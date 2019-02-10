@@ -1,3 +1,5 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+open_apiserver:
+     resource: "@OpenAPIServerBundle/Resources/config/routing.yml"
