@@ -1,0 +1,167 @@
+swagger: "2.0"
+info:
+  description: "This is a password manager server."
+  version: "0.0.1"
+  title: "Password Manager"
+  termsOfService: ""
+  contact:
+    email: "test@te.st"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: ""
+basePath: "/v0"
+tags:
+- name: "user"
+  description: "Creating users, signing in/out"
+- name: "accounts"
+  description: "Access to accounts stored in the password manager"
+- name: "maintenance"
+  description: "General information"
+schemes:
+- "https"
+paths:
+  /user:
+    post:
+      tags:
+      - "user"
+      summary: "login"
+      description: ""
+      operationId: "loginUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Logon Object"
+        required: true
+        schema:
+          $ref: "#/definitions/Logon"
+      responses:
+        405:
+          description: "Invalid input"
+        200:
+          description: "OK"
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: SESSIONID=1234567890; Path=/; HttpOnly; Secure; SameSite
+    put:
+      tags:
+      - "user"
+      summary: "registration"
+      description: ""
+      operationId: "registerUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Registration Object"
+        required: true
+        schema:
+          $ref: "#/definitions/Registration"
+      responses:
+        405:
+          description: "Invalid input"
+  /user/logout:
+    get:
+      tags:
+      - "user"
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: "logoutUser"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+  /accounts:
+    get:
+      tags:
+      - "accounts"
+      summary: "Returns the accounts stored by the current user"
+      description: ""
+      operationId: "getAccounts"
+      produces:
+      - "application/json"
+      responses:
+        403:
+          description: "Unauthorized"
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Account"
+        400:
+          description: "Invalid status value"
+#      security:
+#        - pm_auth: []
+securityDefinitions:
+  petstore_auth:
+    type: "apiKey"
+    in: header
+    name: SESSIONID
+definitions:
+  Logon:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      authkey:
+        type: "string"
+  Registration:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      email:
+        type: "string"
+  Account:
+    type: "object"
+    properties:
+      index:
+        type: "integer"
+      name:
+        type: "string"
+      additional:
+        type: "string"
+      password:
+        type: "string"
+  File:
+    type: "object"
+    properties:
+      index:
+        type: "integer"
+      name:
+        type: "string"
+      key:
+        type: "string"
+  Accounts:
+    type: "array"
+    items:
+      $ref: "#/definitions/Account"
+  Files:
+    type: "array"
+    items:
+      $ref: "#/definitions/File"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Repository"
+  url: "http://github.com/zeruniverse/PasswordManager"
