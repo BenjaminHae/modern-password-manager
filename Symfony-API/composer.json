@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/orm": "2.6",
+        "openapi/server-bundle": "dev-master",
         "symfony/console": "4.2.*",
         "symfony/dotenv": "4.2.*",
         "symfony/flex": "^1.1",
@@ -59,5 +60,9 @@
     },
     "require-dev": {
         "symfony/web-server-bundle": "4.2.*"
-    }
+    },
+    "repositories": [{
+       "type": "path",
+       "url": "../OpenAPIServerBundle/"
+    }]
 }
