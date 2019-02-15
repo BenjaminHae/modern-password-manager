@@ -25,3 +25,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # OpenAPIService
+
+    App\Api\:
+        resource: '../src/Api'
+        tags: 
+            - { name: 'open_apiserver.api', api: 'accounts' }
