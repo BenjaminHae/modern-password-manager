@@ -5,11 +5,12 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id()
@@ -19,19 +20,20 @@ class User
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=180, unique=true)
      */
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=510)
+     * @ORM\Column(type="json")
      */
-    private $passwordHash;
+    private $roles = [];
 
     /**
-     * @ORM\Column(type="binary")
+     * @var string The hashed password
+     * @ORM\Column(type="string")
      */
-    private $salt;
+    private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -75,28 +77,45 @@ class User
         return $this;
     }
 
-    public function getPasswordHash(): ?string
+    public function getRoles(): ?array
     {
-        return $this->passwordHash;
+        return $this->roles;
     }
 
-    public function setPasswordHash(string $passwordHash): self
+    public function setRoles(array $roles): self
     {
-        $this->passwordHash = $passwordHash;
+        $this->roles = $roles;
 
         return $this;
     }
 
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
     public function getSalt()
     {
-        return $this->salt;
+        // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
-    public function setSalt($salt): self
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
     {
-        $this->salt = $salt;
-
-        return $this;
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
     public function getEmail(): ?string
