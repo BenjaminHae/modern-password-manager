@@ -16,7 +16,11 @@ class AccountsApi implements AccountsApiInterface
      */
     public function getAccounts(&$responseCode, array &$responseHeaders)
     {
-	return new Account(["name"=> "test"]);
+        $accounts = array();
+        for ($i = 0; $i <= 10; $i++) {
+            array_push($accounts, new Account(["name"=> "test" . $i ]));
+        }
+	return $accounts;
         // Implement the operation ...
     }
 
