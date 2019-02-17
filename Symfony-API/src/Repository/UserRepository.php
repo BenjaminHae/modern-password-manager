@@ -36,15 +36,15 @@ class UserRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?User
+    public function findOneByUsernameAndPassword($username, $password): ?User
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('u.username = :user')
+            ->andWhere('u.password = :password')
+            ->setParameter('user', $username)
+            ->setParameter('password', $password)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
 }
