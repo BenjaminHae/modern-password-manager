@@ -4,7 +4,7 @@ All URIs are relative to *http://http:/v0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**loginUser**](UserApiInterface.md#loginUser) | **POST** /user | login
+[**loginUser**](UserApiInterface.md#loginUser) | **POST** /user/login | login
 [**logoutUser**](UserApiInterface.md#logoutUser) | **GET** /user/logout | Logs out current logged in user session
 [**registerUser**](UserApiInterface.md#registerUser) | **PUT** /user | registration
 

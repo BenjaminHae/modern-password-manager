@@ -11,7 +11,7 @@ open_apiserver_accounts_getaccounts:
 
 # user
 open_apiserver_user_loginuser:
-    path:     /user
+    path:     /user/login
     methods:  [POST]
     defaults:
         _controller: open_apiserver.controller.user:loginUserAction

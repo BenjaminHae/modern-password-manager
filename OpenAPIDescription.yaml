@@ -22,6 +22,27 @@ schemes:
 - "https"
 paths:
   /user:
+    put:
+      tags:
+      - "user"
+      summary: "registration"
+      description: ""
+      operationId: "registerUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Registration Object"
+        required: true
+        schema:
+          $ref: "#/definitions/Registration"
+      responses:
+        405:
+          description: "Invalid input"
+  /user/login:
     post:
       tags:
       - "user"
@@ -49,26 +70,6 @@ paths:
               schema:
                 type: string
                 example: SESSIONID=1234567890; Path=/; HttpOnly; Secure; SameSite
-    put:
-      tags:
-      - "user"
-      summary: "registration"
-      description: ""
-      operationId: "registerUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Registration Object"
-        required: true
-        schema:
-          $ref: "#/definitions/Registration"
-      responses:
-        405:
-          description: "Invalid input"
   /user/logout:
     get:
       tags:
@@ -115,7 +116,7 @@ definitions:
     properties:
       username:
         type: "string"
-      authkey:
+      password:
         type: "string"
   Registration:
     type: "object"
@@ -123,6 +124,8 @@ definitions:
       username:
         type: "string"
       email:
+        type: "string"
+      password:
         type: "string"
   Account:
     type: "object"

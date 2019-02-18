@@ -109,7 +109,7 @@ All URIs are relative to *http://http:/v0*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *AccountsApiInterface* | [**getAccounts**](Resources/docs/Api/AccountsApiInterface.md#getaccounts) | **GET** /accounts | Returns the accounts stored by the current user
-*UserApiInterface* | [**loginUser**](Resources/docs/Api/UserApiInterface.md#loginuser) | **POST** /user | login
+*UserApiInterface* | [**loginUser**](Resources/docs/Api/UserApiInterface.md#loginuser) | **POST** /user/login | login
 *UserApiInterface* | [**logoutUser**](Resources/docs/Api/UserApiInterface.md#logoutuser) | **GET** /user/logout | Logs out current logged in user session
 *UserApiInterface* | [**registerUser**](Resources/docs/Api/UserApiInterface.md#registeruser) | **PUT** /user | registration
 

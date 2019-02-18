@@ -21,17 +21,16 @@ services:
 
     open_apiserver.controller.accounts:
         class: OpenAPI\Server\Controller\AccountsController
-        tags: ['controller.service_arguments']
         calls:
          - [setSerializer, ['@open_apiserver.service.serializer']]
          - [setValidator,  ['@open_apiserver.service.validator']]
          - [setApiServer,  ['@open_apiserver.api.api_server']]
+        tags: ['controller.service_arguments']
 
     open_apiserver.controller.user:
         class: OpenAPI\Server\Controller\UserController
-        tags: ['controller.service_arguments']
         calls:
          - [setSerializer, ['@open_apiserver.service.serializer']]
          - [setValidator,  ['@open_apiserver.service.validator']]
          - [setApiServer,  ['@open_apiserver.api.api_server']]
-
+        tags: ['controller.service_arguments']

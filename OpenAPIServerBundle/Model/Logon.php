@@ -51,11 +51,11 @@ class Logon
 
     /**
      * @var string|null
-     * @SerializedName("authkey")
+     * @SerializedName("password")
      * @Assert\Type("string")
      * @Type("string")
      */
-    protected $authkey;
+    protected $password;
 
     /**
      * Constructor
@@ -64,7 +64,7 @@ class Logon
     public function __construct(array $data = null)
     {
         $this->username = isset($data['username']) ? $data['username'] : null;
-        $this->authkey = isset($data['authkey']) ? $data['authkey'] : null;
+        $this->password = isset($data['password']) ? $data['password'] : null;
     }
 
     /**
@@ -92,25 +92,25 @@ class Logon
     }
 
     /**
-     * Gets authkey.
+     * Gets password.
      *
      * @return string|null
      */
-    public function getAuthkey()
+    public function getPassword()
     {
-        return $this->authkey;
+        return $this->password;
     }
 
     /**
-     * Sets authkey.
+     * Sets password.
      *
-     * @param string|null $authkey
+     * @param string|null $password
      *
      * @return $this
      */
-    public function setAuthkey($authkey = null)
+    public function setPassword($password = null)
     {
-        $this->authkey = $authkey;
+        $this->password = $password;
 
         return $this;
     }

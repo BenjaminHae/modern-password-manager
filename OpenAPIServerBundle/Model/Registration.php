@@ -58,6 +58,14 @@ class Registration
     protected $email;
 
     /**
+     * @var string|null
+     * @SerializedName("password")
+     * @Assert\Type("string")
+     * @Type("string")
+     */
+    protected $password;
+
+    /**
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
@@ -65,6 +73,7 @@ class Registration
     {
         $this->username = isset($data['username']) ? $data['username'] : null;
         $this->email = isset($data['email']) ? $data['email'] : null;
+        $this->password = isset($data['password']) ? $data['password'] : null;
     }
 
     /**
@@ -111,6 +120,30 @@ class Registration
     public function setEmail($email = null)
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Gets password.
+     *
+     * @return string|null
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Sets password.
+     *
+     * @param string|null $password
+     *
+     * @return $this
+     */
+    public function setPassword($password = null)
+    {
+        $this->password = $password;
 
         return $this;
     }
