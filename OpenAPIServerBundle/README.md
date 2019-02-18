@@ -119,6 +119,7 @@ Class | Method | HTTP request | Description
  - [Account](Resources/docs/Model/Account.md)
  - [ApiResponse](Resources/docs/Model/ApiResponse.md)
  - [File](Resources/docs/Model/File.md)
+ - [GenericSuccessMessage](Resources/docs/Model/GenericSuccessMessage.md)
  - [Logon](Resources/docs/Model/Logon.md)
  - [Registration](Resources/docs/Model/Registration.md)
 

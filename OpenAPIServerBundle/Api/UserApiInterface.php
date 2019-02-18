@@ -29,6 +29,7 @@
 namespace OpenAPI\Server\Api;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use OpenAPI\Server\Model\GenericSuccessMessage;
 use OpenAPI\Server\Model\Logon;
 use OpenAPI\Server\Model\Registration;
 
@@ -52,7 +53,7 @@ interface UserApiInterface
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
-     * @return void
+     * @return OpenAPI\Server\Model\GenericSuccessMessage[]
      *
      */
     public function loginUser(Logon $body, &$responseCode, array &$responseHeaders);
@@ -79,7 +80,7 @@ interface UserApiInterface
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
-     * @return void
+     * @return OpenAPI\Server\Model\GenericSuccessMessage[]
      *
      */
     public function registerUser(Registration $body, &$responseCode, array &$responseHeaders);

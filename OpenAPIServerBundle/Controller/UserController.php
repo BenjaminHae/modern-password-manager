@@ -35,6 +35,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Constraints as Assert;
 use OpenAPI\Server\Api\UserApiInterface;
+use OpenAPI\Server\Model\GenericSuccessMessage;
 use OpenAPI\Server\Model\Logon;
 use OpenAPI\Server\Model\Registration;
 
@@ -68,7 +69,7 @@ class UserController extends Controller
         }
 
         // Figure out what data format to return to the client
-        $produces = [];
+        $produces = ['application/json'];
         // Figure out what the client accepts
         $clientAccepts = $request->headers->has('Accept')?$request->headers->get('Accept'):'*/*';
         $responseFormat = $this->getOutputFormat($clientAccepts, $produces);
@@ -101,7 +102,7 @@ class UserController extends Controller
 
             
             // Make the call to the business logic
-            $responseCode = 204;
+            $responseCode = 200;
             $responseHeaders = [];
             $result = $handler->loginUser($body, $responseCode, $responseHeaders);
 
@@ -218,7 +219,7 @@ class UserController extends Controller
         }
 
         // Figure out what data format to return to the client
-        $produces = [];
+        $produces = ['application/json'];
         // Figure out what the client accepts
         $clientAccepts = $request->headers->has('Accept')?$request->headers->get('Accept'):'*/*';
         $responseFormat = $this->getOutputFormat($clientAccepts, $produces);
@@ -251,15 +252,18 @@ class UserController extends Controller
 
             
             // Make the call to the business logic
-            $responseCode = 204;
+            $responseCode = 200;
             $responseHeaders = [];
             $result = $handler->registerUser($body, $responseCode, $responseHeaders);
 
             // Find default response message
-            $message = '';
+            $message = 'successful operation';
 
             // Find a more specific message, if available
             switch ($responseCode) {
+                case 200:
+                    $message = 'successful operation';
+                    break;
                 case 405:
                     $message = 'Invalid input';
                     break;
