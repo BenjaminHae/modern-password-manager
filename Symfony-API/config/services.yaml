@@ -30,5 +30,10 @@ services:
 
     App\Api\:
         resource: '../src/Api'
+    
+    App\Api\UserApi:
+        tags:
+            - { name: "open_apiserver.api", api: "user" }
+    App\Api\AccountsApi:
         tags: 
             - { name: 'open_apiserver.api', api: 'accounts' }
