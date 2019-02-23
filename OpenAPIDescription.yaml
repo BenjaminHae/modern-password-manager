@@ -38,7 +38,9 @@ paths:
         description: "Registration Object"
         required: true
         schema:
-          $ref: "#/definitions/Registration"
+          allOf:
+            - $ref: "#/definitions/LogonInformation"
+            - $ref: "#/definitions/UserInformation"
       responses:
         200:
           description: "successful operation"
@@ -63,7 +65,7 @@ paths:
         description: "Logon Object"
         required: true
         schema:
-          $ref: "#/definitions/Logon"
+          $ref: "#/definitions/LogonInformation"
       responses:
         405:
           description: "Invalid input"
@@ -104,9 +106,88 @@ paths:
         200:
           description: "successful operation"
           schema:
-            type: "array"
+            $ref: "#/definitions/Accounts"
+        400:
+          description: "Invalid status value"
+    post:
+      tags:
+      - "accounts"
+      summary: "Update a stored account"
+      description: ""
+      operationId: "updateAccount"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Account Object"
+        required: true
+        schema:
+          allOf:
+            - $ref: "#/definitions/AccountId"
+            - $ref: "#/definitions/Account"
+      produces:
+      - "application/json"
+      responses:
+        403:
+          description: "Unauthorized"
+        200:
+          description: "successful operation"
+          schema:
             items:
-              $ref: "#/definitions/Account"
+              $ref: "#/definitions/Accounts"
+        400:
+          description: "Invalid status value"
+    delete:
+      tags:
+      - "accounts"
+      summary: "Delete a stored Account"
+      description: ""
+      operationId: "deleteAccount"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Account Id"
+        required: true
+        schema:
+          $ref: "#/definitions/AccountId"
+      produces:
+      - "application/json"
+      responses:
+        403:
+          description: "Unauthorized"
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Accounts"
+        400:
+          description: "Invalid status value"
+    put:
+      tags:
+      - "accounts"
+      summary: "Add Account"
+      description: ""
+      operationId: "addAccount"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Account Values"
+        required: true
+        schema:
+          $ref: "#/definitions/Account"
+      produces:
+      - "application/json"
+      responses:
+        403:
+          description: "Unauthorized"
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Accounts"
         400:
           description: "Invalid status value"
 #      security:
@@ -117,27 +198,26 @@ securityDefinitions:
     in: header
     name: SESSIONID
 definitions:
-  Logon:
+  LogonInformation:
     type: "object"
     properties:
       username:
         type: "string"
       password:
         type: "string"
-  Registration:
+  UserInformation:
     type: "object"
     properties:
-      username:
-        type: "string"
       email:
         type: "string"
-      password:
-        type: "string"
-  Account:
+  AccountId:
     type: "object"
     properties:
       index:
         type: "integer"
+  Account:
+    type: "object"
+    properties:
       name:
         type: "string"
       additional:
@@ -156,7 +236,9 @@ definitions:
   Accounts:
     type: "array"
     items:
-      $ref: "#/definitions/Account"
+      allOf:
+        - $ref: "#/definitions/AccountId"
+        - $ref: "#/definitions/Account"
   Files:
     type: "array"
     items:
@@ -165,16 +247,6 @@ definitions:
     type: "object"
     properties:
       status:
-        type: "string"
-      message:
-        type: "string"
-  ApiResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
         type: "string"
       message:
         type: "string"
