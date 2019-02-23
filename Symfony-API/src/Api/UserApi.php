@@ -3,28 +3,40 @@
 namespace App\Api;
 
 use OpenAPI\Server\Api\UserApiInterface;
-use OpenAPI\Server\Model\Logon;
+use OpenAPI\Server\Model\LogonInformation;
 use OpenAPI\Server\Model\Registration;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use OpenAPI\Server\Model\RegistrationInformation;
 
 class UserApi implements UserApiInterface
 {
     private $entityManager;
     private $passwordEncoder;
+    private $security;
+    private $session;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, Security $security, SessionInterface $session)
     {
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
+        $this->security = $security;
+        $this->session = $session;
     }
 
     // ...
 
-    public function loginUser(Logon $body, &$responseCode, array &$responseHeaders) {
-        return ["success"=> true];
+    public function loginUser(LogonInformation $body, &$responseCode, array &$responseHeaders) {
+        $currentUser = $this->security->getUser();
+        if ($currentUser)
+        {
+            $username = $currentUser->getUsername();
+            return ["success"=> true, "loggedInAs" => $username];
+        }
+        return ["error" => "not logged in"];
     }
 
     public function logoutUser(&$responseCode, array &$responseHeaders) {
@@ -32,7 +44,7 @@ class UserApi implements UserApiInterface
         return ["not implemented"=> true];
     }
 
-    public function registerUser(Registration $registration, &$responseCode, array &$responseHeaders) {
+    public function registerUser(RegistrationInformation $registration, &$responseCode, array &$responseHeaders) {
 	$user = new User();
         $user->setUsername($registration->getUsername());
         $user->setEmail($registration->getEmail());
