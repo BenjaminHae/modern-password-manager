@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use OpenAPI\Server\Api\UserApiInterface;
 use OpenAPI\Server\Model\GenericSuccessMessage;
 use OpenAPI\Server\Model\LogonInformation;
-use OpenAPI\Server\Model\UNKNOWN_BASE_TYPE;
+use OpenAPI\Server\Model\RegistrationInformation;
 
 /**
  * UserController Class Doc Comment
@@ -235,12 +235,12 @@ class UserController extends Controller
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $body = $this->deserialize($body, 'OpenAPI\Server\Model\UNKNOWN_BASE_TYPE', $inputFormat);
+        $body = $this->deserialize($body, 'OpenAPI\Server\Model\RegistrationInformation', $inputFormat);
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
-        $asserts[] = new Assert\Type("OpenAPI\Server\Model\UNKNOWN_BASE_TYPE");
+        $asserts[] = new Assert\Type("OpenAPI\Server\Model\RegistrationInformation");
         $response = $this->validate($body, $asserts);
         if ($response instanceof Response) {
             return $response;

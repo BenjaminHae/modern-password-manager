@@ -1,6 +1,6 @@
 <?php
 /**
- * AccountId
+ * RegistrationInformation
  *
  * PHP version 5
  *
@@ -34,36 +34,20 @@ use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * Class representing the AccountId model.
+ * Class representing the RegistrationInformation model.
  *
  * @package OpenAPI\Server\Model
  * @author  OpenAPI Generator team
  */
-class AccountId 
+class RegistrationInformation 
 {
         /**
-     * @var int|null
-     * @SerializedName("index")
-     * @Assert\Type("int")
-     * @Type("int")
-     */
-    protected $index;
-
-    /**
      * @var string|null
-     * @SerializedName("name")
+     * @SerializedName("username")
      * @Assert\Type("string")
      * @Type("string")
      */
-    protected $name;
-
-    /**
-     * @var string|null
-     * @SerializedName("additional")
-     * @Assert\Type("string")
-     * @Type("string")
-     */
-    protected $additional;
+    protected $username;
 
     /**
      * @var string|null
@@ -74,85 +58,44 @@ class AccountId
     protected $password;
 
     /**
+     * @var string|null
+     * @SerializedName("email")
+     * @Assert\Type("string")
+     * @Type("string")
+     */
+    protected $email;
+
+    /**
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
     public function __construct(array $data = null)
     {
-        $this->index = isset($data['index']) ? $data['index'] : null;
-        $this->name = isset($data['name']) ? $data['name'] : null;
-        $this->additional = isset($data['additional']) ? $data['additional'] : null;
+        $this->username = isset($data['username']) ? $data['username'] : null;
         $this->password = isset($data['password']) ? $data['password'] : null;
+        $this->email = isset($data['email']) ? $data['email'] : null;
     }
 
     /**
-     * Gets index.
-     *
-     * @return int|null
-     */
-    public function getIndex()
-    {
-        return $this->index;
-    }
-
-    /**
-     * Sets index.
-     *
-     * @param int|null $index
-     *
-     * @return $this
-     */
-    public function setIndex($index = null)
-    {
-        $this->index = $index;
-
-        return $this;
-    }
-
-    /**
-     * Gets name.
+     * Gets username.
      *
      * @return string|null
      */
-    public function getName()
+    public function getUsername()
     {
-        return $this->name;
+        return $this->username;
     }
 
     /**
-     * Sets name.
+     * Sets username.
      *
-     * @param string|null $name
+     * @param string|null $username
      *
      * @return $this
      */
-    public function setName($name = null)
+    public function setUsername($username = null)
     {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Gets additional.
-     *
-     * @return string|null
-     */
-    public function getAdditional()
-    {
-        return $this->additional;
-    }
-
-    /**
-     * Sets additional.
-     *
-     * @param string|null $additional
-     *
-     * @return $this
-     */
-    public function setAdditional($additional = null)
-    {
-        $this->additional = $additional;
+        $this->username = $username;
 
         return $this;
     }
@@ -177,6 +120,30 @@ class AccountId
     public function setPassword($password = null)
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Gets email.
+     *
+     * @return string|null
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Sets email.
+     *
+     * @param string|null $email
+     *
+     * @return $this
+     */
+    public function setEmail($email = null)
+    {
+        $this->email = $email;
 
         return $this;
     }

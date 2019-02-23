@@ -23,7 +23,7 @@ services:
 ```
 
 ## **addAccount**
-> AccountId addAccount($body)
+> OpenAPI\Server\Model\AccountId addAccount($body)
 
 Add Account
 
@@ -61,7 +61,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**AccountId**](../Model/AccountId.md)
+[**OpenAPI\Server\Model\AccountId**](../Model/AccountId.md)
 
 ### Authorization
 
@@ -75,7 +75,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 ## **deleteAccount**
-> AccountId deleteAccount($body)
+> OpenAPI\Server\Model\AccountId deleteAccount($body)
 
 Delete a stored Account
 
@@ -96,7 +96,7 @@ class AccountsApi implements AccountsApiInterface
     /**
      * Implementation of AccountsApiInterface#deleteAccount
      */
-    public function deleteAccount(AccountId $body)
+    public function deleteAccount(Index $body)
     {
         // Implement the operation ...
     }
@@ -109,11 +109,11 @@ class AccountsApi implements AccountsApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**OpenAPI\Server\Model\AccountId**](../Model/AccountId.md)| Account Id |
+ **body** | [**OpenAPI\Server\Model\Index**](../Model/Index.md)| Account Id |
 
 ### Return type
 
-[**AccountId**](../Model/AccountId.md)
+[**OpenAPI\Server\Model\AccountId**](../Model/AccountId.md)
 
 ### Authorization
 
@@ -127,7 +127,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 ## **getAccounts**
-> AccountId getAccounts()
+> OpenAPI\Server\Model\AccountId getAccounts()
 
 Returns the accounts stored by the current user
 
@@ -162,7 +162,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**AccountId**](../Model/AccountId.md)
+[**OpenAPI\Server\Model\AccountId**](../Model/AccountId.md)
 
 ### Authorization
 
@@ -197,7 +197,7 @@ class AccountsApi implements AccountsApiInterface
     /**
      * Implementation of AccountsApiInterface#updateAccount
      */
-    public function updateAccount(UNKNOWN_BASE_TYPE $body)
+    public function updateAccount(AccountId $body)
     {
         // Implement the operation ...
     }
@@ -210,7 +210,7 @@ class AccountsApi implements AccountsApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**OpenAPI\Server\Model\UNKNOWN_BASE_TYPE**](../Model/UNKNOWN_BASE_TYPE.md)| Account Object |
+ **body** | [**OpenAPI\Server\Model\AccountId**](../Model/AccountId.md)| Account Object |
 
 ### Return type
 

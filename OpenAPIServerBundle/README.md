@@ -123,7 +123,9 @@ Class | Method | HTTP request | Description
  - [AccountId](Resources/docs/Model/AccountId.md)
  - [File](Resources/docs/Model/File.md)
  - [GenericSuccessMessage](Resources/docs/Model/GenericSuccessMessage.md)
+ - [Index](Resources/docs/Model/Index.md)
  - [LogonInformation](Resources/docs/Model/LogonInformation.md)
+ - [RegistrationInformation](Resources/docs/Model/RegistrationInformation.md)
  - [UserInformation](Resources/docs/Model/UserInformation.md)
 
 

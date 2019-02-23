@@ -38,9 +38,7 @@ paths:
         description: "Registration Object"
         required: true
         schema:
-          allOf:
-            - $ref: "#/definitions/LogonInformation"
-            - $ref: "#/definitions/UserInformation"
+          $ref: "#/definitions/RegistrationInformation"
       responses:
         200:
           description: "successful operation"
@@ -123,9 +121,7 @@ paths:
         description: "Account Object"
         required: true
         schema:
-          allOf:
-            - $ref: "#/definitions/AccountId"
-            - $ref: "#/definitions/Account"
+          $ref: "#/definitions/AccountId"
       produces:
       - "application/json"
       responses:
@@ -152,7 +148,7 @@ paths:
         description: "Account Id"
         required: true
         schema:
-          $ref: "#/definitions/AccountId"
+          $ref: "#/definitions/Index"
       produces:
       - "application/json"
       responses:
@@ -198,6 +194,11 @@ securityDefinitions:
     in: header
     name: SESSIONID
 definitions:
+  RegistrationInformation:
+    type: "object"
+    allOf:
+      - $ref: "#/definitions/LogonInformation"
+      - $ref: "#/definitions/UserInformation"
   LogonInformation:
     type: "object"
     properties:
@@ -211,10 +212,9 @@ definitions:
       email:
         type: "string"
   AccountId:
-    type: "object"
-    properties:
-      index:
-        type: "integer"
+    allOf:
+      - $ref: "#/definitions/Index"
+      - $ref: "#/definitions/Account"
   Account:
     type: "object"
     properties:
@@ -224,6 +224,15 @@ definitions:
         type: "string"
       password:
         type: "string"
+  Accounts:
+    type: "array"
+    items:
+      $ref: "#/definitions/AccountId"
+  Index:
+    type: "object"
+    properties:
+      index:
+        type: "integer"
   File:
     type: "object"
     properties:
@@ -233,12 +242,6 @@ definitions:
         type: "string"
       key:
         type: "string"
-  Accounts:
-    type: "array"
-    items:
-      allOf:
-        - $ref: "#/definitions/AccountId"
-        - $ref: "#/definitions/Account"
   Files:
     type: "array"
     items:

@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use OpenAPI\Server\Api\AccountsApiInterface;
 use OpenAPI\Server\Model\Account;
 use OpenAPI\Server\Model\AccountId;
-use OpenAPI\Server\Model\UNKNOWN_BASE_TYPE;
+use OpenAPI\Server\Model\Index;
 
 /**
  * AccountsController Class Doc Comment
@@ -173,12 +173,12 @@ class AccountsController extends Controller
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $body = $this->deserialize($body, 'OpenAPI\Server\Model\AccountId', $inputFormat);
+        $body = $this->deserialize($body, 'OpenAPI\Server\Model\Index', $inputFormat);
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
-        $asserts[] = new Assert\Type("OpenAPI\Server\Model\AccountId");
+        $asserts[] = new Assert\Type("OpenAPI\Server\Model\Index");
         $response = $this->validate($body, $asserts);
         if ($response instanceof Response) {
             return $response;
@@ -332,12 +332,12 @@ class AccountsController extends Controller
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $body = $this->deserialize($body, 'OpenAPI\Server\Model\UNKNOWN_BASE_TYPE', $inputFormat);
+        $body = $this->deserialize($body, 'OpenAPI\Server\Model\AccountId', $inputFormat);
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
-        $asserts[] = new Assert\Type("OpenAPI\Server\Model\UNKNOWN_BASE_TYPE");
+        $asserts[] = new Assert\Type("OpenAPI\Server\Model\AccountId");
         $response = $this->validate($body, $asserts);
         if ($response instanceof Response) {
             return $response;

@@ -144,7 +144,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#registerUser
      */
-    public function registerUser(UNKNOWN_BASE_TYPE $body)
+    public function registerUser(RegistrationInformation $body)
     {
         // Implement the operation ...
     }
@@ -157,7 +157,7 @@ class UserApi implements UserApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**OpenAPI\Server\Model\UNKNOWN_BASE_TYPE**](../Model/UNKNOWN_BASE_TYPE.md)| Registration Object |
+ **body** | [**OpenAPI\Server\Model\RegistrationInformation**](../Model/RegistrationInformation.md)| Registration Object |
 
 ### Return type
 
