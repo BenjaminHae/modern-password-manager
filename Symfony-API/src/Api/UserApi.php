@@ -2,15 +2,15 @@
 
 namespace App\Api;
 
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use OpenAPI\Server\Api\UserApiInterface;
 use OpenAPI\Server\Model\LogonInformation;
 use OpenAPI\Server\Model\Registration;
-use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
+use OpenAPI\Server\Model\RegistrationInformation;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use OpenAPI\Server\Model\RegistrationInformation;
 
 class UserApi implements UserApiInterface
 {
