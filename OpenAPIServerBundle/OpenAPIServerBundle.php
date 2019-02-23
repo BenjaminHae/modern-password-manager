@@ -47,4 +47,16 @@ class OpenAPIServerBundle extends Bundle
     {
         $container->addCompilerPass(new OpenAPIServerApiPass());
     }
+
+    public function getContainerExtension()
+    {
+        if (null === $this->extension) {
+            $extension = $this->createContainerExtension();
+            $this->extension = $extension;
+        }
+
+        if ($this->extension) {
+            return $this->extension;
+        }
+    }
 }
