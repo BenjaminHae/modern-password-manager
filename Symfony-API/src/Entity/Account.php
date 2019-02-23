@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use OpenAPI\Server\Model\AccountId as OpenAPIAccount;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AccountRepository")
@@ -27,9 +28,9 @@ class Account
     private $password;
 
     /**
-     * @ORM\Column(type="json", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
-    private $other = [];
+    private $other;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="accounts")
@@ -66,12 +67,12 @@ class Account
         return $this;
     }
 
-    public function getOther(): ?array
+    public function getOther(): ?string
     {
         return $this->other;
     }
 
-    public function setOther(?array $other): self
+    public function setOther(?string $other): self
     {
         $this->other = $other;
 
@@ -88,5 +89,16 @@ class Account
         $this->user = $user;
 
         return $this;
+    }
+
+    public function getAsOpenAPIAccount(): OpenAPIAccount
+    {
+        $contents = [
+            "name" => $this->getName(),
+            "additional" => $this->getOther(),
+            "password" => $this->getPassword(),
+            "index" => $this->getId(),
+        ];
+        return new OpenAPIAccount($contents);
     }
 }
