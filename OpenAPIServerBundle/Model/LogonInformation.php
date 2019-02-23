@@ -1,6 +1,6 @@
 <?php
 /**
- * Account
+ * LogonInformation
  *
  * PHP version 5
  *
@@ -34,28 +34,20 @@ use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * Class representing the Account model.
+ * Class representing the LogonInformation model.
  *
  * @package OpenAPI\Server\Model
  * @author  OpenAPI Generator team
  */
-class Account 
+class LogonInformation 
 {
         /**
      * @var string|null
-     * @SerializedName("name")
+     * @SerializedName("username")
      * @Assert\Type("string")
      * @Type("string")
      */
-    protected $name;
-
-    /**
-     * @var string|null
-     * @SerializedName("additional")
-     * @Assert\Type("string")
-     * @Type("string")
-     */
-    protected $additional;
+    protected $username;
 
     /**
      * @var string|null
@@ -71,55 +63,30 @@ class Account
      */
     public function __construct(array $data = null)
     {
-        $this->name = isset($data['name']) ? $data['name'] : null;
-        $this->additional = isset($data['additional']) ? $data['additional'] : null;
+        $this->username = isset($data['username']) ? $data['username'] : null;
         $this->password = isset($data['password']) ? $data['password'] : null;
     }
 
     /**
-     * Gets name.
+     * Gets username.
      *
      * @return string|null
      */
-    public function getName()
+    public function getUsername()
     {
-        return $this->name;
+        return $this->username;
     }
 
     /**
-     * Sets name.
+     * Sets username.
      *
-     * @param string|null $name
+     * @param string|null $username
      *
      * @return $this
      */
-    public function setName($name = null)
+    public function setUsername($username = null)
     {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Gets additional.
-     *
-     * @return string|null
-     */
-    public function getAdditional()
-    {
-        return $this->additional;
-    }
-
-    /**
-     * Sets additional.
-     *
-     * @param string|null $additional
-     *
-     * @return $this
-     */
-    public function setAdditional($additional = null)
-    {
-        $this->additional = $additional;
+        $this->username = $username;
 
         return $this;
     }

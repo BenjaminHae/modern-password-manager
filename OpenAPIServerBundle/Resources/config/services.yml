@@ -34,3 +34,4 @@ services:
          - [setValidator,  ['@open_apiserver.service.validator']]
          - [setApiServer,  ['@open_apiserver.api.api_server']]
         tags: ['controller.service_arguments']
+

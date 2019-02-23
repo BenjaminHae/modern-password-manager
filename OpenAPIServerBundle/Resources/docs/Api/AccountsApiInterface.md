@@ -4,7 +4,10 @@ All URIs are relative to *http://http:/v0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**addAccount**](AccountsApiInterface.md#addAccount) | **PUT** /accounts | Add Account
+[**deleteAccount**](AccountsApiInterface.md#deleteAccount) | **DELETE** /accounts | Delete a stored Account
 [**getAccounts**](AccountsApiInterface.md#getAccounts) | **GET** /accounts | Returns the accounts stored by the current user
+[**updateAccount**](AccountsApiInterface.md#updateAccount) | **POST** /accounts | Update a stored account
 
 
 ## Service Declaration
@@ -19,8 +22,112 @@ services:
     # ...
 ```
 
+## **addAccount**
+> AccountId addAccount($body)
+
+Add Account
+
+### Example Implementation
+```php
+<?php
+// src/Acme/MyBundle/Api/AccountsApiInterface.php
+
+namespace Acme\MyBundle\Api;
+
+use OpenAPI\Server\Api\AccountsApiInterface;
+
+class AccountsApi implements AccountsApiInterface
+{
+
+    // ...
+
+    /**
+     * Implementation of AccountsApiInterface#addAccount
+     */
+    public function addAccount(Account $body)
+    {
+        // Implement the operation ...
+    }
+
+    // ...
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**OpenAPI\Server\Model\Account**](../Model/Account.md)| Account Values |
+
+### Return type
+
+[**AccountId**](../Model/AccountId.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+## **deleteAccount**
+> AccountId deleteAccount($body)
+
+Delete a stored Account
+
+### Example Implementation
+```php
+<?php
+// src/Acme/MyBundle/Api/AccountsApiInterface.php
+
+namespace Acme\MyBundle\Api;
+
+use OpenAPI\Server\Api\AccountsApiInterface;
+
+class AccountsApi implements AccountsApiInterface
+{
+
+    // ...
+
+    /**
+     * Implementation of AccountsApiInterface#deleteAccount
+     */
+    public function deleteAccount(AccountId $body)
+    {
+        // Implement the operation ...
+    }
+
+    // ...
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**OpenAPI\Server\Model\AccountId**](../Model/AccountId.md)| Account Id |
+
+### Return type
+
+[**AccountId**](../Model/AccountId.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
 ## **getAccounts**
-> OpenAPI\Server\Model\Account getAccounts()
+> AccountId getAccounts()
 
 Returns the accounts stored by the current user
 
@@ -55,7 +162,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**OpenAPI\Server\Model\Account**](../Model/Account.md)
+[**AccountId**](../Model/AccountId.md)
 
 ### Authorization
 
@@ -64,6 +171,58 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+## **updateAccount**
+> array updateAccount($body)
+
+Update a stored account
+
+### Example Implementation
+```php
+<?php
+// src/Acme/MyBundle/Api/AccountsApiInterface.php
+
+namespace Acme\MyBundle\Api;
+
+use OpenAPI\Server\Api\AccountsApiInterface;
+
+class AccountsApi implements AccountsApiInterface
+{
+
+    // ...
+
+    /**
+     * Implementation of AccountsApiInterface#updateAccount
+     */
+    public function updateAccount(UNKNOWN_BASE_TYPE $body)
+    {
+        // Implement the operation ...
+    }
+
+    // ...
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**OpenAPI\Server\Model\UNKNOWN_BASE_TYPE**](../Model/UNKNOWN_BASE_TYPE.md)| Account Object |
+
+### Return type
+
+**array**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)

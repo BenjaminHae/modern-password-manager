@@ -3,11 +3,29 @@
 # Do not edit the class manually.
 
 # accounts
+open_apiserver_accounts_addaccount:
+    path:     /accounts
+    methods:  [PUT]
+    defaults:
+        _controller: open_apiserver.controller.accounts:addAccountAction
+
+open_apiserver_accounts_deleteaccount:
+    path:     /accounts
+    methods:  [DELETE]
+    defaults:
+        _controller: open_apiserver.controller.accounts:deleteAccountAction
+
 open_apiserver_accounts_getaccounts:
     path:     /accounts
     methods:  [GET]
     defaults:
         _controller: open_apiserver.controller.accounts:getAccountsAction
+
+open_apiserver_accounts_updateaccount:
+    path:     /accounts
+    methods:  [POST]
+    defaults:
+        _controller: open_apiserver.controller.accounts:updateAccountAction
 
 # user
 open_apiserver_user_loginuser:

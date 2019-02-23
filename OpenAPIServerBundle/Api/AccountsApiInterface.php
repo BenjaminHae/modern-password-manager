@@ -30,6 +30,8 @@ namespace OpenAPI\Server\Api;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use OpenAPI\Server\Model\Account;
+use OpenAPI\Server\Model\AccountId;
+use OpenAPI\Server\Model\UNKNOWN_BASE_TYPE;
 
 /**
  * AccountsApiInterface Interface Doc Comment
@@ -43,6 +45,34 @@ interface AccountsApiInterface
 {
 
     /**
+     * Operation addAccount
+     *
+     * Add Account
+     *
+     * @param  OpenAPI\Server\Model\Account $body  Account Values (required)
+     * @param  integer $responseCode     The HTTP response code to return
+     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     *
+     * @return AccountId[]
+     *
+     */
+    public function addAccount(Account $body, &$responseCode, array &$responseHeaders);
+
+    /**
+     * Operation deleteAccount
+     *
+     * Delete a stored Account
+     *
+     * @param  OpenAPI\Server\Model\AccountId $body  Account Id (required)
+     * @param  integer $responseCode     The HTTP response code to return
+     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     *
+     * @return AccountId[]
+     *
+     */
+    public function deleteAccount(AccountId $body, &$responseCode, array &$responseHeaders);
+
+    /**
      * Operation getAccounts
      *
      * Returns the accounts stored by the current user
@@ -50,8 +80,22 @@ interface AccountsApiInterface
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
-     * @return OpenAPI\Server\Model\Account[]
+     * @return AccountId[]
      *
      */
     public function getAccounts(&$responseCode, array &$responseHeaders);
+
+    /**
+     * Operation updateAccount
+     *
+     * Update a stored account
+     *
+     * @param  OpenAPI\Server\Model\UNKNOWN_BASE_TYPE $body  Account Object (required)
+     * @param  integer $responseCode     The HTTP response code to return
+     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     *
+     * @return array
+     *
+     */
+    public function updateAccount(UNKNOWN_BASE_TYPE $body, &$responseCode, array &$responseHeaders);
 }

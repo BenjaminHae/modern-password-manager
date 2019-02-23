@@ -36,8 +36,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Constraints as Assert;
 use OpenAPI\Server\Api\UserApiInterface;
 use OpenAPI\Server\Model\GenericSuccessMessage;
-use OpenAPI\Server\Model\Logon;
-use OpenAPI\Server\Model\Registration;
+use OpenAPI\Server\Model\LogonInformation;
+use OpenAPI\Server\Model\UNKNOWN_BASE_TYPE;
 
 /**
  * UserController Class Doc Comment
@@ -85,12 +85,12 @@ class UserController extends Controller
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $body = $this->deserialize($body, 'OpenAPI\Server\Model\Logon', $inputFormat);
+        $body = $this->deserialize($body, 'OpenAPI\Server\Model\LogonInformation', $inputFormat);
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
-        $asserts[] = new Assert\Type("OpenAPI\Server\Model\Logon");
+        $asserts[] = new Assert\Type("OpenAPI\Server\Model\LogonInformation");
         $response = $this->validate($body, $asserts);
         if ($response instanceof Response) {
             return $response;
@@ -235,12 +235,12 @@ class UserController extends Controller
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $body = $this->deserialize($body, 'OpenAPI\Server\Model\Registration', $inputFormat);
+        $body = $this->deserialize($body, 'OpenAPI\Server\Model\UNKNOWN_BASE_TYPE', $inputFormat);
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
-        $asserts[] = new Assert\Type("OpenAPI\Server\Model\Registration");
+        $asserts[] = new Assert\Type("OpenAPI\Server\Model\UNKNOWN_BASE_TYPE");
         $response = $this->validate($body, $asserts);
         if ($response instanceof Response) {
             return $response;

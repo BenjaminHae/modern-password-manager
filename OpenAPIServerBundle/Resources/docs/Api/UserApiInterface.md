@@ -43,7 +43,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#loginUser
      */
-    public function loginUser(Logon $body)
+    public function loginUser(LogonInformation $body)
     {
         // Implement the operation ...
     }
@@ -56,7 +56,7 @@ class UserApi implements UserApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**OpenAPI\Server\Model\Logon**](../Model/Logon.md)| Logon Object |
+ **body** | [**OpenAPI\Server\Model\LogonInformation**](../Model/LogonInformation.md)| Logon Object |
 
 ### Return type
 
@@ -144,7 +144,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#registerUser
      */
-    public function registerUser(Registration $body)
+    public function registerUser(UNKNOWN_BASE_TYPE $body)
     {
         // Implement the operation ...
     }
@@ -157,7 +157,7 @@ class UserApi implements UserApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**OpenAPI\Server\Model\Registration**](../Model/Registration.md)| Registration Object |
+ **body** | [**OpenAPI\Server\Model\UNKNOWN_BASE_TYPE**](../Model/UNKNOWN_BASE_TYPE.md)| Registration Object |
 
 ### Return type
 

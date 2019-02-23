@@ -108,7 +108,10 @@ All URIs are relative to *http://http:/v0*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*AccountsApiInterface* | [**addAccount**](Resources/docs/Api/AccountsApiInterface.md#addaccount) | **PUT** /accounts | Add Account
+*AccountsApiInterface* | [**deleteAccount**](Resources/docs/Api/AccountsApiInterface.md#deleteaccount) | **DELETE** /accounts | Delete a stored Account
 *AccountsApiInterface* | [**getAccounts**](Resources/docs/Api/AccountsApiInterface.md#getaccounts) | **GET** /accounts | Returns the accounts stored by the current user
+*AccountsApiInterface* | [**updateAccount**](Resources/docs/Api/AccountsApiInterface.md#updateaccount) | **POST** /accounts | Update a stored account
 *UserApiInterface* | [**loginUser**](Resources/docs/Api/UserApiInterface.md#loginuser) | **POST** /user/login | login
 *UserApiInterface* | [**logoutUser**](Resources/docs/Api/UserApiInterface.md#logoutuser) | **GET** /user/logout | Logs out current logged in user session
 *UserApiInterface* | [**registerUser**](Resources/docs/Api/UserApiInterface.md#registeruser) | **PUT** /user | registration
@@ -117,11 +120,11 @@ Class | Method | HTTP request | Description
 ## Documentation For Models
 
  - [Account](Resources/docs/Model/Account.md)
- - [ApiResponse](Resources/docs/Model/ApiResponse.md)
+ - [AccountId](Resources/docs/Model/AccountId.md)
  - [File](Resources/docs/Model/File.md)
  - [GenericSuccessMessage](Resources/docs/Model/GenericSuccessMessage.md)
- - [Logon](Resources/docs/Model/Logon.md)
- - [Registration](Resources/docs/Model/Registration.md)
+ - [LogonInformation](Resources/docs/Model/LogonInformation.md)
+ - [UserInformation](Resources/docs/Model/UserInformation.md)
 
 
 ## Documentation For Authorization

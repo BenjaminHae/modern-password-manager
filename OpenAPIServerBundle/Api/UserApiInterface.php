@@ -30,8 +30,8 @@ namespace OpenAPI\Server\Api;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use OpenAPI\Server\Model\GenericSuccessMessage;
-use OpenAPI\Server\Model\Logon;
-use OpenAPI\Server\Model\Registration;
+use OpenAPI\Server\Model\LogonInformation;
+use OpenAPI\Server\Model\UNKNOWN_BASE_TYPE;
 
 /**
  * UserApiInterface Interface Doc Comment
@@ -49,14 +49,14 @@ interface UserApiInterface
      *
      * login
      *
-     * @param  OpenAPI\Server\Model\Logon $body  Logon Object (required)
+     * @param  OpenAPI\Server\Model\LogonInformation $body  Logon Object (required)
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return OpenAPI\Server\Model\GenericSuccessMessage[]
      *
      */
-    public function loginUser(Logon $body, &$responseCode, array &$responseHeaders);
+    public function loginUser(LogonInformation $body, &$responseCode, array &$responseHeaders);
 
     /**
      * Operation logoutUser
@@ -76,12 +76,12 @@ interface UserApiInterface
      *
      * registration
      *
-     * @param  OpenAPI\Server\Model\Registration $body  Registration Object (required)
+     * @param  OpenAPI\Server\Model\UNKNOWN_BASE_TYPE $body  Registration Object (required)
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return OpenAPI\Server\Model\GenericSuccessMessage[]
      *
      */
-    public function registerUser(Registration $body, &$responseCode, array &$responseHeaders);
+    public function registerUser(UNKNOWN_BASE_TYPE $body, &$responseCode, array &$responseHeaders);
 }
