@@ -3,6 +3,7 @@
 namespace App\Api;
 
 use App\Entity\User;
+use App\Api\CsrfTokenValidatorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use OpenAPI\Server\Api\UserApiInterface;
 use OpenAPI\Server\Model\LogonInformation;
