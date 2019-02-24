@@ -27,6 +27,14 @@ services:
          - [setApiServer,  ['@open_apiserver.api.api_server']]
         tags: ['controller.service_arguments']
 
+    open_apiserver.controller.maintenance:
+        class: OpenAPI\Server\Controller\MaintenanceController
+        calls:
+         - [setSerializer, ['@open_apiserver.service.serializer']]
+         - [setValidator,  ['@open_apiserver.service.validator']]
+         - [setApiServer,  ['@open_apiserver.api.api_server']]
+        tags: ['controller.service_arguments']
+
     open_apiserver.controller.user:
         class: OpenAPI\Server\Controller\UserController
         calls:

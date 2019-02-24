@@ -112,6 +112,7 @@ Class | Method | HTTP request | Description
 *AccountsApiInterface* | [**deleteAccount**](Resources/docs/Api/AccountsApiInterface.md#deleteaccount) | **DELETE** /accounts | Delete a stored Account
 *AccountsApiInterface* | [**getAccounts**](Resources/docs/Api/AccountsApiInterface.md#getaccounts) | **GET** /accounts | Returns the accounts stored by the current user
 *AccountsApiInterface* | [**updateAccount**](Resources/docs/Api/AccountsApiInterface.md#updateaccount) | **POST** /accounts | Update a stored account
+*MaintenanceApiInterface* | [**serverInformation**](Resources/docs/Api/MaintenanceApiInterface.md#serverinformation) | **GET** /info | get information about the server for the client
 *UserApiInterface* | [**loginUser**](Resources/docs/Api/UserApiInterface.md#loginuser) | **POST** /user/login | login
 *UserApiInterface* | [**logoutUser**](Resources/docs/Api/UserApiInterface.md#logoutuser) | **GET** /user/logout | Logs out current logged in user session
 *UserApiInterface* | [**registerUser**](Resources/docs/Api/UserApiInterface.md#registeruser) | **PUT** /user | registration
@@ -126,6 +127,7 @@ Class | Method | HTTP request | Description
  - [Index](Resources/docs/Model/Index.md)
  - [LogonInformation](Resources/docs/Model/LogonInformation.md)
  - [RegistrationInformation](Resources/docs/Model/RegistrationInformation.md)
+ - [ServerInformation](Resources/docs/Model/ServerInformation.md)
  - [UserInformation](Resources/docs/Model/UserInformation.md)
 
 

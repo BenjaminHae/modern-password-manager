@@ -27,6 +27,13 @@ open_apiserver_accounts_updateaccount:
     defaults:
         _controller: open_apiserver.controller.accounts:updateAccountAction
 
+# maintenance
+open_apiserver_maintenance_serverinformation:
+    path:     /info
+    methods:  [GET]
+    defaults:
+        _controller: open_apiserver.controller.maintenance:serverInformationAction
+
 # user
 open_apiserver_user_loginuser:
     path:     /user/login
