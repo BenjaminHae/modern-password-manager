@@ -80,18 +80,18 @@ class UserController extends Controller
         // Handle authentication
 
         // Read out all input parameter values into variables
-        $body = $request->getContent();
+        $logonInformation = $request->getContent();
 
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $body = $this->deserialize($body, 'OpenAPI\Server\Model\LogonInformation', $inputFormat);
+        $logonInformation = $this->deserialize($logonInformation, 'OpenAPI\Server\Model\LogonInformation', $inputFormat);
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
         $asserts[] = new Assert\Type("OpenAPI\Server\Model\LogonInformation");
-        $response = $this->validate($body, $asserts);
+        $response = $this->validate($logonInformation, $asserts);
         if ($response instanceof Response) {
             return $response;
         }
@@ -104,7 +104,7 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            $result = $handler->loginUser($body, $responseCode, $responseHeaders);
+            $result = $handler->loginUser($logonInformation, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = 'OK';
@@ -230,18 +230,18 @@ class UserController extends Controller
         // Handle authentication
 
         // Read out all input parameter values into variables
-        $body = $request->getContent();
+        $registrationInformation = $request->getContent();
 
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $body = $this->deserialize($body, 'OpenAPI\Server\Model\RegistrationInformation', $inputFormat);
+        $registrationInformation = $this->deserialize($registrationInformation, 'OpenAPI\Server\Model\RegistrationInformation', $inputFormat);
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
         $asserts[] = new Assert\Type("OpenAPI\Server\Model\RegistrationInformation");
-        $response = $this->validate($body, $asserts);
+        $response = $this->validate($registrationInformation, $asserts);
         if ($response instanceof Response) {
             return $response;
         }
@@ -254,7 +254,7 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            $result = $handler->registerUser($body, $responseCode, $responseHeaders);
+            $result = $handler->registerUser($registrationInformation, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = 'successful operation';

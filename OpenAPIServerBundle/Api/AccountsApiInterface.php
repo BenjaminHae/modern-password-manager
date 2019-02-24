@@ -49,28 +49,28 @@ interface AccountsApiInterface
      *
      * Add Account
      *
-     * @param  OpenAPI\Server\Model\Account $body  Account Values (required)
+     * @param  OpenAPI\Server\Model\Account $account  Account Values (required)
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return OpenAPI\Server\Model\AccountId[]
      *
      */
-    public function addAccount(Account $body, &$responseCode, array &$responseHeaders);
+    public function addAccount(Account $account, &$responseCode, array &$responseHeaders);
 
     /**
      * Operation deleteAccount
      *
      * Delete a stored Account
      *
-     * @param  OpenAPI\Server\Model\Index $body  Account Id (required)
+     * @param  OpenAPI\Server\Model\Index $index  Account Id (required)
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return OpenAPI\Server\Model\AccountId[]
      *
      */
-    public function deleteAccount(Index $body, &$responseCode, array &$responseHeaders);
+    public function deleteAccount(Index $index, &$responseCode, array &$responseHeaders);
 
     /**
      * Operation getAccounts
@@ -90,12 +90,12 @@ interface AccountsApiInterface
      *
      * Update a stored account
      *
-     * @param  OpenAPI\Server\Model\AccountId $body  Account Object (required)
+     * @param  OpenAPI\Server\Model\AccountId $accountId  Account Object (required)
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return array
      *
      */
-    public function updateAccount(AccountId $body, &$responseCode, array &$responseHeaders);
+    public function updateAccount(AccountId $accountId, &$responseCode, array &$responseHeaders);
 }

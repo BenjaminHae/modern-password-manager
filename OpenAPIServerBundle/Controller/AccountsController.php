@@ -80,18 +80,18 @@ class AccountsController extends Controller
         // Handle authentication
 
         // Read out all input parameter values into variables
-        $body = $request->getContent();
+        $account = $request->getContent();
 
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $body = $this->deserialize($body, 'OpenAPI\Server\Model\Account', $inputFormat);
+        $account = $this->deserialize($account, 'OpenAPI\Server\Model\Account', $inputFormat);
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
         $asserts[] = new Assert\Type("OpenAPI\Server\Model\Account");
-        $response = $this->validate($body, $asserts);
+        $response = $this->validate($account, $asserts);
         if ($response instanceof Response) {
             return $response;
         }
@@ -104,7 +104,7 @@ class AccountsController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            $result = $handler->addAccount($body, $responseCode, $responseHeaders);
+            $result = $handler->addAccount($account, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = 'successful operation';
@@ -168,18 +168,18 @@ class AccountsController extends Controller
         // Handle authentication
 
         // Read out all input parameter values into variables
-        $body = $request->getContent();
+        $index = $request->getContent();
 
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $body = $this->deserialize($body, 'OpenAPI\Server\Model\Index', $inputFormat);
+        $index = $this->deserialize($index, 'OpenAPI\Server\Model\Index', $inputFormat);
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
         $asserts[] = new Assert\Type("OpenAPI\Server\Model\Index");
-        $response = $this->validate($body, $asserts);
+        $response = $this->validate($index, $asserts);
         if ($response instanceof Response) {
             return $response;
         }
@@ -192,7 +192,7 @@ class AccountsController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            $result = $handler->deleteAccount($body, $responseCode, $responseHeaders);
+            $result = $handler->deleteAccount($index, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = 'successful operation';
@@ -327,18 +327,18 @@ class AccountsController extends Controller
         // Handle authentication
 
         // Read out all input parameter values into variables
-        $body = $request->getContent();
+        $accountId = $request->getContent();
 
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $body = $this->deserialize($body, 'OpenAPI\Server\Model\AccountId', $inputFormat);
+        $accountId = $this->deserialize($accountId, 'OpenAPI\Server\Model\AccountId', $inputFormat);
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
         $asserts[] = new Assert\Type("OpenAPI\Server\Model\AccountId");
-        $response = $this->validate($body, $asserts);
+        $response = $this->validate($accountId, $asserts);
         if ($response instanceof Response) {
             return $response;
         }
@@ -351,7 +351,7 @@ class AccountsController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            $result = $handler->updateAccount($body, $responseCode, $responseHeaders);
+            $result = $handler->updateAccount($accountId, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = 'successful operation';

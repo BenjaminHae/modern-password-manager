@@ -1,6 +1,6 @@
 # OpenAPI\Server\Api\UserApiInterface
 
-All URIs are relative to *http://http:/v0*
+All URIs are relative to *http://localhost/v0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -22,7 +22,7 @@ services:
 ```
 
 ## **loginUser**
-> OpenAPI\Server\Model\GenericSuccessMessage loginUser($body)
+> OpenAPI\Server\Model\GenericSuccessMessage loginUser($logonInformation)
 
 login
 
@@ -43,7 +43,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#loginUser
      */
-    public function loginUser(LogonInformation $body)
+    public function loginUser(LogonInformation $logonInformation)
     {
         // Implement the operation ...
     }
@@ -56,7 +56,7 @@ class UserApi implements UserApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**OpenAPI\Server\Model\LogonInformation**](../Model/LogonInformation.md)| Logon Object |
+ **logonInformation** | [**OpenAPI\Server\Model\LogonInformation**](../Model/LogonInformation.md)| Logon Object |
 
 ### Return type
 
@@ -123,7 +123,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 ## **registerUser**
-> OpenAPI\Server\Model\GenericSuccessMessage registerUser($body)
+> OpenAPI\Server\Model\GenericSuccessMessage registerUser($registrationInformation)
 
 registration
 
@@ -144,7 +144,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#registerUser
      */
-    public function registerUser(RegistrationInformation $body)
+    public function registerUser(RegistrationInformation $registrationInformation)
     {
         // Implement the operation ...
     }
@@ -157,7 +157,7 @@ class UserApi implements UserApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**OpenAPI\Server\Model\RegistrationInformation**](../Model/RegistrationInformation.md)| Registration Object |
+ **registrationInformation** | [**OpenAPI\Server\Model\RegistrationInformation**](../Model/RegistrationInformation.md)| Registration Object |
 
 ### Return type
 

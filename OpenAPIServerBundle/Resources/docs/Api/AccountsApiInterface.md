@@ -1,6 +1,6 @@
 # OpenAPI\Server\Api\AccountsApiInterface
 
-All URIs are relative to *http://http:/v0*
+All URIs are relative to *http://localhost/v0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -23,7 +23,7 @@ services:
 ```
 
 ## **addAccount**
-> OpenAPI\Server\Model\AccountId addAccount($body)
+> OpenAPI\Server\Model\AccountId addAccount($account)
 
 Add Account
 
@@ -44,7 +44,7 @@ class AccountsApi implements AccountsApiInterface
     /**
      * Implementation of AccountsApiInterface#addAccount
      */
-    public function addAccount(Account $body)
+    public function addAccount(Account $account)
     {
         // Implement the operation ...
     }
@@ -57,7 +57,7 @@ class AccountsApi implements AccountsApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**OpenAPI\Server\Model\Account**](../Model/Account.md)| Account Values |
+ **account** | [**OpenAPI\Server\Model\Account**](../Model/Account.md)| Account Values |
 
 ### Return type
 
@@ -75,7 +75,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 ## **deleteAccount**
-> OpenAPI\Server\Model\AccountId deleteAccount($body)
+> OpenAPI\Server\Model\AccountId deleteAccount($index)
 
 Delete a stored Account
 
@@ -96,7 +96,7 @@ class AccountsApi implements AccountsApiInterface
     /**
      * Implementation of AccountsApiInterface#deleteAccount
      */
-    public function deleteAccount(Index $body)
+    public function deleteAccount(Index $index)
     {
         // Implement the operation ...
     }
@@ -109,7 +109,7 @@ class AccountsApi implements AccountsApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**OpenAPI\Server\Model\Index**](../Model/Index.md)| Account Id |
+ **index** | [**OpenAPI\Server\Model\Index**](../Model/Index.md)| Account Id |
 
 ### Return type
 
@@ -176,7 +176,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 ## **updateAccount**
-> array updateAccount($body)
+> array updateAccount($accountId)
 
 Update a stored account
 
@@ -197,7 +197,7 @@ class AccountsApi implements AccountsApiInterface
     /**
      * Implementation of AccountsApiInterface#updateAccount
      */
-    public function updateAccount(AccountId $body)
+    public function updateAccount(AccountId $accountId)
     {
         // Implement the operation ...
     }
@@ -210,7 +210,7 @@ class AccountsApi implements AccountsApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**OpenAPI\Server\Model\AccountId**](../Model/AccountId.md)| Account Object |
+ **accountId** | [**OpenAPI\Server\Model\AccountId**](../Model/AccountId.md)| Account Object |
 
 ### Return type
 

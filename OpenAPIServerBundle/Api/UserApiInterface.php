@@ -49,14 +49,14 @@ interface UserApiInterface
      *
      * login
      *
-     * @param  OpenAPI\Server\Model\LogonInformation $body  Logon Object (required)
+     * @param  OpenAPI\Server\Model\LogonInformation $logonInformation  Logon Object (required)
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return OpenAPI\Server\Model\GenericSuccessMessage[]
      *
      */
-    public function loginUser(LogonInformation $body, &$responseCode, array &$responseHeaders);
+    public function loginUser(LogonInformation $logonInformation, &$responseCode, array &$responseHeaders);
 
     /**
      * Operation logoutUser
@@ -76,12 +76,12 @@ interface UserApiInterface
      *
      * registration
      *
-     * @param  OpenAPI\Server\Model\RegistrationInformation $body  Registration Object (required)
+     * @param  OpenAPI\Server\Model\RegistrationInformation $registrationInformation  Registration Object (required)
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return OpenAPI\Server\Model\GenericSuccessMessage[]
      *
      */
-    public function registerUser(RegistrationInformation $body, &$responseCode, array &$responseHeaders);
+    public function registerUser(RegistrationInformation $registrationInformation, &$responseCode, array &$responseHeaders);
 }

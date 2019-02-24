@@ -1,277 +1,261 @@
-swagger: "2.0"
+openapi: 3.0.0
 info:
-  description: "This is a password manager server."
-  version: "0.0.1"
-  title: "Password Manager"
+  description: This is a password manager server.
+  version: 0.0.1
+  title: Password Manager
   termsOfService: ""
   contact:
-    email: "test@te.st"
+    email: test@te.st
   license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: ""
-basePath: "/v0"
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
 tags:
-- name: "user"
-  description: "Creating users, signing in/out"
-- name: "accounts"
-  description: "Access to accounts stored in the password manager"
-- name: "maintenance"
-  description: "General information"
-schemes:
-- "https"
+  - name: user
+    description: Creating users, signing in/out
+  - name: accounts
+    description: Access to accounts stored in the password manager
+  - name: maintenance
+    description: General information
 paths:
   /info:
     get:
       tags:
-      - "maintenance"
-      summary: "get information about the server for the client"
+        - maintenance
+      summary: get information about the server for the client
       description: ""
-      operationId: "serverInformation"
-      produces:
-      - "application/json"
+      operationId: serverInformation
       responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/ServerInformation"
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerInformation"
   /user:
     put:
       tags:
-      - "user"
-      summary: "registration"
+        - user
+      summary: registration
       description: ""
-      operationId: "registerUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Registration Object"
+      operationId: registerUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistrationInformation"
+        description: Registration Object
         required: true
-        schema:
-          $ref: "#/definitions/RegistrationInformation"
       responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/GenericSuccessMessage"
-        405:
-          description: "Invalid input"
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericSuccessMessage"
+        "405":
+          description: Invalid input
   /user/login:
     post:
       tags:
-      - "user"
-      summary: "login"
+        - user
+      summary: login
       description: ""
-      operationId: "loginUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Logon Object"
+      operationId: loginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LogonInformation"
+        description: Logon Object
         required: true
-        schema:
-          $ref: "#/definitions/LogonInformation"
       responses:
-        405:
-          description: "Invalid input"
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/GenericSuccessMessage"
+        "200":
+          description: OK
           headers:
             Set-Cookie:
               schema:
                 type: string
                 example: SESSIONID=1234567890; Path=/; HttpOnly; Secure; SameSite
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericSuccessMessage"
+        "405":
+          description: Invalid input
   /user/logout:
     get:
       tags:
-      - "user"
-      summary: "Logs out current logged in user session"
+        - user
+      summary: Logs out current logged in user session
       description: ""
-      operationId: "logoutUser"
-      produces:
-      - "application/json"
-      parameters: []
+      operationId: logoutUser
       responses:
         default:
-          description: "successful operation"
+          description: successful operation
   /accounts:
     get:
       tags:
-      - "accounts"
-      summary: "Returns the accounts stored by the current user"
+        - accounts
+      summary: Returns the accounts stored by the current user
       description: ""
-      operationId: "getAccounts"
-      produces:
-      - "application/json"
+      operationId: getAccounts
       responses:
-        403:
-          description: "Unauthorized"
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Accounts"
-        400:
-          description: "Invalid status value"
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Accounts"
+        "400":
+          description: Invalid status value
+        "403":
+          description: Unauthorized
     post:
       tags:
-      - "accounts"
-      summary: "Update a stored account"
+        - accounts
+      summary: Update a stored account
       description: ""
-      operationId: "updateAccount"
-      consumes:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Account Object"
+      operationId: updateAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountId"
+        description: Account Object
         required: true
-        schema:
-          $ref: "#/definitions/AccountId"
-      produces:
-      - "application/json"
       responses:
-        403:
-          description: "Unauthorized"
-        200:
-          description: "successful operation"
-          schema:
-            items:
-              $ref: "#/definitions/Accounts"
-        400:
-          description: "Invalid status value"
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Accounts"
+        "400":
+          description: Invalid status value
+        "403":
+          description: Unauthorized
     delete:
       tags:
-      - "accounts"
-      summary: "Delete a stored Account"
+        - accounts
+      summary: Delete a stored Account
       description: ""
-      operationId: "deleteAccount"
-      consumes:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Account Id"
+      operationId: deleteAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Index"
+        description: Account Id
         required: true
-        schema:
-          $ref: "#/definitions/Index"
-      produces:
-      - "application/json"
       responses:
-        403:
-          description: "Unauthorized"
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Accounts"
-        400:
-          description: "Invalid status value"
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Accounts"
+        "400":
+          description: Invalid status value
+        "403":
+          description: Unauthorized
     put:
       tags:
-      - "accounts"
-      summary: "Add Account"
+        - accounts
+      summary: Add Account
       description: ""
-      operationId: "addAccount"
-      consumes:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Account Values"
+      operationId: addAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Account"
+        description: Account Values
         required: true
-        schema:
-          $ref: "#/definitions/Account"
-      produces:
-      - "application/json"
       responses:
-        403:
-          description: "Unauthorized"
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Accounts"
-        400:
-          description: "Invalid status value"
-#      security:
-#        - pm_auth: []
-securityDefinitions:
-  petstore_auth:
-    type: "apiKey"
-    in: header
-    name: SESSIONID
-definitions:
-  RegistrationInformation:
-    type: "object"
-    allOf:
-      - $ref: "#/definitions/LogonInformation"
-      - $ref: "#/definitions/UserInformation"
-  LogonInformation:
-    type: "object"
-    properties:
-      username:
-        type: "string"
-      password:
-        type: "string"
-  UserInformation:
-    type: "object"
-    properties:
-      email:
-        type: "string"
-  AccountId:
-    allOf:
-      - $ref: "#/definitions/Index"
-      - $ref: "#/definitions/Account"
-  Account:
-    type: "object"
-    properties:
-      name:
-        type: "string"
-      additional:
-        type: "string"
-      password:
-        type: "string"
-  Accounts:
-    type: "array"
-    items:
-      $ref: "#/definitions/AccountId"
-  Index:
-    type: "object"
-    properties:
-      index:
-        type: "integer"
-  File:
-    type: "object"
-    properties:
-      index:
-        type: "integer"
-      name:
-        type: "string"
-      key:
-        type: "string"
-  Files:
-    type: "array"
-    items:
-      $ref: "#/definitions/File"
-  ServerInformation:
-    type: "object"
-    properties:
-      csrfToken:
-        type: "string"
-  GenericSuccessMessage:
-    type: "object"
-    properties:
-      status:
-        type: "string"
-      message:
-        type: "string"
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Accounts"
+        "400":
+          description: Invalid status value
+        "403":
+          description: Unauthorized
 externalDocs:
-  description: "Repository"
-  url: "http://github.com/zeruniverse/PasswordManager"
+  description: Repository
+  url: http://github.com/zeruniverse/PasswordManager
+servers:
+  - url: /v0
+components:
+  securitySchemes:
+    petstore_auth:
+      type: apiKey
+      in: header
+      name: SESSIONID
+  schemas:
+    RegistrationInformation:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/LogonInformation"
+        - $ref: "#/components/schemas/UserInformation"
+    LogonInformation:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    UserInformation:
+      type: object
+      properties:
+        email:
+          type: string
+    AccountId:
+      allOf:
+        - $ref: "#/components/schemas/Index"
+        - $ref: "#/components/schemas/Account"
+    Account:
+      type: object
+      properties:
+        name:
+          type: string
+        additional:
+          type: string
+        password:
+          type: string
+    Accounts:
+      type: array
+      items:
+        $ref: "#/components/schemas/AccountId"
+    Index:
+      type: object
+      properties:
+        index:
+          type: integer
+    File:
+      type: object
+      properties:
+        index:
+          type: integer
+        name:
+          type: string
+        key:
+          type: string
+    Files:
+      type: array
+      items:
+        $ref: "#/components/schemas/File"
+    ServerInformation:
+      type: object
+      properties:
+        csrfToken:
+          type: string
+    GenericSuccessMessage:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
