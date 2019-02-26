@@ -66,7 +66,7 @@ interface UserApiInterface
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
-     * @return void
+     * @return OpenAPI\Server\Model\GenericSuccessMessage[]
      *
      */
     public function logoutUser(&$responseCode, array &$responseHeaders);

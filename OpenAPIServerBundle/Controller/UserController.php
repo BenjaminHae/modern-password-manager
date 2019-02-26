@@ -146,7 +146,7 @@ class UserController extends Controller
     public function logoutUserAction(Request $request)
     {
         // Figure out what data format to return to the client
-        $produces = [];
+        $produces = ['application/json'];
         // Figure out what the client accepts
         $clientAccepts = $request->headers->has('Accept')?$request->headers->get('Accept'):'*/*';
         $responseFormat = $this->getOutputFormat($clientAccepts, $produces);
@@ -170,17 +170,17 @@ class UserController extends Controller
 
             
             // Make the call to the business logic
-            $responseCode = 204;
+            $responseCode = 200;
             $responseHeaders = [];
             $result = $handler->logoutUser($responseCode, $responseHeaders);
 
             // Find default response message
-            $message = 'successful operation';
+            $message = 'OK';
 
             // Find a more specific message, if available
             switch ($responseCode) {
-                case 0:
-                    $message = 'successful operation';
+                case 200:
+                    $message = 'OK';
                     break;
             }
 

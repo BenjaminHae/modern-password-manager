@@ -90,8 +90,12 @@ paths:
       description: ""
       operationId: logoutUser
       responses:
-        default:
-          description: successful operation
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericSuccessMessage"
   /accounts:
     get:
       tags:
