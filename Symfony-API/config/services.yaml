@@ -40,3 +40,15 @@ services:
     App\Api\MaintenanceApi:
         tags: 
             - { name: 'open_apiserver.api', api: 'maintenance' }
+
+    App\Services\:
+        resource: '../src/Services/*'
+      
+    # Plugin Services
+    App\Services\PluginManager:
+        arguments: [!tagged app.plugin]
+    App\Plugins\:
+        resource: '../src/Plugins/'
+        tags:
+            - "app.plugin"
+    
