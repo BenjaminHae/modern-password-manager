@@ -10,16 +10,17 @@ use OpenAPI\Server\Model\Account as OpenAPIAccount;
 use OpenAPI\Server\Model\AccountId;
 use OpenAPI\Server\Model\Index;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
-class AccountsApi implements AccountsApiInterface
+class AccountsApi extends CsrfProtection implements AccountsApiInterface
 {
     private $entityManager;
     private $passwordEncoder;
     private $security;
-    private $session;
 
-    public function __construct(EntityManagerInterface $entityManager, Security $security)
+    public function __construct(EntityManagerInterface $entityManager, Security $security, CsrfTokenManagerInterface $csrfManager)
     {
+        parent::__construct($csrfManager);
         $this->entityManager = $entityManager;
         $this->security = $security;
     }

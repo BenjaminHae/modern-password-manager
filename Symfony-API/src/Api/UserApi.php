@@ -12,16 +12,18 @@ use OpenAPI\Server\Model\RegistrationInformation;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
-class UserApi implements UserApiInterface
+class UserApi extends CsrfProtection implements UserApiInterface
 {
     private $entityManager;
     private $passwordEncoder;
     private $security;
     private $session;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, Security $security, SessionInterface $session)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, Security $security, SessionInterface $session, CsrfTokenManagerInterface $csrfManager)
     {
+        parent::__construct($csrfManager);
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
         $this->security = $security;
@@ -29,14 +31,6 @@ class UserApi implements UserApiInterface
     }
 
     // ...
-
-    public function setcsrf($token)
-    {
-        $csrfToken = new CsrfToken("Api", $token);
-        if (!$this->csrfManager->isTokenValid($csrfToken)) {
-            throw new AccessDeniedHttpException('This action needs a valid csrf token!');
-        }
-    }
 
     public function loginUser(LogonInformation $body, &$responseCode, array &$responseHeaders) {
         $currentUser = $this->security->getUser();
