@@ -1,6 +1,6 @@
 # OpenAPI\Server\Api\MaintenanceApiInterface
 
-All URIs are relative to *http://localhost/v0*
+All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

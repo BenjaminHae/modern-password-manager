@@ -1,6 +1,6 @@
 # OpenAPI\Server\Api\AccountsApiInterface
 
-All URIs are relative to *http://localhost/v0*
+All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -39,6 +39,14 @@ use OpenAPI\Server\Api\AccountsApiInterface;
 class AccountsApi implements AccountsApiInterface
 {
 
+    /**
+     * Configure API key authorization: csrf
+     */
+    public function setcsrf($apiKey)
+    {
+        // Retrieve logged in user from $apiKey ...
+    }
+
     // ...
 
     /**
@@ -65,7 +73,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[csrf](../../README.md#csrf)
 
 ### HTTP request headers
 
@@ -90,6 +98,14 @@ use OpenAPI\Server\Api\AccountsApiInterface;
 
 class AccountsApi implements AccountsApiInterface
 {
+
+    /**
+     * Configure API key authorization: csrf
+     */
+    public function setcsrf($apiKey)
+    {
+        // Retrieve logged in user from $apiKey ...
+    }
 
     // ...
 
@@ -117,7 +133,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[csrf](../../README.md#csrf)
 
 ### HTTP request headers
 
@@ -192,6 +208,14 @@ use OpenAPI\Server\Api\AccountsApiInterface;
 class AccountsApi implements AccountsApiInterface
 {
 
+    /**
+     * Configure API key authorization: csrf
+     */
+    public function setcsrf($apiKey)
+    {
+        // Retrieve logged in user from $apiKey ...
+    }
+
     // ...
 
     /**
@@ -218,7 +242,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[csrf](../../README.md#csrf)
 
 ### HTTP request headers
 

@@ -78,6 +78,9 @@ class AccountsController extends Controller
         }
 
         // Handle authentication
+        // Authentication 'csrf' required
+        // Set key with prefix in header
+        $securitycsrf = $request->headers->get('X-CSRF-TOKEN');
 
         // Read out all input parameter values into variables
         $account = $request->getContent();
@@ -100,6 +103,8 @@ class AccountsController extends Controller
         try {
             $handler = $this->getApiHandler();
 
+            // Set authentication method 'csrf'
+            $handler->setcsrf($securitycsrf);
             
             // Make the call to the business logic
             $responseCode = 200;
@@ -166,6 +171,9 @@ class AccountsController extends Controller
         }
 
         // Handle authentication
+        // Authentication 'csrf' required
+        // Set key with prefix in header
+        $securitycsrf = $request->headers->get('X-CSRF-TOKEN');
 
         // Read out all input parameter values into variables
         $index = $request->getContent();
@@ -188,6 +196,8 @@ class AccountsController extends Controller
         try {
             $handler = $this->getApiHandler();
 
+            // Set authentication method 'csrf'
+            $handler->setcsrf($securitycsrf);
             
             // Make the call to the business logic
             $responseCode = 200;
@@ -325,6 +335,9 @@ class AccountsController extends Controller
         }
 
         // Handle authentication
+        // Authentication 'csrf' required
+        // Set key with prefix in header
+        $securitycsrf = $request->headers->get('X-CSRF-TOKEN');
 
         // Read out all input parameter values into variables
         $accountId = $request->getContent();
@@ -347,6 +360,8 @@ class AccountsController extends Controller
         try {
             $handler = $this->getApiHandler();
 
+            // Set authentication method 'csrf'
+            $handler->setcsrf($securitycsrf);
             
             // Make the call to the business logic
             $responseCode = 200;

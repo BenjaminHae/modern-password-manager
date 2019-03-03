@@ -45,6 +45,15 @@ interface AccountsApiInterface
 {
 
     /**
+     * Sets authentication method csrf
+     *
+     * @param string $value Value of the csrf authentication method.
+     *
+     * @return void
+     */
+    public function setcsrf($value);
+
+    /**
      * Operation addAccount
      *
      * Add Account
