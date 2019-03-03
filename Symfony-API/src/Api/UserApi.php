@@ -30,6 +30,14 @@ class UserApi implements UserApiInterface
 
     // ...
 
+    public function setcsrf($token)
+    {
+        $csrfToken = new CsrfToken("Api", $token);
+        if (!$this->csrfManager->isTokenValid($csrfToken)) {
+            throw new AccessDeniedHttpException('This action needs a valid csrf token!');
+        }
+    }
+
     public function loginUser(LogonInformation $body, &$responseCode, array &$responseHeaders) {
         $currentUser = $this->security->getUser();
         if ($currentUser)
@@ -40,9 +48,13 @@ class UserApi implements UserApiInterface
         return ["error" => "not logged in"];
     }
 
-    public function logoutUser(&$responseCode, array &$responseHeaders) {
-        $responseCode = 501;
-        return ["not implemented"=> true];
+    public function logoutUser(&$responseCode, array &$responseHeaders) 
+    {
+        //not working, session stays active
+        $this->session->start();
+        $this->session->clear();
+        $this->session->invalidate();
+        return ["Logged Out" => true];
     }
 
     public function registerUser(RegistrationInformation $registration, &$responseCode, array &$responseHeaders) {

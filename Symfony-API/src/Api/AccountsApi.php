@@ -44,6 +44,14 @@ class AccountsApi implements AccountsApiInterface
         $account->setPassword($request->getPassword());
         $account->setOther($request->getAdditional());
     }
+
+    public function setcsrf($token)
+    {
+        $csrfToken = new CsrfToken("Api", $token);
+        if (!$this->csrfManager->isTokenValid($csrfToken)) {
+            throw new AccessDeniedHttpException('This action needs a valid csrf token!');
+        }
+    }
     
     // ...
 
