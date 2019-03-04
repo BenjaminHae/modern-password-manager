@@ -4,6 +4,7 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**changePassword**](UserApiInterface.md#changePassword) | **POST** /user/changepassword | change user password
 [**loginUser**](UserApiInterface.md#loginUser) | **POST** /user/login | login
 [**logoutUser**](UserApiInterface.md#logoutUser) | **GET** /user/logout | Logs out current logged in user session
 [**registerUser**](UserApiInterface.md#registerUser) | **PUT** /user | registration
@@ -20,6 +21,68 @@ services:
             - { name: "open_apiserver.api", api: "user" }
     # ...
 ```
+
+## **changePassword**
+> OpenAPI\Server\Model\GenericSuccessMessage changePassword($changePassword)
+
+change user password
+
+change password of current user and upload reencrypted accounts
+
+### Example Implementation
+```php
+<?php
+// src/Acme/MyBundle/Api/UserApiInterface.php
+
+namespace Acme\MyBundle\Api;
+
+use OpenAPI\Server\Api\UserApiInterface;
+
+class UserApi implements UserApiInterface
+{
+
+    /**
+     * Configure API key authorization: csrf
+     */
+    public function setcsrf($apiKey)
+    {
+        // Retrieve logged in user from $apiKey ...
+    }
+
+    // ...
+
+    /**
+     * Implementation of UserApiInterface#changePassword
+     */
+    public function changePassword(ChangePassword $changePassword)
+    {
+        // Implement the operation ...
+    }
+
+    // ...
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **changePassword** | [**OpenAPI\Server\Model\ChangePassword**](../Model/ChangePassword.md)| Logon Object |
+
+### Return type
+
+[**OpenAPI\Server\Model\GenericSuccessMessage**](../Model/GenericSuccessMessage.md)
+
+### Authorization
+
+[csrf](../../README.md#csrf)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 ## **loginUser**
 > OpenAPI\Server\Model\GenericSuccessMessage loginUser($logonInformation)

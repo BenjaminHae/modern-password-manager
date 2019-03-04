@@ -100,6 +100,29 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GenericSuccessMessage"
+  /user/changepassword:
+    post:
+      tags:
+        - user
+      summary: "change user password"
+      description: "change password of current user and upload reencrypted accounts"
+      operationId: changePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePassword"
+        description: Logon Object
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericSuccessMessage"
+      security:
+        - csrf: []
   /accounts:
     get:
       tags:
@@ -224,6 +247,13 @@ components:
       properties:
         email:
           type: string
+    ChangePassword:
+      type: object
+      properties:
+        newPassword:
+          type: string
+        accounts:
+          $ref: "#/components/schemas/Accounts"
     AccountId:
       allOf:
         - $ref: "#/components/schemas/Index"

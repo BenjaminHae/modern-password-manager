@@ -29,6 +29,7 @@
 namespace OpenAPI\Server\Api;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use OpenAPI\Server\Model\ChangePassword;
 use OpenAPI\Server\Model\GenericSuccessMessage;
 use OpenAPI\Server\Model\LogonInformation;
 use OpenAPI\Server\Model\RegistrationInformation;
@@ -52,6 +53,20 @@ interface UserApiInterface
      * @return void
      */
     public function setcsrf($value);
+
+    /**
+     * Operation changePassword
+     *
+     * change user password
+     *
+     * @param  OpenAPI\Server\Model\ChangePassword $changePassword  Logon Object (required)
+     * @param  integer $responseCode     The HTTP response code to return
+     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     *
+     * @return OpenAPI\Server\Model\GenericSuccessMessage[]
+     *
+     */
+    public function changePassword(ChangePassword $changePassword, &$responseCode, array &$responseHeaders);
 
     /**
      * Operation loginUser

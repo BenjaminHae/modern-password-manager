@@ -129,6 +129,7 @@ Class | Method | HTTP request | Description
 *AccountsApiInterface* | [**getAccounts**](Resources/docs/Api/AccountsApiInterface.md#getaccounts) | **GET** /accounts | Returns the accounts stored by the current user
 *AccountsApiInterface* | [**updateAccount**](Resources/docs/Api/AccountsApiInterface.md#updateaccount) | **POST** /accounts | Update a stored account
 *MaintenanceApiInterface* | [**serverInformation**](Resources/docs/Api/MaintenanceApiInterface.md#serverinformation) | **GET** /info | get information about the server for the client
+*UserApiInterface* | [**changePassword**](Resources/docs/Api/UserApiInterface.md#changepassword) | **POST** /user/changepassword | change user password
 *UserApiInterface* | [**loginUser**](Resources/docs/Api/UserApiInterface.md#loginuser) | **POST** /user/login | login
 *UserApiInterface* | [**logoutUser**](Resources/docs/Api/UserApiInterface.md#logoutuser) | **GET** /user/logout | Logs out current logged in user session
 *UserApiInterface* | [**registerUser**](Resources/docs/Api/UserApiInterface.md#registeruser) | **PUT** /user | registration
@@ -138,6 +139,7 @@ Class | Method | HTTP request | Description
 
  - [Account](Resources/docs/Model/Account.md)
  - [AccountId](Resources/docs/Model/AccountId.md)
+ - [ChangePassword](Resources/docs/Model/ChangePassword.md)
  - [File](Resources/docs/Model/File.md)
  - [GenericSuccessMessage](Resources/docs/Model/GenericSuccessMessage.md)
  - [Index](Resources/docs/Model/Index.md)

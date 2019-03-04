@@ -35,6 +35,12 @@ open_apiserver_maintenance_serverinformation:
         _controller: open_apiserver.controller.maintenance:serverInformationAction
 
 # user
+open_apiserver_user_changepassword:
+    path:     /user/changepassword
+    methods:  [POST]
+    defaults:
+        _controller: open_apiserver.controller.user:changePasswordAction
+
 open_apiserver_user_loginuser:
     path:     /user/login
     methods:  [POST]
