@@ -2,9 +2,8 @@
 
 namespace App\Api;
 
-use App\Entity\Account;
+use App\Controller\AccountController;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Common\Collections\Criteria;
 use OpenAPI\Server\Api\AccountsApiInterface;
 use OpenAPI\Server\Model\Account as OpenAPIAccount;
 use OpenAPI\Server\Model\AccountId;
@@ -17,6 +16,7 @@ class AccountsApi extends CsrfProtection implements AccountsApiInterface
     private $entityManager;
     private $passwordEncoder;
     private $security;
+    private $accountsController;
 
     public function __construct(EntityManagerInterface $entityManager, Security $security, CsrfTokenManagerInterface $csrfManager)
     {
@@ -25,35 +25,27 @@ class AccountsApi extends CsrfProtection implements AccountsApiInterface
         $this->security = $security;
     }
 
+    private function getAccountsController()
+    {
+        if (!$this->accountsController)
+        {
+            $this->accountsController = new AccountController($this->entityManager);
+        }
+        return $this->accountsController;
+    }
+
     private function getCurrentUsersAccounts() 
     {
         $currentUser = $this->security->getUser();
-	return $currentUser->getAccounts()->map(function($account) { return $account->getAsOpenAPIAccount(); } );
+        return $this->getAccountsController()->getAccountsForUserAsAPI($currentUser);
     }
 
     private function getCurrentUsersSpecificAccount(int $id)
     {
         $currentUser = $this->security->getUser();
-        $idCriteria = Criteria::create()
-            ->where(Criteria::expr()->eq("id", $id));
-        return $currentUser->getAccounts()->matching($idCriteria)[0];
+        return $this->getAccountsController()->getSpecificAccountForUserAsAPI($currentUser, $id);
     }
 
-    private function fillAccountFromRequest($request, Account $account)
-    {
-        $account->setName($request->getName());
-        $account->setPassword($request->getPassword());
-        $account->setOther($request->getAdditional());
-    }
-
-    public function setcsrf($token)
-    {
-        $csrfToken = new CsrfToken("Api", $token);
-        if (!$this->csrfManager->isTokenValid($csrfToken)) {
-            throw new AccessDeniedHttpException('This action needs a valid csrf token!');
-        }
-    }
-    
     // ...
 
     /**
@@ -67,27 +59,21 @@ class AccountsApi extends CsrfProtection implements AccountsApiInterface
     public function addAccount(OpenAPIAccount $request, &$responseCode, array &$responseHeaders)
     {
         $currentUser = $this->security->getUser();
-        $account = new Account();
-        $this->fillAccountFromRequest($request, $account);
-        $currentUser->addAccount($account);
-        $this->entityManager->persist($account);
-        $this->entityManager->flush();
+        $this->getAccountsController()->addAccountFromAPI($currentUser, $request);
         return $this->getCurrentUsersAccounts();
     }
 
     public function deleteAccount(Index $body, &$responseCode, array &$responseHeaders)
     {
-        $account = $this->getCurrentUsersSpecificAccount($body->getIndex());
-        $this->entityManager->remove($account);
-        $this->entityManager->flush();
+        $currentUser = $this->security->getUser();
+        $this->getAccountsController()->deleteAccount($currentUser, $body->getIndex());
         return $this->getCurrentUsersAccounts();
     }
 
     public function updateAccount(AccountId $body, &$responseCode, array &$responseHeaders)
     {
-        $account = $this->getCurrentUsersSpecificAccount($body->getIndex());
-        $this->fillAccountFromRequest($body, $account);
-        $this->entityManager->flush();
+        $currentUser = $this->security->getUser();
+        $this->getAccountsController()->updateAccountFromAPI($currentUser, $body->getIndex(), $body);
         return $this->getCurrentUsersAccounts();
     }
 
