@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Account;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\Criteria;
+use OpenAPI\Server\Model\AccountId as OpenAPIAccountId;
 
 class AccountController
 {
@@ -58,10 +59,19 @@ class AccountController
         return true;
     }
 
-    public function updateAccountFromApi($user, int $id, $newAccount)
+    public function updateAccountFromApi($user, OpenAPIAccountId $account)
     {
-        $currentAccount = $this->getSpecificAccountForUser($user, $id);
-        $this->fillAccountFromRequest($newAccount, $currentAccount);
+        return $this->updateAccountsFromApi($user, [$account]);
+    }
+
+    public function updateAccountsFromApi($user, $accounts)
+    {
+        //todo if every account should be updated there must be a way that reduces database regquests, i.e. get all accounts for the account
+        foreach ($accounts as $account)
+        {
+            $currentAccount = $this->getSpecificAccountForUser($user, $account->getIndex());
+            $this->fillAccountFromRequest($account, $currentAccount);
+        }
         $this->entityManager->flush();
         return true;
     }
