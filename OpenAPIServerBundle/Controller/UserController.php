@@ -30,6 +30,7 @@
 namespace OpenAPI\Server\Controller;
 
 use \Exception;
+use JMS\Serializer\Exception\RuntimeException as SerializerRuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -89,12 +90,17 @@ class UserController extends Controller
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $changePassword = $this->deserialize($changePassword, 'OpenAPI\Server\Model\ChangePassword', $inputFormat);
+        try {
+            $changePassword = $this->deserialize($changePassword, 'OpenAPI\Server\Model\ChangePassword', $inputFormat);
+        } catch (SerializerRuntimeException $exception) {
+            return $this->createBadRequestResponse($exception->getMessage());
+        }
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
         $asserts[] = new Assert\Type("OpenAPI\Server\Model\ChangePassword");
+        $asserts[] = new Assert\Valid();
         $response = $this->validate($changePassword, $asserts);
         if ($response instanceof Response) {
             return $response;
@@ -176,12 +182,17 @@ class UserController extends Controller
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $logonInformation = $this->deserialize($logonInformation, 'OpenAPI\Server\Model\LogonInformation', $inputFormat);
+        try {
+            $logonInformation = $this->deserialize($logonInformation, 'OpenAPI\Server\Model\LogonInformation', $inputFormat);
+        } catch (SerializerRuntimeException $exception) {
+            return $this->createBadRequestResponse($exception->getMessage());
+        }
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
         $asserts[] = new Assert\Type("OpenAPI\Server\Model\LogonInformation");
+        $asserts[] = new Assert\Valid();
         $response = $this->validate($logonInformation, $asserts);
         if ($response instanceof Response) {
             return $response;
@@ -252,8 +263,6 @@ class UserController extends Controller
         // Read out all input parameter values into variables
 
         // Use the default value if no value was provided
-
-        // Deserialize the input values that needs it
 
         // Validate the input values
 
@@ -331,12 +340,17 @@ class UserController extends Controller
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $registrationInformation = $this->deserialize($registrationInformation, 'OpenAPI\Server\Model\RegistrationInformation', $inputFormat);
+        try {
+            $registrationInformation = $this->deserialize($registrationInformation, 'OpenAPI\Server\Model\RegistrationInformation', $inputFormat);
+        } catch (SerializerRuntimeException $exception) {
+            return $this->createBadRequestResponse($exception->getMessage());
+        }
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
         $asserts[] = new Assert\Type("OpenAPI\Server\Model\RegistrationInformation");
+        $asserts[] = new Assert\Valid();
         $response = $this->validate($registrationInformation, $asserts);
         if ($response instanceof Response) {
             return $response;

@@ -30,6 +30,7 @@
 namespace OpenAPI\Server\Controller;
 
 use \Exception;
+use JMS\Serializer\Exception\RuntimeException as SerializerRuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -72,8 +73,6 @@ class MaintenanceController extends Controller
         // Read out all input parameter values into variables
 
         // Use the default value if no value was provided
-
-        // Deserialize the input values that needs it
 
         // Validate the input values
 

@@ -18,6 +18,8 @@ services:
 
     open_apiserver.service.validator:
         class: '%open_apiserver.validator%'
+        arguments:
+            - '@validator'
 
     open_apiserver.controller.accounts:
         class: OpenAPI\Server\Controller\AccountsController

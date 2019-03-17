@@ -30,6 +30,7 @@
 namespace OpenAPI\Server\Controller;
 
 use \Exception;
+use JMS\Serializer\Exception\RuntimeException as SerializerRuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -88,12 +89,17 @@ class AccountsController extends Controller
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $account = $this->deserialize($account, 'OpenAPI\Server\Model\Account', $inputFormat);
+        try {
+            $account = $this->deserialize($account, 'OpenAPI\Server\Model\Account', $inputFormat);
+        } catch (SerializerRuntimeException $exception) {
+            return $this->createBadRequestResponse($exception->getMessage());
+        }
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
         $asserts[] = new Assert\Type("OpenAPI\Server\Model\Account");
+        $asserts[] = new Assert\Valid();
         $response = $this->validate($account, $asserts);
         if ($response instanceof Response) {
             return $response;
@@ -181,12 +187,17 @@ class AccountsController extends Controller
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $index = $this->deserialize($index, 'OpenAPI\Server\Model\Index', $inputFormat);
+        try {
+            $index = $this->deserialize($index, 'OpenAPI\Server\Model\Index', $inputFormat);
+        } catch (SerializerRuntimeException $exception) {
+            return $this->createBadRequestResponse($exception->getMessage());
+        }
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
         $asserts[] = new Assert\Type("OpenAPI\Server\Model\Index");
+        $asserts[] = new Assert\Valid();
         $response = $this->validate($index, $asserts);
         if ($response instanceof Response) {
             return $response;
@@ -260,8 +271,6 @@ class AccountsController extends Controller
         // Read out all input parameter values into variables
 
         // Use the default value if no value was provided
-
-        // Deserialize the input values that needs it
 
         // Validate the input values
 
@@ -345,12 +354,17 @@ class AccountsController extends Controller
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
-        $accountId = $this->deserialize($accountId, 'OpenAPI\Server\Model\AccountId', $inputFormat);
+        try {
+            $accountId = $this->deserialize($accountId, 'OpenAPI\Server\Model\AccountId', $inputFormat);
+        } catch (SerializerRuntimeException $exception) {
+            return $this->createBadRequestResponse($exception->getMessage());
+        }
 
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
         $asserts[] = new Assert\Type("OpenAPI\Server\Model\AccountId");
+        $asserts[] = new Assert\Valid();
         $response = $this->validate($accountId, $asserts);
         if ($response instanceof Response) {
             return $response;
