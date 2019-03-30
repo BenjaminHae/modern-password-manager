@@ -205,9 +205,9 @@ export class AccountsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateAccount(accountId: AccountId, observe?: 'body', reportProgress?: boolean): Observable<Array<Array>>;
-    public updateAccount(accountId: AccountId, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Array>>>;
-    public updateAccount(accountId: AccountId, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Array>>>;
+    public updateAccount(accountId: AccountId, observe?: 'body', reportProgress?: boolean): Observable<Array<Account>>;
+    public updateAccount(accountId: AccountId, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Account>>>;
+    public updateAccount(accountId: AccountId, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Account>>>;
     public updateAccount(accountId: AccountId, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (accountId === null || accountId === undefined) {
             throw new Error('Required parameter accountId was null or undefined when calling updateAccount.');
@@ -238,7 +238,7 @@ export class AccountsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<Array<Array>>(`${this.configuration.basePath}/accounts`,
+        return this.httpClient.post<Array<Account>>(`${this.configuration.basePath}/accounts`,
             accountId,
             {
                 withCredentials: this.configuration.withCredentials,
