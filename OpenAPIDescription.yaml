@@ -160,33 +160,6 @@ paths:
           content:
             application/json:
               schema:
-                items:
-                  $ref: "#/components/schemas/Accounts"
-        "400":
-          description: Invalid status value
-        "403":
-          description: Unauthorized
-      security:
-        - csrf: []
-    delete:
-      tags:
-        - accounts
-      summary: Delete a stored Account
-      description: ""
-      operationId: deleteAccount
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Index"
-        description: Account Id
-        required: true
-      responses:
-        "200":
-          description: successful operation
-          content:
-            application/json:
-              schema:
                 $ref: "#/components/schemas/Accounts"
         "400":
           description: Invalid status value
@@ -220,6 +193,31 @@ paths:
           description: Unauthorized
       security:
         - csrf: []
+  /accounts/{id}:
+    delete:
+      tags:
+        - accounts
+      summary: Delete a stored Account
+      description: ""
+      operationId: deleteAccount
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the account to delete
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Accounts"
+        "400":
+          description: Invalid status value
+        "403":
+          description: Unauthorized
 externalDocs:
   description: Repository
   url: http://github.com/zeruniverse/PasswordManager
@@ -294,6 +292,8 @@ components:
       properties:
         csrfToken:
           type: string
+        allowRegistration:
+          type: boolean
     GenericSuccessMessage:
       type: object
       properties:

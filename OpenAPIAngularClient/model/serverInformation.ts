@@ -13,5 +13,6 @@
 
 export interface ServerInformation { 
     csrfToken?: string;
+    allowRegistration?: boolean;
 }
 

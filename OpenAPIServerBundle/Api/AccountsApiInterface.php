@@ -102,7 +102,7 @@ interface AccountsApiInterface
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
-     * @return array
+     * @return OpenAPI\Server\Model\AccountId[]
      *
      */
     public function updateAccount(AccountId $accountId, &$responseCode, array &$responseHeaders);

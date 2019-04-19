@@ -20,7 +20,6 @@ import { Observable }                                        from 'rxjs';
 
 import { Account } from '../model/account';
 import { AccountId } from '../model/accountId';
-import { Index } from '../model/index';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -115,24 +114,19 @@ export class AccountsService {
     /**
      * Delete a stored Account
      * 
-     * @param index Account Id
+     * @param id The id of the account to delete
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteAccount(index: Index, observe?: 'body', reportProgress?: boolean): Observable<Array<AccountId>>;
-    public deleteAccount(index: Index, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<AccountId>>>;
-    public deleteAccount(index: Index, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<AccountId>>>;
-    public deleteAccount(index: Index, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (index === null || index === undefined) {
-            throw new Error('Required parameter index was null or undefined when calling deleteAccount.');
+    public deleteAccount(id: number, observe?: 'body', reportProgress?: boolean): Observable<Array<AccountId>>;
+    public deleteAccount(id: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<AccountId>>>;
+    public deleteAccount(id: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<AccountId>>>;
+    public deleteAccount(id: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling deleteAccount.');
         }
 
         let headers = this.defaultHeaders;
-
-        // authentication (csrf) required
-        if (this.configuration.apiKeys && this.configuration.apiKeys["X-CSRF-TOKEN"]) {
-            headers = headers.set('X-CSRF-TOKEN', this.configuration.apiKeys["X-CSRF-TOKEN"]);
-        }
 
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
@@ -145,14 +139,9 @@ export class AccountsService {
 
         // to determine the Content-Type header
         const consumes: string[] = [
-            'application/json'
         ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
 
-        return this.httpClient.delete<Array<AccountId>>(`${this.configuration.basePath}/accounts`,
+        return this.httpClient.delete<Array<AccountId>>(`${this.configuration.basePath}/accounts/${encodeURIComponent(String(id))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -205,9 +194,9 @@ export class AccountsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateAccount(accountId: AccountId, observe?: 'body', reportProgress?: boolean): Observable<Array<Account>>;
-    public updateAccount(accountId: AccountId, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Account>>>;
-    public updateAccount(accountId: AccountId, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Account>>>;
+    public updateAccount(accountId: AccountId, observe?: 'body', reportProgress?: boolean): Observable<Array<AccountId>>;
+    public updateAccount(accountId: AccountId, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<AccountId>>>;
+    public updateAccount(accountId: AccountId, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<AccountId>>>;
     public updateAccount(accountId: AccountId, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (accountId === null || accountId === undefined) {
             throw new Error('Required parameter accountId was null or undefined when calling updateAccount.');
@@ -238,7 +227,7 @@ export class AccountsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<Array<Account>>(`${this.configuration.basePath}/accounts`,
+        return this.httpClient.post<Array<AccountId>>(`${this.configuration.basePath}/accounts`,
             accountId,
             {
                 withCredentials: this.configuration.withCredentials,
