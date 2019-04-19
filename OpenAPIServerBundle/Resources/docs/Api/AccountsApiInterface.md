@@ -5,7 +5,7 @@ All URIs are relative to *http://localhost*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**addAccount**](AccountsApiInterface.md#addAccount) | **PUT** /accounts | Add Account
-[**deleteAccount**](AccountsApiInterface.md#deleteAccount) | **DELETE** /accounts | Delete a stored Account
+[**deleteAccount**](AccountsApiInterface.md#deleteAccount) | **DELETE** /accounts/{id} | Delete a stored Account
 [**getAccounts**](AccountsApiInterface.md#getAccounts) | **GET** /accounts | Returns the accounts stored by the current user
 [**updateAccount**](AccountsApiInterface.md#updateAccount) | **POST** /accounts | Update a stored account
 
@@ -83,7 +83,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 ## **deleteAccount**
-> OpenAPI\Server\Model\AccountId deleteAccount($index)
+> OpenAPI\Server\Model\AccountId deleteAccount($id)
 
 Delete a stored Account
 
@@ -99,20 +99,12 @@ use OpenAPI\Server\Api\AccountsApiInterface;
 class AccountsApi implements AccountsApiInterface
 {
 
-    /**
-     * Configure API key authorization: csrf
-     */
-    public function setcsrf($apiKey)
-    {
-        // Retrieve logged in user from $apiKey ...
-    }
-
     // ...
 
     /**
      * Implementation of AccountsApiInterface#deleteAccount
      */
-    public function deleteAccount(Index $index)
+    public function deleteAccount($id)
     {
         // Implement the operation ...
     }
@@ -125,7 +117,7 @@ class AccountsApi implements AccountsApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **index** | [**OpenAPI\Server\Model\Index**](../Model/Index.md)| Account Id |
+ **id** | **int**| The id of the account to delete |
 
 ### Return type
 
@@ -133,11 +125,11 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[csrf](../../README.md#csrf)
+No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)

@@ -31,7 +31,6 @@ namespace OpenAPI\Server\Api;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use OpenAPI\Server\Model\Account;
 use OpenAPI\Server\Model\AccountId;
-use OpenAPI\Server\Model\Index;
 
 /**
  * AccountsApiInterface Interface Doc Comment
@@ -72,14 +71,14 @@ interface AccountsApiInterface
      *
      * Delete a stored Account
      *
-     * @param  OpenAPI\Server\Model\Index $index  Account Id (required)
+     * @param  int $id  The id of the account to delete (required)
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return OpenAPI\Server\Model\AccountId[]
      *
      */
-    public function deleteAccount(Index $index, &$responseCode, array &$responseHeaders);
+    public function deleteAccount($id, &$responseCode, array &$responseHeaders);
 
     /**
      * Operation getAccounts

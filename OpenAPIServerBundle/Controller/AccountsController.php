@@ -38,7 +38,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use OpenAPI\Server\Api\AccountsApiInterface;
 use OpenAPI\Server\Model\Account;
 use OpenAPI\Server\Model\AccountId;
-use OpenAPI\Server\Model\Index;
 
 /**
  * AccountsController Class Doc Comment
@@ -157,16 +156,8 @@ class AccountsController extends Controller
      * @param Request $request The Symfony request to handle.
      * @return Response The Symfony response.
      */
-    public function deleteAccountAction(Request $request)
+    public function deleteAccountAction(Request $request, $id)
     {
-        // Make sure that the client is providing something that we can consume
-        $consumes = ['application/json'];
-        $inputFormat = $request->headers->has('Content-Type')?$request->headers->get('Content-Type'):$consumes[0];
-        if (!in_array($inputFormat, $consumes)) {
-            // We can't consume the content that the client is sending us
-            return new Response('', 415);
-        }
-
         // Figure out what data format to return to the client
         $produces = ['application/json'];
         // Figure out what the client accepts
@@ -177,18 +168,14 @@ class AccountsController extends Controller
         }
 
         // Handle authentication
-        // Authentication 'csrf' required
-        // Set key with prefix in header
-        $securitycsrf = $request->headers->get('X-CSRF-TOKEN');
 
         // Read out all input parameter values into variables
-        $index = $request->getContent();
 
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
         try {
-            $index = $this->deserialize($index, 'OpenAPI\Server\Model\Index', $inputFormat);
+            $id = $this->deserialize($id, 'int', 'string');
         } catch (SerializerRuntimeException $exception) {
             return $this->createBadRequestResponse($exception->getMessage());
         }
@@ -196,9 +183,8 @@ class AccountsController extends Controller
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
-        $asserts[] = new Assert\Type("OpenAPI\Server\Model\Index");
-        $asserts[] = new Assert\Valid();
-        $response = $this->validate($index, $asserts);
+        $asserts[] = new Assert\Type("int");
+        $response = $this->validate($id, $asserts);
         if ($response instanceof Response) {
             return $response;
         }
@@ -207,13 +193,11 @@ class AccountsController extends Controller
         try {
             $handler = $this->getApiHandler();
 
-            // Set authentication method 'csrf'
-            $handler->setcsrf($securitycsrf);
             
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            $result = $handler->deleteAccount($index, $responseCode, $responseHeaders);
+            $result = $handler->deleteAccount($id, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = 'successful operation';

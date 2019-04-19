@@ -50,12 +50,21 @@ class ServerInformation
     protected $csrfToken;
 
     /**
+     * @var bool|null
+     * @SerializedName("allowRegistration")
+     * @Assert\Type("bool")
+     * @Type("bool")
+     */
+    protected $allowRegistration;
+
+    /**
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
     public function __construct(array $data = null)
     {
         $this->csrfToken = isset($data['csrfToken']) ? $data['csrfToken'] : null;
+        $this->allowRegistration = isset($data['allowRegistration']) ? $data['allowRegistration'] : null;
     }
 
     /**
@@ -78,6 +87,30 @@ class ServerInformation
     public function setCsrfToken($csrfToken = null)
     {
         $this->csrfToken = $csrfToken;
+
+        return $this;
+    }
+
+    /**
+     * Gets allowRegistration.
+     *
+     * @return bool|null
+     */
+    public function isAllowRegistration()
+    {
+        return $this->allowRegistration;
+    }
+
+    /**
+     * Sets allowRegistration.
+     *
+     * @param bool|null $allowRegistration
+     *
+     * @return $this
+     */
+    public function setAllowRegistration($allowRegistration = null)
+    {
+        $this->allowRegistration = $allowRegistration;
 
         return $this;
     }

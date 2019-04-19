@@ -10,10 +10,12 @@ open_apiserver_accounts_addaccount:
         _controller: open_apiserver.controller.accounts:addAccountAction
 
 open_apiserver_accounts_deleteaccount:
-    path:     /accounts
+    path:     /accounts/{id}
     methods:  [DELETE]
     defaults:
         _controller: open_apiserver.controller.accounts:deleteAccountAction
+    requirements:
+        id: '\d+'
 
 open_apiserver_accounts_getaccounts:
     path:     /accounts

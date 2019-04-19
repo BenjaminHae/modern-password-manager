@@ -125,7 +125,7 @@ All URIs are relative to *http://localhost*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *AccountsApiInterface* | [**addAccount**](Resources/docs/Api/AccountsApiInterface.md#addaccount) | **PUT** /accounts | Add Account
-*AccountsApiInterface* | [**deleteAccount**](Resources/docs/Api/AccountsApiInterface.md#deleteaccount) | **DELETE** /accounts | Delete a stored Account
+*AccountsApiInterface* | [**deleteAccount**](Resources/docs/Api/AccountsApiInterface.md#deleteaccount) | **DELETE** /accounts/{id} | Delete a stored Account
 *AccountsApiInterface* | [**getAccounts**](Resources/docs/Api/AccountsApiInterface.md#getaccounts) | **GET** /accounts | Returns the accounts stored by the current user
 *AccountsApiInterface* | [**updateAccount**](Resources/docs/Api/AccountsApiInterface.md#updateaccount) | **POST** /accounts | Update a stored account
 *MaintenanceApiInterface* | [**serverInformation**](Resources/docs/Api/MaintenanceApiInterface.md#serverinformation) | **GET** /info | get information about the server for the client
