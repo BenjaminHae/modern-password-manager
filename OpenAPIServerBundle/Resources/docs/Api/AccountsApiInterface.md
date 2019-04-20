@@ -7,7 +7,7 @@ Method | HTTP request | Description
 [**addAccount**](AccountsApiInterface.md#addAccount) | **PUT** /accounts | Add Account
 [**deleteAccount**](AccountsApiInterface.md#deleteAccount) | **DELETE** /accounts/{id} | Delete a stored Account
 [**getAccounts**](AccountsApiInterface.md#getAccounts) | **GET** /accounts | Returns the accounts stored by the current user
-[**updateAccount**](AccountsApiInterface.md#updateAccount) | **POST** /accounts | Update a stored account
+[**updateAccount**](AccountsApiInterface.md#updateAccount) | **POST** /accounts/{id} | Update a stored account
 
 
 ## Service Declaration
@@ -117,7 +117,7 @@ class AccountsApi implements AccountsApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **int**| The id of the account to delete |
+ **id** | **int**| The id of the account |
 
 ### Return type
 
@@ -184,7 +184,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 ## **updateAccount**
-> OpenAPI\Server\Model\AccountId updateAccount($accountId)
+> OpenAPI\Server\Model\AccountId updateAccount($id, $account)
 
 Update a stored account
 
@@ -213,7 +213,7 @@ class AccountsApi implements AccountsApiInterface
     /**
      * Implementation of AccountsApiInterface#updateAccount
      */
-    public function updateAccount(AccountId $accountId)
+    public function updateAccount($id, Account $account)
     {
         // Implement the operation ...
     }
@@ -226,7 +226,8 @@ class AccountsApi implements AccountsApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **accountId** | [**OpenAPI\Server\Model\AccountId**](../Model/AccountId.md)| Account Object |
+ **id** | **int**| The id of the account |
+ **account** | [**OpenAPI\Server\Model\Account**](../Model/Account.md)| Account Object |
 
 ### Return type
 

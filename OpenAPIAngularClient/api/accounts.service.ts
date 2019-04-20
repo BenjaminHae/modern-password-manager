@@ -114,7 +114,7 @@ export class AccountsService {
     /**
      * Delete a stored Account
      * 
-     * @param id The id of the account to delete
+     * @param id The id of the account
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -190,16 +190,20 @@ export class AccountsService {
     /**
      * Update a stored account
      * 
-     * @param accountId Account Object
+     * @param id The id of the account
+     * @param account Account Object
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateAccount(accountId: AccountId, observe?: 'body', reportProgress?: boolean): Observable<Array<AccountId>>;
-    public updateAccount(accountId: AccountId, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<AccountId>>>;
-    public updateAccount(accountId: AccountId, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<AccountId>>>;
-    public updateAccount(accountId: AccountId, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (accountId === null || accountId === undefined) {
-            throw new Error('Required parameter accountId was null or undefined when calling updateAccount.');
+    public updateAccount(id: number, account: Account, observe?: 'body', reportProgress?: boolean): Observable<Array<AccountId>>;
+    public updateAccount(id: number, account: Account, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<AccountId>>>;
+    public updateAccount(id: number, account: Account, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<AccountId>>>;
+    public updateAccount(id: number, account: Account, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling updateAccount.');
+        }
+        if (account === null || account === undefined) {
+            throw new Error('Required parameter account was null or undefined when calling updateAccount.');
         }
 
         let headers = this.defaultHeaders;
@@ -227,8 +231,8 @@ export class AccountsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<Array<AccountId>>(`${this.configuration.basePath}/accounts`,
-            accountId,
+        return this.httpClient.post<Array<AccountId>>(`${this.configuration.basePath}/accounts/${encodeURIComponent(String(id))}`,
+            account,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

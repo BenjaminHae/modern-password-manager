@@ -127,7 +127,7 @@ Class | Method | HTTP request | Description
 *AccountsApiInterface* | [**addAccount**](Resources/docs/Api/AccountsApiInterface.md#addaccount) | **PUT** /accounts | Add Account
 *AccountsApiInterface* | [**deleteAccount**](Resources/docs/Api/AccountsApiInterface.md#deleteaccount) | **DELETE** /accounts/{id} | Delete a stored Account
 *AccountsApiInterface* | [**getAccounts**](Resources/docs/Api/AccountsApiInterface.md#getaccounts) | **GET** /accounts | Returns the accounts stored by the current user
-*AccountsApiInterface* | [**updateAccount**](Resources/docs/Api/AccountsApiInterface.md#updateaccount) | **POST** /accounts | Update a stored account
+*AccountsApiInterface* | [**updateAccount**](Resources/docs/Api/AccountsApiInterface.md#updateaccount) | **POST** /accounts/{id} | Update a stored account
 *MaintenanceApiInterface* | [**serverInformation**](Resources/docs/Api/MaintenanceApiInterface.md#serverinformation) | **GET** /info | get information about the server for the client
 *UserApiInterface* | [**changePassword**](Resources/docs/Api/UserApiInterface.md#changepassword) | **POST** /user/changepassword | change user password
 *UserApiInterface* | [**loginUser**](Resources/docs/Api/UserApiInterface.md#loginuser) | **POST** /user/login | login

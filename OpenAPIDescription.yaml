@@ -141,32 +141,6 @@ paths:
           description: Invalid status value
         "403":
           description: Unauthorized
-    post:
-      tags:
-        - accounts
-      summary: Update a stored account
-      description: ""
-      operationId: updateAccount
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AccountId"
-        description: Account Object
-        required: true
-      responses:
-        "200":
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Accounts"
-        "400":
-          description: Invalid status value
-        "403":
-          description: Unauthorized
-      security:
-        - csrf: []
     put:
       tags:
         - accounts
@@ -194,6 +168,39 @@ paths:
       security:
         - csrf: []
   /accounts/{id}:
+    post:
+      tags:
+        - accounts
+      summary: Update a stored account
+      description: ""
+      operationId: updateAccount
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the account
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Account"
+        description: Account Object
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Accounts"
+        "400":
+          description: Invalid status value
+        "403":
+          description: Unauthorized
+      security:
+        - csrf: []
     delete:
       tags:
         - accounts
@@ -204,7 +211,7 @@ paths:
         - name: id
           in: path
           required: true
-          description: The id of the account to delete
+          description: The id of the account
           schema:
             type: integer
       responses:

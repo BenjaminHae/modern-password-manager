@@ -308,7 +308,7 @@ class AccountsController extends Controller
      * @param Request $request The Symfony request to handle.
      * @return Response The Symfony response.
      */
-    public function updateAccountAction(Request $request)
+    public function updateAccountAction(Request $request, $id)
     {
         // Make sure that the client is providing something that we can consume
         $consumes = ['application/json'];
@@ -333,13 +333,14 @@ class AccountsController extends Controller
         $securitycsrf = $request->headers->get('X-CSRF-TOKEN');
 
         // Read out all input parameter values into variables
-        $accountId = $request->getContent();
+        $account = $request->getContent();
 
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
         try {
-            $accountId = $this->deserialize($accountId, 'OpenAPI\Server\Model\AccountId', $inputFormat);
+            $id = $this->deserialize($id, 'int', 'string');
+            $account = $this->deserialize($account, 'OpenAPI\Server\Model\Account', $inputFormat);
         } catch (SerializerRuntimeException $exception) {
             return $this->createBadRequestResponse($exception->getMessage());
         }
@@ -347,9 +348,16 @@ class AccountsController extends Controller
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
-        $asserts[] = new Assert\Type("OpenAPI\Server\Model\AccountId");
+        $asserts[] = new Assert\Type("int");
+        $response = $this->validate($id, $asserts);
+        if ($response instanceof Response) {
+            return $response;
+        }
+        $asserts = [];
+        $asserts[] = new Assert\NotNull();
+        $asserts[] = new Assert\Type("OpenAPI\Server\Model\Account");
         $asserts[] = new Assert\Valid();
-        $response = $this->validate($accountId, $asserts);
+        $response = $this->validate($account, $asserts);
         if ($response instanceof Response) {
             return $response;
         }
@@ -364,7 +372,7 @@ class AccountsController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            $result = $handler->updateAccount($accountId, $responseCode, $responseHeaders);
+            $result = $handler->updateAccount($id, $account, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = 'successful operation';

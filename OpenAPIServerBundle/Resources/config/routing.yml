@@ -24,10 +24,12 @@ open_apiserver_accounts_getaccounts:
         _controller: open_apiserver.controller.accounts:getAccountsAction
 
 open_apiserver_accounts_updateaccount:
-    path:     /accounts
+    path:     /accounts/{id}
     methods:  [POST]
     defaults:
         _controller: open_apiserver.controller.accounts:updateAccountAction
+    requirements:
+        id: '\d+'
 
 # maintenance
 open_apiserver_maintenance_serverinformation:
