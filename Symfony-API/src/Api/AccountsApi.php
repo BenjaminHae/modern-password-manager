@@ -63,10 +63,10 @@ class AccountsApi extends CsrfProtection implements AccountsApiInterface
         return $this->getCurrentUsersAccounts();
     }
 
-    public function deleteAccount(Index $body, &$responseCode, array &$responseHeaders)
+    public function deleteAccount($id, &$responseCode, array &$responseHeaders)
     {
         $currentUser = $this->security->getUser();
-        $this->getAccountsController()->deleteAccount($currentUser, $body->getIndex());
+        $this->getAccountsController()->deleteAccount($currentUser, $id);
         return $this->getCurrentUsersAccounts();
     }
 
