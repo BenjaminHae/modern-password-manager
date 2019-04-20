@@ -51,14 +51,14 @@ class AccountsController extends Controller
 {
 
     /**
-     * Operation addAccount
+     * Operation addAccounts
      *
      * Add Account
      *
      * @param Request $request The Symfony request to handle.
      * @return Response The Symfony response.
      */
-    public function addAccountAction(Request $request)
+    public function addAccountsAction(Request $request)
     {
         // Make sure that the client is providing something that we can consume
         $consumes = ['application/json'];
@@ -89,7 +89,7 @@ class AccountsController extends Controller
 
         // Deserialize the input values that needs it
         try {
-            $account = $this->deserialize($account, 'OpenAPI\Server\Model\Account', $inputFormat);
+            $account = $this->deserialize($account, 'array<OpenAPI\Server\Model\Account>', $inputFormat);
         } catch (SerializerRuntimeException $exception) {
             return $this->createBadRequestResponse($exception->getMessage());
         }
@@ -97,8 +97,10 @@ class AccountsController extends Controller
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
-        $asserts[] = new Assert\Type("OpenAPI\Server\Model\Account");
-        $asserts[] = new Assert\Valid();
+        $asserts[] = new Assert\All([
+            new Assert\Type("OpenAPI\Server\Model\Account"),
+            new Assert\Valid(),
+        ]);
         $response = $this->validate($account, $asserts);
         if ($response instanceof Response) {
             return $response;
@@ -114,7 +116,7 @@ class AccountsController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            $result = $handler->addAccount($account, $responseCode, $responseHeaders);
+            $result = $handler->addAccounts($account, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = 'successful operation';

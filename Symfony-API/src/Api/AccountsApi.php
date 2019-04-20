@@ -56,10 +56,12 @@ class AccountsApi extends CsrfProtection implements AccountsApiInterface
         return $this->getCurrentUsersAccounts();
     }
 
-    public function addAccount(OpenAPIAccount $request, &$responseCode, array &$responseHeaders)
+    public function addAccounts(array $accounts, &$responseCode, array &$responseHeaders)
     {
         $currentUser = $this->security->getUser();
-        $this->getAccountsController()->addAccountFromAPI($currentUser, $request);
+        foreach ($accounts as $account) {
+            $this->getAccountsController()->addAccountFromAPI($currentUser, $account);
+	}
         return $this->getCurrentUsersAccounts();
     }
 

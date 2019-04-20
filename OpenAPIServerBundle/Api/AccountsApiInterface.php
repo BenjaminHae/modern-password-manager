@@ -53,18 +53,18 @@ interface AccountsApiInterface
     public function setcsrf($value);
 
     /**
-     * Operation addAccount
+     * Operation addAccounts
      *
      * Add Account
      *
-     * @param  OpenAPI\Server\Model\Account $account  Account Values (required)
+     * @param  OpenAPI\Server\Model\Account[] $account  Account Values (required)
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return OpenAPI\Server\Model\AccountId[]
      *
      */
-    public function addAccount(Account $account, &$responseCode, array &$responseHeaders);
+    public function addAccounts(array $account, &$responseCode, array &$responseHeaders);
 
     /**
      * Operation deleteAccount

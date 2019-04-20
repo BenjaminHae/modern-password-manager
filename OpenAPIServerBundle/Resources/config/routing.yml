@@ -3,11 +3,11 @@
 # Do not edit the class manually.
 
 # accounts
-open_apiserver_accounts_addaccount:
+open_apiserver_accounts_addaccounts:
     path:     /accounts
     methods:  [PUT]
     defaults:
-        _controller: open_apiserver.controller.accounts:addAccountAction
+        _controller: open_apiserver.controller.accounts:addAccountsAction
 
 open_apiserver_accounts_deleteaccount:
     path:     /accounts/{id}

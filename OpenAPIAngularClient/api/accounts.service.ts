@@ -67,12 +67,12 @@ export class AccountsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public addAccount(account: Account, observe?: 'body', reportProgress?: boolean): Observable<Array<AccountId>>;
-    public addAccount(account: Account, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<AccountId>>>;
-    public addAccount(account: Account, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<AccountId>>>;
-    public addAccount(account: Account, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public addAccounts(account: Array<Account>, observe?: 'body', reportProgress?: boolean): Observable<Array<AccountId>>;
+    public addAccounts(account: Array<Account>, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<AccountId>>>;
+    public addAccounts(account: Array<Account>, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<AccountId>>>;
+    public addAccounts(account: Array<Account>, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (account === null || account === undefined) {
-            throw new Error('Required parameter account was null or undefined when calling addAccount.');
+            throw new Error('Required parameter account was null or undefined when calling addAccounts.');
         }
 
         let headers = this.defaultHeaders;

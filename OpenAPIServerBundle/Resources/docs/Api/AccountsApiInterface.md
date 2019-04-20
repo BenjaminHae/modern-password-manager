@@ -4,7 +4,7 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**addAccount**](AccountsApiInterface.md#addAccount) | **PUT** /accounts | Add Account
+[**addAccounts**](AccountsApiInterface.md#addAccounts) | **PUT** /accounts | Add Account
 [**deleteAccount**](AccountsApiInterface.md#deleteAccount) | **DELETE** /accounts/{id} | Delete a stored Account
 [**getAccounts**](AccountsApiInterface.md#getAccounts) | **GET** /accounts | Returns the accounts stored by the current user
 [**updateAccount**](AccountsApiInterface.md#updateAccount) | **POST** /accounts/{id} | Update a stored account
@@ -22,8 +22,8 @@ services:
     # ...
 ```
 
-## **addAccount**
-> OpenAPI\Server\Model\AccountId addAccount($account)
+## **addAccounts**
+> OpenAPI\Server\Model\AccountId addAccounts($account)
 
 Add Account
 
@@ -50,9 +50,9 @@ class AccountsApi implements AccountsApiInterface
     // ...
 
     /**
-     * Implementation of AccountsApiInterface#addAccount
+     * Implementation of AccountsApiInterface#addAccounts
      */
-    public function addAccount(Account $account)
+    public function addAccounts(array $account)
     {
         // Implement the operation ...
     }
@@ -65,7 +65,7 @@ class AccountsApi implements AccountsApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **account** | [**OpenAPI\Server\Model\Account**](../Model/Account.md)| Account Values |
+ **account** | [**OpenAPI\Server\Model\Account**](../Model/array.md)| Account Values |
 
 ### Return type
 

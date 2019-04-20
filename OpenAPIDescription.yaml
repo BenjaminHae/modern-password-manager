@@ -146,12 +146,12 @@ paths:
         - accounts
       summary: Add Account
       description: ""
-      operationId: addAccount
+      operationId: addAccounts
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Account"
+              $ref: "#/components/schemas/NewAccounts"
         description: Account Values
         required: true
       responses:
@@ -276,6 +276,10 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/AccountId"
+    NewAccounts:
+      type: array
+      items:
+        $ref: "#/components/schemas/Account"
     Index:
       type: object
       properties:
