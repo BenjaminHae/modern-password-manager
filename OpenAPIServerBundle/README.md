@@ -65,7 +65,7 @@ Step 3: Register the routes:
 
 ```yaml
 # app/config/routing.yml
-open_apiserver:
+open_api_server:
     resource: "@OpenAPIServerBundle/Resources/config/routing.yml"
 ```
 
@@ -111,7 +111,7 @@ services:
     acme.my_bundle.api.accounts:
         class: Acme\MyBundle\Api\AccountsApi
         tags:
-            - { name: "open_apiserver.api", api: "accounts" }
+            - { name: "open_api_server.api", api: "accounts" }
     # ...
 ```
 

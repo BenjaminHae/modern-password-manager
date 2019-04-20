@@ -15,7 +15,7 @@ services:
     acme.my_bundle.api.maintenance:
         class: Acme\MyBundle\Api\MaintenanceApi
         tags:
-            - { name: "open_apiserver.api", api: "maintenance" }
+            - { name: "open_api_server.api", api: "maintenance" }
     # ...
 ```
 

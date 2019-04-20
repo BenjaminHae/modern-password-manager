@@ -18,7 +18,7 @@ services:
     acme.my_bundle.api.accounts:
         class: Acme\MyBundle\Api\AccountsApi
         tags:
-            - { name: "open_apiserver.api", api: "accounts" }
+            - { name: "open_api_server.api", api: "accounts" }
     # ...
 ```
 

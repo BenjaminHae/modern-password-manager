@@ -33,13 +33,13 @@ services:
     
     App\Api\UserApi:
         tags:
-            - { name: "open_apiserver.api", api: "user" }
+            - { name: "open_api_server.api", api: "user" }
     App\Api\AccountsApi:
         tags: 
-            - { name: 'open_apiserver.api', api: 'accounts' }
+            - { name: 'open_api_server.api', api: 'accounts' }
     App\Api\MaintenanceApi:
         tags: 
-            - { name: 'open_apiserver.api', api: 'maintenance' }
+            - { name: 'open_api_server.api', api: 'maintenance' }
 
     App\Services\:
         resource: '../src/Services/*'
