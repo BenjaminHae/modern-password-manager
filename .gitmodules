@@ -1,0 +1,4 @@
+[submodule "PM-AngularClient"]
+	path = angularClient
+	url = https://github.com/BenjaminHae/PM-AngularClient.git
+	branch = master
