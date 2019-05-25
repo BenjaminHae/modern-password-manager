@@ -10,10 +10,10 @@ services:
             - ../:/var/www/symfony
             - ./symfony/site.conf:/etc/nginx/conf.d/default.conf
 
-    php:
-        build: symfony
-        volumes:
-            - ../:/var/www/symfony
+#    php:
+#        build: symfony
+#        volumes:
+#            - ../:/var/www/symfony
 
     angular:
         build: angular
@@ -21,3 +21,4 @@ services:
             - ../:/usr/src/app
         ports:
             - 4200:4200
+        user: "${UID}:${GID}"
