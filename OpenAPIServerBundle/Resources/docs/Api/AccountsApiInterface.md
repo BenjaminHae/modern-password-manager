@@ -65,7 +65,7 @@ class AccountsApi implements AccountsApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **account** | [**OpenAPI\Server\Model\Account**](../Model/array.md)| Account Values |
+ **account** | [**OpenAPI\Server\Model\Account**](../Model/Account.md)| Account Values |
 
 ### Return type
 

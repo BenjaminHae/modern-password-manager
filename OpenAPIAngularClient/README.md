@@ -1,4 +1,4 @@
-## @pm-server/pm-server@1.0.0
+## @pm-server/pm-server@0.0.1
 
 ### Building
 
@@ -19,7 +19,7 @@ Navigate to the folder of your consuming project and run one of next commands.
 _published:_
 
 ```
-npm install @pm-server/pm-server@1.0.0 --save
+npm install @pm-server/pm-server@0.0.1 --save
 ```
 
 _without publishing (not recommended):_
