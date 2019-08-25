@@ -7,13 +7,13 @@
         "ext-iconv": "*",
         "doctrine/orm": "2.6",
         "openapi/server-bundle": "dev-master",
-        "symfony/console": "4.2.*",
-        "symfony/dotenv": "4.2.*",
+        "symfony/console": "^4.2",
+        "symfony/dotenv": "^4.2",
         "symfony/flex": "^1.1",
-        "symfony/framework-bundle": "4.2.*",
+        "symfony/framework-bundle": "^4.2",
         "symfony/orm-pack": "^1.0",
-        "symfony/security-bundle": "4.2.*",
-        "symfony/yaml": "4.2.*"
+        "symfony/security-bundle": "^4.2",
+        "symfony/yaml": "^4.2"
     },
     "config": {
         "preferred-install": {
@@ -57,12 +57,12 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.2.*"
+            "require": "^4.2"
         }
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.11",
-        "symfony/web-server-bundle": "4.2.*"
+        "symfony/web-server-bundle": "^4.2"
     },
     "repositories": [{
        "type": "path",
