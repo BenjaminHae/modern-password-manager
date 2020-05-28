@@ -17,13 +17,14 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ChangePassword } from '../model/changePassword';
-import { GenericSuccessMessage } from '../model/genericSuccessMessage';
-import { LogonInformation } from '../model/logonInformation';
-import { RegistrationInformation } from '../model/registrationInformation';
+import { ChangePassword } from '../model/models';
+import { GenericSuccessMessage } from '../model/models';
+import { LogonInformation } from '../model/models';
+import { RegistrationInformation } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
+
 
 
 @Injectable({
@@ -51,6 +52,42 @@ export class UserService {
 
 
 
+    private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
+        if (typeof value === "object" && value instanceof Date === false) {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value);
+        } else {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value, key);
+        }
+        return httpParams;
+    }
+
+    private addToHttpParamsRecursive(httpParams: HttpParams, value?: any, key?: string): HttpParams {
+        if (value == null) {
+            return httpParams;
+        }
+
+        if (typeof value === "object") {
+            if (Array.isArray(value)) {
+                (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
+            } else if (value instanceof Date) {
+                if (key != null) {
+                    httpParams = httpParams.append(key,
+                        (value as Date).toISOString().substr(0, 10));
+                } else {
+                   throw Error("key may not be null if value is Date");
+                }
+            } else {
+                Object.keys(value).forEach( k => httpParams = this.addToHttpParamsRecursive(
+                    httpParams, value[k], key != null ? `${key}.${k}` : k));
+            }
+        } else if (key != null) {
+            httpParams = httpParams.append(key, value);
+        } else {
+            throw Error("key may not be null if value is not object or array");
+        }
+        return httpParams;
+    }
+
     /**
      * change user password
      * change password of current user and upload reencrypted accounts
@@ -58,10 +95,10 @@ export class UserService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public changePassword(changePassword: ChangePassword, observe?: 'body', reportProgress?: boolean): Observable<GenericSuccessMessage>;
-    public changePassword(changePassword: ChangePassword, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GenericSuccessMessage>>;
-    public changePassword(changePassword: ChangePassword, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GenericSuccessMessage>>;
-    public changePassword(changePassword: ChangePassword, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public changePassword(changePassword: ChangePassword, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GenericSuccessMessage>;
+    public changePassword(changePassword: ChangePassword, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GenericSuccessMessage>>;
+    public changePassword(changePassword: ChangePassword, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GenericSuccessMessage>>;
+    public changePassword(changePassword: ChangePassword, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (changePassword === null || changePassword === undefined) {
             throw new Error('Required parameter changePassword was null or undefined when calling changePassword.');
         }
@@ -69,15 +106,21 @@ export class UserService {
         let headers = this.defaultHeaders;
 
         // authentication (csrf) required
-        if (this.configuration.apiKeys && this.configuration.apiKeys["X-CSRF-TOKEN"]) {
-            headers = headers.set('X-CSRF-TOKEN', this.configuration.apiKeys["X-CSRF-TOKEN"]);
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["csrf"] || this.configuration.apiKeys["X-CSRF-TOKEN"];
+            if (key) {
+                headers = headers.set('X-CSRF-TOKEN', key);
+            }
         }
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -92,9 +135,15 @@ export class UserService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.post<GenericSuccessMessage>(`${this.configuration.basePath}/user/changepassword`,
             changePassword,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -109,10 +158,10 @@ export class UserService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public loginUser(logonInformation: LogonInformation, observe?: 'body', reportProgress?: boolean): Observable<GenericSuccessMessage>;
-    public loginUser(logonInformation: LogonInformation, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GenericSuccessMessage>>;
-    public loginUser(logonInformation: LogonInformation, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GenericSuccessMessage>>;
-    public loginUser(logonInformation: LogonInformation, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public loginUser(logonInformation: LogonInformation, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GenericSuccessMessage>;
+    public loginUser(logonInformation: LogonInformation, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GenericSuccessMessage>>;
+    public loginUser(logonInformation: LogonInformation, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GenericSuccessMessage>>;
+    public loginUser(logonInformation: LogonInformation, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (logonInformation === null || logonInformation === undefined) {
             throw new Error('Required parameter logonInformation was null or undefined when calling loginUser.');
         }
@@ -120,15 +169,21 @@ export class UserService {
         let headers = this.defaultHeaders;
 
         // authentication (csrf) required
-        if (this.configuration.apiKeys && this.configuration.apiKeys["X-CSRF-TOKEN"]) {
-            headers = headers.set('X-CSRF-TOKEN', this.configuration.apiKeys["X-CSRF-TOKEN"]);
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["csrf"] || this.configuration.apiKeys["X-CSRF-TOKEN"];
+            if (key) {
+                headers = headers.set('X-CSRF-TOKEN', key);
+            }
         }
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -143,9 +198,15 @@ export class UserService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.post<GenericSuccessMessage>(`${this.configuration.basePath}/user/login`,
             logonInformation,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -159,25 +220,34 @@ export class UserService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public logoutUser(observe?: 'body', reportProgress?: boolean): Observable<GenericSuccessMessage>;
-    public logoutUser(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GenericSuccessMessage>>;
-    public logoutUser(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GenericSuccessMessage>>;
-    public logoutUser(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public logoutUser(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GenericSuccessMessage>;
+    public logoutUser(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GenericSuccessMessage>>;
+    public logoutUser(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GenericSuccessMessage>>;
+    public logoutUser(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<GenericSuccessMessage>(`${this.configuration.basePath}/user/logout`,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -192,10 +262,10 @@ export class UserService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public registerUser(registrationInformation: RegistrationInformation, observe?: 'body', reportProgress?: boolean): Observable<GenericSuccessMessage>;
-    public registerUser(registrationInformation: RegistrationInformation, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GenericSuccessMessage>>;
-    public registerUser(registrationInformation: RegistrationInformation, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GenericSuccessMessage>>;
-    public registerUser(registrationInformation: RegistrationInformation, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public registerUser(registrationInformation: RegistrationInformation, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GenericSuccessMessage>;
+    public registerUser(registrationInformation: RegistrationInformation, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GenericSuccessMessage>>;
+    public registerUser(registrationInformation: RegistrationInformation, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GenericSuccessMessage>>;
+    public registerUser(registrationInformation: RegistrationInformation, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (registrationInformation === null || registrationInformation === undefined) {
             throw new Error('Required parameter registrationInformation was null or undefined when calling registerUser.');
         }
@@ -203,15 +273,21 @@ export class UserService {
         let headers = this.defaultHeaders;
 
         // authentication (csrf) required
-        if (this.configuration.apiKeys && this.configuration.apiKeys["X-CSRF-TOKEN"]) {
-            headers = headers.set('X-CSRF-TOKEN', this.configuration.apiKeys["X-CSRF-TOKEN"]);
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["csrf"] || this.configuration.apiKeys["X-CSRF-TOKEN"];
+            if (key) {
+                headers = headers.set('X-CSRF-TOKEN', key);
+            }
         }
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -226,9 +302,15 @@ export class UserService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.put<GenericSuccessMessage>(`${this.configuration.basePath}/user`,
             registrationInformation,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

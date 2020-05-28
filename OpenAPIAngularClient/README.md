@@ -93,6 +93,31 @@ export class AppModule {}
 ```
 
 ```
+// configuring providers with an authentication service that manages your access tokens
+import { ApiModule, Configuration } from '@pm-server/pm-server';
+
+@NgModule({
+    imports: [ ApiModule ],
+    declarations: [ AppComponent ],
+    providers: [
+      {
+        provide: Configuration,
+        useFactory: (authService: AuthService) => new Configuration(
+          {
+            basePath: environment.apiUrl,
+            accessToken: authService.getAccessToken.bind(authService)
+          }
+        ),
+        deps: [AuthService],
+        multi: false
+      }
+    ],
+    bootstrap: [ AppComponent ]
+})
+export class AppModule {}
+```
+
+```
 import { DefaultApi } from '@pm-server/pm-server';
 
 export class AppComponent {

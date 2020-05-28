@@ -17,11 +17,12 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { Account } from '../model/account';
-import { AccountId } from '../model/accountId';
+import { Account } from '../model/models';
+import { AccountId } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
+
 
 
 @Injectable({
@@ -49,16 +50,52 @@ export class AccountsService {
 
 
 
+    private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
+        if (typeof value === "object" && value instanceof Date === false) {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value);
+        } else {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value, key);
+        }
+        return httpParams;
+    }
+
+    private addToHttpParamsRecursive(httpParams: HttpParams, value?: any, key?: string): HttpParams {
+        if (value == null) {
+            return httpParams;
+        }
+
+        if (typeof value === "object") {
+            if (Array.isArray(value)) {
+                (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
+            } else if (value instanceof Date) {
+                if (key != null) {
+                    httpParams = httpParams.append(key,
+                        (value as Date).toISOString().substr(0, 10));
+                } else {
+                   throw Error("key may not be null if value is Date");
+                }
+            } else {
+                Object.keys(value).forEach( k => httpParams = this.addToHttpParamsRecursive(
+                    httpParams, value[k], key != null ? `${key}.${k}` : k));
+            }
+        } else if (key != null) {
+            httpParams = httpParams.append(key, value);
+        } else {
+            throw Error("key may not be null if value is not object or array");
+        }
+        return httpParams;
+    }
+
     /**
      * Add Account
      * @param account Account Values
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public addAccounts(account: Array<Account>, observe?: 'body', reportProgress?: boolean): Observable<Array<AccountId>>;
-    public addAccounts(account: Array<Account>, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<AccountId>>>;
-    public addAccounts(account: Array<Account>, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<AccountId>>>;
-    public addAccounts(account: Array<Account>, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public addAccounts(account: Array<Account>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<AccountId>>;
+    public addAccounts(account: Array<Account>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<AccountId>>>;
+    public addAccounts(account: Array<Account>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<AccountId>>>;
+    public addAccounts(account: Array<Account>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (account === null || account === undefined) {
             throw new Error('Required parameter account was null or undefined when calling addAccounts.');
         }
@@ -66,15 +103,21 @@ export class AccountsService {
         let headers = this.defaultHeaders;
 
         // authentication (csrf) required
-        if (this.configuration.apiKeys && this.configuration.apiKeys["X-CSRF-TOKEN"]) {
-            headers = headers.set('X-CSRF-TOKEN', this.configuration.apiKeys["X-CSRF-TOKEN"]);
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["csrf"] || this.configuration.apiKeys["X-CSRF-TOKEN"];
+            if (key) {
+                headers = headers.set('X-CSRF-TOKEN', key);
+            }
         }
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -89,9 +132,15 @@ export class AccountsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.put<Array<AccountId>>(`${this.configuration.basePath}/accounts`,
             account,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -106,28 +155,37 @@ export class AccountsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteAccount(id: number, observe?: 'body', reportProgress?: boolean): Observable<Array<AccountId>>;
-    public deleteAccount(id: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<AccountId>>>;
-    public deleteAccount(id: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<AccountId>>>;
-    public deleteAccount(id: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public deleteAccount(id: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<AccountId>>;
+    public deleteAccount(id: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<AccountId>>>;
+    public deleteAccount(id: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<AccountId>>>;
+    public deleteAccount(id: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling deleteAccount.');
         }
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.delete<Array<AccountId>>(`${this.configuration.basePath}/accounts/${encodeURIComponent(String(id))}`,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -141,25 +199,34 @@ export class AccountsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAccounts(observe?: 'body', reportProgress?: boolean): Observable<Array<AccountId>>;
-    public getAccounts(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<AccountId>>>;
-    public getAccounts(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<AccountId>>>;
-    public getAccounts(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getAccounts(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<AccountId>>;
+    public getAccounts(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<AccountId>>>;
+    public getAccounts(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<AccountId>>>;
+    public getAccounts(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<Array<AccountId>>(`${this.configuration.basePath}/accounts`,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -175,10 +242,10 @@ export class AccountsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateAccount(id: number, account: Account, observe?: 'body', reportProgress?: boolean): Observable<Array<AccountId>>;
-    public updateAccount(id: number, account: Account, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<AccountId>>>;
-    public updateAccount(id: number, account: Account, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<AccountId>>>;
-    public updateAccount(id: number, account: Account, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public updateAccount(id: number, account: Account, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<AccountId>>;
+    public updateAccount(id: number, account: Account, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<AccountId>>>;
+    public updateAccount(id: number, account: Account, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<AccountId>>>;
+    public updateAccount(id: number, account: Account, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling updateAccount.');
         }
@@ -189,15 +256,21 @@ export class AccountsService {
         let headers = this.defaultHeaders;
 
         // authentication (csrf) required
-        if (this.configuration.apiKeys && this.configuration.apiKeys["X-CSRF-TOKEN"]) {
-            headers = headers.set('X-CSRF-TOKEN', this.configuration.apiKeys["X-CSRF-TOKEN"]);
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["csrf"] || this.configuration.apiKeys["X-CSRF-TOKEN"];
+            if (key) {
+                headers = headers.set('X-CSRF-TOKEN', key);
+            }
         }
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -212,9 +285,15 @@ export class AccountsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.post<Array<AccountId>>(`${this.configuration.basePath}/accounts/${encodeURIComponent(String(id))}`,
             account,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
