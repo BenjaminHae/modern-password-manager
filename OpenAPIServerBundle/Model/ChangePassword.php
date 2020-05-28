@@ -98,7 +98,7 @@ class ChangePassword
      *
      * @return OpenAPI\Server\Model\AccountId[]|null
      */
-    public function getAccounts()
+    public function getAccounts(): ?array
     {
         return $this->accounts;
     }

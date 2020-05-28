@@ -62,8 +62,7 @@ class AccountsController extends Controller
     {
         // Make sure that the client is providing something that we can consume
         $consumes = ['application/json'];
-        $inputFormat = $request->headers->has('Content-Type')?$request->headers->get('Content-Type'):$consumes[0];
-        if (!in_array($inputFormat, $consumes)) {
+        if (!static::isContentTypeAllowed($request, $consumes)) {
             // We can't consume the content that the client is sending us
             return new Response('', 415);
         }
@@ -89,6 +88,7 @@ class AccountsController extends Controller
 
         // Deserialize the input values that needs it
         try {
+            $inputFormat = $request->getMimeType($request->getContentType());
             $account = $this->deserialize($account, 'array<OpenAPI\Server\Model\Account>', $inputFormat);
         } catch (SerializerRuntimeException $exception) {
             return $this->createBadRequestResponse($exception->getMessage());
@@ -99,8 +99,8 @@ class AccountsController extends Controller
         $asserts[] = new Assert\NotNull();
         $asserts[] = new Assert\All([
             new Assert\Type("OpenAPI\Server\Model\Account"),
+            new Assert\Valid(),
         ]);
-	$assert[] = new Assert\Valid();
         $response = $this->validate($account, $asserts);
         if ($response instanceof Response) {
             return $response;
@@ -314,8 +314,7 @@ class AccountsController extends Controller
     {
         // Make sure that the client is providing something that we can consume
         $consumes = ['application/json'];
-        $inputFormat = $request->headers->has('Content-Type')?$request->headers->get('Content-Type'):$consumes[0];
-        if (!in_array($inputFormat, $consumes)) {
+        if (!static::isContentTypeAllowed($request, $consumes)) {
             // We can't consume the content that the client is sending us
             return new Response('', 415);
         }
@@ -342,6 +341,7 @@ class AccountsController extends Controller
         // Deserialize the input values that needs it
         try {
             $id = $this->deserialize($id, 'int', 'string');
+            $inputFormat = $request->getMimeType($request->getContentType());
             $account = $this->deserialize($account, 'OpenAPI\Server\Model\Account', $inputFormat);
         } catch (SerializerRuntimeException $exception) {
             return $this->createBadRequestResponse($exception->getMessage());
