@@ -10,7 +10,7 @@ import { AccountsService } from './backend/api/accounts.service';
 import { AccountTransformerService } from './backend/controller/account-transformer.service';
 import { CredentialService } from './backend/credential.service';
 import { CryptoService } from './backend/crypto.service';
-import { BaseAPI as OpenAPI, ConfigurationParameters, Configuration as OpenAPIConfiguration } from '@pm-server/pm-server-react-client';
+import { Configuration as OpenAPIConfiguration } from '@pm-server/pm-server-react-client';
 import { MaintenanceApi as OpenAPIMaintenanceService } from '@pm-server/pm-server-react-client';
 import { UserApi as OpenAPIUserService } from '@pm-server/pm-server-react-client';
 import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-react-client';
@@ -23,7 +23,7 @@ let credentialService = new CredentialService();
 let cryptoService = new CryptoService(credentialService);
 let accountTransformerService = new AccountTransformerService(cryptoService); 
 let backend = new BackendService(
-	new MaintenanceService(new OpenAPIMaintenanceService(APIconfiguration)), 
+	new MaintenanceService(new OpenAPIMaintenanceService(APIconfiguration), csrfMiddleware), 
 	new UserService(new OpenAPIUserService(APIconfiguration), accountTransformerService),
 	new AccountsService(new OpenAPIAccountsService(APIconfiguration), accountTransformerService), 
 	credentialService, 

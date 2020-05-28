@@ -1,14 +1,14 @@
-import { MaintenanceApi as OpenAPIMaintenanceService, ServerInformation } from '@pm-server/pm-server-react-client';
+import { MaintenanceApi as OpenAPIMaintenanceService } from '@pm-server/pm-server-react-client';
+import { CSRFMiddleware } from './CSRFMiddleware';
 
 export class MaintenanceService {
 
-  constructor(private maintenanceService: OpenAPIMaintenanceService) { }
+  constructor(private maintenanceService: OpenAPIMaintenanceService, private csrfMiddleware: CSRFMiddleware) { }
 
   async retrieveInfo(): Promise<void> {
     let serverInformation = await this.maintenanceService.serverInformation()
-    // todo set csrf token
-    //if (!this.maintenanceService.configuration.apiKeys)
-    //  this.maintenanceService.configuration.apiKeys = {};
-    //this.maintenanceService.configuration.apiKeys["X-CSRF-TOKEN"] = serverInformation.csrfToken;
+    if (serverInformation.csrfToken) {
+      this.csrfMiddleware.csrfToken = serverInformation.csrfToken;
+    }
   }
 }

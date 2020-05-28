@@ -1,4 +1,4 @@
-import { UserApi as OpenAPIUserService, RegistrationInformation, AccountId as OpenAPIAccountId, ChangePassword as OpenAPIChangePassword } from '@pm-server/pm-server-react-client';
+import { UserApi as OpenAPIUserService, ChangePassword as OpenAPIChangePassword } from '@pm-server/pm-server-react-client';
 import { CryptedObject } from '../models/cryptedObject';
 import { encryptedAccount } from '../models/encryptedAccount';
 import { AccountTransformerService } from '../controller/account-transformer.service';

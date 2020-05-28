@@ -41,7 +41,7 @@ export class BackendService {
   }
 
   async logon(username: string, password: string): Promise<void> {
-    let key = await this.credentials.generateFromPassword(password);
+    await this.credentials.generateFromPassword(password);
     let passwordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
     await this.userService.logon(username, passwordHash)
     await this.afterLogin();
@@ -66,7 +66,7 @@ export class BackendService {
     let newPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12), testCredentials)
     newHash = newPasswordHash;
     let oldPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
-    return oldPasswordHash.toBase64JSON() == newHash.toBase64JSON();
+    return oldPasswordHash.toBase64JSON() === newHash.toBase64JSON();
   }
 
   async reencryptAccount(account: Account, newCredentials: CredentialProvider): Promise<encryptedAccount> {
@@ -94,7 +94,7 @@ export class BackendService {
   }
 
   async register(username: string, password: string, email: string): Promise<any> {
-    let key = await this.credentials.generateFromPassword(password)
+    await this.credentials.generateFromPassword(password)
     let ciphertext = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
     return await this.userService.register(username, ciphertext, email)
   }
