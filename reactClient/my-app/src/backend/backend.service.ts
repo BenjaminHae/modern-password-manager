@@ -9,6 +9,7 @@ import { AccountTransformerService } from './controller/account-transformer.serv
 import { CredentialService } from './credential.service';
 import { CredentialProvider } from './controller/credentialProvider';
 import { CryptoService } from './crypto.service';
+import { Observable } from 'rxjs';
 
 function subscriptionCreator(list: Array<any>): any {
     return (observer: any) => {
@@ -28,10 +29,8 @@ export class BackendService {
   private loginObservers = [];
   public serverSettings: ServerSettings = {allowRegistration: true, passwordGenerator: "aaaaab"};
   public accounts: Array<Account> = [];
-  accountsObservable = null;
-  loginObservable = null;
-  //accountsObservable = new Observable(subscriptionCreator(this.accountsObservers));
-  //loginObservable = new Observable(subscriptionCreator(this.loginObservers));
+  accountsObservable = new Observable<Array<Account>>(subscriptionCreator(this.accountsObservers));
+  loginObservable = new Observable<void>(subscriptionCreator(this.loginObservers));
 
   constructor(private maintenanceService: MaintenanceService, private userService: UserService, private accountsService: AccountsService, private credentials: CredentialService, private accountTransformer: AccountTransformerService, private crypto: CryptoService ) {}
 
@@ -84,11 +83,12 @@ export class BackendService {
   }
 
   private async parseAccounts(encAccounts: Array<encryptedAccount>): Promise<void> {
-    console.log("received accounts");
+    console.log("received " + encAccounts.length + " accounts");
     let accounts: Array<Account> = [];
-    await encAccounts.forEach(async (encaccount: encryptedAccount) => {
-        accounts.push( await this.accountTransformer.decryptAccount(encaccount));
-      });
+    for (let encAccount of encAccounts) {
+        let decAccount =  await this.accountTransformer.decryptAccount(encAccount);
+        accounts.push( decAccount );
+    }
     this.accounts = accounts;
     subscriptionExecutor(this.accountsObservers, accounts);
   }
@@ -105,10 +105,10 @@ export class BackendService {
 
   async addAccounts(newAccounts: Array<Account>): Promise<void> {
     let encAccounts: Array<encryptedAccount> = [];
-    await newAccounts.forEach(async (account: Account) => {
+    for (let account of newAccounts) {
       let encAccount = await this.accountTransformer.encryptAccount(account);
       encAccounts.push(encAccount);
-    });
+    }
     let accounts = await this.accountsService.addAccounts(encAccounts)
     return await this.parseAccounts(accounts)
   }
