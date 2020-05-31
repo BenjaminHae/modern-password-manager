@@ -10,10 +10,14 @@
     "@types/node": "^12.12.42",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
+    "bootstrap": "^4.5.0",
     "react": "^16.13.1",
+    "react-bootstrap": "^1.0.1",
+    "react-data-table-component": "^6.9.3",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
     "rxjs": "^6.5.5",
+    "styled-components": "^5.1.1",
     "typescript": "^3.7.5"
   },
   "scripts": {
