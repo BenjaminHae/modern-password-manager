@@ -123,6 +123,38 @@ paths:
                 $ref: "#/components/schemas/GenericSuccessMessage"
       security:
         - csrf: []
+  /user/settings:
+    get:
+      tags:
+        - user
+      summary: Returns the client settings of the current user
+      description: ""
+      operationId: getUserSettings
+      responses: 
+        "200":
+          description: stored client values (encrypted string that contains a JSON)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserSettings"
+        "403":
+          description: Unauthorized
+  /user/history:
+    get:
+      tags:
+        - user
+      summary: Returns a history of successful and failed logins
+      description: ""
+      operationId: getUserHistory
+      responses: 
+        "200":
+          description: Array of logins
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserHistory"
+        "403":
+          description: Unauthorized
   /accounts:
     get:
       tags:
@@ -251,6 +283,32 @@ components:
       type: object
       properties:
         email:
+          type: string
+    UserHistory:
+      type: array
+      items:
+        $ref: "#/components/schemas/HistoryItem"
+    HistoryItem:
+      type: object
+      properties:
+        UserAgent:
+          type: string
+        IP:
+          type: string
+        Time:
+          type: integer
+        Action:
+          type: string
+          enum:
+            - Login
+            - ChangePassword
+            - Registration
+        ActionResult:
+          type: string
+    UserSettings:
+      type: object
+      properties:
+        encryptedUserSettings:
           type: string
     ChangePassword:
       type: object
