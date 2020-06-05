@@ -27,7 +27,10 @@ interface AuthenticatedState {
 class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedState> {
   constructor(props: AuthenticatedProps) {
     super(props);
-    this.state = {
+    this.state = this.defaultViewState();
+  }
+  defaultViewState(): AuthenticatedState {
+    return {
       view: AuthenticatedView.List,
       selectedAccount: undefined
     }
@@ -49,11 +52,11 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
         );
       case AuthenticatedView.Edit:
         return (
-		<AccountEdit account={this.state.selectedAccount} fields={this.props.fields} editHandler={this.props.editHandler} />
+		<AccountEdit account={this.state.selectedAccount} fields={this.props.fields} editHandler={this.props.editHandler}  abortHandler={this.backToListView.bind(this)} />
         );
       case AuthenticatedView.Add:
         return (
-		<AccountEdit account={undefined} fields={this.props.fields} editHandler={this.props.editHandler} />
+		<AccountEdit account={undefined} fields={this.props.fields} editHandler={this.props.editHandler} abortHandler={this.backToListView.bind(this)} />
         );
     }
   }
@@ -62,6 +65,9 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
   }
   addAccountHandler() {
     this.setState({view: AuthenticatedView.Add});
+  }
+  backToListView() {
+    this.setState(this.defaultViewState());
   }
 }
 export default Authenticated;

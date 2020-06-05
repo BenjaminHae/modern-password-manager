@@ -2,11 +2,13 @@ import React from 'react';
 import styles from './AccountEdit.module.css';
 import { Account } from '../../backend/models/account';
 import { FieldOptions } from '../../backend/models/fieldOptions';
+import Button from 'react-bootstrap/Button';
 
 interface AccountEditProps {
   account?: Account;
   fields: Array<FieldOptions>;
   editHandler: (account: Account) => Promise<boolean>;
+  abortHandler: () => void;
 }
 interface AccountEditState {
     fields: {[index: string]:string};
@@ -24,7 +26,10 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
     }
   }
   generateFieldContents(): {[index: string]:string} {
-    let newFields: {[index: string]:string} = {};
+    let newFields: {[index: string]:string} = { name: "", password: "" };
+    for (let item of this.props.fields) {
+      newFields[item.selector] = "";
+    }
     if (this.props.account) {
       newFields["name"] = this.props.account.name;
       for (let otherKey in this.props.account.other) {
@@ -91,6 +96,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
         <h2>{ this.props.account ? 'Edit Account' : 'Add Account' }</h2>
         {this.getFormFields()}
 	{this.props.account && this.props.account.name}
+        <span> <Button onClick={() => {this.props.abortHandler()} }>Abort</Button></span>
       </div>
     );
   }
