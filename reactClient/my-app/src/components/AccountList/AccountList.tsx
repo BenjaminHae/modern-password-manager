@@ -22,16 +22,17 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
   constructor(props: AccountListProps) {
     super(props);
     this.state = {
-      columns: []
+      columns: this.getColumns()
     }
   }
   componentDidUpdate(prevProps: AccountListProps) {
     if (this.props.fields !== prevProps.fields) {
       console.log(this.props.fields);
-      this.setColumns();
+      this.getColumns();
+      this.setState({columns: this.getColumns()});
     }
   }
-  setColumns() {
+  getColumns(): Array<IDataTableColumn<Account>> {
     let columns: Array<IDataTableColumn<Account>> = [
       { 
         name: "Name", 
@@ -67,7 +68,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
         columns.push(column);
       }
     }
-    this.setState({columns: columns});
+    return columns;
   }
   handlePasswordShow() {
   }
