@@ -3,5 +3,5 @@ export interface FieldOptions {
     selector: string;
     visible: boolean;
     colNumber?: number;
-    sortable: boolean;
+    sortable?: boolean;
 }

@@ -5,6 +5,7 @@ import { MaintenanceService } from './api/maintenance.service';
 import { UserService } from './api/user.service';
 import { AccountsService } from './api/accounts.service';
 import { ServerSettings } from './models/serverSettings';
+import { FieldOptions } from './models/fieldOptions';
 import { AccountTransformerService } from './controller/account-transformer.service';
 import { CredentialService } from './credential.service';
 import { CredentialProvider } from './controller/credentialProvider';
@@ -27,10 +28,13 @@ function subscriptionExecutor(list: Array<any>, params:any) {
 export class BackendService {
   private accountsObservers = [];
   private loginObservers = [];
+  private optionsObservers = [];
   public serverSettings: ServerSettings = {allowRegistration: true, passwordGenerator: "aaaaab"};
   public accounts: Array<Account> = [];
+  public fields: Array<FieldOptions> = [];
   accountsObservable = new Observable<Array<Account>>(subscriptionCreator(this.accountsObservers));
   loginObservable = new Observable<void>(subscriptionCreator(this.loginObservers));
+  optionsObservable = new Observable<Array<FieldOptions>>(subscriptionCreator(this.optionsObservers));
 
   constructor(private maintenanceService: MaintenanceService, private userService: UserService, private accountsService: AccountsService, private credentials: CredentialService, private accountTransformer: AccountTransformerService, private crypto: CryptoService ) {}
 
@@ -79,6 +83,11 @@ export class BackendService {
   async afterLogin(): Promise<void> {
     subscriptionExecutor(this.loginObservers, null);
     let accounts = await this.accountsService.getAccounts()
+    this.fields = [
+      { name: "Username", colNumber: 1, selector: "user", visible: true, sortable: true },
+      { name: "URL", selector: "url", visible: false }
+    ];
+    subscriptionExecutor(this.optionsObservers, this.fields);
     return await this.parseAccounts(accounts)
   }
 

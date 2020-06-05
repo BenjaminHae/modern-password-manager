@@ -4,7 +4,7 @@ export class Account {
     public index: number;
     public name: string;
     public enpassword: CryptedObject;
-    public other: {[index: string]:any};
+    public other: {[index: string]:string};
     public file: any;
 
     constructor(index: number, name: string, enpassword: CryptedObject) {
