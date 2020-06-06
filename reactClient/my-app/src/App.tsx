@@ -71,7 +71,7 @@ export default class App extends React.Component<{}, AppState> {
 	doLogin(username:string, password: string) {
 	  this.backend.logon(username, password)
 		.catch(() => {
-			this.setState({message : "login failed", authenticated : true});
+			this.setState({message : "login failed", authenticated : false});
 		});
 	}
         async editHandler(fields: {[index: string]:string}, account?: Account): Promise<void> {
