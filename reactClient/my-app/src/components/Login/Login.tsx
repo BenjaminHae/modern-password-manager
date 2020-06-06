@@ -7,21 +7,21 @@ interface LoginProps {
 interface LoginState {
   username: string;
   password: string;
+  message: string;
 }
 
 class Login extends React.Component<LoginProps, LoginState> {
-  message = "";
   constructor(props: LoginProps) {
     super(props);
-    this.state = { username: '', password: '' };
+    this.state = { username: '', password: '', message: ""};
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.doLogon = this.doLogon.bind(this);
   }
-  handleNameChange(event: any) {
+  handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({username: event.target.value});
   }
-  handlePasswordChange(event: any) {
+  handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({password: event.target.value});
   }
   doLogon(event: React.FormEvent) {
@@ -49,7 +49,7 @@ class Login extends React.Component<LoginProps, LoginState> {
 		</div>
 	      </div>
 	      <input color="primary" type="submit" value="Login"/>
-	      <span>{this.message}</span>
+	      <span>{this.state.message}</span>
 	    </form>
 	  </div>
     );
