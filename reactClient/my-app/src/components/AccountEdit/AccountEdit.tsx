@@ -7,22 +7,22 @@ import Button from 'react-bootstrap/Button';
 interface AccountEditProps {
   account?: Account;
   fields: Array<FieldOptions>;
-  editHandler: (account: Account) => Promise<boolean>;
-  abortHandler: () => void;
+  editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>;
+  closeHandler: () => void;
 }
 interface AccountEditState {
     fields: {[index: string]:string};
+    message: string;
 }
 class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
   constructor(props: AccountEditProps) {
     super(props);
-    console.log(this.props.account);
     this.handleGenericChange = this.handleGenericChange.bind(this);
-    this.state = { fields: this.generateFieldContents() };
+    this.state = { fields: this.generateFieldContents(), message: "" };
   }
   componentDidUpdate(prevProps: AccountEditProps) {
     if (this.props.account !== prevProps.account) {
-      this.setState({fields: this.generateFieldContents()});
+      this.setState({fields: this.generateFieldContents(), message: "" });
     }
   }
   generateFieldContents(): {[index: string]:string} {
@@ -42,6 +42,9 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
     let currentFields = this.state.fields;
     currentFields[event.target.name] = event.target.value;
     this.setState({fields: currentFields});
+  }
+  cleanUp() {
+    //todo cleanup
   }
   getFormFields() {
     let fields = [ (
@@ -90,13 +93,25 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
     }
     return fields;
   }
+  async submitForm() {
+    try {
+      await this.props.editHandler(this.state.fields, this.props.account);
+      this.cleanUp();
+      this.props.closeHandler();
+    }
+    catch {
+      this.setState({message: "there was an error when saving the account"});
+    }
+  }
   render() {
     return (
       <div>
         <h2>{ this.props.account ? 'Edit Account' : 'Add Account' }</h2>
+        <p>{ this.state.message }</p>
         {this.getFormFields()}
 	{this.props.account && this.props.account.name}
-        <span> <Button onClick={() => {this.props.abortHandler()} }>Abort</Button></span>
+        <span> <Button onClick={() => {this.props.closeHandler()} }>Abort</Button></span>
+        <span> <Button onClick={() => {this.submitForm()} }>store</Button></span>
       </div>
     );
   }

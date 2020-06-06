@@ -18,7 +18,7 @@ interface AuthenticatedProps {
   fields: Array<FieldOptions>;
   backend: BackendService;
   transformer: AccountTransformerService;
-  editHandler: (account: Account) => Promise<boolean>;
+  editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>;
 }
 interface AuthenticatedState {
   view: AuthenticatedView;
@@ -52,11 +52,11 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
         );
       case AuthenticatedView.Edit:
         return (
-		<AccountEdit account={this.state.selectedAccount} fields={this.props.fields} editHandler={this.props.editHandler}  abortHandler={this.backToListView.bind(this)} />
+		<AccountEdit account={this.state.selectedAccount} fields={this.props.fields} editHandler={this.props.editHandler}  closeHandler={this.backToListView.bind(this)} />
         );
       case AuthenticatedView.Add:
         return (
-		<AccountEdit account={undefined} fields={this.props.fields} editHandler={this.props.editHandler} abortHandler={this.backToListView.bind(this)} />
+		<AccountEdit account={undefined} fields={this.props.fields} editHandler={this.props.editHandler} closeHandler={this.backToListView.bind(this)} />
         );
     }
   }
