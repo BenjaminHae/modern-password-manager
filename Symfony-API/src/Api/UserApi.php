@@ -90,7 +90,8 @@ class UserApi extends CsrfProtection implements UserApiInterface
         $currentUser->setPassword($newHash);
         $this->getAccountsController()->updateAccountsFromApi($currentUser, $changes->getAccounts());
         $this->entityManager->flush();
-        return $this->getAccountsController()->getAccountsForUserAsAPI($currentUser);
+        return $this->generateApiSuccess("Changed password, please relogin");
+        //Todo: Auto Logout?
     }
 
     // ...
