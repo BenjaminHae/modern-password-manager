@@ -99,7 +99,6 @@ class AccountsController extends Controller
         $asserts[] = new Assert\NotNull();
         $asserts[] = new Assert\All([
             new Assert\Type("OpenAPI\Server\Model\Account"),
-            new Assert\Valid(),
         ]);
         $response = $this->validate($account, $asserts);
         if ($response instanceof Response) {
