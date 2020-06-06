@@ -42,6 +42,16 @@ class UserApi extends CsrfProtection implements UserApiInterface
         return $this->accountsController;
     }
 
+    private function generateApiError($msg)
+    {
+        return ["success" => false, "message" => $msg];
+    }
+
+    private function generateApiSuccess($msg)
+    {
+        return ["success" => true, "message" => $msg];
+    }
+
     // ...
 
     public function loginUser(LogonInformation $body, &$responseCode, array &$responseHeaders) {
@@ -49,9 +59,9 @@ class UserApi extends CsrfProtection implements UserApiInterface
         if ($currentUser)
         {
             $username = $currentUser->getUsername();
-            return ["success"=> true, "loggedInAs" => $username];
+            return $this->generateApiSuccess("logged in as " . $username);
         }
-        return ["error" => "not logged in"];
+        return $this->generateApiError("failed to log in");
     }
 
     public function logoutUser(&$responseCode, array &$responseHeaders) 
@@ -60,7 +70,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
         $this->session->start();
         $this->session->clear();
         $this->session->invalidate();
-        return ["Logged Out" => true];
+        return $this->generateApiSuccess("logged out");
     }
 
     public function registerUser(RegistrationInformation $registration, &$responseCode, array &$responseHeaders) {
@@ -70,7 +80,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
         $user->setPassword($this->passwordEncoder->encodePassword($user, $registration->getPassword()));
         $this->entityManager->persist($user);
         $this->entityManager->flush();
-        return ["success" => true];
+        return $this->generateApiSuccess("successfully registered");
     }
 
     public function changePassword(ChangePassword $changes, &$responseCode, array &$responseHeaders)
