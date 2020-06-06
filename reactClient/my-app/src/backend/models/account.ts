@@ -32,12 +32,6 @@ export class Account {
         }
         return availableOthers;
     }
-    setOther(name: string, value: any) {
-        this.other[name] = value;
-    }
-    getOther(name: string) {
-        return this.other[name];
-    }
     getOtherJSON() {
         return JSON.stringify(this.other);
     }
