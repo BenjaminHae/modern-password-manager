@@ -38,7 +38,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
     }
     return newFields;
   }
-  handleGenericChange(event: any) {
+  handleGenericChange(event: React.ChangeEvent<HTMLInputElement>) {
     let currentFields = this.state.fields;
     currentFields[event.target.name] = event.target.value;
     this.setState({fields: currentFields});

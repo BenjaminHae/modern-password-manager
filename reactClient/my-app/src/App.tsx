@@ -24,11 +24,13 @@ interface AppState {
 	accounts: Array<Account>;
 	fields: Array<FieldOptions>
 }
-export default class App extends React.Component<{}, AppState> {
+interface AppProps {
+}
+export default class App extends React.Component<AppProps, AppState> {
 	backend: BackendService;
 	accountTransformerService: AccountTransformerService;
         crypto: CryptoService;
-	constructor (props: any) {
+	constructor (props: AppProps) {
 		super(props);
 		this.state = {
 			ready: false,
