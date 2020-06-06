@@ -27,6 +27,7 @@ interface AppState {
 export default class App extends React.Component<{}, AppState> {
 	backend: BackendService;
 	accountTransformerService: AccountTransformerService;
+        crypto: CryptoService;
 	constructor (props: any) {
 		super(props);
 		this.state = {
@@ -39,15 +40,15 @@ export default class App extends React.Component<{}, AppState> {
 		let csrfMiddleware = new CSRFMiddleware();
 		let APIconfiguration = new OpenAPIConfiguration({ basePath: "http://debian-vms-hp.lab:8080", middleware: [csrfMiddleware]});
 		let credentialService = new CredentialService();
-		let cryptoService = new CryptoService(credentialService);
-		this.accountTransformerService = new AccountTransformerService(cryptoService); 
+		this.crypto = new CryptoService(credentialService);
+		this.accountTransformerService = new AccountTransformerService(this.crypto); 
 		this.backend = new BackendService(
 			new MaintenanceService(new OpenAPIMaintenanceService(APIconfiguration), csrfMiddleware), 
 			new UserService(new OpenAPIUserService(APIconfiguration), this.accountTransformerService),
 			new AccountsService(new OpenAPIAccountsService(APIconfiguration), this.accountTransformerService), 
 			credentialService, 
 			this.accountTransformerService, 
-			cryptoService);
+			this.crypto);
 		this.backend.waitForBackend()
 			.then(() => {
 				this.setState({ready : true});
@@ -73,8 +74,37 @@ export default class App extends React.Component<{}, AppState> {
 			this.setState({message : "login failed", authenticated : true});
 		});
 	}
-        async editHandler(account: Account): Promise<boolean> {
-          return true;
+        async editHandler(fields: {[index: string]:string}, account?: Account): Promise<void> {
+	    let updatedAccount: Account;
+	    if (account) {
+	      updatedAccount = account;
+	      updatedAccount.name = fields.name;
+              delete fields.name;
+	      //Only look at password if it has changed
+	      if (fields.password !== "") {
+		console.log("passwordChanged");
+		updatedAccount.enpassword = await this.crypto.encryptChar(fields.password);
+	      }
+              delete fields.password;
+	    }
+	    else {
+	      // Todo auto-generate password
+	      let cryptedPassword = await this.crypto.encryptChar(fields["password"]);
+              delete fields.password;
+	      updatedAccount = new Account(-1, fields.name, cryptedPassword);
+              delete fields.name;
+	    }
+            for (let item in fields) {
+              updatedAccount.other[item] = fields[item];
+            }
+	    if (!account) {
+		    return this.backend.addAccount(updatedAccount);
+	    }
+	    else {
+                    console.log("updating account");
+                    console.log(updatedAccount);
+		    return this.backend.updateAccount(updatedAccount);
+	    }
         }
 
 	render() {
