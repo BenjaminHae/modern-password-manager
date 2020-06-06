@@ -113,7 +113,6 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
         <h2>{ this.props.account ? 'Edit Account' : 'Add Account' }</h2>
         <p>{ this.state.message }</p>
         {this.getFormFields()}
-	{this.props.account && this.props.account.name}
         <span> <Button onClick={() => {this.props.closeHandler()} }>Abort</Button></span>
         <span> <Button onClick={() => {this.submitForm()} }>store</Button></span>
       </div>

@@ -31,9 +31,8 @@ class Login extends React.Component<LoginProps, LoginState> {
   render () {
     return (
 	  <div className={styles.Login}>
-	    Login Component
 		<form onSubmit={this.doLogon}>
-	      Login
+	      <h2>Login</h2>
 	      <div>
 		<div >
 		    <label>Username
