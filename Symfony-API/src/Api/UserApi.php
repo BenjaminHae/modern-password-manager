@@ -83,6 +83,14 @@ class UserApi extends CsrfProtection implements UserApiInterface
         return $this->generateApiSuccess("successfully registered");
     }
 
+    public function getUserHistory(&$responseCode, array &$responseHeaders) {
+        //Todo
+    }
+
+    public function getUserSettings(&$responseCode, array &$responseHeaders) {
+        // Todo
+    }
+
     public function changePassword(ChangePassword $changes, &$responseCode, array &$responseHeaders)
     {
         $currentUser = $this->security->getUser();
