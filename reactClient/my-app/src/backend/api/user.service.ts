@@ -7,24 +7,34 @@ export class UserService {
 
   constructor(private userService: OpenAPIUserService, private accountTransformer: AccountTransformerService) { }
 
-  logon(username: string, password: CryptedObject): Promise<GenericSuccessMessage> {
-    return this.userService.loginUser({ logonInformation: { "username": username, "password": password.toBase64JSON()  }});
+  private checkForSuccess(response: GenericSuccessMessage) {
+    if (!response.success) {
+      throw new Error(response.message);
+    }
   }
 
-  logout(): Promise<GenericSuccessMessage> {
-     return this.userService.logoutUser();
+  async logon(username: string, password: CryptedObject): Promise<void> {
+    let response = await this.userService.loginUser({ logonInformation: { "username": username, "password": password.toBase64JSON()  }});
+    this.checkForSuccess(response);
   }
 
-  register(username: string, password: CryptedObject, email: string): Promise<GenericSuccessMessage> {
-    return this.userService.registerUser({ "registrationInformation": {"username": username, "password": password.toBase64JSON(), "email": email} });
+  async logout(): Promise<void> {
+    let response = await this.userService.logoutUser();
+    this.checkForSuccess(response);
   }
 
-  changePassword(newHash: CryptedObject, accounts: Array<encryptedAccount>): Promise<GenericSuccessMessage> {
+  async register(username: string, password: CryptedObject, email: string): Promise<void> {
+    let response = await this.userService.registerUser({ "registrationInformation": {"username": username, "password": password.toBase64JSON(), "email": email} });
+    this.checkForSuccess(response);
+  }
+
+  async changePassword(newHash: CryptedObject, accounts: Array<encryptedAccount>): Promise<void> {
     let requestData: OpenAPIChangePassword = {};
     requestData.newPassword = newHash.toBase64JSON();
     requestData.accounts = accounts.map((account) => {
         return this.accountTransformer.encryptedAccountToOpenAPI(account);
         });
-    return this.userService.changePassword({changePassword: requestData});
+    let response = await this.userService.changePassword({changePassword: requestData});
+    this.checkForSuccess(response);
   }
 }
