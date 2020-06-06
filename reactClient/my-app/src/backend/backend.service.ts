@@ -49,6 +49,11 @@ export class BackendService {
     await this.userService.logon(username, passwordHash)
     await this.afterLogin();
   }
+  async logout(): Promise<void> {
+    await this.userService.logout();
+    this.fields = [];
+    this.parseAccounts([]);
+  }
 
   async changeUserPassword(newPassword: string): Promise<void> {
     let newCredentials = new CredentialProvider();

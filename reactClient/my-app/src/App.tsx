@@ -76,6 +76,11 @@ export default class App extends React.Component<AppProps, AppState> {
 			this.setState({message : "login failed", authenticated : false});
 		});
 	}
+        async doLogout(): Promise<void> {
+          await this.backend.logout();
+          this.setState({authenticated: false});
+          window.location.reload(false);
+        }
         async editHandler(fields: {[index: string]:string}, account?: Account): Promise<void> {
 	    let updatedAccount: Account;
 	    if (account) {
@@ -117,7 +122,7 @@ export default class App extends React.Component<AppProps, AppState> {
 		<span>{this.state.message}</span>
 	      </header>
 	      {this.state.authenticated 
-	       ? <Authenticated accounts={this.state.accounts} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)}/>
+	       ? <Authenticated accounts={this.state.accounts} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} logoutHandler={this.doLogout.bind(this)}/>
 	       : <Login doLogin={this.doLogin.bind(this)}/>
 	      }
 	    </div>

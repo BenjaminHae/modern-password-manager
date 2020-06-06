@@ -19,6 +19,7 @@ interface AuthenticatedProps {
   backend: BackendService;
   transformer: AccountTransformerService;
   editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>;
+  logoutHandler: () => Promise<void>;
 }
 interface AuthenticatedState {
   view: AuthenticatedView;
@@ -39,7 +40,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
     return (
 	  <div className={styles.Authenticated}>
 	    Authenticated Component
-            <p><Button onClick={this.addAccountHandler.bind(this)}>Add Account</Button></p>
+            <p><Button onClick={this.addAccountHandler.bind(this)}>Add Account</Button><Button onClick={this.props.logoutHandler}>Logout</Button></p>
                 {this.renderSwitchAuthenticatedView()}
 	  </div>
 	);
