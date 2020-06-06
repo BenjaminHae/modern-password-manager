@@ -10,10 +10,10 @@ import { AccountTransformerService } from './controller/account-transformer.serv
 import { CredentialService } from './credential.service';
 import { CredentialProvider } from './controller/credentialProvider';
 import { CryptoService } from './crypto.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscriber, TeardownLogic } from 'rxjs';
 
-function subscriptionCreator(list: Array<any>): any {
-    return (observer: any) => {
+function subscriptionCreator<T>(list: Array<Subscriber<T>>): (s: Subscriber<T>) => TeardownLogic {
+    return (observer: Subscriber<T>) => {
       list.push(observer);
       return {
         unsubscribe() {
@@ -22,13 +22,13 @@ function subscriptionCreator(list: Array<any>): any {
       }
     };
 }
-function subscriptionExecutor<T>(list: Array<any>, params?:T) {
+function subscriptionExecutor<T>(list: Array<Subscriber<T>>, params?:T) {
   list.forEach(obs => obs.next(params));
 }
 export class BackendService {
-  private accountsObservers = [];
-  private loginObservers = [];
-  private optionsObservers = [];
+  private accountsObservers: Array<Subscriber<Array<Account>>> = [];
+  private loginObservers: Array<Subscriber<void>> = [];
+  private optionsObservers: Array<Subscriber<Array<FieldOptions>>> = [];
   public serverSettings: ServerSettings = {allowRegistration: true, passwordGenerator: "aaaaab"};
   public accounts: Array<Account> = [];
   public fields: Array<FieldOptions> = [];
