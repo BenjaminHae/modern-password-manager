@@ -22,7 +22,7 @@ function subscriptionCreator(list: Array<any>): any {
       }
     };
 }
-function subscriptionExecutor(list: Array<any>, params:any) {
+function subscriptionExecutor<T>(list: Array<any>, params?:T) {
   list.forEach(obs => obs.next(params));
 }
 export class BackendService {
@@ -50,7 +50,7 @@ export class BackendService {
     await this.afterLogin();
   }
 
-  async changeUserPassword(newPassword: string): Promise<any> {
+  async changeUserPassword(newPassword: string): Promise<void> {
     let newCredentials = new CredentialProvider();
     await newCredentials.generateFromPassword(newPassword)
     let newPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12), newCredentials)
@@ -81,13 +81,13 @@ export class BackendService {
   }
 
   async afterLogin(): Promise<void> {
-    subscriptionExecutor(this.loginObservers, null);
+    subscriptionExecutor(this.loginObservers);
     let accounts = await this.accountsService.getAccounts()
     this.fields = [
       { name: "Username", colNumber: 1, selector: "user", visible: true, sortable: true },
       { name: "URL", selector: "url", visible: false }
     ];
-    subscriptionExecutor(this.optionsObservers, this.fields);
+    subscriptionExecutor<Array<FieldOptions>>(this.optionsObservers, this.fields);
     return await this.parseAccounts(accounts)
   }
 
@@ -99,10 +99,10 @@ export class BackendService {
         accounts.push( decAccount );
     }
     this.accounts = accounts;
-    subscriptionExecutor(this.accountsObservers, accounts);
+    subscriptionExecutor<Array<Account>>(this.accountsObservers, accounts);
   }
 
-  async register(username: string, password: string, email: string): Promise<any> {
+  async register(username: string, password: string, email: string): Promise<void> {
     await this.credentials.generateFromPassword(password)
     let ciphertext = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
     return await this.userService.register(username, ciphertext, email)
