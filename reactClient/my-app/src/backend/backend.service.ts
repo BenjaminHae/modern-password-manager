@@ -108,7 +108,7 @@ export class BackendService {
     return await this.userService.register(username, ciphertext, email)
   }
 
-  addAccount(account: Account): Promise<any> {
+  addAccount(account: Account): Promise<void> {
     return this.addAccounts([account]);
   }
 
