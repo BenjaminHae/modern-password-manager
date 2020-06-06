@@ -3,3 +3,13 @@
 #    controller: App\Controller\DefaultController::index
 open_api_server:
      resource: "@OpenAPIServerBundle/Resources/config/routing.yml"
+index:
+    path: /
+    controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+    defaults:
+        # the path of the template to render
+        template:  'static/test.html.twig'
+
+        # special options defined by Symfony to set the page cache
+        maxAge:    86400
+        sharedAge: 86400
