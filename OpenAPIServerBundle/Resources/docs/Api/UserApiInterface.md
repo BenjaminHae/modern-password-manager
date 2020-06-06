@@ -5,6 +5,8 @@ All URIs are relative to *http://localhost*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**changePassword**](UserApiInterface.md#changePassword) | **POST** /user/changepassword | change user password
+[**getUserHistory**](UserApiInterface.md#getUserHistory) | **GET** /user/history | Returns a history of successful and failed logins
+[**getUserSettings**](UserApiInterface.md#getUserSettings) | **GET** /user/settings | Returns the client settings of the current user
 [**loginUser**](UserApiInterface.md#loginUser) | **POST** /user/login | login
 [**logoutUser**](UserApiInterface.md#logoutUser) | **GET** /user/logout | Logs out current logged in user session
 [**registerUser**](UserApiInterface.md#registerUser) | **PUT** /user | registration
@@ -80,6 +82,104 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+## **getUserHistory**
+> OpenAPI\Server\Model\HistoryItem getUserHistory()
+
+Returns a history of successful and failed logins
+
+### Example Implementation
+```php
+<?php
+// src/Acme/MyBundle/Api/UserApiInterface.php
+
+namespace Acme\MyBundle\Api;
+
+use OpenAPI\Server\Api\UserApiInterface;
+
+class UserApi implements UserApiInterface
+{
+
+    // ...
+
+    /**
+     * Implementation of UserApiInterface#getUserHistory
+     */
+    public function getUserHistory()
+    {
+        // Implement the operation ...
+    }
+
+    // ...
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**OpenAPI\Server\Model\HistoryItem**](../Model/HistoryItem.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+## **getUserSettings**
+> OpenAPI\Server\Model\UserSettings getUserSettings()
+
+Returns the client settings of the current user
+
+### Example Implementation
+```php
+<?php
+// src/Acme/MyBundle/Api/UserApiInterface.php
+
+namespace Acme\MyBundle\Api;
+
+use OpenAPI\Server\Api\UserApiInterface;
+
+class UserApi implements UserApiInterface
+{
+
+    // ...
+
+    /**
+     * Implementation of UserApiInterface#getUserSettings
+     */
+    public function getUserSettings()
+    {
+        // Implement the operation ...
+    }
+
+    // ...
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**OpenAPI\Server\Model\UserSettings**](../Model/UserSettings.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)

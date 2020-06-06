@@ -366,7 +366,7 @@ components:
     GenericSuccessMessage:
       type: object
       properties:
-        status:
-          type: string
+        success:
+          type: boolean
         message:
           type: string

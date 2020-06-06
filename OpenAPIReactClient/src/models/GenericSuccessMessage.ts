@@ -21,10 +21,10 @@ import { exists, mapValues } from '../runtime';
 export interface GenericSuccessMessage {
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof GenericSuccessMessage
      */
-    status?: string;
+    success?: boolean;
     /**
      * 
      * @type {string}
@@ -43,7 +43,7 @@ export function GenericSuccessMessageFromJSONTyped(json: any, ignoreDiscriminato
     }
     return {
         
-        'status': !exists(json, 'status') ? undefined : json['status'],
+        'success': !exists(json, 'success') ? undefined : json['success'],
         'message': !exists(json, 'message') ? undefined : json['message'],
     };
 }
@@ -57,7 +57,7 @@ export function GenericSuccessMessageToJSON(value?: GenericSuccessMessage | null
     }
     return {
         
-        'status': value.status,
+        'success': value.success,
         'message': value.message,
     };
 }

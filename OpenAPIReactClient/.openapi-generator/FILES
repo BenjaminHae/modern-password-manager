@@ -11,12 +11,14 @@ src/models/Account.ts
 src/models/AccountId.ts
 src/models/ChangePassword.ts
 src/models/GenericSuccessMessage.ts
+src/models/HistoryItem.ts
 src/models/LogonInformation.ts
 src/models/ModelFile.ts
 src/models/ModelIndex.ts
 src/models/RegistrationInformation.ts
 src/models/ServerInformation.ts
 src/models/UserInformation.ts
+src/models/UserSettings.ts
 src/models/index.ts
 src/runtime.ts
 tsconfig.json

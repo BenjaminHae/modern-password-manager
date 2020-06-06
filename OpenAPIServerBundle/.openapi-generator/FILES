@@ -11,11 +11,13 @@
 ./Model/ChangePassword.php
 ./Model/File.php
 ./Model/GenericSuccessMessage.php
+./Model/HistoryItem.php
 ./Model/Index.php
 ./Model/LogonInformation.php
 ./Model/RegistrationInformation.php
 ./Model/ServerInformation.php
 ./Model/UserInformation.php
+./Model/UserSettings.php
 ./Service/JmsSerializer.php
 ./Service/SerializerInterface.php
 ./Service/StrictJsonDeserializationVisitor.php
@@ -24,6 +26,8 @@
 ./Service/ValidatorInterface.php
 ./Tests/AppKernel.php
 ./Tests/Controller/ControllerTest.php
+./Tests/Model/HistoryItemTest.php
+./Tests/Model/UserSettingsTest.php
 ./Tests/test_config.yml
 .php_cs
 .travis.yml
@@ -41,11 +45,13 @@ Resources/docs/Model/AccountId.md
 Resources/docs/Model/ChangePassword.md
 Resources/docs/Model/File.md
 Resources/docs/Model/GenericSuccessMessage.md
+Resources/docs/Model/HistoryItem.md
 Resources/docs/Model/Index.md
 Resources/docs/Model/LogonInformation.md
 Resources/docs/Model/RegistrationInformation.md
 Resources/docs/Model/ServerInformation.md
 Resources/docs/Model/UserInformation.md
+Resources/docs/Model/UserSettings.md
 autoload.php
 composer.json
 git_push.sh

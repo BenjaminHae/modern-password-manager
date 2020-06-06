@@ -38,8 +38,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 use OpenAPI\Server\Api\UserApiInterface;
 use OpenAPI\Server\Model\ChangePassword;
 use OpenAPI\Server\Model\GenericSuccessMessage;
+use OpenAPI\Server\Model\HistoryItem;
 use OpenAPI\Server\Model\LogonInformation;
 use OpenAPI\Server\Model\RegistrationInformation;
+use OpenAPI\Server\Model\UserSettings;
 
 /**
  * UserController Class Doc Comment
@@ -125,6 +127,138 @@ class UserController extends Controller
             switch ($responseCode) {
                 case 200:
                     $message = 'OK';
+                    break;
+            }
+
+            return new Response(
+                $result !== null ?$this->serialize($result, $responseFormat):'',
+                $responseCode,
+                array_merge(
+                    $responseHeaders,
+                    [
+                        'Content-Type' => $responseFormat,
+                        'X-OpenAPI-Message' => $message
+                    ]
+                )
+            );
+        } catch (Exception $fallthrough) {
+            return $this->createErrorResponse(new HttpException(500, 'An unsuspected error occurred.', $fallthrough));
+        }
+    }
+
+    /**
+     * Operation getUserHistory
+     *
+     * Returns a history of successful and failed logins
+     *
+     * @param Request $request The Symfony request to handle.
+     * @return Response The Symfony response.
+     */
+    public function getUserHistoryAction(Request $request)
+    {
+        // Figure out what data format to return to the client
+        $produces = ['application/json'];
+        // Figure out what the client accepts
+        $clientAccepts = $request->headers->has('Accept')?$request->headers->get('Accept'):'*/*';
+        $responseFormat = $this->getOutputFormat($clientAccepts, $produces);
+        if ($responseFormat === null) {
+            return new Response('', 406);
+        }
+
+        // Handle authentication
+
+        // Read out all input parameter values into variables
+
+        // Use the default value if no value was provided
+
+        // Validate the input values
+
+
+        try {
+            $handler = $this->getApiHandler();
+
+            
+            // Make the call to the business logic
+            $responseCode = 200;
+            $responseHeaders = [];
+            $result = $handler->getUserHistory($responseCode, $responseHeaders);
+
+            // Find default response message
+            $message = 'Array of logins';
+
+            // Find a more specific message, if available
+            switch ($responseCode) {
+                case 200:
+                    $message = 'Array of logins';
+                    break;
+                case 403:
+                    $message = 'Unauthorized';
+                    break;
+            }
+
+            return new Response(
+                $result !== null ?$this->serialize($result, $responseFormat):'',
+                $responseCode,
+                array_merge(
+                    $responseHeaders,
+                    [
+                        'Content-Type' => $responseFormat,
+                        'X-OpenAPI-Message' => $message
+                    ]
+                )
+            );
+        } catch (Exception $fallthrough) {
+            return $this->createErrorResponse(new HttpException(500, 'An unsuspected error occurred.', $fallthrough));
+        }
+    }
+
+    /**
+     * Operation getUserSettings
+     *
+     * Returns the client settings of the current user
+     *
+     * @param Request $request The Symfony request to handle.
+     * @return Response The Symfony response.
+     */
+    public function getUserSettingsAction(Request $request)
+    {
+        // Figure out what data format to return to the client
+        $produces = ['application/json'];
+        // Figure out what the client accepts
+        $clientAccepts = $request->headers->has('Accept')?$request->headers->get('Accept'):'*/*';
+        $responseFormat = $this->getOutputFormat($clientAccepts, $produces);
+        if ($responseFormat === null) {
+            return new Response('', 406);
+        }
+
+        // Handle authentication
+
+        // Read out all input parameter values into variables
+
+        // Use the default value if no value was provided
+
+        // Validate the input values
+
+
+        try {
+            $handler = $this->getApiHandler();
+
+            
+            // Make the call to the business logic
+            $responseCode = 200;
+            $responseHeaders = [];
+            $result = $handler->getUserSettings($responseCode, $responseHeaders);
+
+            // Find default response message
+            $message = 'stored client values (encrypted string that contains a JSON)';
+
+            // Find a more specific message, if available
+            switch ($responseCode) {
+                case 200:
+                    $message = 'stored client values (encrypted string that contains a JSON)';
+                    break;
+                case 403:
+                    $message = 'Unauthorized';
                     break;
             }
 

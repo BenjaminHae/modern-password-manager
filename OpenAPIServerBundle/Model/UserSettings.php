@@ -1,6 +1,6 @@
 <?php
 /**
- * GenericSuccessMessage
+ * UserSettings
  *
  * PHP version 5
  *
@@ -34,28 +34,20 @@ use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * Class representing the GenericSuccessMessage model.
+ * Class representing the UserSettings model.
  *
  * @package OpenAPI\Server\Model
  * @author  OpenAPI Generator team
  */
-class GenericSuccessMessage 
+class UserSettings 
 {
         /**
-     * @var bool|null
-     * @SerializedName("success")
-     * @Assert\Type("bool")
-     * @Type("bool")
-     */
-    protected $success;
-
-    /**
      * @var string|null
-     * @SerializedName("message")
+     * @SerializedName("encryptedUserSettings")
      * @Assert\Type("string")
      * @Type("string")
      */
-    protected $message;
+    protected $encryptedUserSettings;
 
     /**
      * Constructor
@@ -63,54 +55,29 @@ class GenericSuccessMessage
      */
     public function __construct(array $data = null)
     {
-        $this->success = isset($data['success']) ? $data['success'] : null;
-        $this->message = isset($data['message']) ? $data['message'] : null;
+        $this->encryptedUserSettings = isset($data['encryptedUserSettings']) ? $data['encryptedUserSettings'] : null;
     }
 
     /**
-     * Gets success.
-     *
-     * @return bool|null
-     */
-    public function isSuccess()
-    {
-        return $this->success;
-    }
-
-    /**
-     * Sets success.
-     *
-     * @param bool|null $success
-     *
-     * @return $this
-     */
-    public function setSuccess($success = null)
-    {
-        $this->success = $success;
-
-        return $this;
-    }
-
-    /**
-     * Gets message.
+     * Gets encryptedUserSettings.
      *
      * @return string|null
      */
-    public function getMessage()
+    public function getEncryptedUserSettings()
     {
-        return $this->message;
+        return $this->encryptedUserSettings;
     }
 
     /**
-     * Sets message.
+     * Sets encryptedUserSettings.
      *
-     * @param string|null $message
+     * @param string|null $encryptedUserSettings
      *
      * @return $this
      */
-    public function setMessage($message = null)
+    public function setEncryptedUserSettings($encryptedUserSettings = null)
     {
-        $this->message = $message;
+        $this->encryptedUserSettings = $encryptedUserSettings;
 
         return $this;
     }

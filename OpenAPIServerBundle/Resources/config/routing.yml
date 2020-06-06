@@ -45,6 +45,18 @@ open_api_server_user_changepassword:
     defaults:
         _controller: open_api_server.controller.user:changePasswordAction
 
+open_api_server_user_getuserhistory:
+    path:     /user/history
+    methods:  [GET]
+    defaults:
+        _controller: open_api_server.controller.user:getUserHistoryAction
+
+open_api_server_user_getusersettings:
+    path:     /user/settings
+    methods:  [GET]
+    defaults:
+        _controller: open_api_server.controller.user:getUserSettingsAction
+
 open_api_server_user_loginuser:
     path:     /user/login
     methods:  [POST]

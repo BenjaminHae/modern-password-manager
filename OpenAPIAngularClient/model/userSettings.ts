@@ -11,8 +11,7 @@
  */
 
 
-export interface GenericSuccessMessage { 
-    success?: boolean;
-    message?: string;
+export interface UserSettings { 
+    encryptedUserSettings?: string;
 }
 

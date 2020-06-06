@@ -31,8 +31,10 @@ namespace OpenAPI\Server\Api;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use OpenAPI\Server\Model\ChangePassword;
 use OpenAPI\Server\Model\GenericSuccessMessage;
+use OpenAPI\Server\Model\HistoryItem;
 use OpenAPI\Server\Model\LogonInformation;
 use OpenAPI\Server\Model\RegistrationInformation;
+use OpenAPI\Server\Model\UserSettings;
 
 /**
  * UserApiInterface Interface Doc Comment
@@ -67,6 +69,32 @@ interface UserApiInterface
      *
      */
     public function changePassword(ChangePassword $changePassword, &$responseCode, array &$responseHeaders);
+
+    /**
+     * Operation getUserHistory
+     *
+     * Returns a history of successful and failed logins
+     *
+     * @param  integer $responseCode     The HTTP response code to return
+     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     *
+     * @return OpenAPI\Server\Model\HistoryItem[]
+     *
+     */
+    public function getUserHistory(&$responseCode, array &$responseHeaders);
+
+    /**
+     * Operation getUserSettings
+     *
+     * Returns the client settings of the current user
+     *
+     * @param  integer $responseCode     The HTTP response code to return
+     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     *
+     * @return OpenAPI\Server\Model\UserSettings
+     *
+     */
+    public function getUserSettings(&$responseCode, array &$responseHeaders);
 
     /**
      * Operation loginUser

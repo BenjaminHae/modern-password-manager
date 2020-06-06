@@ -21,12 +21,18 @@ import {
     GenericSuccessMessage,
     GenericSuccessMessageFromJSON,
     GenericSuccessMessageToJSON,
+    HistoryItem,
+    HistoryItemFromJSON,
+    HistoryItemToJSON,
     LogonInformation,
     LogonInformationFromJSON,
     LogonInformationToJSON,
     RegistrationInformation,
     RegistrationInformationFromJSON,
     RegistrationInformationToJSON,
+    UserSettings,
+    UserSettingsFromJSON,
+    UserSettingsToJSON,
 } from '../models';
 
 export interface ChangePasswordRequest {
@@ -82,6 +88,58 @@ export class UserApi extends runtime.BaseAPI {
      */
     async changePassword(requestParameters: ChangePasswordRequest): Promise<GenericSuccessMessage> {
         const response = await this.changePasswordRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * Returns a history of successful and failed logins
+     */
+    async getUserHistoryRaw(): Promise<runtime.ApiResponse<Array<HistoryItem>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/user/history`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(HistoryItemFromJSON));
+    }
+
+    /**
+     * Returns a history of successful and failed logins
+     */
+    async getUserHistory(): Promise<Array<HistoryItem>> {
+        const response = await this.getUserHistoryRaw();
+        return await response.value();
+    }
+
+    /**
+     * Returns the client settings of the current user
+     */
+    async getUserSettingsRaw(): Promise<runtime.ApiResponse<UserSettings>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/user/settings`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserSettingsFromJSON(jsonValue));
+    }
+
+    /**
+     * Returns the client settings of the current user
+     */
+    async getUserSettings(): Promise<UserSettings> {
+        const response = await this.getUserSettingsRaw();
         return await response.value();
     }
 
