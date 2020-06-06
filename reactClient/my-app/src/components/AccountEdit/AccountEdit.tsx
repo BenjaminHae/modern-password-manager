@@ -45,7 +45,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
   }
   cleanUp() {
     let newFields: {[index: string]:string} = { name: "", password: "" };
-    for (let item in this.props.fields) {
+    for (let item of this.props.fields) {
       newFields[item.selector] = "";
     }
     this.setState({fields: newFields});
