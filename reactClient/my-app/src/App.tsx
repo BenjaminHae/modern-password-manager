@@ -41,7 +41,12 @@ export default class App extends React.Component<AppProps, AppState> {
                         fields: []
 		}
 		let csrfMiddleware = new CSRFMiddleware();
-		let APIconfiguration = new OpenAPIConfiguration({ basePath: "http://debian-vms-hp.lab:8080", middleware: [csrfMiddleware]});
+                let basePath = "";
+                if (process.env.REACT_APP_API_BASE_URL) {
+                  basePath = process.env.REACT_APP_API_BASE_URL;
+                  console.log("using base path " + basePath + " for Api");
+                }
+		let APIconfiguration = new OpenAPIConfiguration({ basePath: basePath, middleware: [csrfMiddleware]});
 		let credentialService = new CredentialService();
 		this.crypto = new CryptoService(credentialService);
 		this.accountTransformerService = new AccountTransformerService(this.crypto); 
@@ -73,7 +78,8 @@ export default class App extends React.Component<AppProps, AppState> {
 	}
 	doLogin(username:string, password: string) {
 	  this.backend.logon(username, password)
-		.catch(() => {
+		.catch((e) => {
+                        console.log(e);
 			this.setState({message : "login failed", authenticated : false});
 		});
 	}
