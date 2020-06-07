@@ -1,7 +1,6 @@
 import React from 'react';
-import Login from './components/Login/Login';
 import Authenticated from './components/Authenticated/Authenticated';
-import Register from './components/Register/Register';
+import Unauthenticated from './components/Unauthenticated/Unauthenticated';
 import './App.css';
 import { BackendService } from './backend/backend.service';
 import { CSRFMiddleware } from './backend/api/CSRFMiddleware';
@@ -133,9 +132,8 @@ export default class App extends React.Component<AppProps, AppState> {
 	      </header>
 	      {this.state.authenticated 
 	       ? <Authenticated accounts={this.state.accounts} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} logoutHandler={this.doLogout.bind(this)}/>
-	       : <Login doLogin={this.doLogin.bind(this)}/>
+	       : <Unauthenticated doLogin={this.doLogin.bind(this)} doRegister={this.doRegister.bind(this)} />
 	      }
-              <Register doRegister={this.doRegister.bind(this)} />
 	    </div>
 	  );
 	}

@@ -2,6 +2,8 @@ import React from 'react';
 import styles from './Register.module.css';
 import Button from 'react-bootstrap/Button';
 
+// Todo:
+//  - add second password input
 interface RegisterProps {
   doRegister: (username: string, password: string, email: string) => Promise<void>;
 }
