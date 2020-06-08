@@ -130,10 +130,13 @@ export default class App extends React.Component<AppProps, AppState> {
 		  Password Manager
 		<span>{this.state.message}</span>
 	      </header>
-	      {this.state.authenticated 
-	       ? <Authenticated accounts={this.state.accounts} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} logoutHandler={this.doLogout.bind(this)}/>
-	       : <Unauthenticated doLogin={this.doLogin.bind(this)} doRegister={this.doRegister.bind(this)} />
-	      }
+	      {this.state.authenticated &&
+	       <Authenticated accounts={this.state.accounts} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} logoutHandler={this.doLogout.bind(this)}/>
+              }
+              {!this.state.authenticated && this.state.ready
+               && <Unauthenticated doLogin={this.doLogin.bind(this)} doRegister={this.doRegister.bind(this)} /> }
+              {!this.state.authenticated && !this.state.ready 
+               && <span>Waiting for server</span> }
 	    </div>
 	  );
 	}
