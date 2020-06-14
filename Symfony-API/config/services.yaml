@@ -40,6 +40,8 @@ services:
     App\Api\MaintenanceApi:
         tags: 
             - { name: 'open_api_server.api', api: 'maintenance' }
+        arguments:
+            $allowRegistration: '%env(REGISTRATION_ALLOWED)%'
 
     App\Services\:
         resource: '../src/Services/*'

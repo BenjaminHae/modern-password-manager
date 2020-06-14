@@ -11,10 +11,12 @@ class MaintenanceApi implements MaintenanceApiInterface
 {
     
     private $csrfManager;
+    private $allowRegistration;
 
-    public function __construct(CsrfTokenManagerInterface $csrfManager)
+    public function __construct(CsrfTokenManagerInterface $csrfManager, $allowRegistration)
     {
         $this->csrfManager = $csrfManager;
+        $this->allowRegistration = strtolower($allowRegistration) === "true";
     }
 
     /**
@@ -22,7 +24,7 @@ class MaintenanceApi implements MaintenanceApiInterface
      */
     public function serverInformation(&$responseCode, array &$responseHeaders)
     {
-        return new ServerInformation(["csrfToken" => $this->csrfManager->getToken("Api")->getValue()]);
+        return new ServerInformation(["csrfToken" => $this->csrfManager->getToken("Api")->getValue(), "allowRegistration" => $this->allowRegistration]);
     }
 
 }
