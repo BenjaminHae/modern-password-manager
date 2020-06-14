@@ -12,11 +12,14 @@ use OpenAPI\Server\Model\LogonInformation;
 use OpenAPI\Server\Model\Registration;
 use OpenAPI\Server\Model\RegistrationInformation;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
-class UserApi extends CsrfProtection implements UserApiInterface
+class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessHandlerInterface
 {
     private $entityManager;
     private $passwordEncoder;
@@ -109,4 +112,10 @@ class UserApi extends CsrfProtection implements UserApiInterface
     }
 
     // ...
+    public function onLogoutSuccess(Request $request) {
+        $response = new Response();
+        $response->setContent(json_encode( $this->generateApiSuccess("logged out") ));
+        $response->headers->set('Content-Type', 'application/json');      
+        return $response;
+    }
 }
