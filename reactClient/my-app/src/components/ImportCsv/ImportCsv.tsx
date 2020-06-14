@@ -5,6 +5,7 @@ import { IDataTableColumn } from 'react-data-table-component';
 import { CsvParser } from './csv/csvParser';
 import { CsvConverter } from './csv/csvConverter';
 import { FieldOptions } from '../../backend/models/fieldOptions';
+import CsvFieldMappingSelect from './CsvFieldMappingSelect/CsvFieldMappingSelect';
 
 interface ImportCsvProps {
   availableFields: Array<FieldOptions>;
@@ -73,11 +74,16 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
   renderMapping() {
     return this.state.headers.map((header: string)=> { 
        let mapped = this.state.mapping.get(header);
-       if (mapped != null) {
-         return (<td key={header} title={mapped}>{this.getColumnNameBySelector(mapped)}</td>) 
+       if (mapped == null) {
+         mapped = header;
        }
-       return ( <td key={header} title={header}></td>)
-      });
+         
+       return (<td key={header} title={mapped}><CsvFieldMappingSelect availableFields={this.props.availableFields} mappedFieldSelector={mapped} header={header} changeHandler={this.mappingChangeHandler.bind(this)}/></td>) 
+     });
+//  <mat-select mat-select [(ngModel)]="selected" (ngModelChange)="onChange($event)">
+//    <mat-option value="undefined">undefined</mat-option>
+//    <mat-option *ngFor="let field of availableFields" [value]="field">{{field}}</mat-option>
+//  </mat-select>
   }
   render () {
     return (
@@ -91,14 +97,17 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
               </form>
         <div>
         <table>
-	<tr>{this.renderHeaders()}</tr>
-	<tr>{this.renderMapping()}</tr>
+          <thead><tr>{this.renderHeaders()}</tr></thead>
+          <tbody><tr>{this.renderMapping()}</tr></tbody>
         </table>
 	<DataTable title="Accounts" columns={this.state.columns} data={this.state.data} />
         </div>
         
       </div>
       );
+  }
+
+  mappingChangeHandler(header: string, newMapping: string) {
   }
 }
 
