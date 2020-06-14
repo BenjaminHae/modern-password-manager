@@ -24,13 +24,14 @@ class UserApi extends CsrfProtection implements UserApiInterface
     private $session;
     private $accountsController;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, Security $security, SessionInterface $session, CsrfTokenManagerInterface $csrfManager)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, Security $security, SessionInterface $session, CsrfTokenManagerInterface $csrfManager, $allowRegistration)
     {
         parent::__construct($csrfManager);
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
         $this->security = $security;
         $this->session = $session;
+        $this->allowRegistration = strtolower($allowRegistration) === "true";
     }
 
     private function getAccountsController()
@@ -74,6 +75,9 @@ class UserApi extends CsrfProtection implements UserApiInterface
     }
 
     public function registerUser(RegistrationInformation $registration, &$responseCode, array &$responseHeaders) {
+        if (!$this->allowRegistration) {
+          return $this->generateApiError("registration is not allowed");
+        }
 	$user = new User();
         $user->setUsername($registration->getUsername());
         $user->setEmail($registration->getEmail());
