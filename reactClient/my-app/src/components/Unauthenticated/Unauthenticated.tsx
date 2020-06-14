@@ -6,13 +6,14 @@ import Register from '../Register/Register';
 interface UnauthenticatedProps {
   doLogin: (username: string, password: string) => void;
   doRegister: (username: string, password: string, email: string) => Promise<void>;
+  showRegistration: boolean;
 }
 class Unauthenticated extends React.Component<UnauthenticatedProps> {
   render () {
     return (
       <div className={styles.Unauthenticated}>
         <Login doLogin={this.props.doLogin}/>
-        <Register doRegister={this.props.doRegister} />
+        {this.props.showRegistration && <Register doRegister={this.props.doRegister} /> }
       </div>
     )
   }

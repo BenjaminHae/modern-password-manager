@@ -4,7 +4,7 @@ import Unauthenticated from './components/Unauthenticated/Unauthenticated';
 import './App.css';
 import { BackendService } from './backend/backend.service';
 import { CSRFMiddleware } from './backend/api/CSRFMiddleware';
-import { MaintenanceService } from './backend/api/maintenance.service';
+import { MaintenanceService, BackendOptions } from './backend/api/maintenance.service';
 import { UserService } from './backend/api/user.service';
 import { AccountsService } from './backend/api/accounts.service';
 import { AccountTransformerService } from './backend/controller/account-transformer.service';
@@ -21,6 +21,7 @@ interface AppState {
 	ready: boolean;
 	message: string;
 	authenticated: boolean;
+	registrationAllowed: boolean;
 	accounts: Array<Account>;
 	fields: Array<FieldOptions>
 }
@@ -36,6 +37,7 @@ export default class App extends React.Component<AppProps, AppState> {
 			ready: false,
 			message: "",
 			authenticated: false,
+			registrationAllowed: false,
 			accounts: [],
                         fields: []
 		}
@@ -57,8 +59,8 @@ export default class App extends React.Component<AppProps, AppState> {
 			this.accountTransformerService, 
 			this.crypto);
 		this.backend.waitForBackend()
-			.then(() => {
-				this.setState({ready : true});
+			.then((backendOptions: BackendOptions) => {
+				this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed});
 			});
 	        this.backend.loginObservable
                         .subscribe(()=>{
@@ -134,7 +136,7 @@ export default class App extends React.Component<AppProps, AppState> {
 	       <Authenticated accounts={this.state.accounts} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} logoutHandler={this.doLogout.bind(this)}/>
               }
               {!this.state.authenticated && this.state.ready
-               && <Unauthenticated doLogin={this.doLogin.bind(this)} doRegister={this.doRegister.bind(this)} /> }
+               && <Unauthenticated doLogin={this.doLogin.bind(this)} doRegister={this.doRegister.bind(this)} showRegistration={this.state.registrationAllowed} /> }
               {!this.state.authenticated && !this.state.ready 
                && <span>Waiting for server</span> }
 	    </div>

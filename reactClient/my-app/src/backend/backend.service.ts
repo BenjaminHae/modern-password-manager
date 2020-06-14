@@ -1,7 +1,7 @@
 import { Account } from './models/account';
 import { CryptedObject } from './models/cryptedObject';
 import { encryptedAccount } from './models/encryptedAccount';
-import { MaintenanceService } from './api/maintenance.service';
+import { MaintenanceService, BackendOptions } from './api/maintenance.service';
 import { UserService } from './api/user.service';
 import { AccountsService } from './api/accounts.service';
 import { ServerSettings } from './models/serverSettings';
@@ -38,9 +38,8 @@ export class BackendService {
 
   constructor(private maintenanceService: MaintenanceService, private userService: UserService, private accountsService: AccountsService, private credentials: CredentialService, private accountTransformer: AccountTransformerService, private crypto: CryptoService ) {}
 
-  async waitForBackend(): Promise<void> {
-    console.log("waiting for maintenanceService");
-    await this.maintenanceService.retrieveInfo();
+  async waitForBackend(): Promise<BackendOptions> {
+    return await this.maintenanceService.retrieveInfo();
   }
 
   async logon(username: string, password: string): Promise<void> {
