@@ -67,10 +67,12 @@ class UserApi extends CsrfProtection implements UserApiInterface
 
     public function logoutUser(&$responseCode, array &$responseHeaders) 
     {
-        //not working, session stays active
-        $this->session->start();
-        $this->session->clear();
-        $this->session->invalidate();
+        $currentUser = $this->security->getUser();
+        if ($currentUser)
+        {
+            $username = $currentUser->getUsername();
+            return $this->generateApiError("still logged in as " . $username);
+        }
         return $this->generateApiSuccess("logged out");
     }
 
