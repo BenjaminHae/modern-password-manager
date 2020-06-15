@@ -61,11 +61,11 @@ export class CsvConverter {
       throw new Error("Password not selected");
     }
     fields["password"] = data[mappedTo];
-    mappedTo = this.getKeyMappedTo("username");
+    mappedTo = this.getKeyMappedTo("name");
     if (!mappedTo) {
-      throw new Error("Username not selected");
+      throw new Error("Account-name not selected");
     }
-    fields["username"] = data[mappedTo];
+    fields["name"] = data[mappedTo];
     for (let item in this.availableFields) {
       let key = this.getKeyMappedTo(item);
       if (key) {

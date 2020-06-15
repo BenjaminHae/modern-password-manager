@@ -19,7 +19,8 @@ class CsvFieldMappingSelect extends React.Component<CsvFieldMappingSelectProps, 
   getOptions() {
     let options: Array<OptionInfo> = [
       { name: "", selector: ""},
-      { name: "Password", selector: "password"}
+      { name: "Password", selector: "password"},
+      { name: "Name", selector: "name"}
       ]
     for (let field of this.props.availableFields) {
       options.push({ name: field.name, selector: field.selector})
