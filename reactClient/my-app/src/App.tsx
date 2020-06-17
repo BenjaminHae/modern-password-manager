@@ -45,7 +45,6 @@ export default class App extends React.Component<AppProps, AppState> {
                 let basePath = "";
                 if (process.env.REACT_APP_API_BASE_URL) {
                   basePath = process.env.REACT_APP_API_BASE_URL;
-                  console.log("using base path " + basePath + " for Api");
                 }
 		let APIconfiguration = new OpenAPIConfiguration({ basePath: basePath, middleware: [csrfMiddleware]});
 		let credentialService = new CredentialService();
@@ -58,10 +57,6 @@ export default class App extends React.Component<AppProps, AppState> {
 			credentialService, 
 			this.accountTransformerService, 
 			this.crypto);
-		this.backend.waitForBackend()
-			.then((backendOptions: BackendOptions) => {
-				this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed});
-			});
 	        this.backend.loginObservable
                         .subscribe(()=>{
 				this.setState({authenticated : true});
@@ -77,6 +72,12 @@ export default class App extends React.Component<AppProps, AppState> {
 				this.setState({fields : fieldOptions});
 			});
 	}
+        componentDidMount() {
+		this.backend.waitForBackend()
+			.then((backendOptions: BackendOptions) => {
+				this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed});
+			});
+        }
 	doLogin(username:string, password: string) {
 	  this.backend.logon(username, password)
 		.catch((e) => {
