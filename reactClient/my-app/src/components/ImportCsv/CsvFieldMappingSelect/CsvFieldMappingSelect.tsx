@@ -29,9 +29,14 @@ class CsvFieldMappingSelect extends React.Component<CsvFieldMappingSelectProps, 
     return options.map((field) => (<option value={field.selector} key={field.selector} >{field.name}</option>));
   }
 
+  handleSelect(event: React.ChangeEvent<HTMLSelectElement>) {
+    this.props.changeHandler(this.props.header, event.target.value);
+    event.preventDefault();
+  }
+
   render () {
     return (
-      <select className={styles.CsvFieldMappingSelect} value={this.props.mappedFieldSelector} >
+      <select className={styles.CsvFieldMappingSelect} value={this.props.mappedFieldSelector} onChange={this.handleSelect.bind(this)} >
       {this.getOptions()}
       </select>
     );

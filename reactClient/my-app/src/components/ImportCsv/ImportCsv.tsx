@@ -11,7 +11,7 @@ interface ImportCsvProps {
   availableFields: Array<FieldOptions>;
 }
 interface ImportCsvState {
-  data: Array<{[index: string]:string}>;
+  previewData: Array<{[index: string]:string}>;
   columns: Array<IDataTableColumn<{[index: string]:string}>>;
   message: string;
   headers: Array<string>;
@@ -24,7 +24,7 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
   constructor(props: ImportCsvProps) {
     super(props);
     this.state = {
-      data: [],
+      previewData: [],
       columns: [],
       message: "",
       headers: [],
@@ -52,14 +52,32 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
             this.setState({message : "file read, using delimiter '" + this.parser.getDelimiter() + "'"});
           });
   }
+  getColumns(headers: Array<string>, mappings: Map<string, string | null>): Array<IDataTableColumn<{[index: string]:string}>> {
+    let columns: Array<IDataTableColumn<{[index: string]:string}>> = []
+    for (let head of this.parser.getHeaders()) {
+      let name = mappings.get(head);
+      if (name !== null) {
+        columns.push( { 
+          name: name, 
+          selector: head
+        });
+      }
+    }
+    return columns;
+  }
 
   showInformation(): void {
+    let headers = this.parser.getHeaders();
+    let mapping = this.importer.getHeaderMappings();
     this.setState({
-      headers: this.parser.getHeaders(),
-      mapping: this.importer.getHeaderMappings()
+      headers: headers,
+      mapping: mapping,
+      previewData: this.parser.getRows(),
+      columns: this.getColumns(headers, mapping)
     });
     //this.headersSelector = this.headers.map(s => s+"_selector");
   }
+
   getColumnNameBySelector(selector: string) {
     for (let item of this.props.availableFields) {
       if (item.selector === selector) {
@@ -68,14 +86,31 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
     }
     return selector;
   }
+
+  mappingChangeHandler(header: string, newMapping: string) {
+    if (newMapping === "") {
+      this.importer.setHeaderMapping(header, null);
+    }
+    else {
+      this.importer.setHeaderMapping(header, newMapping);
+    }
+    let mapping = this.importer.getHeaderMappings()
+    let columns = this.getColumns(this.parser.getHeaders(), mapping)
+    this.setState({mapping: mapping, columns: columns});
+  }
+
   renderHeaders() {
     return this.state.headers.map((header: string) => (<td key={header}>{header}</td>) );
   }
   renderMapping() {
     return this.state.headers.map((header: string)=> { 
        let mapped = this.state.mapping.get(header);
-       if (mapped == null) {
-         mapped = header;
+       let title = header
+       if (mapped) {
+         title = mapped
+       }
+       else {
+         mapped = ""
        }
          
        return (<td key={header} title={mapped}><CsvFieldMappingSelect availableFields={this.props.availableFields} mappedFieldSelector={mapped} header={header} changeHandler={this.mappingChangeHandler.bind(this)}/></td>) 
@@ -100,14 +135,11 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
           <thead><tr>{this.renderHeaders()}</tr></thead>
           <tbody><tr>{this.renderMapping()}</tr></tbody>
         </table>
-	<DataTable title="Accounts" columns={this.state.columns} data={this.state.data} />
+	<DataTable title="Accounts" columns={this.state.columns} data={this.state.previewData} />
         </div>
         
       </div>
       );
-  }
-
-  mappingChangeHandler(header: string, newMapping: string) {
   }
 }
 
