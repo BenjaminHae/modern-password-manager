@@ -66,7 +66,7 @@ export class CsvConverter {
       throw new Error("Account-name not selected");
     }
     fields["name"] = data[mappedTo];
-    for (let item in this.availableFields) {
+    for (let item of this.availableFields) {
       let key = this.getKeyMappedTo(item);
       if (key) {
         fields[item] = data[key];

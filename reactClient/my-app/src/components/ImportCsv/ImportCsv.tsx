@@ -6,12 +6,14 @@ import { CsvParser } from './csv/csvParser';
 import { CsvConverter } from './csv/csvConverter';
 import { FieldOptions } from '../../backend/models/fieldOptions';
 import CsvFieldMappingSelect from './CsvFieldMappingSelect/CsvFieldMappingSelect';
+import Button from 'react-bootstrap/Button';
 
 interface ImportCsvProps {
   availableFields: Array<FieldOptions>;
+  addAccountHandler: (fields: {[index: string]:string}) => Promise<void>;
 }
 interface ImportCsvState {
-  previewData: Array<{[index: string]:string}>;
+  data: Array<{[index: string]:string}>;
   columns: Array<IDataTableColumn<{[index: string]:string}>>;
   message: string;
   headers: Array<string>;
@@ -24,7 +26,7 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
   constructor(props: ImportCsvProps) {
     super(props);
     this.state = {
-      previewData: [],
+      data: [],
       columns: [],
       message: "",
       headers: [],
@@ -66,13 +68,23 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
     return columns;
   }
 
+  async importAccounts(): Promise<void> {
+    let newAccounts = this.importer.createAccounts(this.state.data);
+    for (let newAccount of newAccounts) {
+      await this.props.addAccountHandler(newAccount);
+    }
+    this.setState({message : `imported ${newAccounts.length} accounts`,
+      data: []
+    });
+  }
+
   showInformation(): void {
     let headers = this.parser.getHeaders();
     let mapping = this.importer.getHeaderMappings();
     this.setState({
       headers: headers,
       mapping: mapping,
-      previewData: this.parser.getRows(),
+      data: this.parser.getRows(),
       columns: this.getColumns(headers, mapping)
     });
     //this.headersSelector = this.headers.map(s => s+"_selector");
@@ -131,11 +143,13 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
                   </div>
               </form>
         <div>
+        <p>{this.state.message}</p>
         <table>
-          <thead><tr>{this.renderHeaders()}</tr></thead>
-          <tbody><tr>{this.renderMapping()}</tr></tbody>
+          <thead><tr><td>CSV Header</td>{this.renderHeaders()}</tr></thead>
+          <tbody><tr><td>Mapped Field</td>{this.renderMapping()}</tr></tbody>
         </table>
-	<DataTable title="Accounts" columns={this.state.columns} data={this.state.previewData} />
+            <p><Button onClick={this.importAccounts.bind(this)}>Import</Button></p>
+	<DataTable title="Accounts" columns={this.state.columns} data={this.state.data} />
         </div>
         
       </div>
