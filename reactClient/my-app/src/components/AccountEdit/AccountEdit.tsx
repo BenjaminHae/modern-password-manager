@@ -8,6 +8,7 @@ interface AccountEditProps {
   account?: Account;
   fields: Array<FieldOptions>;
   editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>;
+  deleteHandler: (account: Account) => Promise<void>;
   closeHandler: () => void;
 }
 interface AccountEditState {
@@ -107,6 +108,18 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
       this.setState({message: "there was an error when saving the account"});
     }
   }
+  async deleteHandler() {
+    if (this.props.account) {
+      try {
+        await this.props.deleteHandler(this.props.account);
+        this.cleanUp();
+        this.props.closeHandler();
+      }
+      catch {
+        this.setState({message: "there was an error when deleting the account"});
+      }
+    }
+  }
   render() {
     return (
       <div>
@@ -115,6 +128,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
         {this.getFormFields()}
         <span> <Button onClick={() => {this.props.closeHandler()} }>Abort</Button></span>
         <span> <Button onClick={() => {this.submitForm()} }>store</Button></span>
+        { this.props.account && <span> <Button onClick={this.deleteHandler.bind(this)}>delete</Button></span> }
       </div>
     );
   }

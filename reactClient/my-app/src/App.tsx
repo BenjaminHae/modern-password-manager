@@ -107,6 +107,12 @@ export default class App extends React.Component<AppProps, AppState> {
               delete fields.password;
 	    }
 	    else {
+              if (!("password" in fields)) {
+                throw new Error("Account has no password");
+              }
+              if (!("name" in fields)) {
+                throw new Error("No Account name set");
+              }
 	      // Todo auto-generate password
 	      let cryptedPassword = await this.crypto.encryptChar(fields["password"]);
               delete fields.password;
@@ -125,6 +131,9 @@ export default class App extends React.Component<AppProps, AppState> {
 		    return this.backend.updateAccount(updatedAccount);
 	    }
         }
+        async deleteHandler(account: Account): Promise<void> {
+          return this.backend.deleteAccount(account);
+        }
 
 	render() {
 	  return (
@@ -134,7 +143,7 @@ export default class App extends React.Component<AppProps, AppState> {
 		<span>{this.state.message}</span>
 	      </header>
 	      {this.state.authenticated &&
-	       <Authenticated accounts={this.state.accounts} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} logoutHandler={this.doLogout.bind(this)}/>
+	       <Authenticated accounts={this.state.accounts} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} deleteHandler={this.deleteHandler.bind(this)} logoutHandler={this.doLogout.bind(this)}/>
               }
               {!this.state.authenticated && this.state.ready
                && <Unauthenticated doLogin={this.doLogin.bind(this)} doRegister={this.doRegister.bind(this)} showRegistration={this.state.registrationAllowed} /> }
