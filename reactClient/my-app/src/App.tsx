@@ -105,31 +105,44 @@ export default class App extends React.Component<AppProps, AppState> {
 		updatedAccount.enpassword = await this.crypto.encryptChar(fields.password);
 	      }
               delete fields.password;
+              for (let item in fields) {
+                updatedAccount.other[item] = fields[item];
+              }
 	    }
 	    else {
-              if (!("password" in fields)) {
-                throw new Error("Account has no password");
-              }
-              if (!("name" in fields)) {
-                throw new Error("No Account name set");
-              }
-	      // Todo auto-generate password
-	      let cryptedPassword = await this.crypto.encryptChar(fields["password"]);
-              delete fields.password;
-	      updatedAccount = new Account(-1, fields.name, cryptedPassword);
-              delete fields.name;
+              updatedAccount = await this.generateNewAccount(fields);
 	    }
-            for (let item in fields) {
-              updatedAccount.other[item] = fields[item];
-            }
 	    if (!account) {
 		    return this.backend.addAccount(updatedAccount);
 	    }
 	    else {
-                    console.log("updating account");
-                    console.log(updatedAccount);
 		    return this.backend.updateAccount(updatedAccount);
 	    }
+        }
+        async generateNewAccount(fields: {[index: string]:string}): Promise<Account> {
+	  let updatedAccount: Account;
+          if (!("password" in fields)) {
+            throw new Error("Account has no password");
+          }
+          if (!("name" in fields)) {
+            throw new Error("No Account name set");
+          }
+	  // Todo auto-generate password
+	  let cryptedPassword = await this.crypto.encryptChar(fields["password"]);
+          delete fields.password;
+	  updatedAccount = new Account(-1, fields.name, cryptedPassword);
+          delete fields.name;
+          for (let item in fields) {
+            updatedAccount.other[item] = fields[item];
+          }
+          return updatedAccount;
+        }
+        async bulkAddAccounts(newFields: Array<{[index: string]:string}>): Promise<void> {
+          let newAccounts: Array<Account> = [];
+          for (let fields of newFields) {
+            newAccounts.push(await this.generateNewAccount(fields));
+          }
+          await this.backend.addAccounts(newAccounts);
         }
         async deleteHandler(account: Account): Promise<void> {
           return this.backend.deleteAccount(account);
@@ -143,7 +156,7 @@ export default class App extends React.Component<AppProps, AppState> {
 		<span>{this.state.message}</span>
 	      </header>
 	      {this.state.authenticated &&
-	       <Authenticated accounts={this.state.accounts} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} deleteHandler={this.deleteHandler.bind(this)} logoutHandler={this.doLogout.bind(this)}/>
+	       <Authenticated accounts={this.state.accounts} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} bulkAddHandler={this.bulkAddAccounts.bind(this)} deleteHandler={this.deleteHandler.bind(this)} logoutHandler={this.doLogout.bind(this)}/>
               }
               {!this.state.authenticated && this.state.ready
                && <Unauthenticated doLogin={this.doLogin.bind(this)} doRegister={this.doRegister.bind(this)} showRegistration={this.state.registrationAllowed} /> }

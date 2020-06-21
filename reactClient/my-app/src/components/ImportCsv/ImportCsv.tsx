@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button';
 
 interface ImportCsvProps {
   availableFields: Array<FieldOptions>;
-  addAccountHandler: (fields: {[index: string]:string}) => Promise<void>;
+  bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>;
 }
 interface ImportCsvState {
   data: Array<{[index: string]:string}>;
@@ -70,9 +70,7 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
 
   async importAccounts(): Promise<void> {
     let newAccounts = this.importer.createAccounts(this.state.data);
-    for (let newAccount of newAccounts) {
-      await this.props.addAccountHandler(newAccount);
-    }
+    await this.props.bulkAddHandler(newAccounts);
     this.setState({message : `imported ${newAccounts.length} accounts`,
       data: []
     });

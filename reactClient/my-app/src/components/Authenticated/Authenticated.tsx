@@ -22,6 +22,7 @@ interface AuthenticatedProps {
   backend: BackendService;
   transformer: AccountTransformerService;
   editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>;
+  bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>;
   deleteHandler: (account: Account) => Promise<void>;
   logoutHandler: () => Promise<void>;
 }
@@ -45,7 +46,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
 	  <div className={styles.Authenticated}>
             <p><Button onClick={this.addAccountSelect.bind(this)}>Add Account</Button><Button onClick={this.props.logoutHandler}>Logout</Button></p>
                 {this.renderSwitchAuthenticatedView()}
-                <ImportCsv availableFields={this.props.fields} addAccountHandler={this.props.editHandler}/>
+                <ImportCsv availableFields={this.props.fields} bulkAddHandler={this.props.bulkAddHandler}/>
 	  </div>
 	);
   }
