@@ -30,8 +30,10 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-      - name: Use composer
+      - name: Run composer install
         uses: php-actions/composer@v1
+      - run: composer install
+        working-directory: ./Symfony-API/
       - name: Insert ReactJS files
         uses: actions/download-artifact@v2
         with:
