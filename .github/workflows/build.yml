@@ -1,0 +1,22 @@
+name: linting
+on: [push]
+
+jobs:
+  build:
+    name: build react app 
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: npm install
+        working-directory: ./reactClient/my-app/
+      - run: npm run build
+        working-directory: ./reactClient/my-app/
+      - uses: actions/upload-artifact@v2
+        with:
+          name: react-build
+          path: reactClient/my-app/dist/
