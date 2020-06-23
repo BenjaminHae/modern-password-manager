@@ -37,7 +37,7 @@ jobs:
           tools: composer
       - name: Run composer install
         run: composer install --no-suggest
-        working-directory: ./Symfony-API/public/
+        working-directory: ./Symfony-API/
       - name: Insert ReactJS files
         uses: actions/download-artifact@v2
         with:
