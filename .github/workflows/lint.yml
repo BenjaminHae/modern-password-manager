@@ -14,7 +14,7 @@ jobs:
           node-version: 12.x
       - name: "install"
         run: npm install
-        working_directory: ./reactClient/my-app
+        working-directory: ./reactClient/my-app
       - name: "lint"
         run: npm run lint
-        working_directory: ./reactClient/my-app
+        working-directory: ./reactClient/my-app
