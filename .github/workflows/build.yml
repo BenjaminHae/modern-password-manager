@@ -26,6 +26,7 @@ jobs:
           path: reactClient/my-app/build/
   build_symfony:
     name: build symfony
+    needs: build_react
     runs-on: ubuntu-latest
     steps:
       - name: checkout
