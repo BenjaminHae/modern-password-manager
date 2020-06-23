@@ -45,7 +45,7 @@ jobs:
           name: react-build
           path: Symfony-API/public/
       - name: copy index.html of react to template
-        run: "rm ./templates/base.html.twig && cp ./public/index.html ./Symfony-API/templates/index.html"
+        run: "rm ./templates/base.html.twig && cp ./public/index.html ./templates/"
         working-directory: ./Symfony-API/
       - uses: actions/upload-artifact@v2
         with:
