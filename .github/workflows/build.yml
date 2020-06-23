@@ -24,3 +24,5 @@ jobs:
         with:
           name: react-build
           path: reactClient/my-app/dist/
+      - run: ls -la
+        working-directory: ./reactClient/my-app/
