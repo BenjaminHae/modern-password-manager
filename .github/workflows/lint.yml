@@ -1,2 +1,9 @@
- - name: Super-Linter
-   uses: github/super-linter@v2.1.0
+name: linting
+on: [push]
+
+jobs:
+  build:
+    name: lint 
+    steps:
+      - name: Super-Linter
+        uses: github/super-linter@v2.1.0
