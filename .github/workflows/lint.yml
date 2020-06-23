@@ -8,9 +8,9 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-      - name: Lint: React
+      - name: "Lint: React"
         uses: github/super-linter@v2.1.0
         working-directory: ./reactClient/
-      - name: Lint: Symfony
+      - name: "Lint: Symfony"
         uses: github/super-linter@v2.1.0
         working-directory: ./Symfony-API/
