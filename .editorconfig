@@ -1,0 +1,12 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+[*]
+insert_final_newline = true
+charset = utf-8
+indent_style = space
+
+[*.tsx]
+indent_size = 2
+
+[*.php]
+indent_size = 4
