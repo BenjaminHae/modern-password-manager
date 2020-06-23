@@ -2,7 +2,7 @@ name: build application
 on: [push]
 
 jobs:
-  build:
+  build_react:
     name: build react app 
     runs-on: ubuntu-latest
     steps:
@@ -24,3 +24,23 @@ jobs:
         with:
           name: react-build
           path: reactClient/my-app/build/
+  build_symfony:
+    name: build symfony
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Use composer
+        uses: php-actions/composer@v1
+      - name: Insert ReactJS files
+        uses: actions/download-artifact@v2
+        with:
+          name: react-build
+          path: Symfony-API/public/
+      - name: show files
+        run: ls -la
+        working-directory: ./Symfony-API/public/
+      - uses: actions/upload-artifact@v2
+        with:
+          name: symfony-project
+          path: Symfony-API/
