@@ -23,6 +23,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: react-build
-          path: reactClient/my-app/dist/
-      - run: ls -la
-        working-directory: ./reactClient/my-app/
+          path: reactClient/my-app/build/
