@@ -4,6 +4,7 @@ on: [push]
 jobs:
   build:
     name: lint 
+    runs-on: ubuntu-latest
     steps:
       - name: Super-Linter
         uses: github/super-linter@v2.1.0
