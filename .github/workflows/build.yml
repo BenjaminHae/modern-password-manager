@@ -34,7 +34,7 @@ jobs:
         uses: php-actions/composer@v1
         with: 
           command: install
-          args: -d=./Symfony-API/
+          args: "--working-dir ./Symfony-API/ --no-suggest"
       - name: Insert ReactJS files
         uses: actions/download-artifact@v2
         with:
