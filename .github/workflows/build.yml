@@ -18,6 +18,8 @@ jobs:
         working-directory: ./reactClient/my-app/
       - run: npm run build
         working-directory: ./reactClient/my-app/
+        env:
+          CI: ""
       - uses: actions/upload-artifact@v2
         with:
           name: react-build
