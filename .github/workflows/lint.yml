@@ -16,5 +16,5 @@ jobs:
         run: npm install eslint
         working-directory: ./reactClient/my-app
       - name: "lint"
-        run: npm run lint
+        run: npx eslint src/**/*.ts src/**/*.tsx
         working-directory: ./reactClient/my-app
