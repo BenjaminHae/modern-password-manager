@@ -1,4 +1,4 @@
-name: linting
+name: build application
 on: [push]
 
 jobs:
@@ -13,6 +13,8 @@ jobs:
         with:
           node-version: 12.x
       - run: npm install
+        working-directory: ./reactClient/my-app/
+      - run: npm link ../../OpenAPIReactClient/
         working-directory: ./reactClient/my-app/
       - run: npm run build
         working-directory: ./reactClient/my-app/
