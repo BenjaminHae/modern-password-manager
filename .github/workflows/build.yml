@@ -33,7 +33,8 @@ jobs:
       - name: Run composer install
         uses: php-actions/composer@v1
         with: 
-          command: install -d=./Symfony-API/
+          command: composer
+          args: install -d=./Symfony-API/
       - name: Insert ReactJS files
         uses: actions/download-artifact@v2
         with:
