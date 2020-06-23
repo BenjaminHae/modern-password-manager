@@ -30,11 +30,14 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
+      - name: install php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer
       - name: Run composer install
-        uses: php-actions/composer@v1
-        with: 
-          command: install
-          args: "--working-dir ./Symfony-API/ --no-suggest"
+        run: composer install --no-suggest
+        working-directory: ./Symfony-API/public/
       - name: Insert ReactJS files
         uses: actions/download-artifact@v2
         with:
