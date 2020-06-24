@@ -37,7 +37,7 @@ jobs:
           php-version: '7.4'
           tools: composer
       - name: Run composer install
-        run: composer install --no-suggest
+        run: composer install --no-suggest --no-dev --no-progress
         working-directory: ./Symfony-API/
       - name: Insert ReactJS files
         uses: actions/download-artifact@v2
