@@ -47,6 +47,9 @@ jobs:
       - name: copy index.html of react to template
         run: "rm ./templates/base.html.twig && cp ./public/index.html ./templates/"
         working-directory: ./Symfony-API/
+      - name: Debug ls
+        run: "ls -laR"
+        working-directory: ./Symfony-API/
       - uses: actions/upload-artifact@v2
         with:
           name: symfony-project
