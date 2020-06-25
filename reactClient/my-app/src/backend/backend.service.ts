@@ -117,7 +117,7 @@ export class BackendService {
 
   async register(username: string, password: string, email: string): Promise<void> {
     let newCredentials = new CredentialProviderPassword();
-    await newCredentials.generateFromPassword(newPassword)
+    await newCredentials.generateFromPassword(password)
     this.credentials.setProvider(newCredentials);
     let ciphertext = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
     return await this.userService.register(username, ciphertext, email)
