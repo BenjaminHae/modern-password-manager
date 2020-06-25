@@ -1,5 +1,5 @@
 import { CredentialService } from './credential.service';
-import { CredentialProvider } from './controller/credentialProvider';
+import { ICredentialProvider } from './controller/credentialProvider';
 import { CryptedObject } from './models/cryptedObject';
 
 export class CryptoService {
