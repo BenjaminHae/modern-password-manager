@@ -76,7 +76,7 @@ export class BackendService {
   }
 
   async verifyPassword(password: string): Promise<boolean> {
-    let testCredentials = new CredentialProvider();
+    let testCredentials = new CredentialProviderPassword();
     let newHash: CryptedObject;
     await testCredentials.generateFromPassword(password)
     let newPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12), testCredentials)
@@ -85,10 +85,10 @@ export class BackendService {
     return oldPasswordHash.toBase64JSON() === newHash.toBase64JSON();
   }
 
-  async reencryptAccount(account: Account, newCredentials: CredentialProvider): Promise<encryptedAccount> {
+  async reencryptAccount(account: Account, newCredentials: ICredentialProvider): Promise<encryptedAccount> {
     let password = await this.accountTransformer.getPassword(account)
     let enpassword = await this.crypto.encryptChar(password, undefined, newCredentials);
-          //todo! Aber was?
+          //todo! File-Keys?
     account.enpassword = enpassword;
     return await this.accountTransformer.encryptAccount(account, newCredentials);
   }
