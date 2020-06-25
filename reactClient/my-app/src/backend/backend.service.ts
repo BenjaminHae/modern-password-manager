@@ -8,7 +8,7 @@ import { ServerSettings } from './models/serverSettings';
 import { FieldOptions } from './models/fieldOptions';
 import { AccountTransformerService } from './controller/account-transformer.service';
 import { CredentialService } from './credential.service';
-import { CredentialProvider } from './controller/credentialProvider';
+import { CredentialProviderPassword } from './controller/credentialProviderPassword';
 import { CryptoService } from './crypto.service';
 import { Observable, Subscriber, TeardownLogic } from 'rxjs';
 
