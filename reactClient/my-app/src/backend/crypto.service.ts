@@ -7,6 +7,10 @@ export class CryptoService {
   constructor(private credentials: CredentialService) {
   }
 
+  setCredentials(credentials: CredentialService) {
+    this.credentials = credentials;
+  }
+
   async decryptChar(crypt: CryptedObject, credentials: CredentialProvider=this.credentials.credentialProvider): Promise<string> {
     let key = credentials.getKey()
     if (!key) {
