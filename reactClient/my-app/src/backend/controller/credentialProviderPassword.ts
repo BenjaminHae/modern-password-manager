@@ -35,4 +35,8 @@ export class CredentialProviderPassword implements ICredentialProvider {
     }
     return this.key;
   }
+
+  cleanUp(): Promise<void>{
+    return Promise.resolve();
+  }
 }
