@@ -2,7 +2,7 @@ import { ICredentialProvider } from './controller/credentialProvider';
 import { CredentialProviderUndefined } from './controller/credentialProviderUndefined';
 
 export class CredentialService {
-  public credentialProvider: CredentialProvider
+  public credentialProvider: ICredentialProvider
 
   constructor() {
     this.credentialProvider = new CredentialProviderUndefined();
