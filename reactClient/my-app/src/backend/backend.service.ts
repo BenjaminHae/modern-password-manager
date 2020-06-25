@@ -62,7 +62,7 @@ export class BackendService {
   }
 
   async changeUserPassword(newPassword: string): Promise<void> {
-    let newCredentials = new CredentialProvider();
+    let newCredentials = new CredentialProviderPassword();
     await newCredentials.generateFromPassword(newPassword)
     let newPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12), newCredentials)
     let newHash = newPasswordHash;
@@ -70,7 +70,9 @@ export class BackendService {
     for (let account of this.accounts) {
       newAccounts.push(await this.reencryptAccount(account, newCredentials));
     }
-    return await this.userService.changePassword(newHash, newAccounts);
+    await this.userService.changePassword(newHash, newAccounts);
+    this.credentials.setProvider(newCredentials);
+    return;
   }
 
   async verifyPassword(password: string): Promise<boolean> {
@@ -114,7 +116,9 @@ export class BackendService {
   }
 
   async register(username: string, password: string, email: string): Promise<void> {
-    await this.credentials.generateFromPassword(password)
+    let newCredentials = new CredentialProviderPassword();
+    await newCredentials.generateFromPassword(newPassword)
+    this.credentials.setProvider(newCredentials);
     let ciphertext = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
     return await this.userService.register(username, ciphertext, email)
   }

@@ -11,7 +11,7 @@ export class CryptoService {
     this.credentials = credentials;
   }
 
-  async decryptChar(crypt: CryptedObject, credentials: CredentialProvider=this.credentials.credentialProvider): Promise<string> {
+  async decryptChar(crypt: CryptedObject, credentials: ICredentialProvider=this.credentials.credentialProvider): Promise<string> {
     let key = credentials.getKey()
     if (!key) {
       throw new Error("key is not defined")
@@ -27,7 +27,7 @@ export class CryptoService {
     return this.ab2str(plaintext);
   }
 
-  async encryptChar(plaintext: string, iv = window.crypto.getRandomValues(new Uint8Array(12)), credentials: CredentialProvider=this.credentials.credentialProvider): Promise<CryptedObject> {
+  async encryptChar(plaintext: string, iv = window.crypto.getRandomValues(new Uint8Array(12)), credentials: ICredentialProvider=this.credentials.credentialProvider): Promise<CryptedObject> {
     let key = credentials.getKey()
     if (!key) {
       throw new Error("key is not defined")
