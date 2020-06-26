@@ -25,7 +25,7 @@ class ChangePassword extends React.Component<ChangePasswordProps, ChangePassword
   }
   async doChange(event: React.FormEvent):Promise<void> {
     if (this.state.newPassword === this.state.newPassword2) {
-      async this.props.changePasswordHandler(this.state.oldPassword, this.state.newPassword)
+      await this.props.changePasswordHandler(this.state.oldPassword, this.state.newPassword)
       this.state.message = "Successfully changed password";
     }
     else {
