@@ -151,7 +151,7 @@ export default class App extends React.Component<AppProps, AppState> {
     if (await this.backend.verifyPassword(oldPassword) !== true) {
       throw new Error("old Password does not match current password");
     }
-    return await this.backend.changeUserPassword(oldPassword, newPassword);
+    return await this.backend.changeUserPassword(newPassword);
   }
 
 	render() {
