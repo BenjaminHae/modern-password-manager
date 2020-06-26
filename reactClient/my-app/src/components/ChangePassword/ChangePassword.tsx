@@ -19,7 +19,7 @@ class ChangePassword extends React.Component<ChangePasswordProps, ChangePassword
   }
   handleGenericChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.name in this.state) {
-      this.setState({[event.target.name]: event.target.value} as Partial<ChangePasswordState>);
+      this.setState({[event.target.name]: event.target.value} as Pick<ChangePasswordState, keyof ChangePasswordState>);
     }
   }
   async doChange(event: React.FormEvent):Promise<void> {
