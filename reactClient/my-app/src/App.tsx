@@ -85,68 +85,74 @@ export default class App extends React.Component<AppProps, AppState> {
 			this.setState({message : "login failed", authenticated : false});
 		});
 	}
-        async doRegister(username: string, password: string, email: string): Promise<void> {
-          return this.backend.register(username, password, email);
-        }
-        async doLogout(): Promise<void> {
-          await this.backend.logout();
-          this.setState({authenticated: false});
-          window.location.reload(false);
-        }
-        async editHandler(fields: {[index: string]:string}, account?: Account): Promise<void> {
-	    let updatedAccount: Account;
-	    if (account) {
-	      updatedAccount = account;
-	      updatedAccount.name = fields.name;
-              delete fields.name;
-	      //Only look at password if it has changed
-	      if (fields.password !== "") {
-		console.log("passwordChanged");
-		updatedAccount.enpassword = await this.crypto.encryptChar(fields.password);
-	      }
-              delete fields.password;
-              for (let item in fields) {
-                updatedAccount.other[item] = fields[item];
-              }
-	    }
-	    else {
-              updatedAccount = await this.generateNewAccount(fields);
-	    }
-	    if (!account) {
-		    return this.backend.addAccount(updatedAccount);
-	    }
-	    else {
-		    return this.backend.updateAccount(updatedAccount);
-	    }
-        }
-        async generateNewAccount(fields: {[index: string]:string}): Promise<Account> {
-	  let updatedAccount: Account;
-          if (!("password" in fields)) {
-            throw new Error("Account has no password");
-          }
-          if (!("name" in fields)) {
-            throw new Error("No Account name set");
-          }
-	  // Todo auto-generate password
-	  let cryptedPassword = await this.crypto.encryptChar(fields["password"]);
-          delete fields.password;
-	  updatedAccount = new Account(-1, fields.name, cryptedPassword);
-          delete fields.name;
-          for (let item in fields) {
-            updatedAccount.other[item] = fields[item];
-          }
-          return updatedAccount;
-        }
-        async bulkAddAccounts(newFields: Array<{[index: string]:string}>): Promise<void> {
-          let newAccounts: Array<Account> = [];
-          for (let fields of newFields) {
-            newAccounts.push(await this.generateNewAccount(fields));
-          }
-          await this.backend.addAccounts(newAccounts);
-        }
-        async deleteHandler(account: Account): Promise<void> {
-          return this.backend.deleteAccount(account);
-        }
+  async doRegister(username: string, password: string, email: string): Promise<void> {
+    return this.backend.register(username, password, email);
+  }
+  async doLogout(): Promise<void> {
+    await this.backend.logout();
+    this.setState({authenticated: false});
+    window.location.reload(false);
+  }
+  async editHandler(fields: {[index: string]:string}, account?: Account): Promise<void> {
+    let updatedAccount: Account;
+    if (account) {
+      updatedAccount = account;
+      updatedAccount.name = fields.name;
+      delete fields.name;
+      //Only look at password if it has changed
+      if (fields.password !== "") {
+        console.log("passwordChanged");
+        updatedAccount.enpassword = await this.crypto.encryptChar(fields.password);
+      }
+      delete fields.password;
+      for (let item in fields) {
+        updatedAccount.other[item] = fields[item];
+      }
+    }
+    else {
+      updatedAccount = await this.generateNewAccount(fields);
+    }
+    if (!account) {
+      return this.backend.addAccount(updatedAccount);
+    }
+    else {
+      return this.backend.updateAccount(updatedAccount);
+    }
+  }
+  async generateNewAccount(fields: {[index: string]:string}): Promise<Account> {
+    let updatedAccount: Account;
+    if (!("password" in fields)) {
+      throw new Error("Account has no password");
+    }
+    if (!("name" in fields)) {
+      throw new Error("No Account name set");
+    }
+    // Todo auto-generate password
+    let cryptedPassword = await this.crypto.encryptChar(fields["password"]);
+    delete fields.password;
+    updatedAccount = new Account(-1, fields.name, cryptedPassword);
+    delete fields.name;
+    for (let item in fields) {
+      updatedAccount.other[item] = fields[item];
+    }
+    return updatedAccount;
+  }
+  async bulkAddAccounts(newFields: Array<{[index: string]:string}>): Promise<void> {
+    let newAccounts: Array<Account> = [];
+    for (let fields of newFields) {
+      newAccounts.push(await this.generateNewAccount(fields));
+    }
+    await this.backend.addAccounts(newAccounts);
+  }
+  async deleteHandler(account: Account): Promise<void> {
+    return this.backend.deleteAccount(account);
+  }
+  async changePasswordHandler(oldPassword: string, newPassword: string): Promise<void> {
+    if (await this.backend.verifyPassword(oldPassword) !== true) {
+      throw new Error("old Password does not match current password");
+    }
+    return await this.backend.changeUserPassword(oldPassword, newPassword);
+  }
 
 	render() {
 	  return (
@@ -156,7 +162,7 @@ export default class App extends React.Component<AppProps, AppState> {
 		<span>{this.state.message}</span>
 	      </header>
 	      {this.state.authenticated &&
-	       <Authenticated accounts={this.state.accounts} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} bulkAddHandler={this.bulkAddAccounts.bind(this)} deleteHandler={this.deleteHandler.bind(this)} logoutHandler={this.doLogout.bind(this)}/>
+	       <Authenticated accounts={this.state.accounts} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} bulkAddHandler={this.bulkAddAccounts.bind(this)} deleteHandler={this.deleteHandler.bind(this)} logoutHandler={this.doLogout.bind(this)} changePasswordHandler={this.changePasswordHandler.bind(this)} />
               }
               {!this.state.authenticated && this.state.ready
                && <Unauthenticated doLogin={this.doLogin.bind(this)} doRegister={this.doRegister.bind(this)} showRegistration={this.state.registrationAllowed} /> }

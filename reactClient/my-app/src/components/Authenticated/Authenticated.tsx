@@ -5,6 +5,7 @@ import { FieldOptions } from '../../backend/models/fieldOptions';
 import AccountList from '../AccountList/AccountList';
 import AccountEdit from '../AccountEdit/AccountEdit';
 import ImportCsv from '../ImportCsv/ImportCsv';
+import ChangePassword from '../ChangePassword/ChangePassword';
 import { BackendService } from '../../backend/backend.service';
 import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
 import Button from 'react-bootstrap/Button';
@@ -25,6 +26,7 @@ interface AuthenticatedProps {
   bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>;
   deleteHandler: (account: Account) => Promise<void>;
   logoutHandler: () => Promise<void>;
+  changePasswordHandler: (oldPassword: string, newPassword: string) => Promise<void>;
 }
 interface AuthenticatedState {
   view: AuthenticatedView;
@@ -47,6 +49,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
             <p><Button onClick={this.addAccountSelect.bind(this)}>Add Account</Button><Button onClick={this.props.logoutHandler}>Logout</Button></p>
                 {this.renderSwitchAuthenticatedView()}
                 <ImportCsv availableFields={this.props.fields} bulkAddHandler={this.props.bulkAddHandler}/>
+                <ChangePassword changePasswordHandler={this.props.changePasswordHandler}/>
 	  </div>
 	);
   }
