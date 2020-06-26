@@ -15,7 +15,6 @@ class ChangePassword extends React.Component<ChangePasswordProps, ChangePassword
   constructor(props: ChangePasswordProps) {
     super(props);
     this.state = { oldPassword: '', newPassword: '', newPassword2: '', message: ""};
-    this.handleNameChange = this.handleNameChange.bind(this);
     this.handleGenericChange = this.handleGenericChange.bind(this);
   }
   handleGenericChange(event: React.ChangeEvent<HTMLInputElement>) {
