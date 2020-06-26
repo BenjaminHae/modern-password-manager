@@ -1,5 +1,5 @@
 import { CredentialService } from './credential.service';
-import { CredentialProvider } from './controller/credentialProvider';
+import { ICredentialProvider } from './controller/credentialProvider';
 import { CryptedObject } from './models/cryptedObject';
 
 export class CryptoService {
@@ -7,7 +7,11 @@ export class CryptoService {
   constructor(private credentials: CredentialService) {
   }
 
-  async decryptChar(crypt: CryptedObject, credentials: CredentialProvider=this.credentials.credentialProvider): Promise<string> {
+  setCredentials(credentials: CredentialService) {
+    this.credentials = credentials;
+  }
+
+  async decryptChar(crypt: CryptedObject, credentials: ICredentialProvider=this.credentials.credentialProvider): Promise<string> {
     let key = credentials.getKey()
     if (!key) {
       throw new Error("key is not defined")
@@ -23,7 +27,7 @@ export class CryptoService {
     return this.ab2str(plaintext);
   }
 
-  async encryptChar(plaintext: string, iv = window.crypto.getRandomValues(new Uint8Array(12)), credentials: CredentialProvider=this.credentials.credentialProvider): Promise<CryptedObject> {
+  async encryptChar(plaintext: string, iv = window.crypto.getRandomValues(new Uint8Array(12)), credentials: ICredentialProvider=this.credentials.credentialProvider): Promise<CryptedObject> {
     let key = credentials.getKey()
     if (!key) {
       throw new Error("key is not defined")

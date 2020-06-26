@@ -8,7 +8,8 @@ import { ServerSettings } from './models/serverSettings';
 import { FieldOptions } from './models/fieldOptions';
 import { AccountTransformerService } from './controller/account-transformer.service';
 import { CredentialService } from './credential.service';
-import { CredentialProvider } from './controller/credentialProvider';
+import { CredentialProviderPassword } from './controller/credentialProviderPassword';
+import { ICredentialProvider } from './controller/credentialProvider';
 import { CryptoService } from './crypto.service';
 import { Observable, Subscriber, TeardownLogic } from 'rxjs';
 
@@ -43,9 +44,16 @@ export class BackendService {
   }
 
   async logon(username: string, password: string): Promise<void> {
-    await this.credentials.generateFromPassword(password);
-    let passwordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
-    await this.userService.logon(username, passwordHash)
+    let credentialProvider = new CredentialProviderPassword();
+    await credentialProvider.generateFromPassword(password);
+    await this.logonWithCredentials(credentialProvider, username);
+  }
+  async logonWithCredentials(credentialProvider: ICredentialProvider, username?: string): Promise<void> {
+    this.credentials.setProvider(credentialProvider);
+    if (username) {
+      let passwordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
+      await this.userService.logon(username, passwordHash)
+    }
     await this.afterLogin();
   }
   async logout(): Promise<void> {
@@ -55,7 +63,7 @@ export class BackendService {
   }
 
   async changeUserPassword(newPassword: string): Promise<void> {
-    let newCredentials = new CredentialProvider();
+    let newCredentials = new CredentialProviderPassword();
     await newCredentials.generateFromPassword(newPassword)
     let newPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12), newCredentials)
     let newHash = newPasswordHash;
@@ -63,11 +71,13 @@ export class BackendService {
     for (let account of this.accounts) {
       newAccounts.push(await this.reencryptAccount(account, newCredentials));
     }
-    return await this.userService.changePassword(newHash, newAccounts);
+    await this.userService.changePassword(newHash, newAccounts);
+    this.credentials.setProvider(newCredentials);
+    return;
   }
 
   async verifyPassword(password: string): Promise<boolean> {
-    let testCredentials = new CredentialProvider();
+    let testCredentials = new CredentialProviderPassword();
     let newHash: CryptedObject;
     await testCredentials.generateFromPassword(password)
     let newPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12), testCredentials)
@@ -76,10 +86,10 @@ export class BackendService {
     return oldPasswordHash.toBase64JSON() === newHash.toBase64JSON();
   }
 
-  async reencryptAccount(account: Account, newCredentials: CredentialProvider): Promise<encryptedAccount> {
+  async reencryptAccount(account: Account, newCredentials: ICredentialProvider): Promise<encryptedAccount> {
     let password = await this.accountTransformer.getPassword(account)
     let enpassword = await this.crypto.encryptChar(password, undefined, newCredentials);
-          //todo! Aber was?
+          //todo! File-Keys?
     account.enpassword = enpassword;
     return await this.accountTransformer.encryptAccount(account, newCredentials);
   }
@@ -107,7 +117,9 @@ export class BackendService {
   }
 
   async register(username: string, password: string, email: string): Promise<void> {
-    await this.credentials.generateFromPassword(password)
+    let newCredentials = new CredentialProviderPassword();
+    await newCredentials.generateFromPassword(password)
+    this.credentials.setProvider(newCredentials);
     let ciphertext = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
     return await this.userService.register(username, ciphertext, email)
   }

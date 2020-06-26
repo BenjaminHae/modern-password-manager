@@ -1,18 +1,18 @@
-import { CredentialProvider } from './controller/credentialProvider';
-//todo make ciphers configurable
+import { ICredentialProvider } from './controller/credentialProvider';
+import { CredentialProviderUndefined } from './controller/credentialProviderUndefined';
 
 export class CredentialService {
-  public credentialProvider: CredentialProvider
+  public credentialProvider: ICredentialProvider
 
   constructor() {
-    this.credentialProvider = new CredentialProvider();
+    this.credentialProvider = new CredentialProviderUndefined();
   }
 
-  generateFromPassword(password: string): PromiseLike<CryptoKey>{
-    return this.credentialProvider.generateFromPassword(password);
+  setProvider(newProvider: ICredentialProvider) {
+    this.credentialProvider = newProvider;
   }
 
-  getKey(): CryptoKey | undefined {
+  getKey(): CryptoKey {
     return this.credentialProvider.getKey();
   }
 }

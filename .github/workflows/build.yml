@@ -53,10 +53,13 @@ jobs:
         env:
           APP_ENV: prod
           APP_DEBUG: 0
+      - name: zip
+        run: "zip -r modern-password-manager.zip ./Symfony-API"
+        working-directory: ./
       - name: Debug ls
         run: "ls -laR"
-        working-directory: ./Symfony-API/
+        working-directory: ./
       - uses: actions/upload-artifact@v2
         with:
           name: symfony-project
-          path: Symfony-API/
+          path: modern-password-manager.zip

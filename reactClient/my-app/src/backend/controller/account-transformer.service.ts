@@ -1,5 +1,5 @@
 import { CryptoService } from '../crypto.service';
-import { CredentialProvider } from '../controller/credentialProvider';
+import { ICredentialProvider } from '../controller/credentialProvider';
 import { CryptedObject } from '../models/cryptedObject';
 import { Account } from '../models/account';
 import { encryptedAccount } from '../models/encryptedAccount';
@@ -10,7 +10,7 @@ export class AccountTransformerService {
   constructor(private crypto: CryptoService) {
   }
 
-  async encryptAccount(account: Account, credentials?: CredentialProvider): Promise<encryptedAccount> {
+  async encryptAccount(account: Account, credentials?: ICredentialProvider): Promise<encryptedAccount> {
     let name: CryptedObject;
     let other: CryptedObject;
     name = await this.crypto.encryptChar(account.name, undefined, credentials)
