@@ -46,7 +46,7 @@ export class BackendService {
   async logon(username: string, password: string): Promise<void> {
     let credentialProvider = new CredentialProviderPassword();
     await credentialProvider.generateFromPassword(password);
-    await this.logonWithCredentials(credentialProvider);
+    await this.logonWithCredentials(credentialProvider, username);
   }
   async logonWithCredentials(credentialProvider: ICredentialProvider, username?: string): Promise<void> {
     this.credentials.setProvider(credentialProvider);
