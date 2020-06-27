@@ -34,21 +34,19 @@ class PasswordWithToggle extends React.Component<PasswordProps, PasswordState> {
     }
   }
   render () {
-	return (
-    <React.Fragment>
-    { !this.state.visible ?
-	 <Button onClick={this.show}>{HiddenPassword}</Button>
-     : <div><span>{this.state.password}</span>
-	 <Button onClick={this.hide}>Hide</Button></div>
-    }
-    </React.Fragment>
-  )
+    return (
+      <React.Fragment>
+      { !this.state.visible ?
+        <Button onClick={this.show}>{HiddenPassword}</Button>
+        : <div><span>{this.state.password}</span>
+        <Button onClick={this.hide}>Hide</Button></div>
+      }
+      </React.Fragment>
+    )
   }
-  getPassword() {
-    this.props.transformer.getPassword(this.props.account)
-      .then((password) => {
-	this.setState({password: password});
-      });
+  async getPassword() {
+    this.setState({password: await this.props.transformer.getPassword(this.props.account)});
+  });
   }
   clearPassword() {
     this.setState({password: ""});

@@ -10,13 +10,13 @@ import Button from 'react-bootstrap/Button';
 
 
 interface AccountListProps {
-	accounts: Array<Account>;
-	fields: Array<FieldOptions>;
-	transformer: AccountTransformerService;
-        editAccountHandler: (account: Account) => void;
+  accounts: Array<Account>;
+  fields: Array<FieldOptions>;
+  transformer: AccountTransformerService;
+  editAccountHandler: (account: Account) => void;
 }
 interface AccountListState {
-        columns: Array<IDataTableColumn<Account>>;
+  columns: Array<IDataTableColumn<Account>>;
 }
 class AccountList extends React.Component<AccountListProps, AccountListState> {
   constructor(props: AccountListProps) {
