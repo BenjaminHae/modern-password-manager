@@ -47,6 +47,7 @@ jobs:
         id: composer-cache
         run: |
           echo "::set-output name=dir::$(composer config cache-files-dir)"
+        working-directory: ./Symfony-API/
       - name: Cache composer
         uses: actions/cache@v2
         env:
