@@ -12,6 +12,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
+      - name: Cache node
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-react-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
       - run: npm install
         working-directory: ./reactClient/my-app/
       - run: npm link ../../OpenAPIReactClient/
@@ -36,6 +43,17 @@ jobs:
         with:
           php-version: '7.4'
           tools: composer
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache composer
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-symfony-composer-modules
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/composer.lock') }}
       - name: Run composer install
         run: composer install --no-suggest --no-dev --no-progress
         working-directory: ./Symfony-API/
