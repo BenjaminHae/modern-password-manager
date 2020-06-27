@@ -74,7 +74,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
 	      <div key="password">
 		<div>
 		    <label>Password
-		    <input type="text" placeholder="Password" name="password" onChange={this.handleGenericChange} />{this.props.account && <Button onClick={this.showPassword.bind(this)} >Show</Button>}
+		    <input type="text" placeholder="Password" name="password" onChange={this.handleGenericChange} value={this.state.fields["password"]} />{this.props.account && <Button onClick={this.showPassword.bind(this)} >Show</Button>}
 		    </label>
 		</div>
 	      </div>
