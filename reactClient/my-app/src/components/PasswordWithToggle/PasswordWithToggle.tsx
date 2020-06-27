@@ -46,7 +46,6 @@ class PasswordWithToggle extends React.Component<PasswordProps, PasswordState> {
   }
   async getPassword() {
     this.setState({password: await this.props.transformer.getPassword(this.props.account)});
-  });
   }
   clearPassword() {
     this.setState({password: ""});
