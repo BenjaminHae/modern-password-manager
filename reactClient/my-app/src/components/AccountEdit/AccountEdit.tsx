@@ -56,7 +56,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
   async showPassword() {
     if (this.props.account) {
       let currentFields = this.state.fields;
-      currentFields[password] = await this.props.transformer.getPassword(this.props.account);
+      currentFields["password"] = await this.props.transformer.getPassword(this.props.account);
       this.setState({fields: currentFields});
     }
   }
