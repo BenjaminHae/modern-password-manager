@@ -168,6 +168,7 @@ export default class App extends React.Component<AppProps, AppState> {
                && <Unauthenticated doLogin={this.doLogin.bind(this)} doRegister={this.doRegister.bind(this)} showRegistration={this.state.registrationAllowed} /> }
               {!this.state.authenticated && !this.state.ready 
                && <span>Waiting for server</span> }
+        <footer>Version: {process.env.REACT_APP_GIT_SHA}</footer>
 	    </div>
 	  );
 	}
