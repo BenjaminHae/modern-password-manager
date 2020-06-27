@@ -36,14 +36,8 @@ jobs:
         with:
           php-version: '7.4'
           tools: composer
-      - name: remove composer.lock
-        run: rm composer.lock
-        working-directory: ./Symfony-API/
       - name: Run composer install
         run: composer install --no-suggest --no-dev --no-progress
-        working-directory: ./Symfony-API/
-      - name: Debug ls
-        run: ls -laR
         working-directory: ./Symfony-API/
       - name: Insert ReactJS files
         uses: actions/download-artifact@v2
