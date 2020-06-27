@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './AccountEdit.module.css';
 import { Account } from '../../backend/models/account';
 import { FieldOptions } from '../../backend/models/fieldOptions';
+import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
 import Button from 'react-bootstrap/Button';
 
 interface AccountEditProps {
