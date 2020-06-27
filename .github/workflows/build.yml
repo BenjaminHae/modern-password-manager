@@ -45,19 +45,10 @@ jobs:
           name: react-build
           path: Symfony-API/public/
       - name: copy index.html of react to template
-        run: "rm ./templates/base.html.twig && cp ./public/index.html ./templates/"
+        run: "rm ./templates/base.html.twig && ln -s ./public/index.html ./templates/index.html"
         working-directory: ./Symfony-API/
-      - name: Clear Cache
-        run: php bin/console cache:clear
-        working-directory: ./Symfony-API/
-        env:
-          APP_ENV: prod
-          APP_DEBUG: 0
       - name: zip
-        run: "zip -r modern-password-manager.zip ./Symfony-API"
-        working-directory: ./
-      - name: Debug ls
-        run: "ls -laR"
+        run: "zip --symlinks -r modern-password-manager.zip ./Symfony-API"
         working-directory: ./
       - uses: actions/upload-artifact@v2
         with:
