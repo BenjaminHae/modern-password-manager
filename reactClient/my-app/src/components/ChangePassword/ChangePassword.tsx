@@ -23,6 +23,7 @@ class ChangePassword extends React.Component<ChangePasswordProps, ChangePassword
     }
   }
   async doChange(event: React.FormEvent):Promise<void> {
+    event.preventDefault();
     if (this.state.newPassword === this.state.newPassword2) {
       await this.props.changePasswordHandler(this.state.oldPassword, this.state.newPassword)
       this.setState({message: "Successfully changed password"});
@@ -30,7 +31,6 @@ class ChangePassword extends React.Component<ChangePasswordProps, ChangePassword
     else {
       this.setState({message: "New Password and repeat do not match"});
     }
-    event.preventDefault();
   }
   render () {
     return (
