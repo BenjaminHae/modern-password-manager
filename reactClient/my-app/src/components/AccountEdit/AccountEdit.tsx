@@ -10,6 +10,7 @@ interface AccountEditProps {
   editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>;
   deleteHandler: (account: Account) => Promise<void>;
   closeHandler: () => void;
+  transformer: AccountTransformerService;
 }
 interface AccountEditState {
     fields: {[index: string]:string};
@@ -51,6 +52,13 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
     }
     this.setState({fields: newFields});
   }
+  async showPassword() {
+    if (this.props.account) {
+      let currentFields = this.state.fields;
+      currentFields[password] = await this.props.transformer.getPassword(this.props.account);
+      this.setState({fields: currentFields});
+    }
+  }
   getFormFields() {
     let fields = [ (
 	      <div key="account">
@@ -65,7 +73,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
 	      <div key="password">
 		<div>
 		    <label>Password
-		    <input type="text" placeholder="Password" name="password" onChange={this.handleGenericChange} />
+		    <input type="text" placeholder="Password" name="password" onChange={this.handleGenericChange} />{this.props.account && <Button onClick={this.showPassword.bind(this)} >Show</Button>}
 		    </label>
 		</div>
 	      </div>

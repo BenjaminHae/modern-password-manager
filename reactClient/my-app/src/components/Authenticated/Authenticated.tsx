@@ -61,7 +61,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
         );
       case AuthenticatedView.Edit:
         return (
-		<AccountEdit account={this.state.selectedAccount} fields={this.props.fields} editHandler={this.props.editHandler}  closeHandler={this.backToListView.bind(this)} deleteHandler={this.props.deleteHandler}/>
+		<AccountEdit account={this.state.selectedAccount} fields={this.props.fields} editHandler={this.props.editHandler}  closeHandler={this.backToListView.bind(this)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer}/>
         );
       case AuthenticatedView.Add:
         return (
