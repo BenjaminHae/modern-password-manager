@@ -35,25 +35,25 @@ class ChangePassword extends React.Component<ChangePasswordProps, ChangePassword
   render () {
     return (
 	  <div className={styles.Login}>
-		<form onSubmit={this.doChange}>
-      <h2>Login</h2>
+		<form onSubmit={this.doChange.bind(this)}>
+      <h2>ChangePassword</h2>
       <div>
         <div>
-            <label>Username
+            <label>Old Password
             <input type="text" placeholder="Old Password" name="oldPassword" onChange={this.handleGenericChange}/>
             </label>
         </div>
       </div>
       <div>
         <div>
-            <label>Password
+            <label>New Password
             <input placeholder="New Password" name="newPassword" onChange={this.handleGenericChange}/>
             </label>
         </div>
       </div>
       <div>
         <div>
-            <label>Password
+            <label>Repeat new password
             <input placeholder="New Password (repeated)" name="newPassword2" onChange={this.handleGenericChange}/>
             </label>
         </div>
