@@ -23,7 +23,7 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "REACT_APP_GIT_SHA=\"Live Development on $(git rev-parse --abbrev-ref HEAD) #$(git rev-parse --short HEAD)\" react-scripts start",
     "build": "REACT_APP_GIT_SHA=\"$(date -Is) $(git rev-parse --abbrev-ref HEAD) #$(git rev-parse --short HEAD)\" react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
