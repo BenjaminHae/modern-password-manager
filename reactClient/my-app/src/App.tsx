@@ -180,7 +180,7 @@ export default class App extends React.Component<AppProps, AppState> {
           <span>{this.state.message}</span>
 	      </header>
 	      {this.state.authenticated &&
-	       <Authenticated accounts={this.filterAccounts(this.state.accounts)} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} bulkAddHandler={this.bulkAddAccounts.bind(this)} deleteHandler={this.deleteHandler.bind(this)} logoutHandler={this.doLogout.bind(this)} changePasswordHandler={this.changePasswordHandler.bind(this)} />
+	       <Authenticated accounts={this.filterAccounts(this.state.accounts)} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} bulkAddHandler={this.bulkAddAccounts.bind(this)} deleteHandler={this.deleteHandler.bind(this)} logoutHandler={this.doLogout.bind(this)} changePasswordHandler={this.changePasswordHandler.bind(this)} pluginSystem={this.plugins}/>
               }
         {!this.state.authenticated && this.state.ready
           && <Unauthenticated doLogin={this.doLogin.bind(this)} doRegister={this.doRegister.bind(this)} showRegistration={this.state.registrationAllowed} /> }

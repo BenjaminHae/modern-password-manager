@@ -7,11 +7,6 @@ export class PluginSystem {
   filterChangeHandler?: (filter: AccountsFilter) => void;
   filters: { [index: string]: AccountFilter; } = {};
 
-  setFilterChangeHandler(filterChangeHandler: (filter:AccountsFilter) => void) {
-    this.filterChangeHandler = filterChangeHandler;
-    this.updateFilter();
-  }
-
   registerPlugin() {
   }
 
@@ -19,6 +14,12 @@ export class PluginSystem {
   async callHook<InputData,OutputData=void>(data:InputData): Promise<OutputData> {
     return
   }*/
+
+  setFilterChangeHandler(filterChangeHandler: (filter:AccountsFilter) => void) {
+    this.filterChangeHandler = filterChangeHandler;
+    this.updateFilter();
+    this.setFilter('test', (account:Account):boolean => (account.name.includes('test')));
+  }
 
   setFilter(key: string, filter: AccountFilter) {
     this.filters[key] = filter;
