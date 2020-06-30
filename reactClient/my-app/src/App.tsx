@@ -16,6 +16,7 @@ import { Configuration as OpenAPIConfiguration } from '@pm-server/pm-server-reac
 import { MaintenanceApi as OpenAPIMaintenanceService } from '@pm-server/pm-server-react-client';
 import { UserApi as OpenAPIUserService } from '@pm-server/pm-server-react-client';
 import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-react-client';
+import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
 
 interface AppState {
 	ready: boolean;
@@ -23,14 +24,17 @@ interface AppState {
 	authenticated: boolean;
 	registrationAllowed: boolean;
 	accounts: Array<Account>;
-	fields: Array<FieldOptions>
+	fields: Array<FieldOptions>;
+  filter?: AccountsFilter;
 }
 interface AppProps {
 }
 export default class App extends React.Component<AppProps, AppState> {
 	backend: BackendService;
-	accountTransformerService: AccountTransformerService;
-        crypto: CryptoService;
+  accountTransformerService: AccountTransformerService;
+  crypto: CryptoService;
+  plugins: PluginSystem;
+
 	constructor (props: AppProps) {
 		super(props);
 		this.state = {
@@ -39,52 +43,55 @@ export default class App extends React.Component<AppProps, AppState> {
 			authenticated: false,
 			registrationAllowed: false,
 			accounts: [],
-                        fields: []
-		}
-		let csrfMiddleware = new CSRFMiddleware();
-                let basePath = "";
-                if (process.env.REACT_APP_API_BASE_URL) {
-                  basePath = process.env.REACT_APP_API_BASE_URL;
-                }
+      fields: []
+    }
+
+    this.plugins = new PluginSystem();
+    let csrfMiddleware = new CSRFMiddleware();
+    let basePath = "";
+    if (process.env.REACT_APP_API_BASE_URL) {
+      basePath = process.env.REACT_APP_API_BASE_URL;
+    }
 		let APIconfiguration = new OpenAPIConfiguration({ basePath: basePath, middleware: [csrfMiddleware]});
 		let credentialService = new CredentialService();
 		this.crypto = new CryptoService(credentialService);
 		this.accountTransformerService = new AccountTransformerService(this.crypto); 
-		this.backend = new BackendService(
-			new MaintenanceService(new OpenAPIMaintenanceService(APIconfiguration), csrfMiddleware), 
-			new UserService(new OpenAPIUserService(APIconfiguration), this.accountTransformerService),
-			new AccountsService(new OpenAPIAccountsService(APIconfiguration), this.accountTransformerService), 
-			credentialService, 
-			this.accountTransformerService, 
-			this.crypto);
-	        this.backend.loginObservable
-                        .subscribe(()=>{
-				this.setState({authenticated : true});
-			});
-	        this.backend.accountsObservable
-                        .subscribe((accounts: Array<Account>)=>{
-				console.log("(react) received " + accounts.length + " accounts");
-				this.setState({accounts : accounts});
-			});
-	        this.backend.optionsObservable
-                        .subscribe((fieldOptions: Array<FieldOptions>) => {
-				console.log("(react) received fields: " + fieldOptions);
-				this.setState({fields : fieldOptions});
-			});
+    this.backend = new BackendService(
+        new MaintenanceService(new OpenAPIMaintenanceService(APIconfiguration), csrfMiddleware), 
+        new UserService(new OpenAPIUserService(APIconfiguration), this.accountTransformerService),
+        new AccountsService(new OpenAPIAccountsService(APIconfiguration), this.accountTransformerService), 
+        credentialService, 
+        this.accountTransformerService, 
+        this.crypto);
+    this.backend.loginObservable
+      .subscribe(()=>{
+          this.setState({authenticated : true});
+          });
+    this.backend.accountsObservable
+      .subscribe((accounts: Array<Account>)=>{
+          console.log("(react) received " + accounts.length + " accounts");
+          this.setState({accounts : accounts});
+          });
+    this.backend.optionsObservable
+      .subscribe((fieldOptions: Array<FieldOptions>) => {
+          console.log("(react) received fields: " + fieldOptions);
+          this.setState({fields : fieldOptions});
+          });
 	}
-        componentDidMount() {
-		this.backend.waitForBackend()
-			.then((backendOptions: BackendOptions) => {
-				this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed});
-			});
-        }
-	doLogin(username:string, password: string) {
-	  this.backend.logon(username, password)
-		.catch((e) => {
-                        console.log(e);
-			this.setState({message : "login failed", authenticated : false});
-		});
-	}
+  componentDidMount() {
+    this.backend.waitForBackend()
+      .then((backendOptions: BackendOptions) => {
+          this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed});
+          });
+    this.plugins.setFilterChangeHandler(this.filterChangeHandler.bind(this));
+  }
+  doLogin(username:string, password: string) {
+    this.backend.logon(username, password)
+      .catch((e) => {
+          console.log(e);
+          this.setState({message : "login failed", authenticated : false});
+          });
+  }
   async doRegister(username: string, password: string, email: string): Promise<void> {
     return this.backend.register(username, password, email);
   }
@@ -154,20 +161,31 @@ export default class App extends React.Component<AppProps, AppState> {
     return await this.backend.changeUserPassword(newPassword);
   }
 
+  filterChangeHandler(filter: AccountsFilter): void {
+    this.setState( {filter: filter} );
+  }
+
+  filterAccounts(accounts: Array<Account>): Array<Account> {
+    if (this.state.filter) {
+      return this.state.filter(accounts);
+    }
+    return accounts;
+  }
+
 	render() {
 	  return (
 	    <div className="App">
 	      <header className="App-header">
-		  Password Manager
-		<span>{this.state.message}</span>
+          Password Manager
+          <span>{this.state.message}</span>
 	      </header>
 	      {this.state.authenticated &&
-	       <Authenticated accounts={this.state.accounts} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} bulkAddHandler={this.bulkAddAccounts.bind(this)} deleteHandler={this.deleteHandler.bind(this)} logoutHandler={this.doLogout.bind(this)} changePasswordHandler={this.changePasswordHandler.bind(this)} />
+	       <Authenticated accounts={this.filterAccounts(this.state.accounts)} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} bulkAddHandler={this.bulkAddAccounts.bind(this)} deleteHandler={this.deleteHandler.bind(this)} logoutHandler={this.doLogout.bind(this)} changePasswordHandler={this.changePasswordHandler.bind(this)} />
               }
-              {!this.state.authenticated && this.state.ready
-               && <Unauthenticated doLogin={this.doLogin.bind(this)} doRegister={this.doRegister.bind(this)} showRegistration={this.state.registrationAllowed} /> }
-              {!this.state.authenticated && !this.state.ready 
-               && <span>Waiting for server</span> }
+        {!this.state.authenticated && this.state.ready
+          && <Unauthenticated doLogin={this.doLogin.bind(this)} doRegister={this.doRegister.bind(this)} showRegistration={this.state.registrationAllowed} /> }
+        {!this.state.authenticated && !this.state.ready 
+          && <span>Waiting for server</span> }
         <footer>Version: {process.env.REACT_APP_GIT_SHA}</footer>
 	    </div>
 	  );
