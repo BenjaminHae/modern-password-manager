@@ -19,13 +19,13 @@ import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-reac
 import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
 
 interface AppState {
-	ready: boolean;
-	message: string;
-	authenticated: boolean;
-	registrationAllowed: boolean;
-	accounts: Array<Account>;
-	fields: Array<FieldOptions>;
-  filter?: AccountsFilter;
+  ready: boolean,
+  message: string,
+  authenticated: boolean,
+  registrationAllowed: boolean,
+  accounts: Array<Account>,
+  fields: Array<FieldOptions>,
+  filter?: AccountsFilter,
 }
 interface AppProps {
 }
