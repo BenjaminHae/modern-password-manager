@@ -46,7 +46,6 @@ export default class App extends React.Component<AppProps, AppState> {
       fields: []
     }
 
-    this.plugins = new PluginSystem();
     let csrfMiddleware = new CSRFMiddleware();
     let basePath = "";
     if (process.env.REACT_APP_API_BASE_URL) {
@@ -63,6 +62,7 @@ export default class App extends React.Component<AppProps, AppState> {
         credentialService, 
         this.accountTransformerService, 
         this.crypto);
+    this.plugins = new PluginSystem(this.backend);
     this.backend.loginObservable
       .subscribe(()=>{
           this.setState({authenticated : true});

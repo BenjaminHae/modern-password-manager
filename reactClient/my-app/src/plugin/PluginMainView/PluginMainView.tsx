@@ -18,6 +18,7 @@ class PluginMainView extends React.Component<PluginMainViewProps, PluginMainView
   render () {
     return (
       <div className={styles.PluginMainView}>
+        { this.props.pluginSystem.getMainView() }
         <Button onClick={()=> {this.props.pluginSystem.clearFilters()}}>Clear Filters</Button>
       </div>
     );
