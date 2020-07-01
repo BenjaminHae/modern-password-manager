@@ -37,9 +37,9 @@ class PasswordWithToggle extends React.Component<PasswordProps, PasswordState> {
     return (
       <React.Fragment>
       { !this.state.visible ?
-        <Button onClick={this.show}>{HiddenPassword}</Button>
+        <Button className={styles.Authenticated} onClick={this.show}>{HiddenPassword}</Button>
         : <div><span>{this.state.password}</span>
-        <Button onClick={this.hide}>Hide</Button></div>
+        <Button className={styles.Authenticated} onClick={this.hide}>Hide</Button></div>
       }
       </React.Fragment>
     )
