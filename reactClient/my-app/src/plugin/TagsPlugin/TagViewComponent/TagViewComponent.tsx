@@ -17,12 +17,21 @@ class TagViewComponent extends React.Component<TagViewProps, TagViewState> {
     this.setState({selectedTags: []});
   }
   selectTag(tag: string) {
-    let newSelectedTags = this.state.selectedTags.concat(tag)
+    let newSelectedTags = this.state.selectedTags
+    if (newSelectedTags.includes(tag)) {
+      newSelectedTags = newSelectedTags.filter(t => t !== tag);
+    }
+    else {
+      newSelectedTags = newSelectedTags.concat(tag);
+    }
     this.setState({selectedTags: newSelectedTags});
     this.props.filterCallback(newSelectedTags);
   }
   printTags() {
-    return this.props.tags.map((tag: string) => (<button key={tag} onClick={()=>this.selectTag(tag)}>{tag}</button> ) );
+    return this.props.tags.map(
+      (tag: string) => 
+        (<button key={tag} className={this.state.selectedTags.includes(tag) ? styles.selectedTag : ""} onClick={()=>this.selectTag(tag)}>{tag}</button> )
+    );
   }
   render() {
     return (

@@ -27,13 +27,17 @@ export class TagsPlugin extends BasePlugin implements IPluginWithMainView, IPlug
   }
 
   filterCallback(tagsFilter: Array<string>) {
-    this.pluginSystem.setFilter('tags', (acc: Account): boolean=> {
+    let filter = (acc:Account) => true;
+    if (tagsFilter.length > 0) {
+      filter = (acc: Account): boolean=> {
         if (!("tags" in acc.other)) {
           return false;
         }
         let accTags = acc.other["tags"].split(',').map(function (str: string){return str.trim();});
         return tagsFilter.every(tag => accTags.includes(tag));
-        });
+        }
+    }
+    this.pluginSystem.setFilter('tags', filter);
   }
 
   private gatherDistinctTags(accounts: Array<Account>) {
