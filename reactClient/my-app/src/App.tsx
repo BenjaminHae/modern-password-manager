@@ -62,7 +62,7 @@ export default class App extends React.Component<AppProps, AppState> {
         credentialService, 
         this.accountTransformerService, 
         this.crypto);
-    this.plugins = new PluginSystem(this.backend);
+    this.plugins = new PluginSystem(this.backend, this.accountTransformerService);
     this.backend.loginObservable
       .subscribe(()=>{
           this.setState({authenticated : true});

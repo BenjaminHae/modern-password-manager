@@ -1,7 +1,9 @@
 import { Account } from '../backend/models/account';
 import { BackendService } from '../backend/backend.service';
+import { AccountTransformerService } from '../backend/controller/account-transformer.service';
 import { ActivatedPlugins } from './ActivatedPlugins';
-import { BasePlugin, instanceOfIPluginWithMainView, instanceOfIPluginWithFilter, instanceOfIPluginWithAccountsReady } from './BasePlugin';
+import { IDataTableColumn } from 'react-data-table-component';
+import { BasePlugin, instanceOfIPluginWithMainView, instanceOfIPluginWithFilter, instanceOfIPluginWithAccountsReady, instanceOfIPluginWithAccountList, instanceOfIPluginRequiresTransformer } from './BasePlugin';
 
 export type AccountsFilter = (accounts: Array<Account>) => Array<Account>;
 type AccountFilter = (account: Account) => boolean;
@@ -14,8 +16,9 @@ export class PluginSystem {
   mainViewCallback: Array<() => JSX.Element> = [];
   resetFilterCallback: Array<() => void> = [];
   accountsReadyCallback: Array<(accounts: Array<Account>) => void> = [];
+  accountListCallback: Array<(column: IDataTableColumn<Account>) => IDataTableColumn<Account>> = [];
 
-  constructor (private backend: BackendService) {
+  constructor (private backend: BackendService, private transformer: AccountTransformerService) {
     this.backend.accountsObservable
       .subscribe((accounts: Array<Account>) => {
           this.accountsReady(accounts);
@@ -37,6 +40,11 @@ export class PluginSystem {
   }
 
   registerPlugin(plugin: BasePlugin) {
+    //requires
+    if (instanceOfIPluginRequiresTransformer(plugin)) {
+      plugin.setTransformer(this.transformer);
+    }
+    //callbacks
     if (instanceOfIPluginWithMainView(plugin)) {
       this.mainViewCallback.push(plugin.MainViewJSX.bind(plugin));
     }
@@ -45,6 +53,9 @@ export class PluginSystem {
     }
     if (instanceOfIPluginWithAccountsReady(plugin)) {
       this.accountsReadyCallback.push(plugin.accountsReady.bind(plugin));
+    }
+    if (instanceOfIPluginWithAccountList(plugin)) {
+      this.accountListCallback.push(plugin.accountList.bind(plugin));
     }
   }
 
@@ -91,5 +102,13 @@ export class PluginSystem {
 
   getMainView() {
     return this.mainViewCallback.map(view => view());
+  }
+
+  manipulateAccountListItem(column: IDataTableColumn<Account>): IDataTableColumn<Account> {
+    let result = column;
+    for (let callback of this.accountListCallback) {
+      result = callback(result);
+    }
+    return result;
   }
 }
