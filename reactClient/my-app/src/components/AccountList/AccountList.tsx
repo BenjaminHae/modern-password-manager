@@ -6,6 +6,7 @@ import { FieldOptions } from '../../backend/models/fieldOptions';
 import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
 import DataTable from 'react-data-table-component';
 import { IDataTableColumn } from 'react-data-table-component';
+import { PluginSystem } from '../../plugin/PluginSystem';
 import Button from 'react-bootstrap/Button';
 
 
@@ -14,6 +15,7 @@ interface AccountListProps {
   fields: Array<FieldOptions>;
   transformer: AccountTransformerService;
   editAccountHandler: (account: Account) => void;
+  pluginSystem: PluginSystem
 }
 interface AccountListState {
   columns: Array<IDataTableColumn<Account>>;
@@ -67,6 +69,9 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
       else {
         columns.push(column);
       }
+    }
+    for (let column of columns) {
+      column = this.props.pluginSystem.manipulateAccountListItem(column);
     }
     return columns;
   }

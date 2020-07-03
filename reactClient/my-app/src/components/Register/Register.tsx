@@ -32,34 +32,28 @@ class Register extends React.Component<RegisterProps, RegisterState> {
   }
   render () {
     return (
-	  <div>
+	  <div className={styles.Register}>
 	    <h2>Registration</h2>
 	    <form onSubmit={this.doRegister}>
-	      <div>
-		<div >
-		    <label>Username
-		    <input type="text" placeholder="Username" name="username" onChange={this.handleGenericChange}/>
-		    </label>
-		</div>
-	      </div>
-	      <div>
-		<div>
-		    <label>E-Mail
-		    <input placeholder="you@domain.com" name="email" onChange={this.handleGenericChange}/>
-		    </label>
-		</div>
-	      </div>
-	      <div>
-		<div>
-		    <label>Password
-		    <input placeholder="Password" name="password" onChange={this.handleGenericChange}/>
-		    </label>
-		</div>
-	      </div>
-        <span> <Button onClick={() => {this.doRegister()} }>register</Button></span>
-	      <span>{this.state.message}</span>
-	    </form>
+        <div >
+          <label>Username
+            <input type="text" placeholder="Username" name="username" onChange={this.handleGenericChange}/>
+          </label>
         </div>
+        <div>
+            <label>E-Mail
+              <input placeholder="you@domain.com" name="email" onChange={this.handleGenericChange}/>
+            </label>
+        </div>
+        <div>
+            <label>Password
+              <input placeholder="Password" name="password" onChange={this.handleGenericChange}/>
+            </label>
+        </div>
+        <span> <Button onClick={() => {this.doRegister()} }>register</Button></span>
+        <span>{this.state.message}</span>
+      </form>
+    </div>
     )
   }
 }

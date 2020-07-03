@@ -123,7 +123,7 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
          mapped = ""
        }
          
-       return (<td key={header} title={mapped}><CsvFieldMappingSelect availableFields={this.props.availableFields} mappedFieldSelector={mapped} header={header} changeHandler={this.mappingChangeHandler.bind(this)}/></td>) 
+       return (<td key={header} title={title}><CsvFieldMappingSelect availableFields={this.props.availableFields} mappedFieldSelector={mapped} header={header} changeHandler={this.mappingChangeHandler.bind(this)}/></td>) 
      });
 //  <mat-select mat-select [(ngModel)]="selected" (ngModelChange)="onChange($event)">
 //    <mat-option value="undefined">undefined</mat-option>

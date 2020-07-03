@@ -131,7 +131,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
   }
   render() {
     return (
-      <div>
+      <div className={styles.AccountEdit} >
         <h2>{ this.props.account ? 'Edit Account' : 'Add Account' }</h2>
         <p>{ this.state.message }</p>
         {this.getFormFields()}

@@ -9,6 +9,8 @@ import ChangePassword from '../ChangePassword/ChangePassword';
 import { BackendService } from '../../backend/backend.service';
 import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
 import Button from 'react-bootstrap/Button';
+import { PluginSystem } from '../../plugin/PluginSystem';
+import PluginMainView from '../../plugin/PluginMainView/PluginMainView';
 
 enum AuthenticatedView {
   List,
@@ -18,15 +20,16 @@ enum AuthenticatedView {
   ChangePassword
 }
 interface AuthenticatedProps {
-  accounts: Array<Account>;
-  fields: Array<FieldOptions>;
-  backend: BackendService;
-  transformer: AccountTransformerService;
-  editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>;
-  bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>;
-  deleteHandler: (account: Account) => Promise<void>;
-  logoutHandler: () => Promise<void>;
-  changePasswordHandler: (oldPassword: string, newPassword: string) => Promise<void>;
+  accounts: Array<Account>,
+  fields: Array<FieldOptions>,
+  backend: BackendService,
+  transformer: AccountTransformerService,
+  editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>,
+  bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>,
+  deleteHandler: (account: Account) => Promise<void>,
+  logoutHandler: () => Promise<void>,
+  changePasswordHandler: (oldPassword: string, newPassword: string) => Promise<void>,
+  pluginSystem: PluginSystem
 }
 interface AuthenticatedState {
   view: AuthenticatedView;
@@ -46,7 +49,9 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
   render () {
     return (
 	  <div className={styles.Authenticated}>
+      
             <p><Button onClick={this.addAccountSelect.bind(this)}>Add Account</Button><Button onClick={this.props.logoutHandler}>Logout</Button></p>
+                <PluginMainView pluginSystem={this.props.pluginSystem} />
                 {this.renderSwitchAuthenticatedView()}
                 <ImportCsv availableFields={this.props.fields} bulkAddHandler={this.props.bulkAddHandler}/>
                 <ChangePassword changePasswordHandler={this.props.changePasswordHandler}/>
@@ -57,7 +62,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
     switch(this.state.view) {
       case AuthenticatedView.List:
         return (
-		<AccountList accounts={this.props.accounts} transformer={this.props.transformer} fields={this.props.fields} editAccountHandler={this.editAccountSelect.bind(this)}/>
+		<AccountList accounts={this.props.accounts} transformer={this.props.transformer} fields={this.props.fields} editAccountHandler={this.editAccountSelect.bind(this)} pluginSystem={this.props.pluginSystem} />
         );
       case AuthenticatedView.Edit:
         return (
