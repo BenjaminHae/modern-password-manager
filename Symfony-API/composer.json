@@ -7,6 +7,7 @@
         "ext-iconv": "*",
         "doctrine/orm": "2.6",
         "openapi/server-bundle": "dev-master",
+        "symfony/apache-pack": "^1.0",
         "symfony/console": "^4.2",
         "symfony/dotenv": "^4.2",
         "symfony/flex": "^1.1",
