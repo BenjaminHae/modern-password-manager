@@ -1,8 +1,9 @@
-FROM php:7-fpm
+FROM php:7.4-apache
 
-# RUN apt-get update && apt-get install
+ENV APACHE_DOCUMENT_ROOT /app/public
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && composer --version
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-WORKDIR /
+COPY * /app/
+

@@ -99,7 +99,8 @@ export class BackendService {
     let accounts = await this.accountsService.getAccounts()
     this.fields = [
       { name: "Username", colNumber: 1, selector: "user", visible: true, sortable: true },
-      { name: "URL", selector: "url", visible: false }
+      { name: "URL", selector: "url", visible: false },
+      { name: "Tags", selector: "tags", visible: true }
     ];
     subscriptionExecutor<Array<FieldOptions>>(this.optionsObservers, this.fields);
     return await this.parseAccounts(accounts)
