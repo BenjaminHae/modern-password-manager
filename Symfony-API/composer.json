@@ -16,7 +16,6 @@
         "symfony/security-bundle": "^4.2",
         "symfony/templating": "^4.2",
         "symfony/twig-pack": "^1.0",
-        "symfony/web-server-bundle": "^4.2",
         "symfony/yaml": "^4.2",
         "twig/twig": "^2.0"
     },
@@ -66,7 +65,8 @@
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.11"
+        "symfony/maker-bundle": "^1.11",
+        "symfony/web-server-bundle": "^4.2"
     },
     "repositories": [{
        "type": "path",
