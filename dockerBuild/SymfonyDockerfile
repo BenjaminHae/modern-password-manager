@@ -4,6 +4,10 @@ ENV APACHE_DOCUMENT_ROOT /app/public
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+RUN a2enmod rewrite
 
-COPY * /app/
+COPY . /app
+RUN echo "DATABASE_URL=\"sqlite:////app/var/pwman.sqlite\"" > /app/.env.local
+RUN cd /app/ && php bin/console doctrine:schema:update --force
+RUN chown -R www-data:www-data /app/var
 
