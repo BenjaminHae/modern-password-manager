@@ -69,6 +69,9 @@ jobs:
       - name: copy index.html of react to template
         run: "rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html"
         working-directory: ./Symfony-API/
+      - name: copy Dockerfile
+        run: "cp ../dockerBuild/SymfonyDockerfile Dockerfile"
+        working-directory: ./Symfony-API/
       - name: zip
         run: "zip --symlinks -r modern-password-manager.zip ./Symfony-API"
         working-directory: ./
