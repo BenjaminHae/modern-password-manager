@@ -55,6 +55,11 @@ class User implements UserInterface
      */
     private $accounts;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $ClientConfiguration;
+
     public function __construct()
     {
         $this->accounts = new ArrayCollection();
@@ -185,6 +190,18 @@ class User implements UserInterface
                 $account->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getClientConfiguration(): ?string
+    {
+        return $this->ClientConfiguration;
+    }
+
+    public function setClientConfiguration(?string $ClientConfiguration): self
+    {
+        $this->ClientConfiguration = $ClientConfiguration;
 
         return $this;
     }
