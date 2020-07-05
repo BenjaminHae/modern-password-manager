@@ -245,24 +245,33 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getLastSuccessfulLoginEvent(): Event
+    public function getLastSuccessfulLoginEvent(): ?Event
     {
         $lastLoginCriteria = Criteria::create();
         $lastLoginCriteria
             ->where(Criteria::expr()->eq('EventType', "Login"))
-            ->where(Criteria::expr()->eq('ActionResult', "success"))
+            ->andWhere(Criteria::expr()->eq('ActionResult', "success"))
             ->orderBy(['Time' => 'DESC']);
-        return $this->events->matching($lastLoginCriteria)->next();
+        $relevantLogin = $this->events->matching($lastLoginCriteria)->next();
+        if ($relevantLogin) {
+          return $relevantLogin;
+        }
+        return null;
     }
 
     public function getLastSuccessfulLoginTimeAndUnsuccessfulCount() {
         $lastLogin = $this->getLastSuccessfulLoginEvent();
+        $lastLoginTime = null;
         $unsuccessfulCriteria = Criteria::create();
         $unsuccessfulCriteria
             ->where(Criteria::expr()->eq('EventType', "Login"))
-            ->where(Criteria::expr()->eq('ActionResult', "failed"))
-            ->where(Criteria::expr()->gt('Time', $lastLogin->getTime()));
-        $unsuccessfulCount = $this->events->matching($unsuccessfulCriteria)->count();
-        return [$lastLogin->getTime(), $unsuccessfulCount];
+            ->andWhere(Criteria::expr()->eq('ActionResult', "failed"));
+        if ($lastLogin !== null) {
+            $lastLoginTime = $lastLogin->getTime();
+            $unsuccessfulCriteria
+                ->andWhere(Criteria::expr()->gt('Time', $lastLoginTime));
+        }
+        $unsuccessful = $this->events->matching($unsuccessfulCriteria);
+        return [$lastLoginTime, $unsuccessful->count()];
     }
 }
