@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -241,5 +243,26 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    public function getLastSuccessfulLoginEvent(): Event
+    {
+        $lastLoginCriteria = Criteria::create();
+        $lastLoginCriteria
+            ->where(Criteria::expr()->eq('EventType', "Login"))
+            ->where(Criteria::expr()->eq('ActionResult', "success"))
+            ->orderBy(['Time' => 'DESC']);
+        return $this->events->matching($lastLoginCriteria)->next();
+    }
+
+    public function getLastSuccessfulLoginTimeAndUnsuccessfulCount() {
+        $lastLogin = $this->getLastSuccessfulLoginEvent();
+        $unsuccessfulCriteria = Criteria::create();
+        $unsuccessfulCriteria
+            ->where(Criteria::expr()->eq('EventType', "Login"))
+            ->where(Criteria::expr()->eq('ActionResult', "failed"))
+            ->where(Criteria::expr()->gt('Time', $lastLogin->getTime()));
+        $unsuccessfulCount = $this->events->matching($unsuccessfulCriteria)->count();
+        return [$lastLogin->getTime(), $unsuccessfulCount];
     }
 }

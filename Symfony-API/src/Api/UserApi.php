@@ -67,7 +67,8 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
         if ($currentUser)
         {
             $username = $currentUser->getUsername();
-            return $this->generateApiSuccess("logged in as " . $username);
+            $loginReport = $currentUser->getLastSuccessfulLoginTimeAndUnsuccessfulCount();
+            return $this->generateApiSuccess("logged in as " . $username . " last Login was " .$loginReport[0]->format('Y-m-d\TH:i:s.u'). " unsuccessful: " . $loginReport[1]);
         }
         return $this->generateApiError("failed to log in");
     }
