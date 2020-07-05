@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\EventRepository;
 use Doctrine\ORM\Mapping as ORM;
+use OpenAPI\Server\Model\HistoryItem as OpenAPIHistoryItem;
 
 /**
  * @ORM\Entity(repositoryClass=EventRepository::class)
@@ -123,5 +124,17 @@ class Event
         $this->User = $User;
 
         return $this;
+    }
+
+    public function getAsOpenAPIHistoryItem(): OpenAPIHistoryItem
+    {
+        $contents = [
+            "userAgent"=> $this->getUserAgent(),
+            "iP"=> $this->getIP(),
+            "time"=> $this->getTime(),
+            "action"=> $this->getEventType(),
+            "actionResult"=> $this->getActionResult()
+        ];
+        return new OpenAPIHistoryItem($contents);
     }
 }

@@ -27,8 +27,7 @@ class AccountsApi extends CsrfProtection implements AccountsApiInterface
 
     private function getAccountsController()
     {
-        if (!$this->accountsController)
-        {
+        if (!$this->accountsController) {
             $this->accountsController = new AccountController($this->entityManager);
         }
         return $this->accountsController;
@@ -61,7 +60,7 @@ class AccountsApi extends CsrfProtection implements AccountsApiInterface
         $currentUser = $this->security->getUser();
         foreach ($accounts as $account) {
             $this->getAccountsController()->addAccountFromAPI($currentUser, $account);
-	}
+        }
         return $this->getCurrentUsersAccounts();
     }
 

@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
+use OpenAPI\Server\Model\UserSettings as OpenAPIUserSettings;
 
 class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessHandlerInterface
 {
@@ -83,7 +84,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
         if (!$this->allowRegistration) {
           return $this->generateApiError("registration is not allowed");
         }
-	$user = new User();
+        $user = new User();
         $user->setUsername($registration->getUsername());
         $user->setEmail($registration->getEmail());
         $user->setPassword($this->passwordEncoder->encodePassword($user, $registration->getPassword()));
@@ -92,12 +93,24 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
         return $this->generateApiSuccess("successfully registered");
     }
 
-    public function getUserHistory(&$responseCode, array &$responseHeaders) {
-        //Todo
+    public function getUserHistory(&$responseCode, array &$responseHeaders) 
+    {
+        $currentUser = $this->security->getUser();
+        return $currentUser->getEvents()->map(function($event) { return $event->getAsOpenAPIHistoryItem(); } );
     }
 
-    public function getUserSettings(&$responseCode, array &$responseHeaders) {
-        // Todo
+    public function getUserSettings(&$responseCode, array &$responseHeaders) 
+    {
+        $currentUser = $this->security->getUser();
+        $userSettings = $currentUser->getClientConfiguration();
+        return new OpenAPIUserSettings(["encryptedUserSettings" => $userSettings]);
+    }
+
+    public function setUserSettings(OpenAPIUserSettings $userSettings, &$responseCode, array &$responseHeaders) {
+        $currentUser = $this->security->getUser();
+        $userSettings = $currentUser->setClientConfiguration($userSettings->getEncryptedUserSettings());
+        $this->entityManager->flush();
+        return $this->generateApiSuccess("successfully stored user settings");
     }
 
     public function changePassword(ChangePassword $changes, &$responseCode, array &$responseHeaders)
@@ -112,7 +125,8 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
     }
 
     // ...
-    public function onLogoutSuccess(Request $request) {
+    public function onLogoutSuccess(Request $request) 
+    {
         $response = new Response();
         $response->setContent(json_encode( $this->generateApiSuccess("logged out") ));
         $response->headers->set('Content-Type', 'application/json');      

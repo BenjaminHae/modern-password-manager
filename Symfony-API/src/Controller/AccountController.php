@@ -36,7 +36,7 @@ class AccountController
 
     public function getAccountsForUserAsAPI($user)
     {
-	return $user->getAccounts()->map(function($account) { return $account->getAsOpenAPIAccount(); } );
+        return $user->getAccounts()->map(function($account) { return $account->getAsOpenAPIAccount(); } );
     }
 
     public function getSpecificAccountForUser($user, int $id)
