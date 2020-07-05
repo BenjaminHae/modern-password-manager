@@ -105,7 +105,7 @@ interface UserApiInterface
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
-     * @return OpenAPI\Server\Model\GenericSuccessMessage
+     * @return GenericSuccessMessage
      *
      */
     public function loginUser(LogonInformation $logonInformation, &$responseCode, array &$responseHeaders);

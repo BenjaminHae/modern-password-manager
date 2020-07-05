@@ -186,7 +186,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 ## **loginUser**
-> OpenAPI\Server\Model\GenericSuccessMessage loginUser($logonInformation)
+> GenericSuccessMessage loginUser($logonInformation)
 
 login
 
@@ -232,7 +232,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**OpenAPI\Server\Model\GenericSuccessMessage**](../Model/GenericSuccessMessage.md)
+[**GenericSuccessMessage**](../Model/GenericSuccessMessage.md)
 
 ### Authorization
 

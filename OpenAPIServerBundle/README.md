@@ -148,6 +148,7 @@ Class | Method | HTTP request | Description
  - [HistoryItem](Resources/docs/Model/HistoryItem.md)
  - [Index](Resources/docs/Model/Index.md)
  - [LogonInformation](Resources/docs/Model/LogonInformation.md)
+ - [LogonSecurityInformation](Resources/docs/Model/LogonSecurityInformation.md)
  - [RegistrationInformation](Resources/docs/Model/RegistrationInformation.md)
  - [ServerInformation](Resources/docs/Model/ServerInformation.md)
  - [UserInformation](Resources/docs/Model/UserInformation.md)

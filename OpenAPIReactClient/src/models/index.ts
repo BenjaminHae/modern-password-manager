@@ -4,6 +4,7 @@ export * from './ChangePassword';
 export * from './GenericSuccessMessage';
 export * from './HistoryItem';
 export * from './LogonInformation';
+export * from './LogonSecurityInformation';
 export * from './ModelFile';
 export * from './ModelIndex';
 export * from './RegistrationInformation';

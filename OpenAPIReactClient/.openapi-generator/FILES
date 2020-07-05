@@ -13,6 +13,7 @@ src/models/ChangePassword.ts
 src/models/GenericSuccessMessage.ts
 src/models/HistoryItem.ts
 src/models/LogonInformation.ts
+src/models/LogonSecurityInformation.ts
 src/models/ModelFile.ts
 src/models/ModelIndex.ts
 src/models/RegistrationInformation.ts

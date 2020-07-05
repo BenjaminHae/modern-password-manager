@@ -21,6 +21,9 @@ import {
     GenericSuccessMessage,
     GenericSuccessMessageFromJSON,
     GenericSuccessMessageToJSON,
+    GenericSuccessMessage &amp; LogonSecurityInformation,
+    GenericSuccessMessage &amp; LogonSecurityInformationFromJSON,
+    GenericSuccessMessage &amp; LogonSecurityInformationToJSON,
     HistoryItem,
     HistoryItemFromJSON,
     HistoryItemToJSON,
@@ -150,7 +153,7 @@ export class UserApi extends runtime.BaseAPI {
     /**
      * login
      */
-    async loginUserRaw(requestParameters: LoginUserRequest): Promise<runtime.ApiResponse<GenericSuccessMessage>> {
+    async loginUserRaw(requestParameters: LoginUserRequest): Promise<runtime.ApiResponse<GenericSuccessMessage & LogonSecurityInformation>> {
         if (requestParameters.logonInformation === null || requestParameters.logonInformation === undefined) {
             throw new runtime.RequiredError('logonInformation','Required parameter requestParameters.logonInformation was null or undefined when calling loginUser.');
         }
@@ -173,13 +176,13 @@ export class UserApi extends runtime.BaseAPI {
             body: LogonInformationToJSON(requestParameters.logonInformation),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => GenericSuccessMessageFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => GenericSuccessMessage &amp; LogonSecurityInformationFromJSON(jsonValue));
     }
 
     /**
      * login
      */
-    async loginUser(requestParameters: LoginUserRequest): Promise<GenericSuccessMessage> {
+    async loginUser(requestParameters: LoginUserRequest): Promise<GenericSuccessMessage & LogonSecurityInformation> {
         const response = await this.loginUserRaw(requestParameters);
         return await response.value();
     }
