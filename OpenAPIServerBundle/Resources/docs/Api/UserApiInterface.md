@@ -4,13 +4,13 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**changeClientSettings**](UserApiInterface.md#changeClientSettings) | **POST** /user/settings | change client settings of current user
 [**changePassword**](UserApiInterface.md#changePassword) | **POST** /user/changepassword | change user password
 [**getUserHistory**](UserApiInterface.md#getUserHistory) | **GET** /user/history | Returns a history of successful and failed logins
 [**getUserSettings**](UserApiInterface.md#getUserSettings) | **GET** /user/settings | Returns the client settings of the current user
 [**loginUser**](UserApiInterface.md#loginUser) | **POST** /user/login | login
 [**logoutUser**](UserApiInterface.md#logoutUser) | **GET** /user/logout | Logs out current logged in user session
 [**registerUser**](UserApiInterface.md#registerUser) | **PUT** /user | registration
+[**setUserSettings**](UserApiInterface.md#setUserSettings) | **POST** /user/settings | change client settings of current user
 
 
 ## Service Declaration
@@ -24,68 +24,6 @@ services:
             - { name: "open_api_server.api", api: "user" }
     # ...
 ```
-
-## **changeClientSettings**
-> OpenAPI\Server\Model\GenericSuccessMessage changeClientSettings($userSettings)
-
-change client settings of current user
-
-parameter contains encrypted client settings
-
-### Example Implementation
-```php
-<?php
-// src/Acme/MyBundle/Api/UserApiInterface.php
-
-namespace Acme\MyBundle\Api;
-
-use OpenAPI\Server\Api\UserApiInterface;
-
-class UserApi implements UserApiInterface
-{
-
-    /**
-     * Configure API key authorization: csrf
-     */
-    public function setcsrf($apiKey)
-    {
-        // Retrieve logged in user from $apiKey ...
-    }
-
-    // ...
-
-    /**
-     * Implementation of UserApiInterface#changeClientSettings
-     */
-    public function changeClientSettings(UserSettings $userSettings)
-    {
-        // Implement the operation ...
-    }
-
-    // ...
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **userSettings** | [**OpenAPI\Server\Model\UserSettings**](../Model/UserSettings.md)| Settings Object |
-
-### Return type
-
-[**OpenAPI\Server\Model\GenericSuccessMessage**](../Model/GenericSuccessMessage.md)
-
-### Authorization
-
-[csrf](../../README.md#csrf)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 ## **changePassword**
 > OpenAPI\Server\Model\GenericSuccessMessage changePassword($changePassword)
@@ -400,6 +338,68 @@ class UserApi implements UserApiInterface
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **registrationInformation** | [**OpenAPI\Server\Model\RegistrationInformation**](../Model/RegistrationInformation.md)| Registration Object |
+
+### Return type
+
+[**OpenAPI\Server\Model\GenericSuccessMessage**](../Model/GenericSuccessMessage.md)
+
+### Authorization
+
+[csrf](../../README.md#csrf)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+## **setUserSettings**
+> OpenAPI\Server\Model\GenericSuccessMessage setUserSettings($userSettings)
+
+change client settings of current user
+
+parameter contains encrypted client settings
+
+### Example Implementation
+```php
+<?php
+// src/Acme/MyBundle/Api/UserApiInterface.php
+
+namespace Acme\MyBundle\Api;
+
+use OpenAPI\Server\Api\UserApiInterface;
+
+class UserApi implements UserApiInterface
+{
+
+    /**
+     * Configure API key authorization: csrf
+     */
+    public function setcsrf($apiKey)
+    {
+        // Retrieve logged in user from $apiKey ...
+    }
+
+    // ...
+
+    /**
+     * Implementation of UserApiInterface#setUserSettings
+     */
+    public function setUserSettings(UserSettings $userSettings)
+    {
+        // Implement the operation ...
+    }
+
+    // ...
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **userSettings** | [**OpenAPI\Server\Model\UserSettings**](../Model/UserSettings.md)| Settings Object |
 
 ### Return type
 

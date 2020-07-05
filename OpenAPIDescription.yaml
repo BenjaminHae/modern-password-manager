@@ -146,7 +146,7 @@ paths:
         - user
       summary: "change client settings of current user"
       description: "parameter contains encrypted client settings"
-      operationId: changeClientSettings
+      operationId: setUserSettings
       requestBody:
         content:
           application/json:

@@ -57,20 +57,6 @@ interface UserApiInterface
     public function setcsrf($value);
 
     /**
-     * Operation changeClientSettings
-     *
-     * change client settings of current user
-     *
-     * @param  OpenAPI\Server\Model\UserSettings $userSettings  Settings Object (required)
-     * @param  integer $responseCode     The HTTP response code to return
-     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
-     *
-     * @return OpenAPI\Server\Model\GenericSuccessMessage
-     *
-     */
-    public function changeClientSettings(UserSettings $userSettings, &$responseCode, array &$responseHeaders);
-
-    /**
      * Operation changePassword
      *
      * change user password
@@ -150,4 +136,18 @@ interface UserApiInterface
      *
      */
     public function registerUser(RegistrationInformation $registrationInformation, &$responseCode, array &$responseHeaders);
+
+    /**
+     * Operation setUserSettings
+     *
+     * change client settings of current user
+     *
+     * @param  OpenAPI\Server\Model\UserSettings $userSettings  Settings Object (required)
+     * @param  integer $responseCode     The HTTP response code to return
+     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     *
+     * @return OpenAPI\Server\Model\GenericSuccessMessage
+     *
+     */
+    public function setUserSettings(UserSettings $userSettings, &$responseCode, array &$responseHeaders);
 }
