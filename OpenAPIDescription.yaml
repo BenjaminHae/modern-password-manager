@@ -112,7 +112,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ChangePassword"
-        description: Logon Object
+        description: ChangePassword Object
         required: true
       responses:
         "200":
@@ -121,6 +121,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GenericSuccessMessage"
+        "403":
+          description: Unauthorized
       security:
         - csrf: []
   /user/settings:
@@ -139,6 +141,30 @@ paths:
                 $ref: "#/components/schemas/UserSettings"
         "403":
           description: Unauthorized
+    post:
+      tags:
+        - user
+      summary: "change client settings of current user"
+      description: "parameter contains encrypted client settings"
+      operationId: changeClientSettings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserSettings"
+        description: Settings Object
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericSuccessMessage"
+        "403":
+          description: Unauthorized
+      security:
+        - csrf: []
   /user/history:
     get:
       tags:
