@@ -129,6 +129,7 @@ Class | Method | HTTP request | Description
 *AccountsApiInterface* | [**getAccounts**](Resources/docs/Api/AccountsApiInterface.md#getaccounts) | **GET** /accounts | Returns the accounts stored by the current user
 *AccountsApiInterface* | [**updateAccount**](Resources/docs/Api/AccountsApiInterface.md#updateaccount) | **POST** /accounts/{id} | Update a stored account
 *MaintenanceApiInterface* | [**serverInformation**](Resources/docs/Api/MaintenanceApiInterface.md#serverinformation) | **GET** /info | get information about the server for the client
+*UserApiInterface* | [**changeClientSettings**](Resources/docs/Api/UserApiInterface.md#changeclientsettings) | **POST** /user/settings | change client settings of current user
 *UserApiInterface* | [**changePassword**](Resources/docs/Api/UserApiInterface.md#changepassword) | **POST** /user/changepassword | change user password
 *UserApiInterface* | [**getUserHistory**](Resources/docs/Api/UserApiInterface.md#getuserhistory) | **GET** /user/history | Returns a history of successful and failed logins
 *UserApiInterface* | [**getUserSettings**](Resources/docs/Api/UserApiInterface.md#getusersettings) | **GET** /user/settings | Returns the client settings of the current user

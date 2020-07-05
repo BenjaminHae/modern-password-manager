@@ -35,6 +35,10 @@ import {
     UserSettingsToJSON,
 } from '../models';
 
+export interface ChangeClientSettingsRequest {
+    userSettings: UserSettings;
+}
+
 export interface ChangePasswordRequest {
     changePassword: ChangePassword;
 }
@@ -51,6 +55,45 @@ export interface RegisterUserRequest {
  * 
  */
 export class UserApi extends runtime.BaseAPI {
+
+    /**
+     * parameter contains encrypted client settings
+     * change client settings of current user
+     */
+    async changeClientSettingsRaw(requestParameters: ChangeClientSettingsRequest): Promise<runtime.ApiResponse<GenericSuccessMessage>> {
+        if (requestParameters.userSettings === null || requestParameters.userSettings === undefined) {
+            throw new runtime.RequiredError('userSettings','Required parameter requestParameters.userSettings was null or undefined when calling changeClientSettings.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-CSRF-TOKEN"] = this.configuration.apiKey("X-CSRF-TOKEN"); // csrf authentication
+        }
+
+        const response = await this.request({
+            path: `/user/settings`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UserSettingsToJSON(requestParameters.userSettings),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GenericSuccessMessageFromJSON(jsonValue));
+    }
+
+    /**
+     * parameter contains encrypted client settings
+     * change client settings of current user
+     */
+    async changeClientSettings(requestParameters: ChangeClientSettingsRequest): Promise<GenericSuccessMessage> {
+        const response = await this.changeClientSettingsRaw(requestParameters);
+        return await response.value();
+    }
 
     /**
      * change password of current user and upload reencrypted accounts
