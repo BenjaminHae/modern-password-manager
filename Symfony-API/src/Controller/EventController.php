@@ -19,7 +19,7 @@ class EventController
         $this->requestStack = $request;
     }
 
-    public function StoreLoginEvent(User $user, string $eventType, string $eventResult) {
+    public function StoreEvent(User $user, string $eventType, string $eventResult) {
         $request = $this->requestStack->getCurrentRequest();
 
         $event = new Event();

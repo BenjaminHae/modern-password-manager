@@ -4,8 +4,10 @@ namespace App\Api;
 
 use App\Controller\AccountController;
 use App\Entity\User;
+use App\Controller\EventController;
 use Doctrine\ORM\EntityManagerInterface;
 use OpenAPI\Server\Api\UserApiInterface;
+use OpenAPI\Server\Model\UserSettings as OpenAPIUserSettings;
 use OpenAPI\Server\Model\AccountId;
 use OpenAPI\Server\Model\ChangePassword;
 use OpenAPI\Server\Model\LogonInformation;
@@ -18,7 +20,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
-use OpenAPI\Server\Model\UserSettings as OpenAPIUserSettings;
 
 class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessHandlerInterface
 {
@@ -27,12 +28,14 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
     private $security;
     private $session;
     private $accountsController;
+    private $eventController;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, Security $security, SessionInterface $session, CsrfTokenManagerInterface $csrfManager, $allowRegistration)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, Security $security, SessionInterface $session, EventController $eventController, CsrfTokenManagerInterface $csrfManager, $allowRegistration)
     {
         parent::__construct($csrfManager);
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
+        $this->eventController = $eventController;
         $this->security = $security;
         $this->session = $session;
         $this->allowRegistration = strtolower($allowRegistration) === "true";
@@ -90,6 +93,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
         $user->setPassword($this->passwordEncoder->encodePassword($user, $registration->getPassword()));
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+        $this->eventController->StoreEvent($user, "Register", "success");
         return $this->generateApiSuccess("successfully registered");
     }
 
@@ -120,6 +124,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
         $currentUser->setPassword($newHash);
         $this->getAccountsController()->updateAccountsFromApi($currentUser, $changes->getAccounts());
         $this->entityManager->flush();
+        $this->eventController->StoreEvent($currentUser, "ChangePassword", "success");
         return $this->generateApiSuccess("Changed password, please relogin");
         //Todo: Auto Logout?
     }

@@ -23,14 +23,14 @@ class LoginListener
         // Get the User entity.
         $user = $event->getAuthenticationToken()->getUser();
 
-        $this->eventController->StoreLoginEvent($user, "Login", "success");
+        $this->eventController->StoreEvent($user, "Login", "success");
     }
 
     public function onSecurityAuthenticationFailure(AuthenticationFailureEvent $event) {
         // Get the User entity.
         $UNAUTHENTICATEDuser = $this->userRepository->findOneByUsernameUNAUTHENTICATED($event->getAuthenticationToken()->getUser());
         
-        $this->eventController->StoreLoginEvent($UNAUTHENTICATEDuser, "Login", "failed");
+        $this->eventController->StoreEvent($UNAUTHENTICATEDuser, "Login", "failed");
     }
 }
 ?>
