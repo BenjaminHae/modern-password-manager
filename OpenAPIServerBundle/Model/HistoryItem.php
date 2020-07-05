@@ -58,10 +58,10 @@ class HistoryItem
     protected $iP;
 
     /**
-     * @var int|null
+     * @var \DateTime|null
      * @SerializedName("Time")
-     * @Assert\Type("int")
-     * @Type("int")
+     * @Assert\DateTime()
+     * @Type("DateTime")
      */
     protected $time;
 
@@ -146,9 +146,9 @@ class HistoryItem
     /**
      * Gets time.
      *
-     * @return int|null
+     * @return \DateTime|null
      */
-    public function getTime()
+    public function getTime(): ?\DateTime
     {
         return $this->time;
     }
@@ -156,11 +156,11 @@ class HistoryItem
     /**
      * Sets time.
      *
-     * @param int|null $time
+     * @param \DateTime|null $time
      *
      * @return $this
      */
-    public function setTime($time = null)
+    public function setTime(\DateTime $time = null)
     {
         $this->time = $time;
 

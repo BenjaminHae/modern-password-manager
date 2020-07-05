@@ -322,7 +322,8 @@ components:
         IP:
           type: string
         Time:
-          type: integer
+          type: string
+          format: date-time
         Action:
           type: string
           enum:

@@ -33,10 +33,10 @@ export interface HistoryItem {
     iP?: string;
     /**
      * 
-     * @type {number}
+     * @type {Date}
      * @memberof HistoryItem
      */
-    time?: number;
+    time?: Date;
     /**
      * 
      * @type {string}
@@ -63,7 +63,7 @@ export function HistoryItemFromJSONTyped(json: any, ignoreDiscriminator: boolean
         
         'userAgent': !exists(json, 'UserAgent') ? undefined : json['UserAgent'],
         'iP': !exists(json, 'IP') ? undefined : json['IP'],
-        'time': !exists(json, 'Time') ? undefined : json['Time'],
+        'time': !exists(json, 'Time') ? undefined : (new Date(json['Time'])),
         'action': !exists(json, 'Action') ? undefined : json['Action'],
         'actionResult': !exists(json, 'ActionResult') ? undefined : json['ActionResult'],
     };
@@ -80,7 +80,7 @@ export function HistoryItemToJSON(value?: HistoryItem | null): any {
         
         'UserAgent': value.userAgent,
         'IP': value.iP,
-        'Time': value.time,
+        'Time': value.time === undefined ? undefined : (value.time.toISOString()),
         'Action': value.action,
         'ActionResult': value.actionResult,
     };
