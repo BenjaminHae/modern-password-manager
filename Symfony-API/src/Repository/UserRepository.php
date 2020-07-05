@@ -48,4 +48,14 @@ class UserRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+
+    public function findOneByUsernameUNAUTHENTICATED($username): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.username = :user')
+            ->setParameter('user', $username)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }
