@@ -4,20 +4,24 @@ namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use App\Entity\Event;
 use App\Entity\User;
 
 class EventController
 {
     private $em;
-    private $userRepository;
+    private $requestStack;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, RequestStack $request)
     {
         $this->em = $em;
+        $this->requestStack = $request;
     }
 
-    public function StoreLoginEvent(User $user, Request $request, string $eventType, string $eventResult) {
+    public function StoreLoginEvent(User $user, string $eventType, string $eventResult) {
+        $request = $this->requestStack->getCurrentRequest();
+
         $event = new Event();
         $event->setUserAgent($request->headers->get('User-Agent'));
         $event->setIp($request->getClientIp());
