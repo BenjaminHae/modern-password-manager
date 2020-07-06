@@ -27,7 +27,7 @@ class EventController
         $event->setIp($request->getClientIp());
         $event->setTime(new \DateTime());
         $event->setEventType($eventType);
-        $event->setActionResult($eventResult);
+        $event->setEventResult($eventResult);
 
         $user->addEvent($event);
 

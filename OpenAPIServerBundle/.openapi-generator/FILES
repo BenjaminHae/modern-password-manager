@@ -27,7 +27,6 @@
 ./Service/ValidatorInterface.php
 ./Tests/AppKernel.php
 ./Tests/Controller/ControllerTest.php
-./Tests/Model/LogonSecurityInformationTest.php
 ./Tests/test_config.yml
 .php_cs
 .travis.yml

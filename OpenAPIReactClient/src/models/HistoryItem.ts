@@ -42,13 +42,13 @@ export interface HistoryItem {
      * @type {string}
      * @memberof HistoryItem
      */
-    action?: HistoryItemActionEnum;
+    event?: HistoryItemEventEnum;
     /**
      * 
      * @type {string}
      * @memberof HistoryItem
      */
-    actionResult?: string;
+    eventResult?: string;
 }
 
 export function HistoryItemFromJSON(json: any): HistoryItem {
@@ -64,8 +64,8 @@ export function HistoryItemFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'userAgent': !exists(json, 'UserAgent') ? undefined : json['UserAgent'],
         'iP': !exists(json, 'IP') ? undefined : json['IP'],
         'time': !exists(json, 'Time') ? undefined : (new Date(json['Time'])),
-        'action': !exists(json, 'Action') ? undefined : json['Action'],
-        'actionResult': !exists(json, 'ActionResult') ? undefined : json['ActionResult'],
+        'event': !exists(json, 'Event') ? undefined : json['Event'],
+        'eventResult': !exists(json, 'EventResult') ? undefined : json['EventResult'],
     };
 }
 
@@ -81,8 +81,8 @@ export function HistoryItemToJSON(value?: HistoryItem | null): any {
         'UserAgent': value.userAgent,
         'IP': value.iP,
         'Time': value.time === undefined ? undefined : (value.time.toISOString()),
-        'Action': value.action,
-        'ActionResult': value.actionResult,
+        'Event': value.event,
+        'EventResult': value.eventResult,
     };
 }
 
@@ -90,7 +90,7 @@ export function HistoryItemToJSON(value?: HistoryItem | null): any {
 * @export
 * @enum {string}
 */
-export enum HistoryItemActionEnum {
+export enum HistoryItemEventEnum {
     Login = 'Login',
     ChangePassword = 'ChangePassword',
     Registration = 'Registration'

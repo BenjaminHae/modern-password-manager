@@ -335,13 +335,13 @@ components:
         Time:
           type: string
           format: date-time
-        Action:
+        Event:
           type: string
           enum:
             - Login
             - ChangePassword
             - Registration
-        ActionResult:
+        EventResult:
           type: string
     UserSettings:
       type: object

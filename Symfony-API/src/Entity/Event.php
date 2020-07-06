@@ -41,7 +41,7 @@ class Event
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $ActionResult;
+    private $EventResult;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="events")
@@ -102,14 +102,14 @@ class Event
         return $this;
     }
 
-    public function getActionResult(): ?string
+    public function getEventResult(): ?string
     {
-        return $this->ActionResult;
+        return $this->EventResult;
     }
 
-    public function setActionResult(string $ActionResult): self
+    public function setEventResult(string $EventResult): self
     {
-        $this->ActionResult = $ActionResult;
+        $this->EventResult = $EventResult;
 
         return $this;
     }
@@ -132,8 +132,8 @@ class Event
             "userAgent"=> $this->getUserAgent(),
             "iP"=> $this->getIP(),
             "time"=> $this->getTime(),
-            "action"=> $this->getEventType(),
-            "actionResult"=> $this->getActionResult()
+            "event"=> $this->getEventType(),
+            "eventResult"=> $this->getEventResult()
         ];
         return new OpenAPIHistoryItem($contents);
     }

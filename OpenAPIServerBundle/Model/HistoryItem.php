@@ -67,20 +67,20 @@ class HistoryItem
 
     /**
      * @var string|null
-     * @SerializedName("Action")
+     * @SerializedName("Event")
      * @Assert\Choice({ "Login", "ChangePassword", "Registration" })
      * @Assert\Type("string")
      * @Type("string")
      */
-    protected $action;
+    protected $event;
 
     /**
      * @var string|null
-     * @SerializedName("ActionResult")
+     * @SerializedName("EventResult")
      * @Assert\Type("string")
      * @Type("string")
      */
-    protected $actionResult;
+    protected $eventResult;
 
     /**
      * Constructor
@@ -91,8 +91,8 @@ class HistoryItem
         $this->userAgent = isset($data['userAgent']) ? $data['userAgent'] : null;
         $this->iP = isset($data['iP']) ? $data['iP'] : null;
         $this->time = isset($data['time']) ? $data['time'] : null;
-        $this->action = isset($data['action']) ? $data['action'] : null;
-        $this->actionResult = isset($data['actionResult']) ? $data['actionResult'] : null;
+        $this->event = isset($data['event']) ? $data['event'] : null;
+        $this->eventResult = isset($data['eventResult']) ? $data['eventResult'] : null;
     }
 
     /**
@@ -168,49 +168,49 @@ class HistoryItem
     }
 
     /**
-     * Gets action.
+     * Gets event.
      *
      * @return string|null
      */
-    public function getAction()
+    public function getEvent()
     {
-        return $this->action;
+        return $this->event;
     }
 
     /**
-     * Sets action.
+     * Sets event.
      *
-     * @param string|null $action
+     * @param string|null $event
      *
      * @return $this
      */
-    public function setAction($action = null)
+    public function setEvent($event = null)
     {
-        $this->action = $action;
+        $this->event = $event;
 
         return $this;
     }
 
     /**
-     * Gets actionResult.
+     * Gets eventResult.
      *
      * @return string|null
      */
-    public function getActionResult()
+    public function getEventResult()
     {
-        return $this->actionResult;
+        return $this->eventResult;
     }
 
     /**
-     * Sets actionResult.
+     * Sets eventResult.
      *
-     * @param string|null $actionResult
+     * @param string|null $eventResult
      *
      * @return $this
      */
-    public function setActionResult($actionResult = null)
+    public function setEventResult($eventResult = null)
     {
-        $this->actionResult = $actionResult;
+        $this->eventResult = $eventResult;
 
         return $this;
     }
