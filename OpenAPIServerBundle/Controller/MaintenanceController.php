@@ -2,7 +2,7 @@
 
 /**
  * MaintenanceController
- * PHP version 5
+ * PHP version 7.1.3
  *
  * @category Class
  * @package  OpenAPI\Server\Controller
@@ -87,7 +87,7 @@ class MaintenanceController extends Controller
             $result = $handler->serverInformation($responseCode, $responseHeaders);
 
             // Find default response message
-            $message = 'successful operation';
+            $message = '';
 
             // Find a more specific message, if available
             switch ($responseCode) {

@@ -2,7 +2,7 @@
 
 /**
  * AccountsController
- * PHP version 5
+ * PHP version 7.1.3
  *
  * @category Class
  * @package  OpenAPI\Server\Controller
@@ -118,7 +118,7 @@ class AccountsController extends Controller
             $result = $handler->addAccounts($account, $responseCode, $responseHeaders);
 
             // Find default response message
-            $message = 'successful operation';
+            $message = '';
 
             // Find a more specific message, if available
             switch ($responseCode) {
@@ -201,7 +201,7 @@ class AccountsController extends Controller
             $result = $handler->deleteAccount($id, $responseCode, $responseHeaders);
 
             // Find default response message
-            $message = 'successful operation';
+            $message = '';
 
             // Find a more specific message, if available
             switch ($responseCode) {
@@ -270,7 +270,7 @@ class AccountsController extends Controller
             $result = $handler->getAccounts($responseCode, $responseHeaders);
 
             // Find default response message
-            $message = 'successful operation';
+            $message = '';
 
             // Find a more specific message, if available
             switch ($responseCode) {
@@ -376,7 +376,7 @@ class AccountsController extends Controller
             $result = $handler->updateAccount($id, $account, $responseCode, $responseHeaders);
 
             // Find default response message
-            $message = 'successful operation';
+            $message = '';
 
             // Find a more specific message, if available
             switch ($responseCode) {

@@ -1,7 +1,7 @@
 <?php
 /**
  * UserApiInterface
- * PHP version 5
+ * PHP version 7.1.3
  *
  * @category Class
  * @package  OpenAPI\Server
@@ -33,6 +33,7 @@ use OpenAPI\Server\Model\ChangePassword;
 use OpenAPI\Server\Model\GenericSuccessMessage;
 use OpenAPI\Server\Model\HistoryItem;
 use OpenAPI\Server\Model\LogonInformation;
+use OpenAPI\Server\Model\LogonResult;
 use OpenAPI\Server\Model\RegistrationInformation;
 use OpenAPI\Server\Model\UserSettings;
 
@@ -105,7 +106,7 @@ interface UserApiInterface
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
-     * @return GenericSuccessMessage
+     * @return OpenAPI\Server\Model\LogonResult
      *
      */
     public function loginUser(LogonInformation $logonInformation, &$responseCode, array &$responseHeaders);

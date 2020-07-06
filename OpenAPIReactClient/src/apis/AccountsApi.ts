@@ -49,7 +49,7 @@ export class AccountsApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('account','Required parameter requestParameters.account was null or undefined when calling addAccounts.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -86,7 +86,7 @@ export class AccountsApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteAccount.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -112,7 +112,7 @@ export class AccountsApi extends runtime.BaseAPI {
      * Returns the accounts stored by the current user
      */
     async getAccountsRaw(): Promise<runtime.ApiResponse<Array<AccountId>>> {
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -146,7 +146,7 @@ export class AccountsApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('account','Required parameter requestParameters.account was null or undefined when calling updateAccount.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 

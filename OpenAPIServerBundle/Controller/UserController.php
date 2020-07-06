@@ -2,7 +2,7 @@
 
 /**
  * UserController
- * PHP version 5
+ * PHP version 7.1.3
  *
  * @category Class
  * @package  OpenAPI\Server\Controller
@@ -40,6 +40,7 @@ use OpenAPI\Server\Model\ChangePassword;
 use OpenAPI\Server\Model\GenericSuccessMessage;
 use OpenAPI\Server\Model\HistoryItem;
 use OpenAPI\Server\Model\LogonInformation;
+use OpenAPI\Server\Model\LogonResult;
 use OpenAPI\Server\Model\RegistrationInformation;
 use OpenAPI\Server\Model\UserSettings;
 
@@ -121,7 +122,7 @@ class UserController extends Controller
             $result = $handler->changePassword($changePassword, $responseCode, $responseHeaders);
 
             // Find default response message
-            $message = 'OK';
+            $message = '';
 
             // Find a more specific message, if available
             switch ($responseCode) {
@@ -187,7 +188,7 @@ class UserController extends Controller
             $result = $handler->getUserHistory($responseCode, $responseHeaders);
 
             // Find default response message
-            $message = 'Array of logins';
+            $message = '';
 
             // Find a more specific message, if available
             switch ($responseCode) {
@@ -253,7 +254,7 @@ class UserController extends Controller
             $result = $handler->getUserSettings($responseCode, $responseHeaders);
 
             // Find default response message
-            $message = 'stored client values (encrypted string that contains a JSON)';
+            $message = '';
 
             // Find a more specific message, if available
             switch ($responseCode) {
@@ -348,7 +349,7 @@ class UserController extends Controller
             $result = $handler->loginUser($logonInformation, $responseCode, $responseHeaders);
 
             // Find default response message
-            $message = 'OK';
+            $message = '';
 
             // Find a more specific message, if available
             switch ($responseCode) {
@@ -414,7 +415,7 @@ class UserController extends Controller
             $result = $handler->logoutUser($responseCode, $responseHeaders);
 
             // Find default response message
-            $message = 'OK';
+            $message = '';
 
             // Find a more specific message, if available
             switch ($responseCode) {
@@ -506,7 +507,7 @@ class UserController extends Controller
             $result = $handler->registerUser($registrationInformation, $responseCode, $responseHeaders);
 
             // Find default response message
-            $message = 'successful operation';
+            $message = '';
 
             // Find a more specific message, if available
             switch ($responseCode) {
@@ -601,7 +602,7 @@ class UserController extends Controller
             $result = $handler->setUserSettings($userSettings, $responseCode, $responseHeaders);
 
             // Find default response message
-            $message = 'OK';
+            $message = '';
 
             // Find a more specific message, if available
             switch ($responseCode) {

@@ -29,7 +29,7 @@ export class MaintenanceApi extends runtime.BaseAPI {
      * get information about the server for the client
      */
     async serverInformationRaw(): Promise<runtime.ApiResponse<ServerInformation>> {
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 

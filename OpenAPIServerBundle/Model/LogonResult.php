@@ -1,6 +1,6 @@
 <?php
 /**
- * LogonSecurityInformation
+ * LogonResult
  *
  * PHP version 7.1.3
  *
@@ -34,14 +34,30 @@ use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * Class representing the LogonSecurityInformation model.
+ * Class representing the LogonResult model.
  *
  * @package OpenAPI\Server\Model
  * @author  OpenAPI Generator team
  */
-class LogonSecurityInformation 
+class LogonResult 
 {
         /**
+     * @var bool|null
+     * @SerializedName("success")
+     * @Assert\Type("bool")
+     * @Type("bool")
+     */
+    protected $success;
+
+    /**
+     * @var string|null
+     * @SerializedName("message")
+     * @Assert\Type("string")
+     * @Type("string")
+     */
+    protected $message;
+
+    /**
      * @var \DateTime|null
      * @SerializedName("lastLogin")
      * @Assert\DateTime()
@@ -63,8 +79,58 @@ class LogonSecurityInformation
      */
     public function __construct(array $data = null)
     {
+        $this->success = isset($data['success']) ? $data['success'] : null;
+        $this->message = isset($data['message']) ? $data['message'] : null;
         $this->lastLogin = isset($data['lastLogin']) ? $data['lastLogin'] : null;
         $this->failedLogins = isset($data['failedLogins']) ? $data['failedLogins'] : null;
+    }
+
+    /**
+     * Gets success.
+     *
+     * @return bool|null
+     */
+    public function isSuccess()
+    {
+        return $this->success;
+    }
+
+    /**
+     * Sets success.
+     *
+     * @param bool|null $success
+     *
+     * @return $this
+     */
+    public function setSuccess($success = null)
+    {
+        $this->success = $success;
+
+        return $this;
+    }
+
+    /**
+     * Gets message.
+     *
+     * @return string|null
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * Sets message.
+     *
+     * @param string|null $message
+     *
+     * @return $this
+     */
+    public function setMessage($message = null)
+    {
+        $this->message = $message;
+
+        return $this;
     }
 
     /**

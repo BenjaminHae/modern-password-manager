@@ -14,6 +14,7 @@
 ./Model/HistoryItem.php
 ./Model/Index.php
 ./Model/LogonInformation.php
+./Model/LogonResult.php
 ./Model/LogonSecurityInformation.php
 ./Model/RegistrationInformation.php
 ./Model/ServerInformation.php
@@ -27,8 +28,11 @@
 ./Service/ValidatorInterface.php
 ./Tests/AppKernel.php
 ./Tests/Controller/ControllerTest.php
+./Tests/Model/LogonResultTest.php
 ./Tests/test_config.yml
-.php_cs
+.coveralls.yml
+.gitignore
+.php_cs.dist
 .travis.yml
 DependencyInjection/Compiler/OpenAPIServerApiPass.php
 DependencyInjection/OpenAPIServerExtension.php
@@ -47,6 +51,7 @@ Resources/docs/Model/GenericSuccessMessage.md
 Resources/docs/Model/HistoryItem.md
 Resources/docs/Model/Index.md
 Resources/docs/Model/LogonInformation.md
+Resources/docs/Model/LogonResult.md
 Resources/docs/Model/LogonSecurityInformation.md
 Resources/docs/Model/RegistrationInformation.md
 Resources/docs/Model/ServerInformation.md

@@ -21,15 +21,15 @@ import {
     GenericSuccessMessage,
     GenericSuccessMessageFromJSON,
     GenericSuccessMessageToJSON,
-    GenericSuccessMessage &amp; LogonSecurityInformation,
-    GenericSuccessMessage &amp; LogonSecurityInformationFromJSON,
-    GenericSuccessMessage &amp; LogonSecurityInformationToJSON,
     HistoryItem,
     HistoryItemFromJSON,
     HistoryItemToJSON,
     LogonInformation,
     LogonInformationFromJSON,
     LogonInformationToJSON,
+    LogonResult,
+    LogonResultFromJSON,
+    LogonResultToJSON,
     RegistrationInformation,
     RegistrationInformationFromJSON,
     RegistrationInformationToJSON,
@@ -68,7 +68,7 @@ export class UserApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('changePassword','Required parameter requestParameters.changePassword was null or undefined when calling changePassword.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -102,7 +102,7 @@ export class UserApi extends runtime.BaseAPI {
      * Returns a history of successful and failed logins
      */
     async getUserHistoryRaw(): Promise<runtime.ApiResponse<Array<HistoryItem>>> {
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -128,7 +128,7 @@ export class UserApi extends runtime.BaseAPI {
      * Returns the client settings of the current user
      */
     async getUserSettingsRaw(): Promise<runtime.ApiResponse<UserSettings>> {
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -153,12 +153,12 @@ export class UserApi extends runtime.BaseAPI {
     /**
      * login
      */
-    async loginUserRaw(requestParameters: LoginUserRequest): Promise<runtime.ApiResponse<GenericSuccessMessage & LogonSecurityInformation>> {
+    async loginUserRaw(requestParameters: LoginUserRequest): Promise<runtime.ApiResponse<LogonResult>> {
         if (requestParameters.logonInformation === null || requestParameters.logonInformation === undefined) {
             throw new runtime.RequiredError('logonInformation','Required parameter requestParameters.logonInformation was null or undefined when calling loginUser.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -176,13 +176,13 @@ export class UserApi extends runtime.BaseAPI {
             body: LogonInformationToJSON(requestParameters.logonInformation),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => GenericSuccessMessage &amp; LogonSecurityInformationFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => LogonResultFromJSON(jsonValue));
     }
 
     /**
      * login
      */
-    async loginUser(requestParameters: LoginUserRequest): Promise<GenericSuccessMessage & LogonSecurityInformation> {
+    async loginUser(requestParameters: LoginUserRequest): Promise<LogonResult> {
         const response = await this.loginUserRaw(requestParameters);
         return await response.value();
     }
@@ -191,7 +191,7 @@ export class UserApi extends runtime.BaseAPI {
      * Logs out current logged in user session
      */
     async logoutUserRaw(): Promise<runtime.ApiResponse<GenericSuccessMessage>> {
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -221,7 +221,7 @@ export class UserApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('registrationInformation','Required parameter requestParameters.registrationInformation was null or undefined when calling registerUser.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -259,7 +259,7 @@ export class UserApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('userSettings','Required parameter requestParameters.userSettings was null or undefined when calling setUserSettings.');
         }
 
-        const queryParameters: runtime.HTTPQuery = {};
+        const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
