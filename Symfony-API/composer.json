@@ -8,15 +8,15 @@
         "doctrine/orm": "~2.6",
         "openapi/server-bundle": "dev-master",
         "symfony/apache-pack": "^1.0",
-        "symfony/console": "^4.2",
-        "symfony/dotenv": "^4.2",
+        "symfony/console": "^4.4",
+        "symfony/dotenv": "^4.4",
         "symfony/flex": "^1.1",
-        "symfony/framework-bundle": "^4.2",
+        "symfony/framework-bundle": "^4.4",
         "symfony/orm-pack": "^1.0",
-        "symfony/security-bundle": "^4.2",
-        "symfony/templating": "^4.2",
+        "symfony/security-bundle": "^4.4",
+        "symfony/templating": "^4.4",
         "symfony/twig-pack": "^1.0",
-        "symfony/yaml": "^4.2",
+        "symfony/yaml": "^4.4",
         "twig/twig": "^2.0"
     },
     "config": {
@@ -61,12 +61,12 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "^4.2"
+            "require": "^4.4"
         }
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.11",
-        "symfony/web-server-bundle": "^4.2"
+        "symfony/web-server-bundle": "^4.4"
     },
     "repositories": [{
        "type": "path",
