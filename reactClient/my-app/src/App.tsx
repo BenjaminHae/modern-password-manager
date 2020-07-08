@@ -5,7 +5,7 @@ import './App.css';
 import { BackendService } from './backend/backend.service';
 import { CSRFMiddleware } from './backend/api/CSRFMiddleware';
 import { MaintenanceService, BackendOptions } from './backend/api/maintenance.service';
-import { UserService } from './backend/api/user.service';
+import { UserService, ILogonInformation } from './backend/api/user.service';
 import { AccountsService } from './backend/api/accounts.service';
 import { AccountTransformerService } from './backend/controller/account-transformer.service';
 import { CredentialService } from './backend/credential.service';
@@ -87,9 +87,21 @@ export default class App extends React.Component<AppProps, AppState> {
   }
   doLogin(username:string, password: string) {
     this.backend.logon(username, password)
+      .then((info: ILogonInformation) => {
+        let important = false;
+        let message = "";
+        if (info.lastLogin) {
+          message += `Your last login was on ${info.lastLogin.toString()}. `;
+        }
+        if (info.failedLogins && info.failedLogins > 0) {
+          message += `There were ${info.failedLogins}.`
+          important = true;
+        }
+        this.showMessage(message, important);
+      })
       .catch((e) => {
-          console.log(e);
-          this.setState({message : "login failed", authenticated : false});
+          this.showMessage("login failed", true);
+          this.setState({ authenticated: false });
           });
   }
   async doRegister(username: string, password: string, email: string): Promise<void> {
@@ -170,6 +182,10 @@ export default class App extends React.Component<AppProps, AppState> {
       return this.state.filter(accounts);
     }
     return accounts;
+  }
+
+  showMessage(message: string, important: boolean = false) {
+    this.setState({message: message});
   }
 
 	render() {
