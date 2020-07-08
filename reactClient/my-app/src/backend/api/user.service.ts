@@ -3,6 +3,11 @@ import { CryptedObject } from '../models/cryptedObject';
 import { encryptedAccount } from '../models/encryptedAccount';
 import { AccountTransformerService } from '../controller/account-transformer.service';
 
+export interface ILogonInformation {
+  lastLogin?: Date | null;
+  failedLogins?: number;
+}
+
 export class UserService {
 
   constructor(private userService: OpenAPIUserService, private accountTransformer: AccountTransformerService) { }
@@ -13,9 +18,13 @@ export class UserService {
     }
   }
 
-  async logon(username: string, password: CryptedObject): Promise<void> {
+  async logon(username: string, password: CryptedObject): Promise<ILogonInformation> {
     let response = await this.userService.loginUser({ logonInformation: { "username": username, "password": password.toBase64JSON()  }});
     this.checkForSuccess(response);
+    if (response.failedLogins !== undefined)
+      throw new Error("failedLogin undefined");
+    let result = { failedLogins: response.failedLogins, lastLogin: response.lastLogin}
+    return result;
   }
 
   async logout(): Promise<void> {

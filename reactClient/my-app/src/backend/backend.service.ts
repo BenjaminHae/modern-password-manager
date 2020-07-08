@@ -2,7 +2,7 @@ import { Account } from './models/account';
 import { CryptedObject } from './models/cryptedObject';
 import { encryptedAccount } from './models/encryptedAccount';
 import { MaintenanceService, BackendOptions } from './api/maintenance.service';
-import { UserService } from './api/user.service';
+import { UserService, ILogonInformation } from './api/user.service';
 import { AccountsService } from './api/accounts.service';
 import { ServerSettings } from './models/serverSettings';
 import { FieldOptions } from './models/fieldOptions';
@@ -43,19 +43,23 @@ export class BackendService {
     return await this.maintenanceService.retrieveInfo();
   }
 
-  async logon(username: string, password: string): Promise<void> {
+  async logon(username: string, password: string): Promise<ILogonInformation> {
     let credentialProvider = new CredentialProviderPassword();
     await credentialProvider.generateFromPassword(password);
-    await this.logonWithCredentials(credentialProvider, username);
+    return await this.logonWithCredentials(credentialProvider, username);
   }
-  async logonWithCredentials(credentialProvider: ICredentialProvider, username?: string): Promise<void> {
+
+  async logonWithCredentials(credentialProvider: ICredentialProvider, username?: string): Promise<ILogonInformation> {
     this.credentials.setProvider(credentialProvider);
+    let response: ILogonInformation = {};
     if (username) {
       let passwordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
-      await this.userService.logon(username, passwordHash)
+      response = await this.userService.logon(username, passwordHash)
     }
     await this.afterLogin();
+    return response;
   }
+
   async logout(): Promise<void> {
     await this.userService.logout();
     this.fields = [];
