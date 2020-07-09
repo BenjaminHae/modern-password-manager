@@ -1,6 +1,7 @@
 import React from 'react';
 import Authenticated from './components/Authenticated/Authenticated';
 import Unauthenticated from './components/Unauthenticated/Unauthenticated';
+import Message from './components/Message/Message';
 import './App.css';
 import { BackendService } from './backend/backend.service';
 import { CSRFMiddleware } from './backend/api/CSRFMiddleware';
@@ -21,6 +22,8 @@ import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
 interface AppState {
   ready: boolean,
   message: string,
+  messageImportant: boolean;
+  messageClickHandler?: (()=>void);
   authenticated: boolean,
   registrationAllowed: boolean,
   accounts: Array<Account>,
@@ -40,6 +43,7 @@ export default class App extends React.Component<AppProps, AppState> {
 		this.state = {
 			ready: false,
 			message: "",
+			messageImportant: false,
 			authenticated: false,
 			registrationAllowed: false,
 			accounts: [],
@@ -100,7 +104,7 @@ export default class App extends React.Component<AppProps, AppState> {
         this.showMessage(message, important);
       })
       .catch((e) => {
-          this.showMessage("login failed", true);
+          this.showMessage("login failed: " + e.toString(), true);
           this.setState({ authenticated: false });
           });
   }
@@ -184,8 +188,8 @@ export default class App extends React.Component<AppProps, AppState> {
     return accounts;
   }
 
-  showMessage(message: string, important: boolean = false) {
-    this.setState({message: message});
+  showMessage(message: string, important: boolean = false, clickHandler?: () => void) {
+    this.setState({message: message, messageImportant: important, messageClickHandler: clickHandler});
   }
 
 	render() {
@@ -193,10 +197,10 @@ export default class App extends React.Component<AppProps, AppState> {
 	    <div className="App">
 	      <header className="App-header">
           Password Manager
-          <span>{this.state.message}</span>
 	      </header>
+        <Message message={this.state.message} clickHandler={this.state.messageClickHandler} important={this.state.messageImportant}/>
 	      {this.state.authenticated &&
-	       <Authenticated accounts={this.filterAccounts(this.state.accounts)} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} bulkAddHandler={this.bulkAddAccounts.bind(this)} deleteHandler={this.deleteHandler.bind(this)} logoutHandler={this.doLogout.bind(this)} changePasswordHandler={this.changePasswordHandler.bind(this)} pluginSystem={this.plugins}/>
+	       <Authenticated accounts={this.filterAccounts(this.state.accounts)} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} bulkAddHandler={this.bulkAddAccounts.bind(this)} deleteHandler={this.deleteHandler.bind(this)} logoutHandler={this.doLogout.bind(this)} changePasswordHandler={this.changePasswordHandler.bind(this)} pluginSystem={this.plugins} showMessage={this.showMessage.bind(this)}/>
               }
         {!this.state.authenticated && this.state.ready
           && <Unauthenticated doLogin={this.doLogin.bind(this)} doRegister={this.doRegister.bind(this)} showRegistration={this.state.registrationAllowed} /> }

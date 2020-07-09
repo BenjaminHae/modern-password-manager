@@ -21,7 +21,7 @@ export class UserService {
   async logon(username: string, password: CryptedObject): Promise<ILogonInformation> {
     let response = await this.userService.loginUser({ logonInformation: { "username": username, "password": password.toBase64JSON()  }});
     this.checkForSuccess(response);
-    if (response.failedLogins !== undefined)
+    if (response.failedLogins === undefined)
       throw new Error("failedLogin undefined");
     let result = { failedLogins: response.failedLogins, lastLogin: response.lastLogin}
     return result;

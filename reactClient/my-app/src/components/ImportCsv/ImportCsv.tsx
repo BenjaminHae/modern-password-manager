@@ -11,11 +11,11 @@ import Button from 'react-bootstrap/Button';
 interface ImportCsvProps {
   availableFields: Array<FieldOptions>;
   bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>;
+  showMessage: (message: string, important?: boolean, clickHandler?: () => void) => void
 }
 interface ImportCsvState {
   data: Array<{[index: string]:string}>;
   columns: Array<IDataTableColumn<{[index: string]:string}>>;
-  message: string;
   headers: Array<string>;
   mapping: Map<string, string | null>;
 }
@@ -28,7 +28,6 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
     this.state = {
       data: [],
       columns: [],
-      message: "",
       headers: [],
       mapping: new Map<string, string | null>()
     }
@@ -41,7 +40,7 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
         newFile = event.target.files[0]
         this.parser = new CsvParser();
         this.importer.availableFields = this.props.availableFields.map((field) => { return field.selector });
-        this.setState({message : "reading file"});
+        this.props.showMessage("reading file");
         this.createPreview(newFile);
       }
     }
@@ -51,7 +50,7 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
       .then(() => {
             this.importer.autoHeaderMapping(this.parser.getHeaders());
             this.showInformation();
-            this.setState({message : "file read, using delimiter '" + this.parser.getDelimiter() + "'"});
+            this.props.showMessage(`file read, using delimiter '${this.parser.getDelimiter()}'`);
           });
   }
   getColumns(headers: Array<string>, mappings: Map<string, string | null>): Array<IDataTableColumn<{[index: string]:string}>> {
@@ -71,9 +70,8 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
   async importAccounts(): Promise<void> {
     let newAccounts = this.importer.createAccounts(this.state.data);
     await this.props.bulkAddHandler(newAccounts);
-    this.setState({message : `imported ${newAccounts.length} accounts`,
-      data: []
-    });
+      this.props.showMessage(`imported ${newAccounts.length} accounts`);
+    this.setState({ data: [] });
   }
 
   showInformation(): void {
@@ -141,7 +139,6 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
                   </div>
               </form>
         <div>
-        <p>{this.state.message}</p>
         <table>
           <thead><tr><td>CSV Header</td>{this.renderHeaders()}</tr></thead>
           <tbody><tr><td>Mapped Field</td>{this.renderMapping()}</tr></tbody>

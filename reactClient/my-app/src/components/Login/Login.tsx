@@ -7,13 +7,12 @@ interface LoginProps {
 interface LoginState {
   username: string;
   password: string;
-  message: string;
 }
 
 class Login extends React.Component<LoginProps, LoginState> {
   constructor(props: LoginProps) {
     super(props);
-    this.state = { username: '', password: '', message: ""};
+    this.state = { username: '', password: ''};
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.doLogon = this.doLogon.bind(this);
@@ -48,7 +47,6 @@ class Login extends React.Component<LoginProps, LoginState> {
 		</div>
 	      </div>
 	      <input color="primary" type="submit" value="Login"/>
-	      <span>{this.state.message}</span>
 	    </form>
 	  </div>
     );

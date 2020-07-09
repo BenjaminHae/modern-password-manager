@@ -29,7 +29,8 @@ interface AuthenticatedProps {
   deleteHandler: (account: Account) => Promise<void>,
   logoutHandler: () => Promise<void>,
   changePasswordHandler: (oldPassword: string, newPassword: string) => Promise<void>,
-  pluginSystem: PluginSystem
+  pluginSystem: PluginSystem,
+  showMessage: (message: string, important?: boolean, clickHandler?: () => void) => void
 }
 interface AuthenticatedState {
   view: AuthenticatedView;
@@ -53,8 +54,8 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
             <p><Button onClick={this.addAccountSelect.bind(this)}>Add Account</Button><Button onClick={this.props.logoutHandler}>Logout</Button></p>
                 <PluginMainView pluginSystem={this.props.pluginSystem} />
                 {this.renderSwitchAuthenticatedView()}
-                <ImportCsv availableFields={this.props.fields} bulkAddHandler={this.props.bulkAddHandler}/>
-                <ChangePassword changePasswordHandler={this.props.changePasswordHandler}/>
+                <ImportCsv availableFields={this.props.fields} bulkAddHandler={this.props.bulkAddHandler} showMessage={this.props.showMessage}/>
+                <ChangePassword changePasswordHandler={this.props.changePasswordHandler} showMessage={this.props.showMessage}/>
 	  </div>
 	);
   }
@@ -66,11 +67,11 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
         );
       case AuthenticatedView.Edit:
         return (
-		<AccountEdit account={this.state.selectedAccount} fields={this.props.fields} editHandler={this.props.editHandler}  closeHandler={this.backToListView.bind(this)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer}/>
+		<AccountEdit account={this.state.selectedAccount} fields={this.props.fields} editHandler={this.props.editHandler}  closeHandler={this.backToListView.bind(this)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage}/>
         );
       case AuthenticatedView.Add:
         return (
-		<AccountEdit account={undefined} fields={this.props.fields} editHandler={this.props.editHandler} closeHandler={this.backToListView.bind(this)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} />
+		<AccountEdit account={undefined} fields={this.props.fields} editHandler={this.props.editHandler} closeHandler={this.backToListView.bind(this)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage} />
         );
     }
   }

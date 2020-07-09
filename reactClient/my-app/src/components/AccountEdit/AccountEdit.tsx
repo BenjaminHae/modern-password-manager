@@ -12,20 +12,20 @@ interface AccountEditProps {
   deleteHandler: (account: Account) => Promise<void>;
   closeHandler: () => void;
   transformer: AccountTransformerService;
+  showMessage: (message: string, important?: boolean, clickHandler?: () => void) => void
 }
 interface AccountEditState {
     fields: {[index: string]:string};
-    message: string;
 }
 class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
   constructor(props: AccountEditProps) {
     super(props);
     this.handleGenericChange = this.handleGenericChange.bind(this);
-    this.state = { fields: this.generateFieldContents(), message: "" };
+    this.state = { fields: this.generateFieldContents()};
   }
   componentDidUpdate(prevProps: AccountEditProps) {
     if (this.props.account !== prevProps.account) {
-      this.setState({fields: this.generateFieldContents(), message: "" });
+      this.setState({fields: this.generateFieldContents()});
     }
   }
   generateFieldContents(): {[index: string]:string} {
@@ -114,7 +114,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
       this.props.closeHandler();
     }
     catch {
-      this.setState({message: "there was an error when saving the account"});
+      this.props.showMessage("there was an error when saving the account", true);
     }
   }
   async deleteHandler() {
@@ -125,7 +125,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
         this.props.closeHandler();
       }
       catch {
-        this.setState({message: "there was an error when deleting the account"});
+        this.props.showMessage("there was an error when deleting the account", true);
       }
     }
   }
@@ -133,7 +133,6 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
     return (
       <div className={styles.AccountEdit} >
         <h2>{ this.props.account ? 'Edit Account' : 'Add Account' }</h2>
-        <p>{ this.state.message }</p>
         {this.getFormFields()}
         <span> <Button onClick={() => {this.props.closeHandler()} }>Abort</Button></span>
         <span> <Button onClick={() => {this.submitForm()} }>store</Button></span>

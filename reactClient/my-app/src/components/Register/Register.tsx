@@ -9,7 +9,6 @@ interface RegisterProps {
 }
 interface RegisterState {
   values: {[index: string]:string};
-  message: string;
 }
 
 
@@ -18,7 +17,6 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     super(props);
     this.state = {
       values: {username:  "", password:  "", email:  ""},
-      message:  ""
     }
     this.handleGenericChange = this.handleGenericChange.bind(this);
   }
@@ -51,7 +49,6 @@ class Register extends React.Component<RegisterProps, RegisterState> {
             </label>
         </div>
         <span> <Button onClick={() => {this.doRegister()} }>register</Button></span>
-        <span>{this.state.message}</span>
       </form>
     </div>
     )

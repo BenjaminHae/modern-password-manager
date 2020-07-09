@@ -3,18 +3,18 @@ import styles from './ChangePassword.module.css';
 
 interface ChangePasswordProps {
   changePasswordHandler: (oldPassword: string, newPassword: string) => Promise<void>;
+  showMessage: (message: string, important?: boolean, clickHandler?: () => void) => void
 }
 interface ChangePasswordState {
   oldPassword: string;
   newPassword: string;
   newPassword2: string;
-  message: string;
 }
 
 class ChangePassword extends React.Component<ChangePasswordProps, ChangePasswordState> {
   constructor(props: ChangePasswordProps) {
     super(props);
-    this.state = { oldPassword: '', newPassword: '', newPassword2: '', message: ""};
+    this.state = { oldPassword: '', newPassword: '', newPassword2: ''};
     this.handleGenericChange = this.handleGenericChange.bind(this);
   }
   handleGenericChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -26,10 +26,10 @@ class ChangePassword extends React.Component<ChangePasswordProps, ChangePassword
     event.preventDefault();
     if (this.state.newPassword === this.state.newPassword2) {
       await this.props.changePasswordHandler(this.state.oldPassword, this.state.newPassword)
-      this.setState({message: "Successfully changed password"});
+      this.props.showMessage("Successfully changed password");
     }
     else {
-      this.setState({message: "New Password and repeat do not match"});
+      this.props.showMessage("New Password and repeat do not match");
     }
   }
   render () {
@@ -59,7 +59,6 @@ class ChangePassword extends React.Component<ChangePasswordProps, ChangePassword
         </div>
       </div>
       <input color="primary" type="submit" value="Change Password"/>
-      <span>{this.state.message}</span>
     </form>
 	  </div>
     );
