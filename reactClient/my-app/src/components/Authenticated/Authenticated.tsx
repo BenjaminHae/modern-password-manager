@@ -6,22 +6,26 @@ import AccountList from '../AccountList/AccountList';
 import AccountEdit from '../AccountEdit/AccountEdit';
 import ImportCsv from '../ImportCsv/ImportCsv';
 import ChangePassword from '../ChangePassword/ChangePassword';
+import History from '../History/History';
 import { BackendService } from '../../backend/backend.service';
 import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
 import Button from 'react-bootstrap/Button';
 import { PluginSystem } from '../../plugin/PluginSystem';
 import PluginMainView from '../../plugin/PluginMainView/PluginMainView';
+import { HistoryItem } from '@pm-server/pm-server-react-client';
 
 enum AuthenticatedView {
   List,
   Edit,
   Add,
   Import,
-  ChangePassword
+  ChangePassword,
+  History
 }
 interface AuthenticatedProps {
   accounts: Array<Account>,
   fields: Array<FieldOptions>,
+  historyItems: Array<HistoryItem>,
   backend: BackendService,
   transformer: AccountTransformerService,
   editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>,
@@ -30,7 +34,8 @@ interface AuthenticatedProps {
   logoutHandler: () => Promise<void>,
   changePasswordHandler: (oldPassword: string, newPassword: string) => Promise<void>,
   pluginSystem: PluginSystem,
-  showMessage: (message: string, important?: boolean, clickHandler?: () => void) => void
+  showMessage: (message: string, important?: boolean, clickHandler?: () => void) => void,
+  loadHistoryHandler: () => Promise<void>;
 }
 interface AuthenticatedState {
   view: AuthenticatedView;
@@ -49,29 +54,40 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
   }
   render () {
     return (
-	  <div className={styles.Authenticated}>
-      
-            <p><Button onClick={this.addAccountSelect.bind(this)}>Add Account</Button><Button onClick={this.props.logoutHandler}>Logout</Button></p>
-                <PluginMainView pluginSystem={this.props.pluginSystem} />
-                {this.renderSwitchAuthenticatedView()}
-                <ImportCsv availableFields={this.props.fields} bulkAddHandler={this.props.bulkAddHandler} showMessage={this.props.showMessage}/>
-                <ChangePassword changePasswordHandler={this.props.changePasswordHandler} showMessage={this.props.showMessage}/>
-	  </div>
-	);
+      <div className={styles.Authenticated}>
+        <p><Button onClick={this.addAccountSelect.bind(this)}>Add Account</Button></p>
+        <p><Button onClick={this.historySelect.bind(this)}>History</Button></p>
+        <p><Button onClick={this.props.logoutHandler}>Logout</Button></p>
+        <PluginMainView pluginSystem={this.props.pluginSystem} />
+        {this.renderSwitchAuthenticatedView()}
+      </div>
+    );
   }
   renderSwitchAuthenticatedView() {
     switch(this.state.view) {
       case AuthenticatedView.List:
         return (
-		<AccountList accounts={this.props.accounts} transformer={this.props.transformer} fields={this.props.fields} editAccountHandler={this.editAccountSelect.bind(this)} pluginSystem={this.props.pluginSystem} />
+          <AccountList accounts={this.props.accounts} transformer={this.props.transformer} fields={this.props.fields} editAccountHandler={this.editAccountSelect.bind(this)} pluginSystem={this.props.pluginSystem} />
         );
       case AuthenticatedView.Edit:
         return (
-		<AccountEdit account={this.state.selectedAccount} fields={this.props.fields} editHandler={this.props.editHandler}  closeHandler={this.backToListView.bind(this)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage}/>
+          <AccountEdit account={this.state.selectedAccount} fields={this.props.fields} editHandler={this.props.editHandler}  closeHandler={this.backToListView.bind(this)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage}/>
         );
       case AuthenticatedView.Add:
         return (
-		<AccountEdit account={undefined} fields={this.props.fields} editHandler={this.props.editHandler} closeHandler={this.backToListView.bind(this)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage} />
+          <AccountEdit account={undefined} fields={this.props.fields} editHandler={this.props.editHandler} closeHandler={this.backToListView.bind(this)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage} />
+        );
+      case AuthenticatedView.History:
+        return (
+          <History historyItems={this.props.historyItems} />
+        );
+      case AuthenticatedView.ChangePassword:
+        return (
+          <ChangePassword changePasswordHandler={this.props.changePasswordHandler} showMessage={this.props.showMessage}/>
+        );
+      case AuthenticatedView.Import:
+        return (
+          <ImportCsv availableFields={this.props.fields} bulkAddHandler={this.props.bulkAddHandler} showMessage={this.props.showMessage}/>
         );
     }
   }
@@ -80,6 +96,10 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
   }
   addAccountSelect() {
     this.setState({view: AuthenticatedView.Add});
+  }
+  historySelect(): void {
+    this.props.loadHistoryHandler();
+    this.setState({view: AuthenticatedView.History});
   }
   backToListView() {
     this.setState(this.defaultViewState());

@@ -1,4 +1,4 @@
-import { UserApi as OpenAPIUserService, ChangePassword as OpenAPIChangePassword, GenericSuccessMessage } from '@pm-server/pm-server-react-client';
+import { UserApi as OpenAPIUserService, ChangePassword as OpenAPIChangePassword, GenericSuccessMessage, HistoryItem } from '@pm-server/pm-server-react-client';
 import { CryptedObject } from '../models/cryptedObject';
 import { encryptedAccount } from '../models/encryptedAccount';
 import { AccountTransformerService } from '../controller/account-transformer.service';
@@ -45,5 +45,9 @@ export class UserService {
         });
     let response = await this.userService.changePassword({changePassword: requestData});
     this.checkForSuccess(response);
+  }
+
+  async getHistory(): Promise<Array<HistoryItem>> {
+    return this.userService.getUserHistory();
   }
 }

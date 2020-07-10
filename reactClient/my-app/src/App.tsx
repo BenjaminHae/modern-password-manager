@@ -18,17 +18,19 @@ import { MaintenanceApi as OpenAPIMaintenanceService } from '@pm-server/pm-serve
 import { UserApi as OpenAPIUserService } from '@pm-server/pm-server-react-client';
 import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-react-client';
 import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
+import { HistoryItem } from '@pm-server/pm-server-react-client';
 
 interface AppState {
-  ready: boolean,
-  message: string,
+  ready: boolean;
+  message: string;
   messageImportant: boolean;
+  authenticated: boolean;
+  registrationAllowed: boolean;
+  accounts: Array<Account>;
+  fields: Array<FieldOptions>;
+  historyItems: Array<HistoryItem>;
+  filter?: AccountsFilter;
   messageClickHandler?: (()=>void);
-  authenticated: boolean,
-  registrationAllowed: boolean,
-  accounts: Array<Account>,
-  fields: Array<FieldOptions>,
-  filter?: AccountsFilter,
 }
 interface AppProps {
 }
@@ -38,16 +40,17 @@ export default class App extends React.Component<AppProps, AppState> {
   crypto: CryptoService;
   plugins: PluginSystem;
 
-	constructor (props: AppProps) {
-		super(props);
-		this.state = {
-			ready: false,
-			message: "",
-			messageImportant: false,
-			authenticated: false,
-			registrationAllowed: false,
-			accounts: [],
-      fields: []
+  constructor (props: AppProps) {
+    super(props);
+    this.state = {
+      ready: false,
+      message: "",
+      messageImportant: false,
+      authenticated: false,
+      registrationAllowed: false,
+      accounts: [],
+      fields: [],
+      historyItems: []
     }
 
     let csrfMiddleware = new CSRFMiddleware();
@@ -176,6 +179,10 @@ export default class App extends React.Component<AppProps, AppState> {
     }
     return await this.backend.changeUserPassword(newPassword);
   }
+  async loadHistory(): Promise<void> {
+    console.log('test');
+    this.setState({ historyItems: await this.backend.getHistory() });
+  }
 
   filterChangeHandler(filter: AccountsFilter): void {
     this.setState( {filter: filter} );
@@ -198,12 +205,34 @@ export default class App extends React.Component<AppProps, AppState> {
 	      <header className="App-header">
           Password Manager
 	      </header>
-        <Message message={this.state.message} clickHandler={this.state.messageClickHandler} important={this.state.messageImportant}/>
+        <Message 
+            message={this.state.message} 
+            clickHandler={this.state.messageClickHandler} 
+            important={this.state.messageImportant}
+        />
 	      {this.state.authenticated &&
-	       <Authenticated accounts={this.filterAccounts(this.state.accounts)} fields={this.state.fields} backend={this.backend} transformer={this.accountTransformerService} editHandler={this.editHandler.bind(this)} bulkAddHandler={this.bulkAddAccounts.bind(this)} deleteHandler={this.deleteHandler.bind(this)} logoutHandler={this.doLogout.bind(this)} changePasswordHandler={this.changePasswordHandler.bind(this)} pluginSystem={this.plugins} showMessage={this.showMessage.bind(this)}/>
+	       <Authenticated 
+            accounts={this.filterAccounts(this.state.accounts)} 
+            fields={this.state.fields} 
+            historyItems={this.state.historyItems} 
+            backend={this.backend} 
+            pluginSystem={this.plugins} 
+            transformer={this.accountTransformerService} 
+            editHandler={this.editHandler.bind(this)} 
+            bulkAddHandler={this.bulkAddAccounts.bind(this)} 
+            deleteHandler={this.deleteHandler.bind(this)} 
+            logoutHandler={this.doLogout.bind(this)} 
+            changePasswordHandler={this.changePasswordHandler.bind(this)} 
+            loadHistoryHandler={this.loadHistory.bind(this)} 
+            showMessage={this.showMessage.bind(this)} 
+        />
               }
         {!this.state.authenticated && this.state.ready
-          && <Unauthenticated doLogin={this.doLogin.bind(this)} doRegister={this.doRegister.bind(this)} showRegistration={this.state.registrationAllowed} /> }
+          && <Unauthenticated 
+                doLogin={this.doLogin.bind(this)} 
+                doRegister={this.doRegister.bind(this)} 
+                showRegistration={this.state.registrationAllowed} 
+              /> }
         {!this.state.authenticated && !this.state.ready 
           && <span>Waiting for server</span> }
         <footer>Version: {process.env.REACT_APP_GIT_SHA}</footer>

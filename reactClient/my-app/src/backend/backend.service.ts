@@ -3,6 +3,7 @@ import { CryptedObject } from './models/cryptedObject';
 import { encryptedAccount } from './models/encryptedAccount';
 import { MaintenanceService, BackendOptions } from './api/maintenance.service';
 import { UserService, ILogonInformation } from './api/user.service';
+import { HistoryItem } from '@pm-server/pm-server-react-client';
 import { AccountsService } from './api/accounts.service';
 import { ServerSettings } from './models/serverSettings';
 import { FieldOptions } from './models/fieldOptions';
@@ -152,6 +153,10 @@ export class BackendService {
   async deleteAccount(account: Account): Promise<void> {
     let accounts = await this.accountsService.deleteAccount(account.index)
     return await this.parseAccounts(accounts)
+  }
+
+  async getHistory(): Promise<Array<HistoryItem>> {
+    return await this.userService.getHistory();
   }
 
 }
