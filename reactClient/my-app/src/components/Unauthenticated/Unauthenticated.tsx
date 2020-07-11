@@ -12,8 +12,10 @@ class Unauthenticated extends React.Component<UnauthenticatedProps> {
   render () {
     return (
       <div className={styles.Unauthenticated}>
-        <Login doLogin={this.props.doLogin}/>
-        {this.props.showRegistration && <Register doRegister={this.props.doRegister} /> }
+          <Login doLogin={this.props.doLogin}/>
+        {this.props.showRegistration && 
+            <Register doRegister={this.props.doRegister} />
+        }
       </div>
     )
   }

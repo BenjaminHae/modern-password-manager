@@ -19,6 +19,8 @@ import { UserApi as OpenAPIUserService } from '@pm-server/pm-server-react-client
 import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-react-client';
 import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
 import { HistoryItem } from '@pm-server/pm-server-react-client';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 interface AppState {
   ready: boolean;
@@ -235,7 +237,7 @@ export default class App extends React.Component<AppProps, AppState> {
               /> }
         {!this.state.authenticated && !this.state.ready 
           && <span>Waiting for server</span> }
-        <footer>Version: {process.env.REACT_APP_GIT_SHA}</footer>
+        <footer className="App-footer">Version: {process.env.REACT_APP_GIT_SHA}</footer>
 	    </div>
 	  );
 	}

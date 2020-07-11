@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './PasswordWithToggle.module.css';
+import styles from './AccountPasswordWithToggle.module.css';
 import { Account } from '../../backend/models/account';
 import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
 import Button from 'react-bootstrap/Button';
@@ -13,7 +13,7 @@ interface PasswordState {
 	visible: boolean;
 }
 const HiddenPassword = "******";
-class PasswordWithToggle extends React.Component<PasswordProps, PasswordState> {
+class AccountPasswordWithToggle extends React.Component<PasswordProps, PasswordState> {
   constructor(props: PasswordProps) {
     super(props);
     this.state = {
@@ -58,4 +58,4 @@ class PasswordWithToggle extends React.Component<PasswordProps, PasswordState> {
   }
 }
 
-export default PasswordWithToggle;
+export default AccountPasswordWithToggle;

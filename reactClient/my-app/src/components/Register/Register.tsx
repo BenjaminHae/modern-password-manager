@@ -1,6 +1,9 @@
 import React from 'react';
 import styles from './Register.module.css';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
+import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWithToggle';
 
 // Todo:
 //  - add second password input
@@ -31,25 +34,24 @@ class Register extends React.Component<RegisterProps, RegisterState> {
   render () {
     return (
 	  <div className={styles.Register}>
-	    <h2>Registration</h2>
-	    <form onSubmit={this.doRegister}>
-        <div >
-          <label>Username
-            <input type="text" placeholder="Username" name="username" onChange={this.handleGenericChange}/>
-          </label>
-        </div>
-        <div>
-            <label>E-Mail
-              <input placeholder="you@domain.com" name="email" onChange={this.handleGenericChange}/>
-            </label>
-        </div>
-        <div>
-            <label>Password
-              <input placeholder="Password" name="password" onChange={this.handleGenericChange}/>
-            </label>
-        </div>
-        <span> <Button onClick={() => {this.doRegister()} }>register</Button></span>
-      </form>
+      <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
+	    <h2>Register</h2>
+	    <Form onSubmit={this.doRegister.bind(this)}>
+          <Form.Group controlId="formUsername">
+            <Form.Label>Username</Form.Label>
+            <Form.Control type="text" placeholder="Enter Username" name="username" onChange={this.handleGenericChange}/>
+          </Form.Group>
+          <Form.Group controlId="formEmail">
+            <Form.Label>E-Mail</Form.Label>
+            <Form.Control type="text" placeholder="Enter E-Mail-Address" name="email" onChange={this.handleGenericChange}/>
+          </Form.Group>
+          <Form.Group controlId="formPassword">
+            <Form.Label>Password</Form.Label>
+            <PasswordInputWithToggle onChange={this.handleGenericChange} />
+          </Form.Group>
+        <Button variant="primary" type="submit">Register</Button>
+      </Form>
+      </Col>
     </div>
     )
   }

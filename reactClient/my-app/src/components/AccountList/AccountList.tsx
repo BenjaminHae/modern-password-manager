@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './AccountList.module.css';
-import PasswordWithToggle from '../PasswordWithToggle/PasswordWithToggle';
+import AccountPasswordWithToggle from '../AccountPasswordWithToggle/AccountPasswordWithToggle';
 import { Account } from '../../backend/models/account';
 import { FieldOptions } from '../../backend/models/fieldOptions';
 import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
@@ -45,7 +45,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
       { 
         name: "Password",  
         ignoreOnRowClick: true, 
-        cell: (row: Account) => <PasswordWithToggle account={row} transformer={this.props.transformer}/> 
+        cell: (row: Account) => <AccountPasswordWithToggle account={row} transformer={this.props.transformer}/> 
       }
     ];
     let sortFunc = (a: FieldOptions, b: FieldOptions) => {
