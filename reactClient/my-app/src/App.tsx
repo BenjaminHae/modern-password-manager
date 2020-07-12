@@ -26,6 +26,7 @@ interface AppState {
   ready: boolean;
   message: string;
   messageImportant: boolean;
+  messageShow: boolean;
   authenticated: boolean;
   registrationAllowed: boolean;
   accounts: Array<Account>;
@@ -41,6 +42,7 @@ export default class App extends React.Component<AppProps, AppState> {
   accountTransformerService: AccountTransformerService;
   crypto: CryptoService;
   plugins: PluginSystem;
+  messageTimeout: number = 0;
 
   constructor (props: AppProps) {
     super(props);
@@ -48,6 +50,7 @@ export default class App extends React.Component<AppProps, AppState> {
       ready: false,
       message: "",
       messageImportant: false,
+      messageShow: false,
       authenticated: false,
       registrationAllowed: false,
       accounts: [],
@@ -198,7 +201,15 @@ export default class App extends React.Component<AppProps, AppState> {
   }
 
   showMessage(message: string, important: boolean = false, clickHandler?: () => void) {
-    this.setState({message: message, messageImportant: important, messageClickHandler: clickHandler});
+    this.setState({message: message, messageImportant: important, messageClickHandler: clickHandler, messageShow: true});
+    window.clearTimeout(this.messageTimeout);
+    if (! important) {
+      this.messageTimeout = window.setTimeout(() => {this.setState({messageShow: false})}, 5000);
+    }
+  }
+
+  closeMessage() {
+    this.setState({messageShow: false});
   }
 
 	render() {
@@ -209,8 +220,9 @@ export default class App extends React.Component<AppProps, AppState> {
 	      </header>
         <Message 
             message={this.state.message} 
-            clickHandler={this.state.messageClickHandler} 
+            show={this.state.messageShow}
             important={this.state.messageImportant}
+            closeHandler={this.closeMessage.bind(this)}
         />
 	      {this.state.authenticated &&
 	       <Authenticated 
