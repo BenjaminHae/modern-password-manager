@@ -13,7 +13,7 @@ const History: React.FC<IHistoryProps> = (props: IHistoryProps) => {
       name: 'Timestamp', 
       cell: (row: HistoryItem) => { 
         if (row.time) 
-          return ( <span>{row.time.toString()}</span> ); 
+          return ( <span>{row.time}</span> ); 
         else 
           return ( <span/> )
       }
@@ -27,7 +27,7 @@ const History: React.FC<IHistoryProps> = (props: IHistoryProps) => {
   return (
       <div className={styles.History}>
       History Component
-        <DataTable title="History" columns={columns} data={props.historyItems} />
+        <DataTable title="History" columns={columns} data={props.historyItems} dense pagination striped />
       </div>
       )
 };

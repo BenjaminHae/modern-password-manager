@@ -109,8 +109,9 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
     }
     return fields;
   }
-  async submitForm() {
+  async submitForm(event: React.FormEvent) {
     try {
+      event.preventDefault();
       await this.props.editHandler(this.state.fields, this.props.account);
       this.cleanUp();
       this.props.closeHandler();

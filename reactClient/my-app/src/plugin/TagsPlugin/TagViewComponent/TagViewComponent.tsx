@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './TagViewComponent.module.css';
+import Button from 'react-bootstrap/Button';
 
 interface TagViewProps {
   tags: Array<string>;
@@ -30,7 +31,7 @@ class TagViewComponent extends React.Component<TagViewProps, TagViewState> {
   printTags() {
     return this.props.tags.map(
       (tag: string) => 
-        (<button key={tag} className={this.state.selectedTags.includes(tag) ? styles.selectedTag : ""} onClick={()=>this.selectTag(tag)}>{tag}</button> )
+        ( <Button key={tag} variant={this.state.selectedTags.includes(tag) ? "info" : "outline-info"} onClick={()=>this.selectTag(tag)}>{tag}</Button> )
     );
   }
   render() {

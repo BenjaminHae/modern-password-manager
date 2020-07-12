@@ -28,8 +28,9 @@ class Login extends React.Component<LoginProps, LoginState> {
     this.setState({password: event.target.value});
   }
   doLogon(event: React.FormEvent) {
-    this.props.doLogin(this.state.username, this.state.password)
     event.preventDefault();
+    this.props.doLogin(this.state.username, this.state.password)
+    this.setState({ password: "" });
   }
   render () {
     return (
@@ -43,7 +44,7 @@ class Login extends React.Component<LoginProps, LoginState> {
           </Form.Group>
           <Form.Group controlId="formPassword">
             <Form.Label>Password</Form.Label>
-            <PasswordInputWithToggle onChange={this.handlePasswordChange} />
+            <PasswordInputWithToggle onChange={this.handlePasswordChange} value={this.state.password} />
           </Form.Group>
           <Button variant="primary" type="submit">Login</Button>
         </Form>

@@ -9,13 +9,14 @@ interface PasswordProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   name?: string;
   placeholder?: string;
+  value?: string;
 }
 const PasswordInputWithToggle: React.FC<PasswordProps> = (props: PasswordProps) => {
   const [visible, setVisible] = useState(false);
   
   return (
     <InputGroup>
-      <Form.Control type={visible ? "text": "password" } placeholder={ props.placeholder || "Enter Password" } name={ props.name || "password" } onChange={props.onChange}/>
+      <Form.Control type={visible ? "text": "password" } placeholder={ props.placeholder || "Enter Password" } name={ props.name || "password" } onChange={ props.onChange } value={props.value} />
       <InputGroup.Append>
         <Button variant="info" onClick={()=>setVisible(!visible)}>{visible ? <EyeSlash/> : <Eye/> }</Button>
       </InputGroup.Append>

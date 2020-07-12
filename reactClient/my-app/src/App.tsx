@@ -103,7 +103,7 @@ export default class App extends React.Component<AppProps, AppState> {
         let important = false;
         let message = "";
         if (info.lastLogin) {
-          message += `Your last login was on ${info.lastLogin.toString()}. `;
+          message += `Your last login was on ${info.lastLogin.toLocaleString(navigator.language)}. `;
         }
         if (info.failedLogins && info.failedLogins > 0) {
           message += `There were ${info.failedLogins}.`
@@ -185,8 +185,17 @@ export default class App extends React.Component<AppProps, AppState> {
     return await this.backend.changeUserPassword(newPassword);
   }
   async loadHistory(): Promise<void> {
-    console.log('test');
-    this.setState({ historyItems: await this.backend.getHistory() });
+    let history = await this.backend.getHistory()
+    history = history.sort( (a, b) => {
+        if (a > b) {
+          return 1;
+        }
+        else {
+          return -1;
+        }
+      }
+    );
+    this.setState({ historyItems: history });
   }
 
   filterChangeHandler(filter: AccountsFilter): void {

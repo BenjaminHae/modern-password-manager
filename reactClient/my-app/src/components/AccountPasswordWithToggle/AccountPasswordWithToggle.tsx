@@ -35,13 +35,13 @@ class AccountPasswordWithToggle extends React.Component<PasswordProps, PasswordS
   }
   render () {
     return (
-      <React.Fragment>
+      <>
       { !this.state.visible ?
         <Button className={styles.Authenticated} onClick={this.show}>{HiddenPassword}</Button>
         : <div><span>{this.state.password}</span>
         <Button className={styles.Authenticated} onClick={this.hide}>Hide</Button></div>
       }
-      </React.Fragment>
+      </>
     )
   }
   async getPassword() {

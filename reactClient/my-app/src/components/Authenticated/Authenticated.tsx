@@ -55,10 +55,9 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
   render () {
     return (
       <div className={styles.Authenticated}>
-        <p><Button onClick={this.addAccountSelect.bind(this)}>Add Account</Button></p>
+        <p><Button onClick={this.props.logoutHandler} variant="secondary" >Logout</Button></p>
+        <p><Button onClick={this.addAccountSelect.bind(this)} variant="success" >Add Account</Button></p>
         <p><Button onClick={this.historySelect.bind(this)}>History</Button></p>
-        <p><Button onClick={this.props.logoutHandler}>Logout</Button></p>
-        <PluginMainView pluginSystem={this.props.pluginSystem} />
         {this.renderSwitchAuthenticatedView()}
       </div>
     );
@@ -67,7 +66,10 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
     switch(this.state.view) {
       case AuthenticatedView.List:
         return (
-          <AccountList accounts={this.props.accounts} transformer={this.props.transformer} fields={this.props.fields} editAccountHandler={this.editAccountSelect.bind(this)} pluginSystem={this.props.pluginSystem} />
+          <>
+            <PluginMainView pluginSystem={this.props.pluginSystem} />
+            <AccountList accounts={this.props.accounts} transformer={this.props.transformer} fields={this.props.fields} editAccountHandler={this.editAccountSelect.bind(this)} pluginSystem={this.props.pluginSystem} />
+          </>
         );
       case AuthenticatedView.Edit:
         return (

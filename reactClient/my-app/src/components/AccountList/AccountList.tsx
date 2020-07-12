@@ -83,10 +83,10 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
 	<li key={item.index}>{item.name}</li>
 	);*/
     return (
-  <div className={styles.AccountList}>
-	<DataTable title="Passwords" columns={this.state.columns} data={this.props.accounts} />
-  </div>
-	);
+      <div className={styles.AccountList}>
+        <DataTable title="Passwords" columns={this.state.columns} data={this.props.accounts} striped />
+      </div>
+    );
   }
 }
 
