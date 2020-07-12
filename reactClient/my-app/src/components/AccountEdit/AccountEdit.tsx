@@ -4,6 +4,10 @@ import { Account } from '../../backend/models/account';
 import { FieldOptions } from '../../backend/models/fieldOptions';
 import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
+import InputGroup from 'react-bootstrap/InputGroup';
+import { Eye } from 'react-bootstrap-icons';
 
 interface AccountEditProps {
   account?: Account;
@@ -62,22 +66,23 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
   }
   getFormFields() {
     let fields = [ (
-	      <div key="account">
-		<div>
-		    <label>Account Name
-		    <input type="text" placeholder="Account name" name="name" onChange={this.handleGenericChange} value={this.state.fields["name"]} />
-		    </label>
-		</div>
-	      </div>
+        <Form.Group controlId="formUsername" key="account">
+          <Form.Label>Account Name</Form.Label>
+          <Form.Control type="text" placeholder="Account name" name="name" onChange={this.handleGenericChange} value={this.state.fields["name"]} />
+        </Form.Group>
 	   ), 
            (
-	      <div key="password">
-		<div>
-		    <label>Password
-		    <input type="text" placeholder="Password" name="password" onChange={this.handleGenericChange} value={this.state.fields["password"]} />{this.props.account && <Button onClick={this.showPassword.bind(this)} >Show</Button>}
-		    </label>
-		</div>
-	      </div>
+        <Form.Group controlId="formPassword" key="password">
+          <Form.Label>Password</Form.Label>
+          <InputGroup>
+            <Form.Control type="text" placeholder="Password" name="password" onChange={this.handleGenericChange} value={this.state.fields["password"]} />
+            {this.props.account && 
+              <InputGroup.Append>
+                <Button variant="info" onClick={this.showPassword.bind(this)}><Eye/></Button>
+              </InputGroup.Append>
+            }
+          </InputGroup>
+        </Form.Group>
 	   )];
     let sortFunc = (a: FieldOptions, b: FieldOptions) => {
       if (!a.colNumber) {
@@ -90,13 +95,10 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
     }
     for (let field of this.props.fields.sort(sortFunc)) {
       let fieldOut = (
-	      <div key={field.selector}>
-		<div>
-		    <label>{field.name}
-		    <input type="text" placeholder={field.name} name={field.selector} onChange={this.handleGenericChange} value={this.state.fields[field.selector]} />
-		    </label>
-		</div>
-	      </div>
+        <Form.Group controlId={"form" + field.selector} key={field.selector} >
+          <Form.Label>{field.name}</Form.Label>
+          <Form.Control type="text" placeholder={field.name} name={field.selector} onChange={this.handleGenericChange} value={this.state.fields[field.selector]} />
+        </Form.Group>
         );
       if (field.colNumber) {
         fields.splice(field.colNumber, 0, fieldOut);
@@ -132,11 +134,15 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
   render() {
     return (
       <div className={styles.AccountEdit} >
-        <h2>{ this.props.account ? 'Edit Account' : 'Add Account' }</h2>
-        {this.getFormFields()}
-        <span> <Button onClick={() => {this.props.closeHandler()} }>Abort</Button></span>
-        <span> <Button onClick={() => {this.submitForm()} }>store</Button></span>
-        { this.props.account && <span> <Button onClick={this.deleteHandler.bind(this)}>delete</Button></span> }
+        <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
+          <h2>{ this.props.account ? 'Edit Account' : 'Add Account' }</h2>
+          <Form onSubmit={this.submitForm.bind(this)}>
+            {this.getFormFields()}
+            <span> <Button variant="secondary" onClick={() => {this.props.closeHandler()} }>Abort</Button></span>
+            <span> <Button variant="primary" type="submit">store</Button></span>
+            { this.props.account && <span> <Button variant="warning" onClick={this.deleteHandler.bind(this)}>delete</Button></span> }
+          </Form>
+        </Col>
       </div>
     );
   }
