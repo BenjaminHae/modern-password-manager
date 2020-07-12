@@ -35,18 +35,18 @@ class Login extends React.Component<LoginProps, LoginState> {
     return (
 	  <div className={styles.Login}>
       <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
-      <h2>Login</h2>
-      <Form onSubmit={this.doLogon}>
-        <Form.Group controlId="formUsername">
-          <Form.Label>Username</Form.Label>
-          <Form.Control type="text" placeholder="Enter Username" name="username" onChange={this.handleNameChange}/>
-        </Form.Group>
-        <Form.Group controlId="formPassword">
-          <Form.Label>Password</Form.Label>
-          <PasswordInputWithToggle onChange={this.handlePasswordChange} />
-        </Form.Group>
-        <Button variant="primary" type="submit">Login</Button>
-      </Form>
+        <h2>Login</h2>
+        <Form onSubmit={this.doLogon}>
+          <Form.Group controlId="formUsername">
+            <Form.Label>Username</Form.Label>
+            <Form.Control type="text" placeholder="Enter Username" name="username" onChange={this.handleNameChange}/>
+          </Form.Group>
+          <Form.Group controlId="formPassword">
+            <Form.Label>Password</Form.Label>
+            <PasswordInputWithToggle onChange={this.handlePasswordChange} />
+          </Form.Group>
+          <Button variant="primary" type="submit">Login</Button>
+        </Form>
       </Col>
     </div>
     );
