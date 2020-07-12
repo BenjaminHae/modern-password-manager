@@ -1,1 +1,12 @@
 .AccountList {}
+.AccountList button {
+  float: right;
+  margin-right: 0px !important;
+}
+.AccountList button:parent {
+  width: 100%;
+}
+.AccountList div[role=cell] {
+  width: 100%;
+  padding-right:0px;
+}

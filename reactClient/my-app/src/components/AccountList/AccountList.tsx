@@ -8,6 +8,7 @@ import DataTable from 'react-data-table-component';
 import { IDataTableColumn } from 'react-data-table-component';
 import { PluginSystem } from '../../plugin/PluginSystem';
 import Button from 'react-bootstrap/Button';
+import { Plus, Pencil } from 'react-bootstrap-icons';
 
 
 interface AccountListProps {
@@ -15,6 +16,7 @@ interface AccountListProps {
   fields: Array<FieldOptions>;
   transformer: AccountTransformerService;
   editAccountHandler: (account: Account) => void;
+  addAccountHandler: () => void;
   pluginSystem: PluginSystem
 }
 interface AccountListState {
@@ -34,13 +36,16 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
       this.setState({columns: this.getColumns()});
     }
   }
+  getTableActions() {
+    return <Button onClick={this.props.addAccountHandler} variant="success" size="sm" ><Plus/> Add Account</Button>
+  }
   getColumns(): Array<IDataTableColumn<Account>> {
     let columns: Array<IDataTableColumn<Account>> = [
       { 
         name: "Name", 
         selector: "name", 
         sortable:true,
-        cell: (row: Account) => <span>{row.name} <Button onClick={()=>{this.props.editAccountHandler(row)}}>edit</Button></span>
+        cell: (row: Account) => <>{row.name} <Button size="sm" onClick={()=>{this.props.editAccountHandler(row)}}><Pencil/></Button></>
       },
       { 
         name: "Password",  
@@ -84,7 +89,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
 	);*/
     return (
       <div className={styles.AccountList}>
-        <DataTable title="Passwords" columns={this.state.columns} data={this.props.accounts} striped />
+        <DataTable title="Passwords" columns={this.state.columns} data={this.props.accounts} striped actions={this.getTableActions()} />
       </div>
     );
   }

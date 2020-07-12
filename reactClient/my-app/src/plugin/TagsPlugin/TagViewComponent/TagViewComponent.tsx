@@ -31,7 +31,7 @@ class TagViewComponent extends React.Component<TagViewProps, TagViewState> {
   printTags() {
     return this.props.tags.map(
       (tag: string) => 
-        ( <Button key={tag} variant={this.state.selectedTags.includes(tag) ? "info" : "outline-info"} onClick={()=>this.selectTag(tag)}>{tag}</Button> )
+        ( <Button key={tag} size="sm" variant={this.state.selectedTags.includes(tag) ? "info" : "outline-info"} onClick={()=>this.selectTag(tag)}>{tag}</Button> )
     );
   }
   render() {

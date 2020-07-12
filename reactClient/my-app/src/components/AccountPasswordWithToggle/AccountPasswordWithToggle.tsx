@@ -3,6 +3,7 @@ import styles from './AccountPasswordWithToggle.module.css';
 import { Account } from '../../backend/models/account';
 import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
 import Button from 'react-bootstrap/Button';
+import { EyeSlash } from 'react-bootstrap-icons';
 
 interface PasswordProps {
 	account: Account;
@@ -37,9 +38,9 @@ class AccountPasswordWithToggle extends React.Component<PasswordProps, PasswordS
     return (
       <>
       { !this.state.visible ?
-        <Button className={styles.Authenticated} onClick={this.show}>{HiddenPassword}</Button>
-        : <div><span>{this.state.password}</span>
-        <Button className={styles.Authenticated} onClick={this.hide}>Hide</Button></div>
+        <span onClick={this.show} >{HiddenPassword}</span>
+        : <><span>{this.state.password}</span>
+        <Button className={styles.Authenticated} onClick={this.hide} size="sm"><EyeSlash/></Button></>
       }
       </>
     )

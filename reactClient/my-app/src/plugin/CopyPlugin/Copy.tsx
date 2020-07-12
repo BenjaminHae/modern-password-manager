@@ -4,6 +4,7 @@ import { AccountTransformerService } from '../../backend/controller/account-tran
 import { BasePlugin, IPluginWithAccountList, IPluginRequiresTransformer } from '../BasePlugin';
 import { IDataTableColumn } from 'react-data-table-component';
 import Button from 'react-bootstrap/Button';
+import { ClipboardData } from 'react-bootstrap-icons';
 
 export class CopyPlugin extends BasePlugin implements IPluginWithAccountList, IPluginRequiresTransformer {
   transformer?: AccountTransformerService;
@@ -26,11 +27,10 @@ export class CopyPlugin extends BasePlugin implements IPluginWithAccountList, IP
     return column;
   }
   showCopyPassword(account: Account) {
-    console.log("showCopyPassword");
     if(!navigator.clipboard) {
       return;
     }
-    return (<Button onClick={() => this.copyPassword(account)}>Copy</Button>)
+    return (<Button onClick={() => this.copyPassword(account)} size="sm"><ClipboardData/></Button>)
   }
   async copyPassword(account: Account) {
     if (!this.transformer)

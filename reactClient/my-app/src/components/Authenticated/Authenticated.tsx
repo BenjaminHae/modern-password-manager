@@ -68,7 +68,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
         return (
           <>
             <PluginMainView pluginSystem={this.props.pluginSystem} />
-            <AccountList accounts={this.props.accounts} transformer={this.props.transformer} fields={this.props.fields} editAccountHandler={this.editAccountSelect.bind(this)} pluginSystem={this.props.pluginSystem} />
+            <AccountList accounts={this.props.accounts} transformer={this.props.transformer} fields={this.props.fields} editAccountHandler={this.editAccountSelect.bind(this)} addAccountHandler={this.addAccountSelect.bind(this)} pluginSystem={this.props.pluginSystem} />
           </>
         );
       case AuthenticatedView.Edit:

@@ -13,7 +13,7 @@ const History: React.FC<IHistoryProps> = (props: IHistoryProps) => {
       name: 'Timestamp', 
       cell: (row: HistoryItem) => { 
         if (row.time) 
-          return ( <span>{row.time}</span> ); 
+          return ( <span>{row.time.toLocaleString(navigator.language)}</span> ); 
         else 
           return ( <span/> )
       }
