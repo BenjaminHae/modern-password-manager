@@ -23,7 +23,8 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
     this.handleGenericChange = this.handleGenericChange.bind(this);
   }
-  doRegister() {
+  doRegister(event: React.FormEvent) {
+    event.preventDefault();
     this.props.doRegister(this.state.values.username, this.state.values.password, this.state.values.email);
   }
   handleGenericChange(event: React.ChangeEvent<HTMLInputElement>) {
