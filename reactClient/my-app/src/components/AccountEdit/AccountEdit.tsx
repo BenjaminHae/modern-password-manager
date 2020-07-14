@@ -22,16 +22,19 @@ interface AccountEditState {
     fields: {[index: string]:string};
 }
 class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
+
   constructor(props: AccountEditProps) {
     super(props);
     this.handleGenericChange = this.handleGenericChange.bind(this);
     this.state = { fields: this.generateFieldContents()};
   }
+
   componentDidUpdate(prevProps: AccountEditProps) {
     if (this.props.account !== prevProps.account) {
       this.setState({fields: this.generateFieldContents()});
     }
   }
+
   generateFieldContents(): {[index: string]:string} {
     let newFields: {[index: string]:string} = { name: "", password: "" };
     for (let item of this.props.fields) {
@@ -64,7 +67,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
       this.setState({fields: currentFields});
     }
   }
-  getFormFields() {
+  renderFormFields() {
     let fields = [ (
         <Form.Group controlId="formUsername" key="account">
           <Form.Label>Account Name</Form.Label>
@@ -138,7 +141,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
         <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
           <h2>{ this.props.account ? 'Edit Account' : 'Add Account' }</h2>
           <Form onSubmit={this.submitForm.bind(this)}>
-            {this.getFormFields()}
+            {this.renderFormFields()}
             <span> <Button variant="secondary" onClick={() => {this.props.closeHandler()} }>Abort</Button></span>
             <span> <Button variant="primary" type="submit">store</Button></span>
             { this.props.account && <span> <Button variant="warning" onClick={this.deleteHandler.bind(this)}>delete</Button></span> }
