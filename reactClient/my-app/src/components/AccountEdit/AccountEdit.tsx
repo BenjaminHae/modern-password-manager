@@ -88,7 +88,6 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
         </Form.Group>
 	   )];
     let sortFunc = (a: FieldOptions, b: FieldOptions) => {
-      console.log(a,b);
       if (!a.colNumber) {
         if (!b.colNumber) {
           return 0;
