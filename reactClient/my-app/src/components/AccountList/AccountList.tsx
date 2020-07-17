@@ -54,6 +54,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
       }
     ];
     let sortFunc = (a: FieldOptions, b: FieldOptions) => {
+      console.log(a, b);
       if (!a.colNumber) {
         if (!b.colNumber) {
           return 0;
