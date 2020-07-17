@@ -91,6 +91,8 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
       console.log(a,b);
       if (!a.colNumber) {
         if (!b.colNumber) {
+          return 0;
+        }
         return 1;
       }
       if (!b.colNumber) {
