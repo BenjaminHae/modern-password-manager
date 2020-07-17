@@ -12,6 +12,7 @@ type AccountFilter = (account: Account) => boolean;
 export class PluginSystem {
   filterChangeHandler?: (filter: AccountsFilter) => void;
   filters: { [index: string]: AccountFilter } = {};
+  filterPresent: boolean = false;
   
   mainViewCallback: Array<() => JSX.Element> = [];
   resetFilterCallback: Array<() => void> = [];
@@ -74,12 +75,14 @@ export class PluginSystem {
   }
 
   setFilter(key: string, filter: AccountFilter) {
+    this.filterPresent = true;
     this.filters[key] = filter;
     this.updateFilter();
   }
 
   clearFilters() {
     this.filters = {};
+    this.filterPresent = false;
     this.resetFilterCallback.forEach(reset => reset());
     this.updateFilter();
   }

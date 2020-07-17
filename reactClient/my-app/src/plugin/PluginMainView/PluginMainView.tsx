@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 
 interface PluginMainViewProps {
 //  backend: BackendService,
-  pluginSystem: PluginSystem,
+  pluginSystem: PluginSystem;
 }
 interface PluginMainViewState {
 }
@@ -15,7 +15,7 @@ class PluginMainView extends React.Component<PluginMainViewProps, PluginMainView
     return (
       <div className={styles.PluginMainView}>
         { this.props.pluginSystem.getMainView() }
-        <Button onClick={()=> {this.props.pluginSystem.clearFilters()}}>Clear Filters</Button>
+        { this.props.pluginSystem.filterPresent && <Button onClick={()=> {this.props.pluginSystem.clearFilters()}}>Clear Filters</Button> }
       </div>
     );
   }
