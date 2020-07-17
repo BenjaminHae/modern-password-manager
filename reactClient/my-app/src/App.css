@@ -1,4 +1,7 @@
 .App {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
   /*text-align: center;*/
 }
 
@@ -26,9 +29,7 @@
 
 .App-footer {
   text-align: center;
-  position: absolute;
-  bottom: 0;
-  padding-bottom: 1em;
+  margin-top: auto;
   width: 100%;
 }
 

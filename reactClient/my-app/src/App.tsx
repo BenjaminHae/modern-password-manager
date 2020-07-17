@@ -97,8 +97,8 @@ export default class App extends React.Component<AppProps, AppState> {
           });
     this.plugins.setFilterChangeHandler(this.filterChangeHandler.bind(this));
   }
-  doLogin(username:string, password: string) {
-    this.backend.logon(username, password)
+  doLogin(username:string, password: string):Promise<void> {
+    return this.backend.logon(username, password)
       .then((info: ILogonInformation) => {
         let important = false;
         let message = "";
