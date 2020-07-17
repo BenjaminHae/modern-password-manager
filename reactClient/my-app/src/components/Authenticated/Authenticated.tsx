@@ -55,9 +55,10 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
   render () {
     return (
       <div className={styles.Authenticated}>
-        <p><Button onClick={this.props.logoutHandler} variant="secondary" >Logout</Button></p>
-        <p><Button onClick={this.addAccountSelect.bind(this)} variant="success" >Add Account</Button></p>
-        <p><Button onClick={this.historySelect.bind(this)}>History</Button></p>
+        <p className={styles.Selectors}>
+          <Button onClick={this.historySelect.bind(this)}>History</Button>
+          <Button onClick={this.props.logoutHandler} variant="secondary" >Logout</Button>
+        </p>
         {this.renderSwitchAuthenticatedView()}
       </div>
     );
