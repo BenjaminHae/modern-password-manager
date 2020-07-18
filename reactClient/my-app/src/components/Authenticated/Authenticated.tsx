@@ -31,7 +31,6 @@ interface AuthenticatedProps {
   editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>,
   bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>,
   deleteHandler: (account: Account) => Promise<void>,
-  logoutHandler: () => Promise<void>,
   changePasswordHandler: (oldPassword: string, newPassword: string) => Promise<void>,
   pluginSystem: PluginSystem,
   showMessage: (message: string, important?: boolean, clickHandler?: () => void) => void,
@@ -57,7 +56,6 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
       <div className={styles.Authenticated}>
         <p className={styles.Selectors}>
           <Button onClick={this.historySelect.bind(this)}>History</Button>
-          <Button onClick={this.props.logoutHandler} variant="secondary" >Logout</Button>
         </p>
         {this.renderSwitchAuthenticatedView()}
       </div>

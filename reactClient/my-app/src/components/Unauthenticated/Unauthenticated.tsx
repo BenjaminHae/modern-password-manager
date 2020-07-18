@@ -7,12 +7,13 @@ interface UnauthenticatedProps {
   doLogin: (username: string, password: string) => void;
   doRegister: (username: string, password: string, email: string) => Promise<void>;
   showRegistration: boolean;
+  ready: boolean;
 }
 class Unauthenticated extends React.Component<UnauthenticatedProps> {
   render () {
     return (
       <div className={styles.Unauthenticated}>
-          <Login doLogin={this.props.doLogin}/>
+          <Login doLogin={this.props.doLogin} ready={this.props.ready}/>
         {this.props.showRegistration && 
             <Register doRegister={this.props.doRegister} />
         }

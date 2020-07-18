@@ -7,16 +7,18 @@ import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWit
 
 interface LoginProps {
   doLogin: (username: string, password: string) => void;
+  ready: boolean;
 }
 interface LoginState {
   username: string;
   password: string;
+  waiting: boolean;
 }
 
 class Login extends React.Component<LoginProps, LoginState> {
   constructor(props: LoginProps) {
     super(props);
-    this.state = { username: '', password: ''};
+    this.state = { username: '', password: '', waiting: false };
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.doLogon = this.doLogon.bind(this);
@@ -27,10 +29,12 @@ class Login extends React.Component<LoginProps, LoginState> {
   handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({password: event.target.value});
   }
-  doLogon(event: React.FormEvent) {
+  async doLogon(event: React.FormEvent) {
     event.preventDefault();
-    this.props.doLogin(this.state.username, this.state.password)
-    this.setState({ password: "" });
+    let password = this.state.password;
+    this.setState({ password: "", waiting: true });
+    await this.props.doLogin(this.state.username, password)
+    this.setState({ waiting: false });
   }
   render () {
     return (
@@ -38,15 +42,17 @@ class Login extends React.Component<LoginProps, LoginState> {
       <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
         <h2>Login</h2>
         <Form onSubmit={this.doLogon}>
-          <Form.Group controlId="formUsername">
-            <Form.Label>Username</Form.Label>
-            <Form.Control type="text" placeholder="Enter Username" name="username" onChange={this.handleNameChange}/>
-          </Form.Group>
-          <Form.Group controlId="formPassword">
-            <Form.Label>Password</Form.Label>
-            <PasswordInputWithToggle onChange={this.handlePasswordChange} value={this.state.password} />
-          </Form.Group>
-          <Button variant="primary" type="submit">Login</Button>
+          <fieldset disabled={this.state.waiting}>
+            <Form.Group controlId="formUsername">
+              <Form.Label>Username</Form.Label>
+              <Form.Control type="text" placeholder="Enter Username" name="username" onChange={this.handleNameChange}/>
+            </Form.Group>
+            <Form.Group controlId="formPassword">
+              <Form.Label>Password</Form.Label>
+              <PasswordInputWithToggle onChange={this.handlePasswordChange} value={this.state.password} />
+            </Form.Group>
+            <Button disabled={!this.props.ready} variant="primary" type="submit">{ this.state.waiting ? "Wait" : "Login" }</Button>
+          </fieldset>
         </Form>
       </Col>
     </div>

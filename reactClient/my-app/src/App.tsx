@@ -3,6 +3,7 @@ import Authenticated from './components/Authenticated/Authenticated';
 import Unauthenticated from './components/Unauthenticated/Unauthenticated';
 import Message from './components/Message/Message';
 import './App.css';
+import styles from './App.module.css';
 import { BackendService } from './backend/backend.service';
 import { CSRFMiddleware } from './backend/api/CSRFMiddleware';
 import { MaintenanceService, BackendOptions } from './backend/api/maintenance.service';
@@ -19,6 +20,7 @@ import { UserApi as OpenAPIUserService } from '@pm-server/pm-server-react-client
 import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-react-client';
 import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
 import { HistoryItem } from '@pm-server/pm-server-react-client';
+import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -226,6 +228,9 @@ export default class App extends React.Component<AppProps, AppState> {
 	    <div className="App">
 	      <header className="App-header">
           Password Manager
+          {this.state.authenticated &&
+            <Button className={styles.Logout} onClick={this.doLogout.bind(this)} variant="secondary" >Logout</Button>
+          }
 	      </header>
         <Message 
             message={this.state.message} 
@@ -244,17 +249,17 @@ export default class App extends React.Component<AppProps, AppState> {
             editHandler={this.editHandler.bind(this)} 
             bulkAddHandler={this.bulkAddAccounts.bind(this)} 
             deleteHandler={this.deleteHandler.bind(this)} 
-            logoutHandler={this.doLogout.bind(this)} 
             changePasswordHandler={this.changePasswordHandler.bind(this)} 
             loadHistoryHandler={this.loadHistory.bind(this)} 
             showMessage={this.showMessage.bind(this)} 
         />
               }
-        {!this.state.authenticated && this.state.ready
+        {!this.state.authenticated
           && <Unauthenticated 
                 doLogin={this.doLogin.bind(this)} 
                 doRegister={this.doRegister.bind(this)} 
                 showRegistration={this.state.registrationAllowed} 
+                ready={this.state.ready}
               /> }
         {!this.state.authenticated && !this.state.ready 
           && <span>Waiting for server</span> }
