@@ -19,14 +19,15 @@ interface AccountEditProps {
   showMessage: (message: string, important?: boolean, clickHandler?: () => void) => void
 }
 interface AccountEditState {
-    fields: {[index: string]:string};
+  fields: {[index: string]:string};
+  waiting: boolean;
 }
 class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
 
   constructor(props: AccountEditProps) {
     super(props);
     this.handleGenericChange = this.handleGenericChange.bind(this);
-    this.state = { fields: this.generateFieldContents()};
+    this.state = { fields: this.generateFieldContents(), waiting: false};
   }
 
   componentDidUpdate(prevProps: AccountEditProps) {
@@ -118,7 +119,9 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
   async submitForm(event: React.FormEvent) {
     try {
       event.preventDefault();
+      this.setState({waiting: true});
       await this.props.editHandler(this.state.fields, this.props.account);
+      this.setState({waiting: false});
       this.cleanUp();
       this.props.closeHandler();
     }
@@ -129,7 +132,9 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
   async deleteHandler() {
     if (this.props.account) {
       try {
+        this.setState({waiting: true});
         await this.props.deleteHandler(this.props.account);
+        this.setState({waiting: false});
         this.cleanUp();
         this.props.closeHandler();
       }
@@ -144,10 +149,12 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
         <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
           <h2>{ this.props.account ? 'Edit Account' : 'Add Account' }</h2>
           <Form onSubmit={this.submitForm.bind(this)}>
-            {this.renderFormFields()}
-            <span> <Button variant="secondary" onClick={() => {this.props.closeHandler()} }>Abort</Button></span>
-            <span> <Button variant="primary" type="submit">store</Button></span>
-            { this.props.account && <span> <Button variant="warning" onClick={this.deleteHandler.bind(this)}>delete</Button></span> }
+            <fieldset disabled={this.state.waiting}>
+              {this.renderFormFields()}
+              <span> <Button variant="secondary" onClick={() => {this.props.closeHandler()} }>Abort</Button></span>
+              <span> <Button variant="primary" type="submit">store</Button></span>
+              { this.props.account && <span> <Button variant="warning" onClick={this.deleteHandler.bind(this)}>delete</Button></span> }
+            </fieldset>
           </Form>
         </Col>
       </div>
