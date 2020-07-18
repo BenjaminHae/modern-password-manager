@@ -21,6 +21,7 @@ import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-reac
 import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
 import { HistoryItem } from '@pm-server/pm-server-react-client';
 import Button from 'react-bootstrap/Button';
+import { BoxArrowLeft } from 'react-bootstrap-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -229,7 +230,7 @@ export default class App extends React.Component<AppProps, AppState> {
 	      <header className="App-header">
           Password Manager
           {this.state.authenticated &&
-            <Button className={styles.Logout} onClick={this.doLogout.bind(this)} variant="secondary" >Logout</Button>
+            <Button className={styles.Logout} onClick={this.doLogout.bind(this)} variant="secondary" ><BoxArrowLeft/>Logout</Button>
           }
 	      </header>
         <Message 
