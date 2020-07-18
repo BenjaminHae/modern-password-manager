@@ -12,6 +12,7 @@ interface RegisterProps {
 }
 interface RegisterState {
   values: {[index: string]:string};
+  waiting: boolean;
 }
 
 
@@ -20,12 +21,15 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     super(props);
     this.state = {
       values: {username:  "", password:  "", email:  ""},
+      waiting: false
     }
     this.handleGenericChange = this.handleGenericChange.bind(this);
   }
-  doRegister(event: React.FormEvent) {
+  async doRegister(event: React.FormEvent) {
     event.preventDefault();
-    this.props.doRegister(this.state.values.username, this.state.values.password, this.state.values.email);
+    this.setState({ waiting: true });
+    await this.props.doRegister(this.state.values.username, this.state.values.password, this.state.values.email);
+    this.setState({ waiting: false });
   }
   handleGenericChange(event: React.ChangeEvent<HTMLInputElement>) {
     let newValues = this.state.values;
@@ -38,6 +42,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
 	    <h2>Register</h2>
 	    <Form onSubmit={this.doRegister.bind(this)}>
+        <fieldset disabled={this.state.waiting}>
           <Form.Group controlId="formUsername">
             <Form.Label>Username</Form.Label>
             <Form.Control type="text" placeholder="Enter Username" name="username" onChange={this.handleGenericChange}/>
@@ -50,7 +55,8 @@ class Register extends React.Component<RegisterProps, RegisterState> {
             <Form.Label>Password</Form.Label>
             <PasswordInputWithToggle onChange={this.handleGenericChange} />
           </Form.Group>
-        <Button variant="primary" type="submit">Register</Button>
+          <Button variant="primary" type="submit">{ this.state.waiting ? "Wait" : "Register" }</Button>
+        </fieldset>
       </Form>
       </Col>
     </div>
