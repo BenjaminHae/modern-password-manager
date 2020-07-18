@@ -65,6 +65,9 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
       return a.colNumber - b.colNumber
     }
     for (let field of this.props.fields.sort(sortFunc)) {
+      if (!field.visible) {
+        continue;
+      }
       let column: IDataTableColumn<Account> = {
           name: field.name, 
           selector: (row: Account) => row.other[field.selector],
