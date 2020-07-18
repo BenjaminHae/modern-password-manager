@@ -13,7 +13,7 @@ export class TagsPlugin extends BasePlugin implements IPluginWithMainView, IPlug
   }
 
   MainViewJSX() {
-    return ( <TagViewComponent tags={this.tags} filterCallback={this.filterCallback.bind(this)} ref={this.tagList}/> );
+    return ( <TagViewComponent key="TagViewComponent" tags={this.tags} filterCallback={this.filterCallback.bind(this)} ref={this.tagList}/> );
   }
 
   resetFilter() {
