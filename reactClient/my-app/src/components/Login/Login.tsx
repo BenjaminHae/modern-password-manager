@@ -51,7 +51,7 @@ class Login extends React.Component<LoginProps, LoginState> {
               <Form.Label>Password</Form.Label>
               <PasswordInputWithToggle onChange={this.handlePasswordChange} value={this.state.password} />
             </Form.Group>
-            <Button disabled={!this.props.ready} variant="primary" type="submit">{ this.state.waiting ? "Wait" : "Login" }</Button>
+            <Button disabled={!this.props.ready} variant="primary" type="submit">{ this.state.waiting || !this.props.ready ? "Wait" : "Login" }</Button>
           </fieldset>
         </Form>
       </Col>
