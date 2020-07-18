@@ -1,1 +1,6 @@
-.Authenticated {}
+.PluginMainView {
+  padding: 10px;
+}
+.ResetFilter {
+  margin-top: 10px;
+}
