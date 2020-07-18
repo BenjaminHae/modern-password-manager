@@ -1,4 +1,6 @@
-.Authenticated {}
+.Authenticated {
+  padding-top: 10px;
+}
 .Selectors {
   margin-left: auto; 
   float: right
