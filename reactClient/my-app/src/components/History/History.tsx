@@ -34,7 +34,6 @@ const History: React.FC<IHistoryProps> = (props: IHistoryProps) => {
 
   return (
       <div className={styles.History}>
-      History Component
         <DataTable title="History" columns={columns} data={props.historyItems} dense pagination striped />
       </div>
       )
