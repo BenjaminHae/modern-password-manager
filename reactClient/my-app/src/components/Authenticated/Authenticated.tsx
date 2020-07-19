@@ -75,9 +75,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
   render () {
     return (
       <div className={styles.Authenticated}>
-        <p className={styles.Selectors}>
-          {this.renderSelectors()}
-        </p>
+        {this.renderSelectors()}
         {this.renderSwitchAuthenticatedView()}
       </div>
     );
@@ -89,7 +87,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
       )
     });
     return (
-      <Dropdown as={ButtonGroup}>
+      <Dropdown as={ButtonGroup} className={styles.Selectors}>
         <DropdownButton title={this.viewButtons.filter((viewButton)=>viewButton.view === this.state.view)[0].name} id="dropdownView" variant="secondary">
           {buttons}
         </DropdownButton>
