@@ -7,6 +7,9 @@ import { CsvConverter } from './csv/csvConverter';
 import { FieldOptions } from '../../backend/models/fieldOptions';
 import CsvFieldMappingSelect from './CsvFieldMappingSelect/CsvFieldMappingSelect';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
+import Table from 'react-bootstrap/Table';
 
 interface ImportCsvProps {
   availableFields: Array<FieldOptions>;
@@ -18,6 +21,7 @@ interface ImportCsvState {
   columns: Array<IDataTableColumn<{[index: string]:string}>>;
   headers: Array<string>;
   mapping: Map<string, string | null>;
+  waiting: boolean;
 }
 class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
   parser: CsvParser = new CsvParser();
@@ -29,7 +33,8 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
       data: [],
       columns: [],
       headers: [],
-      mapping: new Map<string, string | null>()
+      mapping: new Map<string, string | null>(),
+      waiting: false
     }
   }
 
@@ -108,7 +113,7 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
   }
 
   renderHeaders() {
-    return this.state.headers.map((header: string) => (<td key={header}>{header}</td>) );
+    return this.state.headers.map((header: string) => (<th key={header}>{header}</th>) );
   }
   renderMapping() {
     return this.state.headers.map((header: string)=> { 
@@ -131,22 +136,24 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
   render () {
     return (
       <div className={styles.ImportCsv}>
-        <h3>Import Accounts</h3>
-              <form method="post" action="#" id="#">
-                  <div>
-                    <label>Upload Your File </label>
-                    <input type="file" onChange={this.fileUploadHandler.bind(this)} accept=".csv"/>
-                  </div>
-              </form>
-        <div>
-        <table>
-          <thead><tr><td>CSV Header</td>{this.renderHeaders()}</tr></thead>
-          <tbody><tr><td>Mapped Field</td>{this.renderMapping()}</tr></tbody>
-        </table>
-            <p><Button onClick={this.importAccounts.bind(this)}>Import</Button></p>
-	<DataTable title="Accounts" columns={this.state.columns} data={this.state.data} />
-        </div>
-        
+        <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
+          <h3>Import Accounts</h3>
+          <Form>
+            <fieldset disabled={this.state.waiting}>
+              <Form.Group controlId="importFileUpload">
+                <Form.File custom label="Select your file" name="file" onChange={this.fileUploadHandler.bind(this)} accept=".csv" />
+              </Form.Group>
+            </fieldset>
+          </Form>
+        </Col>
+        <Col>
+          <Table bordered>
+            <thead><tr><th>CSV Header</th>{this.renderHeaders()}</tr></thead>
+            <tbody><tr><td>Mapped Field</td>{this.renderMapping()}</tr></tbody>
+          </Table>
+          <p><Button onClick={this.importAccounts.bind(this)}>Import</Button></p>
+          <DataTable title="Accounts" columns={this.state.columns} data={this.state.data} dense pagination striped />
+        </Col>
       </div>
       );
   }
