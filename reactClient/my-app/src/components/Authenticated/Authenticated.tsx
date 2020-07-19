@@ -10,6 +10,8 @@ import History from '../History/History';
 import { BackendService } from '../../backend/backend.service';
 import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
 import Button from 'react-bootstrap/Button';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 import { PluginSystem } from '../../plugin/PluginSystem';
 import PluginMainView from '../../plugin/PluginMainView/PluginMainView';
 import { HistoryItem } from '@pm-server/pm-server-react-client';
@@ -41,6 +43,12 @@ interface AuthenticatedState {
   selectedAccount?: Account;
 }
 class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedState> {
+  readonly viewButtons = [
+    { view: AuthenticatedView.List, name: "Account List" },
+    { view: AuthenticatedView.Import, name: "Import Accounts" },
+    { view: AuthenticatedView.ChangePassword, name: "Change Password" },
+    { view: AuthenticatedView.History, name: "History" }
+  ];
   constructor(props: AuthenticatedProps) {
     super(props);
     this.state = this.defaultViewState();
@@ -51,15 +59,36 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
       selectedAccount: undefined
     }
   }
+  selectView(view: AuthenticatedView) {
+    this.setState({view: view});
+  }
+  editAccountSelect(account: Account) {
+    this.setState({view: AuthenticatedView.Edit, selectedAccount: account});
+  }
+  addAccountSelect() {
+    this.setState({view: AuthenticatedView.Add});
+  }
   render () {
     return (
       <div className={styles.Authenticated}>
         <p className={styles.Selectors}>
-          <Button onClick={this.historySelect.bind(this)}>History</Button>
+          {this.renderSelectors()}
         </p>
         {this.renderSwitchAuthenticatedView()}
       </div>
     );
+  }
+  renderSelectors() {
+    let buttons = this.viewButtons.map((viewButton)=>{
+      return (
+        <Dropdown.Item key={viewButton.view} onClick={()=>{this.selectView(viewButton.view)}} active={this.state.view === viewButton.view }>{viewButton.name}</Dropdown.Item>
+      )
+    });
+    return (
+      <DropdownButton title="Dropdown" id="dropdownView">
+        {buttons}
+      </DropdownButton>
+    )
   }
   renderSwitchAuthenticatedView() {
     switch(this.state.view) {
@@ -72,15 +101,15 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
         );
       case AuthenticatedView.Edit:
         return (
-          <AccountEdit account={this.state.selectedAccount} fields={this.props.fields} editHandler={this.props.editHandler}  closeHandler={this.backToListView.bind(this)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage}/>
+          <AccountEdit account={this.state.selectedAccount} fields={this.props.fields} editHandler={this.props.editHandler}  closeHandler={()=>this.selectView(AuthenticatedView.List)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage}/>
         );
       case AuthenticatedView.Add:
         return (
-          <AccountEdit account={undefined} fields={this.props.fields} editHandler={this.props.editHandler} closeHandler={this.backToListView.bind(this)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage} />
+          <AccountEdit account={undefined} fields={this.props.fields} editHandler={this.props.editHandler} closeHandler={()=>this.selectView(AuthenticatedView.List)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage} />
         );
       case AuthenticatedView.History:
         return (
-          <History historyItems={this.props.historyItems} />
+          <History historyItems={this.props.historyItems} loadHistoryHandler={this.props.loadHistoryHandler} />
         );
       case AuthenticatedView.ChangePassword:
         return (
@@ -91,19 +120,6 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
           <ImportCsv availableFields={this.props.fields} bulkAddHandler={this.props.bulkAddHandler} showMessage={this.props.showMessage}/>
         );
     }
-  }
-  editAccountSelect(account: Account) {
-    this.setState({view: AuthenticatedView.Edit, selectedAccount: account});
-  }
-  addAccountSelect() {
-    this.setState({view: AuthenticatedView.Add});
-  }
-  historySelect(): void {
-    this.props.loadHistoryHandler();
-    this.setState({view: AuthenticatedView.History});
-  }
-  backToListView() {
-    this.setState(this.defaultViewState());
   }
 }
 export default Authenticated;
