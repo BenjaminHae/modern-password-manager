@@ -10,8 +10,10 @@ import History from '../History/History';
 import { BackendService } from '../../backend/backend.service';
 import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
 import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
+import { BoxArrowUpLeft } from 'react-bootstrap-icons';
 import { PluginSystem } from '../../plugin/PluginSystem';
 import PluginMainView from '../../plugin/PluginMainView/PluginMainView';
 import { HistoryItem } from '@pm-server/pm-server-react-client';
@@ -44,10 +46,12 @@ interface AuthenticatedState {
 }
 class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedState> {
   readonly viewButtons = [
-    { view: AuthenticatedView.List, name: "Account List" },
-    { view: AuthenticatedView.Import, name: "Import Accounts" },
-    { view: AuthenticatedView.ChangePassword, name: "Change Password" },
-    { view: AuthenticatedView.History, name: "History" }
+    { view: AuthenticatedView.List, name: "Account List", selectable: true },
+    { view: AuthenticatedView.Import, name: "Import Accounts", selectable: true },
+    { view: AuthenticatedView.ChangePassword, name: "Change Password", selectable: true  },
+    { view: AuthenticatedView.History, name: "History", selectable: true  },
+    { view: AuthenticatedView.Edit, name: "Edit Account", selectable: false  },
+    { view: AuthenticatedView.Add, name: "Add Account", selectable: false  },
   ];
   constructor(props: AuthenticatedProps) {
     super(props);
@@ -79,15 +83,18 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
     );
   }
   renderSelectors() {
-    let buttons = this.viewButtons.map((viewButton)=>{
+    let buttons = this.viewButtons.filter((viewButton)=>viewButton.selectable).map((viewButton)=>{
       return (
         <Dropdown.Item key={viewButton.view} onClick={()=>{this.selectView(viewButton.view)}} active={this.state.view === viewButton.view }>{viewButton.name}</Dropdown.Item>
       )
     });
     return (
-      <DropdownButton title="Dropdown" id="dropdownView">
-        {buttons}
-      </DropdownButton>
+      <Dropdown as={ButtonGroup}>
+        <DropdownButton title={this.viewButtons.filter((viewButton)=>viewButton.view === this.state.view)[0].name} id="dropdownView" variant="secondary">
+          {buttons}
+        </DropdownButton>
+        {this.state.view !== AuthenticatedView.List && <Button variant="info" onClick={()=>this.selectView(AuthenticatedView.List)} ><BoxArrowUpLeft/></Button> }
+      </Dropdown>
     )
   }
   renderSwitchAuthenticatedView() {
