@@ -1,6 +1,7 @@
 import React from 'react';
 import { FieldOptions } from '../../../backend/models/fieldOptions';
 import styles from './CsvFieldMappingSelect.module.css';
+import Form from 'react-bootstrap/Form';
 
 interface CsvFieldMappingSelectProps {
   availableFields: Array<FieldOptions>;
@@ -36,9 +37,11 @@ class CsvFieldMappingSelect extends React.Component<CsvFieldMappingSelectProps, 
 
   render () {
     return (
-      <select className={styles.CsvFieldMappingSelect} value={this.props.mappedFieldSelector} onChange={this.handleSelect.bind(this)} >
+      <Form.Group>
+        <Form.Control as="select" className={styles.CsvFieldMappingSelect} value={this.props.mappedFieldSelector} onChange={this.handleSelect.bind(this)} >
       {this.getOptions()}
-      </select>
+        </Form.Control>
+      </Form.Group>
     );
   }
 }

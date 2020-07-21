@@ -22,6 +22,7 @@ interface ImportCsvState {
   headers: Array<string>;
   mapping: Map<string, string | null>;
   waiting: boolean;
+  showPasswords: boolean;
 }
 class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
   parser: CsvParser = new CsvParser();
@@ -34,7 +35,8 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
       columns: [],
       headers: [],
       mapping: new Map<string, string | null>(),
-      waiting: false
+      waiting: false,
+      showPasswords: false
     }
   }
 
@@ -73,10 +75,11 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
   }
 
   async importAccounts(): Promise<void> {
+    this.setState({waiting: true});
     let newAccounts = this.importer.createAccounts(this.state.data);
     await this.props.bulkAddHandler(newAccounts);
-      this.props.showMessage(`imported ${newAccounts.length} accounts`);
-    this.setState({ data: [] });
+    this.props.showMessage(`imported ${newAccounts.length} accounts`);
+    this.setState({ data: [], waiting: false});
   }
 
   showInformation(): void {
@@ -136,24 +139,35 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
   render () {
     return (
       <div className={styles.ImportCsv}>
+        <Form>
         <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
           <h3>Import Accounts</h3>
-          <Form>
             <fieldset disabled={this.state.waiting}>
               <Form.Group controlId="importFileUpload">
                 <Form.File custom label="Select your file" name="file" onChange={this.fileUploadHandler.bind(this)} accept=".csv" />
               </Form.Group>
             </fieldset>
-          </Form>
         </Col>
-        <Col>
-          <Table bordered>
-            <thead><tr><th>CSV Header</th>{this.renderHeaders()}</tr></thead>
-            <tbody><tr><td>Mapped Field</td>{this.renderMapping()}</tr></tbody>
-          </Table>
-          <p><Button onClick={this.importAccounts.bind(this)}>Import</Button></p>
-          <DataTable title="Accounts" columns={this.state.columns} data={this.state.data} dense pagination striped />
-        </Col>
+        { this.state.data.length > 0 &&
+          <Col>
+            <h3>Map CSV columns to account properties</h3>
+            <Table bordered>
+              <thead><tr><th>CSV Header</th>{this.renderHeaders()}</tr></thead>
+              <tbody><tr><th>Mapped Field</th>{this.renderMapping()}</tr></tbody>
+            </Table>
+            <p><Button onClick={this.importAccounts.bind(this)}>Import</Button></p>
+            <h3>Accounts to import</h3>
+            <p><Form.Check type='checkbox' label="Show Passwords" onChange={ ()=>this.setState({showPasswords: ! this.state.showPasswords})} /></p>
+            <DataTable noHeader columns={this.state.columns.filter((col)=>{ return !(!this.state.showPasswords && col.name==="password")} )} 
+              data={ this.state.data.map((acc) => {
+                if (this.state.showPasswords)
+                  return acc;
+                const { password, ...cleanAcc } = acc;
+                return cleanAcc;
+            })} dense pagination striped />
+          </Col>
+        }
+        </Form>
       </div>
       );
   }
