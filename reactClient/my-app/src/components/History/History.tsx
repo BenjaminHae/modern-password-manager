@@ -25,6 +25,10 @@ const History: React.FC<IHistoryProps> = (props: IHistoryProps) => {
     {name: 'User-Agent', selector: 'userAgent'},
   ];
   let loaded = false;
+
+  const conditionalRowStyles = [{
+    when: (event:HistoryItem) =>  !event.eventResult || event.eventResult.toLowerCase().includes("failed") ,
+    style: {backgroundColor: 'red'} }];
  
   useEffect(() => {
     if (props.historyItems.length === 0) {
@@ -34,7 +38,8 @@ const History: React.FC<IHistoryProps> = (props: IHistoryProps) => {
 
   return (
       <div className={styles.History}>
-        <DataTable title="History" columns={columns} data={props.historyItems} dense pagination striped />
+        <h3>History</h3>
+        <DataTable noHeader columns={columns} data={props.historyItems} dense pagination striped conditionalRowStyles={conditionalRowStyles}/>
       </div>
       )
 };
