@@ -83,7 +83,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
   renderSelectors() {
     let buttons = this.viewButtons.filter((viewButton)=>viewButton.selectable).map((viewButton)=>{
       return (
-        <Dropdown.Item key={viewButton.view} onClick={()=>{this.selectView(viewButton.view)}} active={this.state.view === viewButton.view }>{viewButton.name}</Dropdown.Item>
+        <Dropdown.Item key={viewButton.view} onSelect={()=>{this.selectView(viewButton.view)}} active={this.state.view === viewButton.view }>{viewButton.name}</Dropdown.Item>
       )
     });
     return (
