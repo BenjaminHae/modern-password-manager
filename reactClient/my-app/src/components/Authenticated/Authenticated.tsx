@@ -10,6 +10,7 @@ import History from '../History/History';
 import { BackendService } from '../../backend/backend.service';
 import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
 import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -75,8 +76,8 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
   render () {
     return (
       <div className={styles.Authenticated}>
-        {this.renderSelectors()}
-        {this.renderSwitchAuthenticatedView()}
+        <Container fluid >{this.renderSelectors()}</Container>
+        <Container fluid style={{clear: "both"}}>{this.renderSwitchAuthenticatedView()}</Container>
       </div>
     );
   }
