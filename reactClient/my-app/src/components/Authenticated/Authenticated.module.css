@@ -2,6 +2,6 @@
   padding: 10px;
 }
 .Selectors {
-  margin-left: auto; 
-  float: right
+  float: right;
+  z-index: 3;
 }
