@@ -9,32 +9,56 @@ import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWit
 //  - add second password input
 interface RegisterProps {
   doRegister: (username: string, password: string, email: string) => Promise<void>;
+  showMessage: (message: string, important?: boolean, clickHandler?: () => void) => void;
 }
-interface RegisterState {
-  values: {[index: string]:string};
+
+interface RegisterFormValues {
+  username: string;
+  password: string;
+  password2: string;
+  email: string;
+}
+interface RegisterState extends RegisterFormValues {
   waiting: boolean;
 }
 
 
 class Register extends React.Component<RegisterProps, RegisterState> {
+  readonly emptyInput = {
+    username: "",
+    password: "",
+    password2: "",
+    email: "",
+  }
   constructor(props: RegisterProps) {
     super(props);
     this.state = {
-      values: {username:  "", password:  "", email:  ""},
+      ...this.emptyInput,
       waiting: false
     }
     this.handleGenericChange = this.handleGenericChange.bind(this);
   }
   async doRegister(event: React.FormEvent) {
-    event.preventDefault();
-    this.setState({ waiting: true });
-    await this.props.doRegister(this.state.values.username, this.state.values.password, this.state.values.email);
-    this.setState({ waiting: false });
+    try {
+      event.preventDefault();
+      let password = this.state.password;
+      this.setState({ waiting: true, password: "" });
+      await this.props.doRegister(this.state.username, password, this.state.email);
+      this.setState({ 
+        ...this.emptyInput,
+        waiting: false
+      });
+      this.props.showMessage("Registered successfully, please log in");
+    }
+    catch(e) {
+      this.setState({ waiting: false });
+      this.props.showMessage("Registration failed: " + e.toString(), true);
+    }
   }
   handleGenericChange(event: React.ChangeEvent<HTMLInputElement>) {
-    let newValues = this.state.values;
-    newValues[event.target.name] = event.target.value;
-    this.setState({ values: newValues });
+    if (event.target.name in (this.state as RegisterFormValues)) {
+      this.setState({[event.target.name]: event.target.value} as Pick<RegisterFormValues, keyof RegisterFormValues>);
+    }
   }
   render () {
     return (
@@ -45,15 +69,15 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         <fieldset disabled={this.state.waiting}>
           <Form.Group controlId="formUsername">
             <Form.Label>Username</Form.Label>
-            <Form.Control type="text" placeholder="Enter Username" name="username" onChange={this.handleGenericChange}/>
+            <Form.Control type="text" placeholder="Enter Username" name="username" onChange={this.handleGenericChange} value={this.state.username} />
           </Form.Group>
           <Form.Group controlId="formEmail">
             <Form.Label>E-Mail</Form.Label>
-            <Form.Control type="text" placeholder="Enter E-Mail-Address" name="email" onChange={this.handleGenericChange}/>
+            <Form.Control type="text" placeholder="Enter E-Mail-Address" name="email" onChange={this.handleGenericChange} value={this.state.email}/>
           </Form.Group>
           <Form.Group controlId="formPassword">
             <Form.Label>Password</Form.Label>
-            <PasswordInputWithToggle onChange={this.handleGenericChange} />
+            <PasswordInputWithToggle onChange={this.handleGenericChange} value={this.state.password} />
           </Form.Group>
           <Button variant="primary" type="submit">{ this.state.waiting ? "Wait" : "Register" }</Button>
         </fieldset>

@@ -260,6 +260,7 @@ export default class App extends React.Component<AppProps, AppState> {
                 doLogin={this.doLogin.bind(this)} 
                 doRegister={this.doRegister.bind(this)} 
                 showRegistration={this.state.registrationAllowed} 
+                showMessage={this.showMessage.bind(this)} 
                 ready={this.state.ready}
               /> }
         {!this.state.authenticated && !this.state.ready 
