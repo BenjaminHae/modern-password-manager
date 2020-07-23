@@ -59,11 +59,11 @@ export class CryptoService {
   }
 
   private addPadding(buf: ArrayBuffer, length: number): ArrayBuffer {
-    let bufLength = buf.byteLength/2;
-    let padLength = Math.max(3, length - bufLength);
-    let paddingBytes = new Uint16Array(padLength);
-    paddingBytes[1] = 1;
-    let paddedBuffer = new Uint16Array(bufLength + padLength);
+    const bufLength = buf.byteLength/2;
+    const padLength = Math.max(2, length - bufLength);
+    const paddingBytes = new Uint16Array(padLength);
+    paddingBytes[0] = 1;
+    const paddedBuffer = new Uint16Array(bufLength + padLength);
     paddedBuffer.set(new Uint16Array(buf), 0);
     paddedBuffer.set(paddingBytes, bufLength);
     return paddedBuffer.buffer;
@@ -72,20 +72,10 @@ export class CryptoService {
   private removePadding(buf: ArrayBuffer): ArrayBuffer {
     function findPaddingStart(buf: Uint16Array): number {
       let lastOne = buf.lastIndexOf(1);
-      console.log(lastOne);
-      if (lastOne === 0) {
-        return buf.length + 1;
+      if (lastOne < 0) {
+        throw new Error("no padding found");
       }
-      if (lastOne === buf.length - 1) {
-        return buf.length + 1
-      }
-      if (buf[lastOne - 1] !== 0) {
-        return buf.length + 1
-      }
-      if (buf[lastOne + 1] !== 0) {
-        return buf.length + 1
-      }
-      return lastOne - 1;
+      return lastOne;
     }
     let length = findPaddingStart(new Uint16Array(buf));
     return buf.slice(0,2*length);
