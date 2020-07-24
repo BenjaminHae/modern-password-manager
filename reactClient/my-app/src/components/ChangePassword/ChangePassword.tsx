@@ -36,6 +36,7 @@ class ChangePassword extends React.Component<ChangePasswordProps, ChangePassword
         this.setState({waiting: true});
         await this.props.changePasswordHandler(this.state.oldPassword, this.state.newPassword)
         this.props.showMessage("Successfully changed password");
+        this.setState({ oldPassword: '', newPassword: '', newPassword2: ''});
       }
       catch {
         this.props.showMessage("There was an error when changing passwords");
