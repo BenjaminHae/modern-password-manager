@@ -121,12 +121,14 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
       event.preventDefault();
       this.setState({waiting: true});
       await this.props.editHandler(this.state.fields, this.props.account);
-      this.setState({waiting: false});
       this.cleanUp();
       this.props.closeHandler();
     }
     catch {
       this.props.showMessage("there was an error when saving the account", true);
+    }
+    finally {
+      this.setState({waiting: false});
     }
   }
   async deleteHandler() {
@@ -134,12 +136,14 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
       try {
         this.setState({waiting: true});
         await this.props.deleteHandler(this.props.account);
-        this.setState({waiting: false});
         this.cleanUp();
         this.props.closeHandler();
       }
       catch {
         this.props.showMessage("there was an error when deleting the account", true);
+      }
+      finally {
+        this.setState({waiting: false});
       }
     }
   }
