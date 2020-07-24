@@ -3,6 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**oldPassword** | **string** |  | [optional] 
 **newPassword** | **string** |  | [optional] 
 **accounts** | [**OpenAPI\Server\Model\AccountId**](AccountId.md) |  | [optional] 
 

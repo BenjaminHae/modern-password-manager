@@ -354,6 +354,8 @@ components:
     ChangePassword:
       type: object
       properties:
+        oldPassword:
+          type: string
         newPassword:
           type: string
         accounts:

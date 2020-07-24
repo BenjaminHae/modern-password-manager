@@ -43,6 +43,14 @@ class ChangePassword
 {
         /**
      * @var string|null
+     * @SerializedName("oldPassword")
+     * @Assert\Type("string")
+     * @Type("string")
+     */
+    protected $oldPassword;
+
+    /**
+     * @var string|null
      * @SerializedName("newPassword")
      * @Assert\Type("string")
      * @Type("string")
@@ -65,8 +73,33 @@ class ChangePassword
      */
     public function __construct(array $data = null)
     {
+        $this->oldPassword = isset($data['oldPassword']) ? $data['oldPassword'] : null;
         $this->newPassword = isset($data['newPassword']) ? $data['newPassword'] : null;
         $this->accounts = isset($data['accounts']) ? $data['accounts'] : null;
+    }
+
+    /**
+     * Gets oldPassword.
+     *
+     * @return string|null
+     */
+    public function getOldPassword()
+    {
+        return $this->oldPassword;
+    }
+
+    /**
+     * Sets oldPassword.
+     *
+     * @param string|null $oldPassword
+     *
+     * @return $this
+     */
+    public function setOldPassword($oldPassword = null)
+    {
+        $this->oldPassword = $oldPassword;
+
+        return $this;
     }
 
     /**
