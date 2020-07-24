@@ -42,24 +42,27 @@ use JMS\Serializer\Annotation\SerializedName;
 class Account 
 {
         /**
-     * @var string|null
+     * @var string
      * @SerializedName("name")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
     protected $name;
 
     /**
-     * @var string|null
+     * @var string
      * @SerializedName("additional")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
     protected $additional;
 
     /**
-     * @var string|null
+     * @var string
      * @SerializedName("password")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
@@ -79,7 +82,7 @@ class Account
     /**
      * Gets name.
      *
-     * @return string|null
+     * @return string
      */
     public function getName()
     {
@@ -89,11 +92,11 @@ class Account
     /**
      * Sets name.
      *
-     * @param string|null $name
+     * @param string $name
      *
      * @return $this
      */
-    public function setName($name = null)
+    public function setName($name)
     {
         $this->name = $name;
 
@@ -103,7 +106,7 @@ class Account
     /**
      * Gets additional.
      *
-     * @return string|null
+     * @return string
      */
     public function getAdditional()
     {
@@ -113,11 +116,11 @@ class Account
     /**
      * Sets additional.
      *
-     * @param string|null $additional
+     * @param string $additional
      *
      * @return $this
      */
-    public function setAdditional($additional = null)
+    public function setAdditional($additional)
     {
         $this->additional = $additional;
 
@@ -127,7 +130,7 @@ class Account
     /**
      * Gets password.
      *
-     * @return string|null
+     * @return string
      */
     public function getPassword()
     {
@@ -137,11 +140,11 @@ class Account
     /**
      * Sets password.
      *
-     * @param string|null $password
+     * @param string $password
      *
      * @return $this
      */
-    public function setPassword($password = null)
+    public function setPassword($password)
     {
         $this->password = $password;
 

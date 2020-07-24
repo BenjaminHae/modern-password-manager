@@ -24,13 +24,13 @@ export interface GenericSuccessMessage {
      * @type {boolean}
      * @memberof GenericSuccessMessage
      */
-    success?: boolean;
+    success: boolean;
     /**
      * 
      * @type {string}
      * @memberof GenericSuccessMessage
      */
-    message?: string;
+    message: string;
 }
 
 export function GenericSuccessMessageFromJSON(json: any): GenericSuccessMessage {
@@ -43,8 +43,8 @@ export function GenericSuccessMessageFromJSONTyped(json: any, ignoreDiscriminato
     }
     return {
         
-        'success': !exists(json, 'success') ? undefined : json['success'],
-        'message': !exists(json, 'message') ? undefined : json['message'],
+        'success': json['success'],
+        'message': json['message'],
     };
 }
 

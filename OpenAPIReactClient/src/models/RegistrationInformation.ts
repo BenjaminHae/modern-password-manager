@@ -35,13 +35,13 @@ export interface RegistrationInformation {
      * @type {string}
      * @memberof RegistrationInformation
      */
-    username?: string;
+    username: string;
     /**
      * 
      * @type {string}
      * @memberof RegistrationInformation
      */
-    password?: string;
+    password: string;
     /**
      * 
      * @type {string}
@@ -60,8 +60,8 @@ export function RegistrationInformationFromJSONTyped(json: any, ignoreDiscrimina
     }
     return {
         
-        'username': !exists(json, 'username') ? undefined : json['username'],
-        'password': !exists(json, 'password') ? undefined : json['password'],
+        'username': json['username'],
+        'password': json['password'],
         'email': !exists(json, 'email') ? undefined : json['email'],
     };
 }

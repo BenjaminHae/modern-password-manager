@@ -42,8 +42,9 @@ use JMS\Serializer\Annotation\SerializedName;
 class UserSettings 
 {
         /**
-     * @var string|null
+     * @var string
      * @SerializedName("encryptedUserSettings")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
@@ -61,7 +62,7 @@ class UserSettings
     /**
      * Gets encryptedUserSettings.
      *
-     * @return string|null
+     * @return string
      */
     public function getEncryptedUserSettings()
     {
@@ -71,11 +72,11 @@ class UserSettings
     /**
      * Sets encryptedUserSettings.
      *
-     * @param string|null $encryptedUserSettings
+     * @param string $encryptedUserSettings
      *
      * @return $this
      */
-    public function setEncryptedUserSettings($encryptedUserSettings = null)
+    public function setEncryptedUserSettings($encryptedUserSettings)
     {
         $this->encryptedUserSettings = $encryptedUserSettings;
 

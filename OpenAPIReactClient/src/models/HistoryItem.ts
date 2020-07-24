@@ -24,31 +24,31 @@ export interface HistoryItem {
      * @type {string}
      * @memberof HistoryItem
      */
-    userAgent?: string;
+    userAgent: string;
     /**
      * 
      * @type {string}
      * @memberof HistoryItem
      */
-    iP?: string;
+    iP: string;
     /**
      * 
      * @type {Date}
      * @memberof HistoryItem
      */
-    time?: Date;
+    time: Date;
     /**
      * 
      * @type {string}
      * @memberof HistoryItem
      */
-    event?: HistoryItemEventEnum;
+    event: HistoryItemEventEnum;
     /**
      * 
      * @type {string}
      * @memberof HistoryItem
      */
-    eventResult?: string;
+    eventResult: string;
 }
 
 export function HistoryItemFromJSON(json: any): HistoryItem {
@@ -61,11 +61,11 @@ export function HistoryItemFromJSONTyped(json: any, ignoreDiscriminator: boolean
     }
     return {
         
-        'userAgent': !exists(json, 'UserAgent') ? undefined : json['UserAgent'],
-        'iP': !exists(json, 'IP') ? undefined : json['IP'],
-        'time': !exists(json, 'Time') ? undefined : (new Date(json['Time'])),
-        'event': !exists(json, 'Event') ? undefined : json['Event'],
-        'eventResult': !exists(json, 'EventResult') ? undefined : json['EventResult'],
+        'userAgent': json['UserAgent'],
+        'iP': json['IP'],
+        'time': (new Date(json['Time'])),
+        'event': json['Event'],
+        'eventResult': json['EventResult'],
     };
 }
 
@@ -80,7 +80,7 @@ export function HistoryItemToJSON(value?: HistoryItem | null): any {
         
         'UserAgent': value.userAgent,
         'IP': value.iP,
-        'Time': value.time === undefined ? undefined : (value.time.toISOString()),
+        'Time': (value.time.toISOString()),
         'Event': value.event,
         'EventResult': value.eventResult,
     };

@@ -24,7 +24,7 @@ export interface UserSettings {
      * @type {string}
      * @memberof UserSettings
      */
-    encryptedUserSettings?: string;
+    encryptedUserSettings: string;
 }
 
 export function UserSettingsFromJSON(json: any): UserSettings {
@@ -37,7 +37,7 @@ export function UserSettingsFromJSONTyped(json: any, ignoreDiscriminator: boolea
     }
     return {
         
-        'encryptedUserSettings': !exists(json, 'encryptedUserSettings') ? undefined : json['encryptedUserSettings'],
+        'encryptedUserSettings': json['encryptedUserSettings'],
     };
 }
 

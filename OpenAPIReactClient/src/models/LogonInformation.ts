@@ -24,13 +24,13 @@ export interface LogonInformation {
      * @type {string}
      * @memberof LogonInformation
      */
-    username?: string;
+    username: string;
     /**
      * 
      * @type {string}
      * @memberof LogonInformation
      */
-    password?: string;
+    password: string;
 }
 
 export function LogonInformationFromJSON(json: any): LogonInformation {
@@ -43,8 +43,8 @@ export function LogonInformationFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
-        'username': !exists(json, 'username') ? undefined : json['username'],
-        'password': !exists(json, 'password') ? undefined : json['password'],
+        'username': json['username'],
+        'password': json['password'],
     };
 }
 

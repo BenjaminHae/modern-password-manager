@@ -35,25 +35,25 @@ export interface AccountId {
      * @type {number}
      * @memberof AccountId
      */
-    index?: number;
+    index: number;
     /**
      * 
      * @type {string}
      * @memberof AccountId
      */
-    name?: string;
+    name: string;
     /**
      * 
      * @type {string}
      * @memberof AccountId
      */
-    additional?: string;
+    additional: string;
     /**
      * 
      * @type {string}
      * @memberof AccountId
      */
-    password?: string;
+    password: string;
 }
 
 export function AccountIdFromJSON(json: any): AccountId {
@@ -66,10 +66,10 @@ export function AccountIdFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     }
     return {
         
-        'index': !exists(json, 'index') ? undefined : json['index'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'additional': !exists(json, 'additional') ? undefined : json['additional'],
-        'password': !exists(json, 'password') ? undefined : json['password'],
+        'index': json['index'],
+        'name': json['name'],
+        'additional': json['additional'],
+        'password': json['password'],
     };
 }
 

@@ -42,24 +42,27 @@ use JMS\Serializer\Annotation\SerializedName;
 class File 
 {
         /**
-     * @var int|null
+     * @var int
      * @SerializedName("index")
+     * @Assert\NotNull()
      * @Assert\Type("int")
      * @Type("int")
      */
     protected $index;
 
     /**
-     * @var string|null
+     * @var string
      * @SerializedName("name")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
     protected $name;
 
     /**
-     * @var string|null
+     * @var string
      * @SerializedName("key")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
@@ -79,7 +82,7 @@ class File
     /**
      * Gets index.
      *
-     * @return int|null
+     * @return int
      */
     public function getIndex()
     {
@@ -89,11 +92,11 @@ class File
     /**
      * Sets index.
      *
-     * @param int|null $index
+     * @param int $index
      *
      * @return $this
      */
-    public function setIndex($index = null)
+    public function setIndex($index)
     {
         $this->index = $index;
 
@@ -103,7 +106,7 @@ class File
     /**
      * Gets name.
      *
-     * @return string|null
+     * @return string
      */
     public function getName()
     {
@@ -113,11 +116,11 @@ class File
     /**
      * Sets name.
      *
-     * @param string|null $name
+     * @param string $name
      *
      * @return $this
      */
-    public function setName($name = null)
+    public function setName($name)
     {
         $this->name = $name;
 
@@ -127,7 +130,7 @@ class File
     /**
      * Gets key.
      *
-     * @return string|null
+     * @return string
      */
     public function getKey()
     {
@@ -137,11 +140,11 @@ class File
     /**
      * Sets key.
      *
-     * @param string|null $key
+     * @param string $key
      *
      * @return $this
      */
-    public function setKey($key = null)
+    public function setKey($key)
     {
         $this->key = $key;
 

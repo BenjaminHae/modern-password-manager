@@ -42,8 +42,9 @@ use JMS\Serializer\Annotation\SerializedName;
 class Index 
 {
         /**
-     * @var int|null
+     * @var int
      * @SerializedName("index")
+     * @Assert\NotNull()
      * @Assert\Type("int")
      * @Type("int")
      */
@@ -61,7 +62,7 @@ class Index
     /**
      * Gets index.
      *
-     * @return int|null
+     * @return int
      */
     public function getIndex()
     {
@@ -71,11 +72,11 @@ class Index
     /**
      * Sets index.
      *
-     * @param int|null $index
+     * @param int $index
      *
      * @return $this
      */
-    public function setIndex($index = null)
+    public function setIndex($index)
     {
         $this->index = $index;
 

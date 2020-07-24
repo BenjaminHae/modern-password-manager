@@ -31,19 +31,19 @@ export interface ChangePassword {
      * @type {string}
      * @memberof ChangePassword
      */
-    oldPassword?: string;
+    oldPassword: string;
     /**
      * 
      * @type {string}
      * @memberof ChangePassword
      */
-    newPassword?: string;
+    newPassword: string;
     /**
      * 
      * @type {Array<AccountId>}
      * @memberof ChangePassword
      */
-    accounts?: Array<AccountId>;
+    accounts: Array<AccountId>;
 }
 
 export function ChangePasswordFromJSON(json: any): ChangePassword {
@@ -56,9 +56,9 @@ export function ChangePasswordFromJSONTyped(json: any, ignoreDiscriminator: bool
     }
     return {
         
-        'oldPassword': !exists(json, 'oldPassword') ? undefined : json['oldPassword'],
-        'newPassword': !exists(json, 'newPassword') ? undefined : json['newPassword'],
-        'accounts': !exists(json, 'accounts') ? undefined : ((json['accounts'] as Array<any>).map(AccountIdFromJSON)),
+        'oldPassword': json['oldPassword'],
+        'newPassword': json['newPassword'],
+        'accounts': ((json['accounts'] as Array<any>).map(AccountIdFromJSON)),
     };
 }
 
@@ -73,7 +73,7 @@ export function ChangePasswordToJSON(value?: ChangePassword | null): any {
         
         'oldPassword': value.oldPassword,
         'newPassword': value.newPassword,
-        'accounts': value.accounts === undefined ? undefined : ((value.accounts as Array<any>).map(AccountIdToJSON)),
+        'accounts': ((value.accounts as Array<any>).map(AccountIdToJSON)),
     };
 }
 

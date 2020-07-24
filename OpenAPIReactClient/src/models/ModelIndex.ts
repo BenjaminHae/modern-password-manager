@@ -24,7 +24,7 @@ export interface ModelIndex {
      * @type {number}
      * @memberof ModelIndex
      */
-    index?: number;
+    index: number;
 }
 
 export function ModelIndexFromJSON(json: any): ModelIndex {
@@ -37,7 +37,7 @@ export function ModelIndexFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     }
     return {
         
-        'index': !exists(json, 'index') ? undefined : json['index'],
+        'index': json['index'],
     };
 }
 

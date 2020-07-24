@@ -3,8 +3,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**success** | **bool** |  | [optional] 
-**message** | **string** |  | [optional] 
+**success** | **bool** |  | 
+**message** | **string** |  | 
 **lastLogin** | [**\DateTime**](\DateTime.md) |  | [optional] 
 **failedLogins** | **int** |  | [optional] 
 

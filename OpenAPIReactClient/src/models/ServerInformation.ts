@@ -24,7 +24,7 @@ export interface ServerInformation {
      * @type {string}
      * @memberof ServerInformation
      */
-    csrfToken?: string;
+    csrfToken: string;
     /**
      * 
      * @type {boolean}
@@ -43,7 +43,7 @@ export function ServerInformationFromJSONTyped(json: any, ignoreDiscriminator: b
     }
     return {
         
-        'csrfToken': !exists(json, 'csrfToken') ? undefined : json['csrfToken'],
+        'csrfToken': json['csrfToken'],
         'allowRegistration': !exists(json, 'allowRegistration') ? undefined : json['allowRegistration'],
     };
 }

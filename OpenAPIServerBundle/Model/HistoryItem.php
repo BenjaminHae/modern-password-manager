@@ -42,32 +42,36 @@ use JMS\Serializer\Annotation\SerializedName;
 class HistoryItem 
 {
         /**
-     * @var string|null
+     * @var string
      * @SerializedName("UserAgent")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
     protected $userAgent;
 
     /**
-     * @var string|null
+     * @var string
      * @SerializedName("IP")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
     protected $iP;
 
     /**
-     * @var \DateTime|null
+     * @var \DateTime
      * @SerializedName("Time")
+     * @Assert\NotNull()
      * @Assert\DateTime()
      * @Type("DateTime")
      */
     protected $time;
 
     /**
-     * @var string|null
+     * @var string
      * @SerializedName("Event")
+     * @Assert\NotNull()
      * @Assert\Choice({ "Login", "ChangePassword", "Registration" })
      * @Assert\Type("string")
      * @Type("string")
@@ -75,8 +79,9 @@ class HistoryItem
     protected $event;
 
     /**
-     * @var string|null
+     * @var string
      * @SerializedName("EventResult")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
@@ -98,7 +103,7 @@ class HistoryItem
     /**
      * Gets userAgent.
      *
-     * @return string|null
+     * @return string
      */
     public function getUserAgent()
     {
@@ -108,11 +113,11 @@ class HistoryItem
     /**
      * Sets userAgent.
      *
-     * @param string|null $userAgent
+     * @param string $userAgent
      *
      * @return $this
      */
-    public function setUserAgent($userAgent = null)
+    public function setUserAgent($userAgent)
     {
         $this->userAgent = $userAgent;
 
@@ -122,7 +127,7 @@ class HistoryItem
     /**
      * Gets iP.
      *
-     * @return string|null
+     * @return string
      */
     public function getIP()
     {
@@ -132,11 +137,11 @@ class HistoryItem
     /**
      * Sets iP.
      *
-     * @param string|null $iP
+     * @param string $iP
      *
      * @return $this
      */
-    public function setIP($iP = null)
+    public function setIP($iP)
     {
         $this->iP = $iP;
 
@@ -146,9 +151,9 @@ class HistoryItem
     /**
      * Gets time.
      *
-     * @return \DateTime|null
+     * @return \DateTime
      */
-    public function getTime(): ?\DateTime
+    public function getTime(): \DateTime
     {
         return $this->time;
     }
@@ -156,11 +161,11 @@ class HistoryItem
     /**
      * Sets time.
      *
-     * @param \DateTime|null $time
+     * @param \DateTime $time
      *
      * @return $this
      */
-    public function setTime(\DateTime $time = null)
+    public function setTime(\DateTime $time)
     {
         $this->time = $time;
 
@@ -170,7 +175,7 @@ class HistoryItem
     /**
      * Gets event.
      *
-     * @return string|null
+     * @return string
      */
     public function getEvent()
     {
@@ -180,11 +185,11 @@ class HistoryItem
     /**
      * Sets event.
      *
-     * @param string|null $event
+     * @param string $event
      *
      * @return $this
      */
-    public function setEvent($event = null)
+    public function setEvent($event)
     {
         $this->event = $event;
 
@@ -194,7 +199,7 @@ class HistoryItem
     /**
      * Gets eventResult.
      *
-     * @return string|null
+     * @return string
      */
     public function getEventResult()
     {
@@ -204,11 +209,11 @@ class HistoryItem
     /**
      * Sets eventResult.
      *
-     * @param string|null $eventResult
+     * @param string $eventResult
      *
      * @return $this
      */
-    public function setEventResult($eventResult = null)
+    public function setEventResult($eventResult)
     {
         $this->eventResult = $eventResult;
 

@@ -42,8 +42,9 @@ use JMS\Serializer\Annotation\SerializedName;
 class ServerInformation 
 {
         /**
-     * @var string|null
+     * @var string
      * @SerializedName("csrfToken")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
@@ -70,7 +71,7 @@ class ServerInformation
     /**
      * Gets csrfToken.
      *
-     * @return string|null
+     * @return string
      */
     public function getCsrfToken()
     {
@@ -80,11 +81,11 @@ class ServerInformation
     /**
      * Sets csrfToken.
      *
-     * @param string|null $csrfToken
+     * @param string $csrfToken
      *
      * @return $this
      */
-    public function setCsrfToken($csrfToken = null)
+    public function setCsrfToken($csrfToken)
     {
         $this->csrfToken = $csrfToken;
 

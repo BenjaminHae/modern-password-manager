@@ -42,32 +42,36 @@ use JMS\Serializer\Annotation\SerializedName;
 class AccountId 
 {
         /**
-     * @var int|null
+     * @var int
      * @SerializedName("index")
+     * @Assert\NotNull()
      * @Assert\Type("int")
      * @Type("int")
      */
     protected $index;
 
     /**
-     * @var string|null
+     * @var string
      * @SerializedName("name")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
     protected $name;
 
     /**
-     * @var string|null
+     * @var string
      * @SerializedName("additional")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
     protected $additional;
 
     /**
-     * @var string|null
+     * @var string
      * @SerializedName("password")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
@@ -88,7 +92,7 @@ class AccountId
     /**
      * Gets index.
      *
-     * @return int|null
+     * @return int
      */
     public function getIndex()
     {
@@ -98,11 +102,11 @@ class AccountId
     /**
      * Sets index.
      *
-     * @param int|null $index
+     * @param int $index
      *
      * @return $this
      */
-    public function setIndex($index = null)
+    public function setIndex($index)
     {
         $this->index = $index;
 
@@ -112,7 +116,7 @@ class AccountId
     /**
      * Gets name.
      *
-     * @return string|null
+     * @return string
      */
     public function getName()
     {
@@ -122,11 +126,11 @@ class AccountId
     /**
      * Sets name.
      *
-     * @param string|null $name
+     * @param string $name
      *
      * @return $this
      */
-    public function setName($name = null)
+    public function setName($name)
     {
         $this->name = $name;
 
@@ -136,7 +140,7 @@ class AccountId
     /**
      * Gets additional.
      *
-     * @return string|null
+     * @return string
      */
     public function getAdditional()
     {
@@ -146,11 +150,11 @@ class AccountId
     /**
      * Sets additional.
      *
-     * @param string|null $additional
+     * @param string $additional
      *
      * @return $this
      */
-    public function setAdditional($additional = null)
+    public function setAdditional($additional)
     {
         $this->additional = $additional;
 
@@ -160,7 +164,7 @@ class AccountId
     /**
      * Gets password.
      *
-     * @return string|null
+     * @return string
      */
     public function getPassword()
     {
@@ -170,11 +174,11 @@ class AccountId
     /**
      * Sets password.
      *
-     * @param string|null $password
+     * @param string $password
      *
      * @return $this
      */
-    public function setPassword($password = null)
+    public function setPassword($password)
     {
         $this->password = $password;
 

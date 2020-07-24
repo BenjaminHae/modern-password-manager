@@ -35,13 +35,13 @@ export interface LogonResult {
      * @type {boolean}
      * @memberof LogonResult
      */
-    success?: boolean;
+    success: boolean;
     /**
      * 
      * @type {string}
      * @memberof LogonResult
      */
-    message?: string;
+    message: string;
     /**
      * 
      * @type {Date}
@@ -66,8 +66,8 @@ export function LogonResultFromJSONTyped(json: any, ignoreDiscriminator: boolean
     }
     return {
         
-        'success': !exists(json, 'success') ? undefined : json['success'],
-        'message': !exists(json, 'message') ? undefined : json['message'],
+        'success': json['success'],
+        'message': json['message'],
         'lastLogin': !exists(json, 'lastLogin') ? undefined : (json['lastLogin'] === null ? null : new Date(json['lastLogin'])),
         'failedLogins': !exists(json, 'failedLogins') ? undefined : json['failedLogins'],
     };

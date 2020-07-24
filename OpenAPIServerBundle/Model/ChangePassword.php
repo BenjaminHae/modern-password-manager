@@ -42,24 +42,27 @@ use JMS\Serializer\Annotation\SerializedName;
 class ChangePassword 
 {
         /**
-     * @var string|null
+     * @var string
      * @SerializedName("oldPassword")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
     protected $oldPassword;
 
     /**
-     * @var string|null
+     * @var string
      * @SerializedName("newPassword")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
     protected $newPassword;
 
     /**
-     * @var OpenAPI\Server\Model\AccountId[]|null
+     * @var OpenAPI\Server\Model\AccountId[]
      * @SerializedName("accounts")
+     * @Assert\NotNull()
      * @Assert\All({
      *   @Assert\Type("OpenAPI\Server\Model\AccountId")
      * })
@@ -81,7 +84,7 @@ class ChangePassword
     /**
      * Gets oldPassword.
      *
-     * @return string|null
+     * @return string
      */
     public function getOldPassword()
     {
@@ -91,11 +94,11 @@ class ChangePassword
     /**
      * Sets oldPassword.
      *
-     * @param string|null $oldPassword
+     * @param string $oldPassword
      *
      * @return $this
      */
-    public function setOldPassword($oldPassword = null)
+    public function setOldPassword($oldPassword)
     {
         $this->oldPassword = $oldPassword;
 
@@ -105,7 +108,7 @@ class ChangePassword
     /**
      * Gets newPassword.
      *
-     * @return string|null
+     * @return string
      */
     public function getNewPassword()
     {
@@ -115,11 +118,11 @@ class ChangePassword
     /**
      * Sets newPassword.
      *
-     * @param string|null $newPassword
+     * @param string $newPassword
      *
      * @return $this
      */
-    public function setNewPassword($newPassword = null)
+    public function setNewPassword($newPassword)
     {
         $this->newPassword = $newPassword;
 
@@ -129,9 +132,9 @@ class ChangePassword
     /**
      * Gets accounts.
      *
-     * @return OpenAPI\Server\Model\AccountId[]|null
+     * @return OpenAPI\Server\Model\AccountId[]
      */
-    public function getAccounts(): ?array
+    public function getAccounts(): array
     {
         return $this->accounts;
     }
@@ -139,11 +142,11 @@ class ChangePassword
     /**
      * Sets accounts.
      *
-     * @param OpenAPI\Server\Model\AccountId[]|null $accounts
+     * @param OpenAPI\Server\Model\AccountId[] $accounts
      *
      * @return $this
      */
-    public function setAccounts(array $accounts = null)
+    public function setAccounts(array $accounts)
     {
         $this->accounts = $accounts;
 

@@ -42,16 +42,18 @@ use JMS\Serializer\Annotation\SerializedName;
 class GenericSuccessMessage 
 {
         /**
-     * @var bool|null
+     * @var bool
      * @SerializedName("success")
+     * @Assert\NotNull()
      * @Assert\Type("bool")
      * @Type("bool")
      */
     protected $success;
 
     /**
-     * @var string|null
+     * @var string
      * @SerializedName("message")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
@@ -70,7 +72,7 @@ class GenericSuccessMessage
     /**
      * Gets success.
      *
-     * @return bool|null
+     * @return bool
      */
     public function isSuccess()
     {
@@ -80,11 +82,11 @@ class GenericSuccessMessage
     /**
      * Sets success.
      *
-     * @param bool|null $success
+     * @param bool $success
      *
      * @return $this
      */
-    public function setSuccess($success = null)
+    public function setSuccess($success)
     {
         $this->success = $success;
 
@@ -94,7 +96,7 @@ class GenericSuccessMessage
     /**
      * Gets message.
      *
-     * @return string|null
+     * @return string
      */
     public function getMessage()
     {
@@ -104,11 +106,11 @@ class GenericSuccessMessage
     /**
      * Sets message.
      *
-     * @param string|null $message
+     * @param string $message
      *
      * @return $this
      */
-    public function setMessage($message = null)
+    public function setMessage($message)
     {
         $this->message = $message;
 

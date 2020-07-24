@@ -300,6 +300,9 @@ components:
         - $ref: "#/components/schemas/UserInformation"
     LogonInformation:
       type: object
+      required:
+        - username
+        - password
       properties:
         username:
           type: string
@@ -330,6 +333,12 @@ components:
         $ref: "#/components/schemas/HistoryItem"
     HistoryItem:
       type: object
+      required:
+        - UserAgent
+        - IP
+        - Time
+        - Event
+        - EventResult
       properties:
         UserAgent:
           type: string
@@ -348,11 +357,17 @@ components:
           type: string
     UserSettings:
       type: object
+      required:
+        - encryptedUserSettings
       properties:
         encryptedUserSettings:
           type: string
     ChangePassword:
       type: object
+      required:
+        - oldPassword
+        - newPassword
+        - accounts
       properties:
         oldPassword:
           type: string
@@ -366,6 +381,10 @@ components:
         - $ref: "#/components/schemas/Account"
     Account:
       type: object
+      required:
+        - name
+        - additional
+        - password
       properties:
         name:
           type: string
@@ -383,11 +402,17 @@ components:
         $ref: "#/components/schemas/Account"
     Index:
       type: object
+      required:
+        - index
       properties:
         index:
           type: integer
     File:
       type: object
+      required:
+        - index
+        - name
+        - key
       properties:
         index:
           type: integer
@@ -401,6 +426,8 @@ components:
         $ref: "#/components/schemas/File"
     ServerInformation:
       type: object
+      required:
+        - csrfToken
       properties:
         csrfToken:
           type: string
@@ -408,6 +435,9 @@ components:
           type: boolean
     GenericSuccessMessage:
       type: object
+      required:
+        - success
+        - message
       properties:
         success:
           type: boolean

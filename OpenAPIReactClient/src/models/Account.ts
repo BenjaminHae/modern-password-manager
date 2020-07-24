@@ -24,19 +24,19 @@ export interface Account {
      * @type {string}
      * @memberof Account
      */
-    name?: string;
+    name: string;
     /**
      * 
      * @type {string}
      * @memberof Account
      */
-    additional?: string;
+    additional: string;
     /**
      * 
      * @type {string}
      * @memberof Account
      */
-    password?: string;
+    password: string;
 }
 
 export function AccountFromJSON(json: any): Account {
@@ -49,9 +49,9 @@ export function AccountFromJSONTyped(json: any, ignoreDiscriminator: boolean): A
     }
     return {
         
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'additional': !exists(json, 'additional') ? undefined : json['additional'],
-        'password': !exists(json, 'password') ? undefined : json['password'],
+        'name': json['name'],
+        'additional': json['additional'],
+        'password': json['password'],
     };
 }
 

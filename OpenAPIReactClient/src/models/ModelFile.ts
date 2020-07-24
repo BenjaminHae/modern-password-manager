@@ -24,19 +24,19 @@ export interface ModelFile {
      * @type {number}
      * @memberof ModelFile
      */
-    index?: number;
+    index: number;
     /**
      * 
      * @type {string}
      * @memberof ModelFile
      */
-    name?: string;
+    name: string;
     /**
      * 
      * @type {string}
      * @memberof ModelFile
      */
-    key?: string;
+    key: string;
 }
 
 export function ModelFileFromJSON(json: any): ModelFile {
@@ -49,9 +49,9 @@ export function ModelFileFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     }
     return {
         
-        'index': !exists(json, 'index') ? undefined : json['index'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'key': !exists(json, 'key') ? undefined : json['key'],
+        'index': json['index'],
+        'name': json['name'],
+        'key': json['key'],
     };
 }
 

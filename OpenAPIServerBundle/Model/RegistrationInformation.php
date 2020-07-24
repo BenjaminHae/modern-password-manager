@@ -42,16 +42,18 @@ use JMS\Serializer\Annotation\SerializedName;
 class RegistrationInformation 
 {
         /**
-     * @var string|null
+     * @var string
      * @SerializedName("username")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
     protected $username;
 
     /**
-     * @var string|null
+     * @var string
      * @SerializedName("password")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
@@ -79,7 +81,7 @@ class RegistrationInformation
     /**
      * Gets username.
      *
-     * @return string|null
+     * @return string
      */
     public function getUsername()
     {
@@ -89,11 +91,11 @@ class RegistrationInformation
     /**
      * Sets username.
      *
-     * @param string|null $username
+     * @param string $username
      *
      * @return $this
      */
-    public function setUsername($username = null)
+    public function setUsername($username)
     {
         $this->username = $username;
 
@@ -103,7 +105,7 @@ class RegistrationInformation
     /**
      * Gets password.
      *
-     * @return string|null
+     * @return string
      */
     public function getPassword()
     {
@@ -113,11 +115,11 @@ class RegistrationInformation
     /**
      * Sets password.
      *
-     * @param string|null $password
+     * @param string $password
      *
      * @return $this
      */
-    public function setPassword($password = null)
+    public function setPassword($password)
     {
         $this->password = $password;
 
