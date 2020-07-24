@@ -5,8 +5,6 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWithToggle';
 
-// Todo:
-//  - add second password input
 interface RegisterProps {
   doRegister: (username: string, password: string, email: string) => Promise<void>;
   showMessage: (message: string, important?: boolean, clickHandler?: () => void) => void;
@@ -20,6 +18,7 @@ interface RegisterFormValues {
 }
 interface RegisterState extends RegisterFormValues {
   waiting: boolean;
+  validated: boolean;
 }
 
 
@@ -34,13 +33,13 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     super(props);
     this.state = {
       ...this.emptyInput,
-      waiting: false
+      waiting: false,
+      validated: false,
     }
     this.handleGenericChange = this.handleGenericChange.bind(this);
   }
-  async doRegister(event: React.FormEvent) {
+  async doRegister(event: React.FormEvent<HTMLFormElement>) {
     try {
-      event.preventDefault();
       let password = this.state.password;
       this.setState({ waiting: true, password: "" });
       await this.props.doRegister(this.state.username, password, this.state.email);
@@ -55,6 +54,20 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       this.props.showMessage("Registration failed: " + e.toString(), true);
     }
   }
+  async submitForm(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!form.checkValidity()) {
+      this.setState({validated: true});
+      return
+    }
+    this.setState({validated: true});
+    if (this.state.password !== this.state.password2) {
+      this.props.showMessage("Password repeat must match password", true);
+      return
+    }
+    await this.doRegister(event);
+  }
   handleGenericChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.name in (this.state as RegisterFormValues)) {
       this.setState({[event.target.name]: event.target.value} as Pick<RegisterFormValues, keyof RegisterFormValues>);
@@ -65,19 +78,35 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 	  <div className={styles.Register}>
       <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
 	    <h2>Register</h2>
-	    <Form onSubmit={this.doRegister.bind(this)}>
+	    <Form onSubmit={this.submitForm.bind(this)} noValidate validated={this.state.validated} >
         <fieldset disabled={this.state.waiting}>
-          <Form.Group controlId="formUsername">
+          <Form.Group controlId="registerFormUsername">
             <Form.Label>Username</Form.Label>
-            <Form.Control type="text" placeholder="Enter Username" name="username" onChange={this.handleGenericChange} value={this.state.username} />
+            <Form.Control type="text" placeholder="Enter Username" name="username" onChange={this.handleGenericChange} value={this.state.username} required/>
+            <Form.Control.Feedback type="invalid">
+              Username is required
+            </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId="formEmail">
+          <Form.Group controlId="registerFormEmail">
             <Form.Label>E-Mail</Form.Label>
-            <Form.Control type="text" placeholder="Enter E-Mail-Address" name="email" onChange={this.handleGenericChange} value={this.state.email}/>
+            <Form.Control type="email" placeholder="Enter E-Mail-Address" name="email" onChange={this.handleGenericChange} value={this.state.email} required/>
+            <Form.Control.Feedback type="invalid">
+              Email is required
+            </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId="formPassword">
+          <Form.Group controlId="registerFormPassword">
             <Form.Label>Password</Form.Label>
-            <PasswordInputWithToggle onChange={this.handleGenericChange} value={this.state.password} />
+            <PasswordInputWithToggle onChange={this.handleGenericChange} value={this.state.password} required/>
+            <Form.Control.Feedback type="invalid">
+              Password is required
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="registerFormPassword2">
+            <Form.Label>Password</Form.Label>
+            <PasswordInputWithToggle placeholder="New Password (repeated)" name="password2" onChange={this.handleGenericChange} value={this.state.password2} required/>
+            <Form.Control.Feedback type="invalid">
+              Password repeat is required
+            </Form.Control.Feedback>
           </Form.Group>
           <Button variant="primary" type="submit">{ this.state.waiting ? "Wait" : "Register" }</Button>
         </fieldset>
