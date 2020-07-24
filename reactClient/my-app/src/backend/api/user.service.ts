@@ -37,9 +37,12 @@ export class UserService {
     this.checkForSuccess(response);
   }
 
-  async changePassword(newHash: CryptedObject, accounts: Array<encryptedAccount>): Promise<void> {
-    let requestData: OpenAPIChangePassword = {};
-    requestData.newPassword = newHash.toBase64JSON();
+  async changePassword(oldHash: CryptedObject, newHash: CryptedObject, accounts: Array<encryptedAccount>): Promise<void> {
+    let requestData: OpenAPIChangePassword = {
+          oldPassword: oldHash.toBase64JSON(),
+          newPassword: newHash.toBase64JSON(),
+          accounts: []
+        };
     requestData.accounts = accounts.map((account) => {
         return this.accountTransformer.encryptedAccountToOpenAPI(account);
         });

@@ -67,28 +67,29 @@ export class BackendService {
     this.parseAccounts([]);
   }
 
-  async changeUserPassword(newPassword: string): Promise<void> {
-    let newCredentials = new CredentialProviderPassword();
+  async changeUserPassword(oldPassword: string, newPassword: string): Promise<void> {
+    if (await this.verifyPassword(oldPassword) !== true) {
+      throw new Error("old Password does not match current password");
+    }
+    const oldPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
+    const newCredentials = new CredentialProviderPassword();
     await newCredentials.generateFromPassword(newPassword)
-    let newPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12), newCredentials)
-    let newHash = newPasswordHash;
+    const newPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12), newCredentials)
     let newAccounts: Array<encryptedAccount> = [];
     for (let account of this.accounts) {
       newAccounts.push(await this.reencryptAccount(account, newCredentials));
     }
-    await this.userService.changePassword(newHash, newAccounts);
+    await this.userService.changePassword(oldPasswordHash, newPasswordHash, newAccounts);
     this.credentials.setProvider(newCredentials);
     return;
   }
 
   async verifyPassword(password: string): Promise<boolean> {
     let testCredentials = new CredentialProviderPassword();
-    let newHash: CryptedObject;
     await testCredentials.generateFromPassword(password)
     let newPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12), testCredentials)
-    newHash = newPasswordHash;
     let oldPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
-    return oldPasswordHash.toBase64JSON() === newHash.toBase64JSON();
+    return oldPasswordHash.toBase64JSON() === newPasswordHash.toBase64JSON();
   }
 
   async reencryptAccount(account: Account, newCredentials: ICredentialProvider): Promise<encryptedAccount> {

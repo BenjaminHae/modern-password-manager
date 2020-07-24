@@ -182,10 +182,7 @@ export default class App extends React.Component<AppProps, AppState> {
     return this.backend.deleteAccount(account);
   }
   async changePasswordHandler(oldPassword: string, newPassword: string): Promise<void> {
-    if (await this.backend.verifyPassword(oldPassword) !== true) {
-      throw new Error("old Password does not match current password");
-    }
-    return await this.backend.changeUserPassword(newPassword);
+    return await this.backend.changeUserPassword(oldPassword, newPassword);
   }
   async loadHistory(): Promise<void> {
     let history = await this.backend.getHistory()
