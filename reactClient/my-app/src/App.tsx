@@ -109,15 +109,15 @@ export default class App extends React.Component<AppProps, AppState> {
           message += `Your last login was on ${info.lastLogin.toLocaleString(navigator.language)}. `;
         }
         if (info.failedLogins && info.failedLogins > 0) {
-          message += `There were ${info.failedLogins}.`
+          message += `There were ${info.failedLogins} failed logins.`
           important = true;
         }
         this.showMessage(message, important);
       })
       .catch((e) => {
-          this.showMessage("login failed: " + e.toString(), true);
-          this.setState({ authenticated: false });
-          });
+        this.showMessage("login failed: " + e.toString(), true);
+        this.setState({ authenticated: false });
+      });
   }
   async doRegister(username: string, password: string, email: string): Promise<void> {
     return this.backend.register(username, password, email);
