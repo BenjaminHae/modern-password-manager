@@ -22,6 +22,10 @@ import {
     LogonSecurityInformationFromJSON,
     LogonSecurityInformationFromJSONTyped,
     LogonSecurityInformationToJSON,
+    UserSettings,
+    UserSettingsFromJSON,
+    UserSettingsFromJSONTyped,
+    UserSettingsToJSON,
 } from './';
 
 /**
@@ -54,6 +58,12 @@ export interface LogonResult {
      * @memberof LogonResult
      */
     failedLogins?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof LogonResult
+     */
+    encryptedUserSettings: string;
 }
 
 export function LogonResultFromJSON(json: any): LogonResult {
@@ -70,6 +80,7 @@ export function LogonResultFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'message': json['message'],
         'lastLogin': !exists(json, 'lastLogin') ? undefined : (json['lastLogin'] === null ? null : new Date(json['lastLogin'])),
         'failedLogins': !exists(json, 'failedLogins') ? undefined : json['failedLogins'],
+        'encryptedUserSettings': json['encryptedUserSettings'],
     };
 }
 
@@ -86,6 +97,7 @@ export function LogonResultToJSON(value?: LogonResult | null): any {
         'message': value.message,
         'lastLogin': value.lastLogin === undefined ? undefined : (value.lastLogin === null ? null : value.lastLogin.toISOString()),
         'failedLogins': value.failedLogins,
+        'encryptedUserSettings': value.encryptedUserSettings,
     };
 }
 

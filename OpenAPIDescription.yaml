@@ -81,7 +81,7 @@ paths:
           content:
             application/json:
               schema:
-                  $ref: "#/components/schemas/LogonResult"
+                $ref: "#/components/schemas/LogonResult"
         "405":
           description: Invalid input
       security:
@@ -313,6 +313,7 @@ components:
         allOf:
           - $ref: "#/components/schemas/GenericSuccessMessage"
           - $ref: "#/components/schemas/LogonSecurityInformation"
+          - $ref: "#/components/schemas/UserSettings"
     LogonSecurityInformation:
       type: object
       properties:
