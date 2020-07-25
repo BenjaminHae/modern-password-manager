@@ -126,6 +126,9 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
     public function changePassword(ChangePassword $changes, &$responseCode, array &$responseHeaders)
     {
         $currentUser = $this->security->getUser();
+        if (!$this->passwordEncoder->isPasswordValid($currentUser, $changes->getOldPassword())) {
+            return $this->generateApiError("Old Password is wrong");
+        }
         $newHash = $this->passwordEncoder->encodePassword($currentUser, $changes->getNewPassword());
         $currentUser->setPassword($newHash);
         $this->getAccountsController()->updateAccountsFromApi($currentUser, $changes->getAccounts());
