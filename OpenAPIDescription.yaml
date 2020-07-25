@@ -313,7 +313,6 @@ components:
         allOf:
           - $ref: "#/components/schemas/GenericSuccessMessage"
           - $ref: "#/components/schemas/LogonSecurityInformation"
-          - $ref: "#/components/schemas/UserSettings"
     LogonSecurityInformation:
       type: object
       properties:

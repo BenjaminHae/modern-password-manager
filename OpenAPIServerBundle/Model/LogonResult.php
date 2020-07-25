@@ -76,15 +76,6 @@ class LogonResult
     protected $failedLogins;
 
     /**
-     * @var string
-     * @SerializedName("encryptedUserSettings")
-     * @Assert\NotNull()
-     * @Assert\Type("string")
-     * @Type("string")
-     */
-    protected $encryptedUserSettings;
-
-    /**
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
@@ -94,7 +85,6 @@ class LogonResult
         $this->message = isset($data['message']) ? $data['message'] : null;
         $this->lastLogin = isset($data['lastLogin']) ? $data['lastLogin'] : null;
         $this->failedLogins = isset($data['failedLogins']) ? $data['failedLogins'] : null;
-        $this->encryptedUserSettings = isset($data['encryptedUserSettings']) ? $data['encryptedUserSettings'] : null;
     }
 
     /**
@@ -189,30 +179,6 @@ class LogonResult
     public function setFailedLogins($failedLogins = null)
     {
         $this->failedLogins = $failedLogins;
-
-        return $this;
-    }
-
-    /**
-     * Gets encryptedUserSettings.
-     *
-     * @return string
-     */
-    public function getEncryptedUserSettings()
-    {
-        return $this->encryptedUserSettings;
-    }
-
-    /**
-     * Sets encryptedUserSettings.
-     *
-     * @param string $encryptedUserSettings
-     *
-     * @return $this
-     */
-    public function setEncryptedUserSettings($encryptedUserSettings)
-    {
-        $this->encryptedUserSettings = $encryptedUserSettings;
 
         return $this;
     }
