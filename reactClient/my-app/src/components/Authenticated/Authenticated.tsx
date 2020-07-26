@@ -5,6 +5,7 @@ import { FieldOptions } from '../../backend/models/fieldOptions';
 import { IMessageOptions } from '../Message/Message';
 import AccountList from '../AccountList/AccountList';
 import AccountEdit from '../AccountEdit/AccountEdit';
+import UserConfiguration from '../UserConfiguration/UserConfiguration';
 import ImportCsv from '../ImportCsv/ImportCsv';
 import ChangePassword from '../ChangePassword/ChangePassword';
 import History from '../History/History';
@@ -25,6 +26,7 @@ enum AuthenticatedView {
   Edit,
   Add,
   Import,
+  Options,
   ChangePassword,
   History
 }
@@ -51,6 +53,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
     { view: AuthenticatedView.List, name: "Account List", selectable: true },
     { view: AuthenticatedView.Import, name: "Import Accounts", selectable: true },
     { view: AuthenticatedView.ChangePassword, name: "Change Password", selectable: true  },
+    { view: AuthenticatedView.Options, name: "Options", selectable: true  },
     { view: AuthenticatedView.History, name: "History", selectable: true  },
     { view: AuthenticatedView.Edit, name: "Edit Account", selectable: false  },
     { view: AuthenticatedView.Add, name: "Add Account", selectable: false  },
@@ -125,6 +128,10 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
       case AuthenticatedView.Import:
         return (
           <ImportCsv availableFields={this.props.fields} bulkAddHandler={this.props.bulkAddHandler} showMessage={this.props.showMessage}/>
+        );
+      case AuthenticatedView.Options:
+        return (
+          <UserConfiguration options={this.props.backend.userOptions}/>
         );
     }
   }
