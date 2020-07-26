@@ -53,4 +53,11 @@ export class UserService {
   async getHistory(): Promise<Array<HistoryItem>> {
     return this.userService.getUserHistory();
   }
+
+  async getUserSettings(): Promise<CryptedObject | null> {
+    const data = await this.userService.getUserSettings();
+    if (data["encryptedUserSettings"])
+      return CryptedObject.fromBase64JSON(data["encryptedUserSettings"]);
+    return null;
+  }
 }

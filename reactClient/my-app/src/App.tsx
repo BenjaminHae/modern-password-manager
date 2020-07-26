@@ -1,7 +1,7 @@
 import React from 'react';
 import Authenticated from './components/Authenticated/Authenticated';
 import Unauthenticated from './components/Unauthenticated/Unauthenticated';
-import Message from './components/Message/Message';
+import Message, { IMessageOptions } from './components/Message/Message';
 import './App.css';
 import styles from './App.module.css';
 import { BackendService } from './backend/backend.service';
@@ -13,7 +13,7 @@ import { AccountTransformerService } from './backend/controller/account-transfor
 import { CredentialService } from './backend/credential.service';
 import { CryptoService } from './backend/crypto.service';
 import { Account } from './backend/models/account';
-import { FieldOptions } from './backend/models/fieldOptions';
+import { UserOptions } from './backend/models/UserOptions';
 import { Configuration as OpenAPIConfiguration } from '@pm-server/pm-server-react-client';
 import { MaintenanceApi as OpenAPIMaintenanceService } from '@pm-server/pm-server-react-client';
 import { UserApi as OpenAPIUserService } from '@pm-server/pm-server-react-client';
@@ -28,15 +28,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 interface AppState {
   ready: boolean;
   message: string;
-  messageImportant: boolean;
   messageShow: boolean;
+  messageOptions: IMessageOptions;
   authenticated: boolean;
   registrationAllowed: boolean;
   accounts: Array<Account>;
-  fields: Array<FieldOptions>;
+  userOptions: UserOptions;
   historyItems: Array<HistoryItem>;
   filter?: AccountsFilter;
-  messageClickHandler?: (()=>void);
 }
 interface AppProps {
 }
@@ -52,12 +51,12 @@ export default class App extends React.Component<AppProps, AppState> {
     this.state = {
       ready: false,
       message: "",
-      messageImportant: false,
       messageShow: false,
+      messageOptions: {},
       authenticated: false,
       registrationAllowed: false,
       accounts: [],
-      fields: [],
+      userOptions: {fields:[]},
       historyItems: []
     }
 
@@ -88,9 +87,9 @@ export default class App extends React.Component<AppProps, AppState> {
           this.setState({accounts : accounts});
           });
     this.backend.optionsObservable
-      .subscribe((fieldOptions: Array<FieldOptions>) => {
-          console.log("(react) received fields: " + fieldOptions);
-          this.setState({fields : fieldOptions});
+      .subscribe((userOptions: UserOptions) => {
+          console.log("(react) received options: " + userOptions);
+          this.setState({userOptions : userOptions});
           });
 	}
   componentDidMount() {
@@ -103,19 +102,21 @@ export default class App extends React.Component<AppProps, AppState> {
   doLogin(username:string, password: string):Promise<void> {
     return this.backend.logon(username, password)
       .then((info: ILogonInformation) => {
-        let important = false;
+        let options: IMessageOptions = {};
         let message = "";
         if (info.lastLogin) {
           message += `Your last login was on ${info.lastLogin.toLocaleString(navigator.language)}. `;
+          options.variant = "info";
         }
         if (info.failedLogins && info.failedLogins > 0) {
           message += `There were ${info.failedLogins} failed logins.`
-          important = true;
+          options.autoClose = false;
+          options.variant = "danger";
         }
-        this.showMessage(message, important);
+        this.showMessage(message, options);
       })
       .catch((e) => {
-        this.showMessage("login failed: " + e.toString(), true);
+        this.showMessage("login failed: " + e.toString(), { autoClose: false });
         this.setState({ authenticated: false });
       });
   }
@@ -209,10 +210,10 @@ export default class App extends React.Component<AppProps, AppState> {
     return accounts;
   }
 
-  showMessage(message: string, important: boolean = false, clickHandler?: () => void) {
-    this.setState({message: message, messageImportant: important, messageClickHandler: clickHandler, messageShow: true});
+  showMessage(message: string, options: IMessageOptions = {}): void {
+    this.setState({message: message, messageOptions: options, messageShow: true});
     window.clearTimeout(this.messageTimeout);
-    if (! important) {
+    if ( options.autoClose !== undefined && options.autoClose) {
       this.messageTimeout = window.setTimeout(() => {this.setState({messageShow: false})}, 5000);
     }
   }
@@ -233,13 +234,13 @@ export default class App extends React.Component<AppProps, AppState> {
         <Message 
             message={this.state.message} 
             show={this.state.messageShow}
-            important={this.state.messageImportant}
+            options={this.state.messageOptions}
             closeHandler={this.closeMessage.bind(this)}
         />
 	      {this.state.authenticated &&
 	       <Authenticated 
             accounts={this.filterAccounts(this.state.accounts)} 
-            fields={this.state.fields} 
+            fields={this.state.userOptions.fields} 
             historyItems={this.state.historyItems} 
             backend={this.backend} 
             pluginSystem={this.plugins} 

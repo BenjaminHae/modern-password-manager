@@ -5,6 +5,7 @@ import { IDataTableColumn } from 'react-data-table-component';
 import { CsvParser } from './csv/csvParser';
 import { CsvConverter } from './csv/csvConverter';
 import { FieldOptions } from '../../backend/models/fieldOptions';
+import { IMessageOptions } from '../Message/Message';
 import CsvFieldMappingSelect from './CsvFieldMappingSelect/CsvFieldMappingSelect';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -14,7 +15,7 @@ import Table from 'react-bootstrap/Table';
 interface ImportCsvProps {
   availableFields: Array<FieldOptions>;
   bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>;
-  showMessage: (message: string, important?: boolean, clickHandler?: () => void) => void
+  showMessage: (message: string, options?: IMessageOptions) => void;
 }
 interface ImportCsvState {
   data: Array<{[index: string]:string}>;

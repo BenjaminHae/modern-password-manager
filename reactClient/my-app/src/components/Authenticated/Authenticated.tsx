@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './Authenticated.module.css';
 import { Account } from '../../backend/models/account';
 import { FieldOptions } from '../../backend/models/fieldOptions';
+import { IMessageOptions } from '../Message/Message';
 import AccountList from '../AccountList/AccountList';
 import AccountEdit from '../AccountEdit/AccountEdit';
 import ImportCsv from '../ImportCsv/ImportCsv';
@@ -38,7 +39,7 @@ interface AuthenticatedProps {
   deleteHandler: (account: Account) => Promise<void>,
   changePasswordHandler: (oldPassword: string, newPassword: string) => Promise<void>,
   pluginSystem: PluginSystem,
-  showMessage: (message: string, important?: boolean, clickHandler?: () => void) => void,
+  showMessage: (message: string, options?: IMessageOptions) => void,
   loadHistoryHandler: () => Promise<void>;
 }
 interface AuthenticatedState {

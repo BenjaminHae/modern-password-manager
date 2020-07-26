@@ -1,12 +1,12 @@
 import { Account } from './models/account';
 import { CryptedObject } from './models/cryptedObject';
 import { encryptedAccount } from './models/encryptedAccount';
+import { UserOptions, UserOptionsFromJSON } from './models/UserOptions';
 import { MaintenanceService, BackendOptions } from './api/maintenance.service';
 import { UserService, ILogonInformation } from './api/user.service';
 import { HistoryItem } from '@pm-server/pm-server-react-client';
 import { AccountsService } from './api/accounts.service';
 import { ServerSettings } from './models/serverSettings';
-import { FieldOptions } from './models/fieldOptions';
 import { AccountTransformerService } from './controller/account-transformer.service';
 import { CredentialService } from './credential.service';
 import { CredentialProviderPassword } from './controller/credentialProviderPassword';
@@ -30,13 +30,13 @@ function subscriptionExecutor<T>(list: Array<Subscriber<T>>, params?:T) {
 export class BackendService {
   private accountsObservers: Array<Subscriber<Array<Account>>> = [];
   private loginObservers: Array<Subscriber<void>> = [];
-  private optionsObservers: Array<Subscriber<Array<FieldOptions>>> = [];
+  private optionsObservers: Array<Subscriber<UserOptions>> = [];
   public serverSettings: ServerSettings = {allowRegistration: true, passwordGenerator: "aaaaab"};
   public accounts: Array<Account> = [];
-  public fields: Array<FieldOptions> = [];
+  public userOptions: UserOptions = { fields: [] };
   accountsObservable = new Observable<Array<Account>>(subscriptionCreator(this.accountsObservers));
   loginObservable = new Observable<void>(subscriptionCreator(this.loginObservers));
-  optionsObservable = new Observable<Array<FieldOptions>>(subscriptionCreator(this.optionsObservers));
+  optionsObservable = new Observable<UserOptions>(subscriptionCreator(this.optionsObservers));
 
   constructor(private maintenanceService: MaintenanceService, private userService: UserService, private accountsService: AccountsService, private credentials: CredentialService, private accountTransformer: AccountTransformerService, private crypto: CryptoService ) {}
 
@@ -63,7 +63,6 @@ export class BackendService {
 
   async logout(): Promise<void> {
     await this.userService.logout();
-    this.fields = [];
     this.parseAccounts([]);
   }
 
@@ -100,15 +99,31 @@ export class BackendService {
     return await this.accountTransformer.encryptAccount(account, newCredentials);
   }
 
+  async getUserOptions() {
+    const encryptedUserConfiguration = await this.userService.getUserSettings();
+    const defaultUserOptions: UserOptions = 
+    this.userOptions = {
+        fields: [
+        { name: "username", colNumber: 1, selector: "user", visible: true, sortable: true },
+        { name: "url", selector: "url", visible: false },
+        { name: "tags", selector: "tags", visible: true }
+      ]
+    };
+    if (encryptedUserConfiguration) {
+      try {
+        let data = JSON.parse(await this.crypto.decryptChar(encryptedUserConfiguration));
+        this.userOptions = UserOptionsFromJSON(data, this.userOptions);
+      }
+      catch {
+      }
+    }
+  }
+
   async afterLogin(): Promise<void> {
     subscriptionExecutor(this.loginObservers);
     let accounts = await this.accountsService.getAccounts()
-    this.fields = [
-      { name: "Username", colNumber: 1, selector: "user", visible: true, sortable: true },
-      { name: "URL", selector: "url", visible: false },
-      { name: "Tags", selector: "tags", visible: true }
-    ];
-    subscriptionExecutor<Array<FieldOptions>>(this.optionsObservers, this.fields);
+    await this.getUserOptions();
+    subscriptionExecutor<UserOptions>(this.optionsObservers, this.userOptions);
     return await this.parseAccounts(accounts)
   }
 

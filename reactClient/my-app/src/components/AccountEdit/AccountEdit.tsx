@@ -3,6 +3,7 @@ import styles from './AccountEdit.module.css';
 import { Account } from '../../backend/models/account';
 import { FieldOptions } from '../../backend/models/fieldOptions';
 import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
+import { IMessageOptions } from '../Message/Message';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
@@ -16,7 +17,7 @@ interface AccountEditProps {
   deleteHandler: (account: Account) => Promise<void>;
   closeHandler: () => void;
   transformer: AccountTransformerService;
-  showMessage: (message: string, important?: boolean, clickHandler?: () => void) => void
+  showMessage: (message: string, options: IMessageOptions) => void,
 }
 interface AccountEditState {
   fields: {[index: string]:string};
@@ -125,7 +126,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
       this.props.closeHandler();
     }
     catch {
-      this.props.showMessage("there was an error when saving the account", true);
+      this.props.showMessage("there was an error when saving the account", { autoClose: false, variant: "danger" });
     }
     finally {
       this.setState({waiting: false});
@@ -140,7 +141,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
         this.props.closeHandler();
       }
       catch {
-        this.props.showMessage("there was an error when deleting the account", true);
+        this.props.showMessage("there was an error when deleting the account", { autoClose: false, variant: "danger" });
       }
       finally {
         this.setState({waiting: false});

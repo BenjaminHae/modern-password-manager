@@ -3,11 +3,12 @@ import styles from './Register.module.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
+import { IMessageOptions } from '../Message/Message';
 import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWithToggle';
 
 interface RegisterProps {
   doRegister: (username: string, password: string, email: string) => Promise<void>;
-  showMessage: (message: string, important?: boolean, clickHandler?: () => void) => void;
+  showMessage: (message: string, options?: IMessageOptions) => void;
 }
 
 interface RegisterFormValues {
@@ -51,7 +52,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
     catch(e) {
       this.setState({ waiting: false });
-      this.props.showMessage("Registration failed: " + e.toString(), true);
+      this.props.showMessage("Registration failed: " + e.toString(), { autoClose: false, variant: "danger" } );
     }
   }
   async submitForm(event: React.FormEvent<HTMLFormElement>) {
@@ -63,7 +64,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
     this.setState({validated: true});
     if (this.state.password !== this.state.password2) {
-      this.props.showMessage("Password repeat must match password", true);
+      this.props.showMessage("Password repeat must match password", { autoClose: false, variant: "danger" });
       return
     }
     await this.doRegister(event);

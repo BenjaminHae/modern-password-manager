@@ -1,13 +1,14 @@
 import React from 'react';
 import styles from './ChangePassword.module.css';
+import { IMessageOptions } from '../Message/Message';
+import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWithToggle';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWithToggle';
 import Col from 'react-bootstrap/Col';
 
 interface ChangePasswordProps {
   changePasswordHandler: (oldPassword: string, newPassword: string) => Promise<void>;
-  showMessage: (message: string, important?: boolean, clickHandler?: () => void) => void
+  showMessage: (message: string, options?: IMessageOptions) => void;
 }
 interface ChangePasswordFormValues {
   oldPassword: string;
