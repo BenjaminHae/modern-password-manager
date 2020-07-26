@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './Authenticated.module.css';
 import { Account } from '../../backend/models/account';
 import { FieldOptions } from '../../backend/models/fieldOptions';
+import { UserOptions } from '../../backend/models/UserOptions';
 import { IMessageOptions } from '../Message/Message';
 import AccountList from '../AccountList/AccountList';
 import AccountEdit from '../AccountEdit/AccountEdit';
@@ -43,6 +44,7 @@ interface AuthenticatedProps {
   pluginSystem: PluginSystem,
   showMessage: (message: string, options?: IMessageOptions) => void,
   loadHistoryHandler: () => Promise<void>;
+  doStoreOptions: (options: UserOptions) => Promise<void>;
 }
 interface AuthenticatedState {
   view: AuthenticatedView;
@@ -131,7 +133,11 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
         );
       case AuthenticatedView.Options:
         return (
-          <UserConfiguration options={this.props.backend.userOptions}/>
+          <UserConfiguration 
+            options={this.props.backend.userOptions} 
+            showMessage={this.props.showMessage}
+            doStoreOptions={this.props.doStoreOptions}
+          />
         );
     }
   }

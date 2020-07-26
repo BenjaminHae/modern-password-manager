@@ -12,6 +12,14 @@ export function FieldOptionsFromJSON(json: any): FieldOptions {
   if ((json === undefined) || (json === null)) {
     return json;
   }
+  const required = ["name", "selector", "visible"];
+  for (let item of required) {
+    if (!exists(json, item)) {
+      throw new Error(`required key "${item}" is not present in field`);
+    }
+  }
+  
+  
   return {
     'name': json['name'],
     'selector': json['selector'],

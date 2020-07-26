@@ -128,6 +128,9 @@ export default class App extends React.Component<AppProps, AppState> {
     this.setState({authenticated: false});
     window.location.reload(false);
   }
+  async doStoreOptions(): Promise<void> {
+    //Todo
+  }
   async editHandler(fields: {[index: string]:string}, account?: Account): Promise<void> {
     let updatedAccount: Account;
     if (account) {
@@ -251,6 +254,7 @@ export default class App extends React.Component<AppProps, AppState> {
             changePasswordHandler={this.changePasswordHandler.bind(this)} 
             loadHistoryHandler={this.loadHistory.bind(this)} 
             showMessage={this.showMessage.bind(this)} 
+            doStoreOptions={this.doStoreOptions.bind(this)}
         />
               }
         {!this.state.authenticated
