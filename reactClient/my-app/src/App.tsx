@@ -1,7 +1,7 @@
 import React from 'react';
 import Authenticated from './components/Authenticated/Authenticated';
 import Unauthenticated from './components/Unauthenticated/Unauthenticated';
-import Message, { IMessageOptions } from './components/Message/Message';
+import Message, { IMessageOptions, IMessage } from './components/Message/Message';
 import './App.css';
 import styles from './App.module.css';
 import { BackendService } from './backend/backend.service';
@@ -27,9 +27,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 interface AppState {
   ready: boolean;
-  message: string;
-  messageShow: boolean;
-  messageOptions: IMessageOptions;
+  messages: Array<IMessage>;
   authenticated: boolean;
   registrationAllowed: boolean;
   accounts: Array<Account>;
@@ -44,15 +42,12 @@ export default class App extends React.Component<AppProps, AppState> {
   accountTransformerService: AccountTransformerService;
   crypto: CryptoService;
   plugins: PluginSystem;
-  messageTimeout: number = 0;
 
   constructor (props: AppProps) {
     super(props);
     this.state = {
       ready: false,
-      message: "",
-      messageShow: false,
-      messageOptions: {},
+      messages: [],
       authenticated: false,
       registrationAllowed: false,
       accounts: [],
@@ -213,16 +208,23 @@ export default class App extends React.Component<AppProps, AppState> {
     return accounts;
   }
 
-  showMessage(message: string, options: IMessageOptions = {}): void {
-    this.setState({message: message, messageOptions: options, messageShow: true});
-    window.clearTimeout(this.messageTimeout);
+  showMessage(text: string, options: IMessageOptions = {}): void {
+    const newMessages = this.state.messages;
+    const message = {message: text, id: Date.now(), ...options}
+    newMessages.push(message);
+    this.setState({messages: newMessages});
     if ( options.autoClose !== undefined && options.autoClose) {
-      this.messageTimeout = window.setTimeout(() => {this.setState({messageShow: false})}, 5000);
+      window.setTimeout(() => {
+        const newMessages = this.state.messages.filter((m)=> m.id !== message.id);
+        this.setState({messages: newMessages});
+      }
+      , 5000);
     }
   }
 
-  closeMessage() {
-    this.setState({messageShow: false});
+  closeMessage(id: number) {
+    const newMessages = this.state.messages.filter((m)=> m.id !== id);
+    this.setState({messages: newMessages});
   }
 
 	render() {
@@ -235,9 +237,7 @@ export default class App extends React.Component<AppProps, AppState> {
           }
 	      </header>
         <Message 
-            message={this.state.message} 
-            show={this.state.messageShow}
-            options={this.state.messageOptions}
+            messages={this.state.messages} 
             closeHandler={this.closeMessage.bind(this)}
         />
 	      {this.state.authenticated &&

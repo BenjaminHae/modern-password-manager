@@ -3,10 +3,8 @@ import styles from './Message.module.css';
 import Alert from 'react-bootstrap/Alert';
 
 export interface IMessageProps {
-  message: string;
-  options: IMessageOptions;
-  closeHandler?: (() => void);
-  show: boolean;
+  messages: Array<IMessage>;
+  closeHandler: ((id: number) => void);
 }
 
 export interface IMessageOptions {
@@ -14,13 +12,23 @@ export interface IMessageOptions {
   variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'dark' | 'light';
   messageClickHandler?: (()=>void);
 }
+export interface IMessage extends IMessageOptions {
+  id: number;
+  message: string;
+  autoClose?: boolean;
+  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'dark' | 'light';
+  messageClickHandler?: (()=>void);
+}
 
 const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
-  return (
-    <Alert show={props.show} dismissible variant={ props.options.variant === undefined ? "info" : props.options.variant } onClose={props.closeHandler} >
-      { props.message }
-    </Alert>
-  );
+  function getMessages(props: IMessageProps) {
+    return props.messages.map( (message: IMessage) => 
+        <Alert key={message.id} dismissible variant={ message.variant === undefined ? "info" : message.variant } onClose={()=>props.closeHandler(message.id)} >
+        { message.message }
+        </Alert>
+        );
+  }
+  return <> {getMessages(props)} </>
 }
 
 export default Message;
