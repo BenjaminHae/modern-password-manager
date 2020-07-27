@@ -210,15 +210,19 @@ export default class App extends React.Component<AppProps, AppState> {
 
   showMessage(text: string, options: IMessageOptions = {}): void {
     const newMessages = this.state.messages;
-    const message = {message: text, id: Date.now(), ...options}
+    const message = {message: text, id: Date.now(), show: true, ...options}
     newMessages.push(message);
     this.setState({messages: newMessages});
-    if ( options.autoClose !== undefined && options.autoClose) {
+    if ( options.autoClose === undefined || options.autoClose) {
+      window.setTimeout(() => {
+        message.show = false;
+      }
+      , 5000);
       window.setTimeout(() => {
         const newMessages = this.state.messages.filter((m)=> m.id !== message.id);
         this.setState({messages: newMessages});
       }
-      , 5000);
+      , 7000);
     }
   }
 
