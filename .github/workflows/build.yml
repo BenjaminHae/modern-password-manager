@@ -72,10 +72,10 @@ jobs:
       - name: copy Dockerfile
         run: "cp ../dockerBuild/SymfonyDockerfile Dockerfile"
         working-directory: ./Symfony-API/
-      - name: zip
-        run: "zip --symlinks -r modern-password-manager.zip ./Symfony-API"
-        working-directory: ./
+      #- name: zip
+      #  run: "zip --symlinks -r modern-password-manager.zip ./Symfony-API"
+      #  working-directory: ./
       - uses: actions/upload-artifact@v2
         with:
           name: symfony-project
-          path: modern-password-manager.zip
+          path: Symfony-API/
