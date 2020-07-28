@@ -117,13 +117,21 @@ export class BackendService {
       catch {
       }
     }
+    subscriptionExecutor<UserOptions>(this.optionsObservers, this.userOptions);
+  }
+
+  async storeUserOptions(options: UserOptions): Promise<void> {
+    const data = JSON.stringify(options);
+    const cryptedOptions = await this.crypto.encryptChar(data);
+    await this.userService.storeUserSettings(cryptedOptions);
+    this.userOptions = options;
+    subscriptionExecutor<UserOptions>(this.optionsObservers, this.userOptions);
   }
 
   async afterLogin(): Promise<void> {
     subscriptionExecutor(this.loginObservers);
     let accounts = await this.accountsService.getAccounts()
     await this.getUserOptions();
-    subscriptionExecutor<UserOptions>(this.optionsObservers, this.userOptions);
     return await this.parseAccounts(accounts)
   }
 
@@ -174,5 +182,6 @@ export class BackendService {
   async getHistory(): Promise<Array<HistoryItem>> {
     return await this.userService.getHistory();
   }
+
 
 }

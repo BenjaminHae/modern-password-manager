@@ -60,4 +60,9 @@ export class UserService {
       return CryptedObject.fromBase64JSON(data["encryptedUserSettings"]);
     return null;
   }
+
+  async storeUserSettings(options: CryptedObject): Promise<void> {
+    const response = await this.userService.setUserSettings({ userSettings: { encryptedUserSettings: options.toBase64JSON() } } );
+    this.checkForSuccess(response);
+  }
 }

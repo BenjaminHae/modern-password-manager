@@ -123,8 +123,8 @@ export default class App extends React.Component<AppProps, AppState> {
     this.setState({authenticated: false});
     window.location.reload(false);
   }
-  async doStoreOptions(): Promise<void> {
-    //Todo
+  async doStoreOptions(options: UserOptions): Promise<void> {
+    await this.backend.storeUserOptions(options);
   }
   async editHandler(fields: {[index: string]:string}, account?: Account): Promise<void> {
     let updatedAccount: Account;
