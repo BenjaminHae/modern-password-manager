@@ -47,7 +47,7 @@ const UserConfiguration: React.FC<UserConfigurationProps> = (props: UserConfigur
           <fieldset disabled={waiting}>
             <Form.Group controlId="UserOptionsForm.Text">
               <Form.Label>Example textarea</Form.Label>
-              <Form.Control as="textarea" rows={20} value={ options } onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOptions(e.target.value)} className={styles.Textarea} />
+              <Form.Control as="textarea" rows={10} value={ options } onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOptions(e.target.value)} className={styles.Textarea} />
             </Form.Group>
             <Button variant="primary" type="submit">Store</Button>
           </fieldset>

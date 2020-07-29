@@ -1,4 +1,5 @@
 .UserConfiguration {}
 .Textarea {
-  font-family:monospace;
+  font-family: monospace;
+  min-height: calc(90vh - 200px);
 }
