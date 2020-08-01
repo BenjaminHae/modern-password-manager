@@ -31,7 +31,7 @@ export class SearchPlugin extends BasePlugin implements IPluginWithFilter, IPlug
       this.pluginSystem.setFilter('search', filter);
     }
     else {
-      this.pluginSystem.setFilter('search', ()=>true);
+      this.pluginSystem.setFilter('search', undefined);
     }
   }
 }

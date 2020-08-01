@@ -2,5 +2,12 @@
   padding: 10px;
 }
 .ResetFilter {
-  margin-top: 10px;
+  margin-top: 1em;
+  margin-bottom: 0px !important;
+}
+.ResetFilterCol {
+  display: flex;
+  flex-direction: column;
+  margin-right: 1em;
+  justify-content: flex-end;
 }

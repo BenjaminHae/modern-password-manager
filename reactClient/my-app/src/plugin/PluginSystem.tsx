@@ -74,9 +74,14 @@ export class PluginSystem {
     this.updateFilter();
   }
 
-  setFilter(key: string, filter: AccountFilter) {
+  setFilter(key: string, filter?: AccountFilter) {
     this.filterPresent = true;
-    this.filters[key] = filter;
+    if (filter === undefined) {
+      delete this.filters[key];
+    }
+    else {
+      this.filters[key] = filter;
+    }
     this.updateFilter();
   }
 
@@ -88,6 +93,7 @@ export class PluginSystem {
   }
 
   updateFilter() {
+    this.filterPresent = Object.keys(this.filters).length > 0;
     if (!this.filterChangeHandler)
       return ;
     this.filterChangeHandler( (accounts: Array<Account>): Array<Account> => {

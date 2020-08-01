@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './SearchInputComponent.module.css';
 import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { Search } from 'react-bootstrap-icons';
 
@@ -24,8 +25,8 @@ class SearchInputComponent extends React.Component<SearchInputProps, SearchInput
   }
   render() {
     return (
-        <div>
-          <Form.Group>
+        <Col className={styles.SearchInputComponent} lg={3} xl={3} sm={6} xs={12}>
+          <Form.Group className={styles.SearchInput}>
             <Form.Label srOnly={true}>Search</Form.Label>
             <InputGroup>
               <InputGroup.Prepend>
@@ -34,7 +35,7 @@ class SearchInputComponent extends React.Component<SearchInputProps, SearchInput
               <Form.Control size="sm" type="text" placeholder="Search" name="searchValue" onChange={this.handleSearchChange.bind(this)} value={this.state.expression} />
             </InputGroup>
           </Form.Group>
-        </div>
+        </Col>
         );
   }
 }

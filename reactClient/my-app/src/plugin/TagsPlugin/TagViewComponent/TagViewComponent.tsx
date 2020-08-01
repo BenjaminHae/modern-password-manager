@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './TagViewComponent.module.css';
+import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 
 interface TagViewProps {
@@ -36,10 +37,10 @@ class TagViewComponent extends React.Component<TagViewProps, TagViewState> {
   }
   render() {
     return (
-        <div className={styles.TagViewComponent}>
+        <Col className={styles.TagViewComponent} lg={3} xl={3} sm={6} xs={12}>
           <h3>Tags</h3>
           {this.printTags()}
-        </div>
+        </Col>
         );
   }
 }

@@ -27,7 +27,7 @@ export class TagsPlugin extends BasePlugin implements IPluginWithMainView, IPlug
   }
 
   filterCallback(tagsFilter: Array<string>) {
-    let filter = (acc:Account) => true;
+    let filter = undefined;
     if (tagsFilter.length > 0) {
       filter = (acc: Account): boolean=> {
         if (!("tags" in acc.other)) {
