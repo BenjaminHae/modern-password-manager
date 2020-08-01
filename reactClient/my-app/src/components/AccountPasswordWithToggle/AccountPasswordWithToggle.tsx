@@ -1,13 +1,12 @@
 import React from 'react';
 import styles from './AccountPasswordWithToggle.module.css';
 import { Account } from '../../backend/models/account';
-import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
 import Button from 'react-bootstrap/Button';
 import { EyeSlash } from 'react-bootstrap-icons';
 
 interface PasswordProps {
 	account: Account;
-	transformer: AccountTransformerService;
+  getAccountPasswordHandler: (account: Account) => Promise<string>;
 }
 interface PasswordState {
 	password: string;
@@ -46,7 +45,7 @@ class AccountPasswordWithToggle extends React.Component<PasswordProps, PasswordS
     )
   }
   async getPassword() {
-    this.setState({password: await this.props.transformer.getPassword(this.props.account)});
+    this.setState({password: await this.props.getAccountPasswordHandler(this.props.account)});
   }
   clearPassword() {
     this.setState({password: ""});

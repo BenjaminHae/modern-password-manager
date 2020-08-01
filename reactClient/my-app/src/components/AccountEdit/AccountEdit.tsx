@@ -2,7 +2,6 @@ import React from 'react';
 import styles from './AccountEdit.module.css';
 import { Account } from '../../backend/models/account';
 import { FieldOptions } from '../../backend/models/fieldOptions';
-import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
 import { IMessageOptions } from '../Message/Message';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -16,7 +15,7 @@ interface AccountEditProps {
   editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>;
   deleteHandler: (account: Account) => Promise<void>;
   closeHandler: () => void;
-  transformer: AccountTransformerService;
+  getAccountPasswordHandler: (account: Account) => Promise<string>;
   showMessage: (message: string, options: IMessageOptions) => void,
 }
 interface AccountEditState {
@@ -65,7 +64,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
   async showPassword() {
     if (this.props.account) {
       let currentFields = this.state.fields;
-      currentFields["password"] = await this.props.transformer.getPassword(this.props.account);
+      currentFields["password"] = await this.props.getAccountPasswordHandler(this.props.account);
       this.setState({fields: currentFields});
     }
   }

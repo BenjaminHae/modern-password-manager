@@ -3,7 +3,6 @@ import styles from './AccountList.module.css';
 import AccountPasswordWithToggle from '../AccountPasswordWithToggle/AccountPasswordWithToggle';
 import { Account } from '../../backend/models/account';
 import { FieldOptions } from '../../backend/models/fieldOptions';
-import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
 import DataTable from 'react-data-table-component';
 import { IDataTableColumn } from 'react-data-table-component';
 import { PluginSystem } from '../../plugin/PluginSystem';
@@ -14,7 +13,7 @@ import { Plus, Pencil } from 'react-bootstrap-icons';
 interface AccountListProps {
   accounts: Array<Account>;
   fields: Array<FieldOptions>;
-  transformer: AccountTransformerService;
+  getAccountPasswordHandler: (account: Account) => Promise<string>;
   editAccountHandler: (account: Account) => void;
   addAccountHandler: () => void;
   pluginSystem: PluginSystem
@@ -49,7 +48,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
       { 
         name: "Password",  
         ignoreOnRowClick: true, 
-        cell: (row: Account) => <AccountPasswordWithToggle account={row} transformer={this.props.transformer}/> 
+        cell: (row: Account) => <AccountPasswordWithToggle account={row} getAccountPasswordHandler={this.props.getAccountPasswordHandler}/> 
       }
     ];
     let sortFunc = (a: FieldOptions, b: FieldOptions) => {

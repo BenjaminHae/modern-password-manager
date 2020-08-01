@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './Authenticated.module.css';
 import { Account } from '../../backend/models/account';
-import { FieldOptions } from '../../backend/models/fieldOptions';
 import { UserOptions } from '../../backend/models/UserOptions';
 import { IMessageOptions } from '../Message/Message';
 import AccountList from '../AccountList/AccountList';
@@ -10,8 +9,6 @@ import UserConfiguration from '../UserConfiguration/UserConfiguration';
 import ImportCsv from '../ImportCsv/ImportCsv';
 import ChangePassword from '../ChangePassword/ChangePassword';
 import History from '../History/History';
-import { BackendService } from '../../backend/backend.service';
-import { AccountTransformerService } from '../../backend/controller/account-transformer.service';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
@@ -35,11 +32,11 @@ interface AuthenticatedProps {
   accounts: Array<Account>,
   historyItems: Array<HistoryItem>,
   userOptions: UserOptions,
-  transformer: AccountTransformerService,
   editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>,
   bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>,
   deleteHandler: (account: Account) => Promise<void>,
   changePasswordHandler: (oldPassword: string, newPassword: string) => Promise<void>,
+  getAccountPasswordHandler: (account: Account) => Promise<string>,
   pluginSystem: PluginSystem,
   showMessage: (message: string, options?: IMessageOptions) => void,
   loadHistoryHandler: () => Promise<void>;
@@ -107,16 +104,39 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
         return (
           <>
             <PluginMainView pluginSystem={this.props.pluginSystem} />
-            <AccountList accounts={this.props.accounts} transformer={this.props.transformer} fields={this.props.userOptions.fields} editAccountHandler={this.editAccountSelect.bind(this)} addAccountHandler={this.addAccountSelect.bind(this)} pluginSystem={this.props.pluginSystem} />
+            <AccountList 
+              accounts={this.props.accounts} 
+              getAccountPasswordHandler={this.props.getAccountPasswordHandler}
+              fields={this.props.userOptions.fields} 
+              editAccountHandler={this.editAccountSelect.bind(this)} 
+              addAccountHandler={this.addAccountSelect.bind(this)} 
+              pluginSystem={this.props.pluginSystem} 
+            />
           </>
         );
       case AuthenticatedView.Edit:
         return (
-          <AccountEdit account={this.state.selectedAccount} fields={this.props.userOptions.fields} editHandler={this.props.editHandler}  closeHandler={()=>this.selectView(AuthenticatedView.List)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage}/>
+            <AccountEdit 
+              account={this.state.selectedAccount} 
+              fields={this.props.userOptions.fields} 
+              editHandler={this.props.editHandler} 
+              closeHandler={()=>this.selectView(AuthenticatedView.List)} 
+              deleteHandler={this.props.deleteHandler} 
+              getAccountPasswordHandler={this.props.getAccountPasswordHandler}
+              showMessage={this.props.showMessage}
+            />
         );
       case AuthenticatedView.Add:
         return (
-          <AccountEdit account={undefined} fields={this.props.userOptions.fields} editHandler={this.props.editHandler} closeHandler={()=>this.selectView(AuthenticatedView.List)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage} />
+            <AccountEdit 
+              account={undefined} 
+              fields={this.props.userOptions.fields} 
+              editHandler={this.props.editHandler} 
+              closeHandler={()=>this.selectView(AuthenticatedView.List)} 
+              deleteHandler={this.props.deleteHandler} 
+              getAccountPasswordHandler={this.props.getAccountPasswordHandler}
+              showMessage={this.props.showMessage}
+            />
         );
       case AuthenticatedView.History:
         return (

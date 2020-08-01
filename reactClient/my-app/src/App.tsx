@@ -196,6 +196,9 @@ export default class App extends React.Component<AppProps, AppState> {
     );
     this.setState({ historyItems: history });
   }
+  async getAccountPassword(account: Account): Promise<string> {
+    return await this.backend.getPassword(account);
+  }
 
   filterChangeHandler(filter: AccountsFilter): void {
     this.setState( {filter: filter} );
@@ -250,8 +253,8 @@ export default class App extends React.Component<AppProps, AppState> {
             historyItems={this.state.historyItems} 
             userOptions={this.state.userOptions}
             pluginSystem={this.plugins} 
-            transformer={this.accountTransformerService} 
             editHandler={this.editHandler.bind(this)} 
+            getAccountPasswordHandler={this.getAccountPassword.bind(this)}
             bulkAddHandler={this.bulkAddAccounts.bind(this)} 
             deleteHandler={this.deleteHandler.bind(this)} 
             changePasswordHandler={this.changePasswordHandler.bind(this)} 

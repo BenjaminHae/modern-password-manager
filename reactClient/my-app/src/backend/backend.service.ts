@@ -183,5 +183,8 @@ export class BackendService {
     return await this.userService.getHistory();
   }
 
+  async getPassword(account: Account): Promise<string> {
+    return await this.accountTransformer.getPassword(account);
+  }
 
 }
