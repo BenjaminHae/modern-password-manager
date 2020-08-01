@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './SearchInputComponent.module.css';
 import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 import { Search } from 'react-bootstrap-icons';
 
 interface SearchInputProps {
@@ -25,8 +26,13 @@ class SearchInputComponent extends React.Component<SearchInputProps, SearchInput
     return (
         <div>
           <Form.Group>
-            <h3><Form.Label>Search</Form.Label></h3>
-            <Form.Control size="sm" type="text" placeholder="Search" name="searchValue" onChange={this.handleSearchChange.bind(this)} value={this.state.expression} />
+            <Form.Label srOnly={true}>Search</Form.Label>
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text><Search/></InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control size="sm" type="text" placeholder="Search" name="searchValue" onChange={this.handleSearchChange.bind(this)} value={this.state.expression} />
+            </InputGroup>
           </Form.Group>
         </div>
         );
