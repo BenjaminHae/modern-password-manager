@@ -247,9 +247,8 @@ export default class App extends React.Component<AppProps, AppState> {
 	      {this.state.authenticated &&
 	       <Authenticated 
             accounts={this.filterAccounts(this.state.accounts)} 
-            fields={this.state.userOptions.fields} 
             historyItems={this.state.historyItems} 
-            backend={this.backend} 
+            userOptions={this.state.userOptions}
             pluginSystem={this.plugins} 
             transformer={this.accountTransformerService} 
             editHandler={this.editHandler.bind(this)} 

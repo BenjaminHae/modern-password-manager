@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './UserConfiguration.module.css';
 import { UserOptions, UserOptionsFromJSON } from '../../backend/models/UserOptions';
 import { IMessageOptions } from '../Message/Message';
@@ -14,6 +14,7 @@ interface UserConfigurationProps {
 const UserConfiguration: React.FC<UserConfigurationProps> = (props: UserConfigurationProps) => {
   const [options, setOptions] = useState(JSON.stringify(props.options, null, 2));
   const [waiting, setWaiting] = useState(false);
+  useEffect( () => { setOptions(JSON.stringify(props.options, null, 2)) }, [props.options]);
   const submit = async (e: React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
     setWaiting(true);

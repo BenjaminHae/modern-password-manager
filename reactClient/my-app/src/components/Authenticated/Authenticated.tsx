@@ -33,9 +33,8 @@ enum AuthenticatedView {
 }
 interface AuthenticatedProps {
   accounts: Array<Account>,
-  fields: Array<FieldOptions>,
   historyItems: Array<HistoryItem>,
-  backend: BackendService,
+  userOptions: UserOptions,
   transformer: AccountTransformerService,
   editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>,
   bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>,
@@ -55,7 +54,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
     { view: AuthenticatedView.List, name: "Account List", selectable: true },
     { view: AuthenticatedView.Import, name: "Import Accounts", selectable: true },
     { view: AuthenticatedView.ChangePassword, name: "Change Password", selectable: true  },
-    { view: AuthenticatedView.Options, name: "Options", selectable: true  },
+    { view: AuthenticatedView.Options, name: "Customization", selectable: true  },
     { view: AuthenticatedView.History, name: "History", selectable: true  },
     { view: AuthenticatedView.Edit, name: "Edit Account", selectable: false  },
     { view: AuthenticatedView.Add, name: "Add Account", selectable: false  },
@@ -108,16 +107,16 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
         return (
           <>
             <PluginMainView pluginSystem={this.props.pluginSystem} />
-            <AccountList accounts={this.props.accounts} transformer={this.props.transformer} fields={this.props.fields} editAccountHandler={this.editAccountSelect.bind(this)} addAccountHandler={this.addAccountSelect.bind(this)} pluginSystem={this.props.pluginSystem} />
+            <AccountList accounts={this.props.accounts} transformer={this.props.transformer} fields={this.props.userOptions.fields} editAccountHandler={this.editAccountSelect.bind(this)} addAccountHandler={this.addAccountSelect.bind(this)} pluginSystem={this.props.pluginSystem} />
           </>
         );
       case AuthenticatedView.Edit:
         return (
-          <AccountEdit account={this.state.selectedAccount} fields={this.props.fields} editHandler={this.props.editHandler}  closeHandler={()=>this.selectView(AuthenticatedView.List)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage}/>
+          <AccountEdit account={this.state.selectedAccount} fields={this.props.userOptions.fields} editHandler={this.props.editHandler}  closeHandler={()=>this.selectView(AuthenticatedView.List)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage}/>
         );
       case AuthenticatedView.Add:
         return (
-          <AccountEdit account={undefined} fields={this.props.fields} editHandler={this.props.editHandler} closeHandler={()=>this.selectView(AuthenticatedView.List)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage} />
+          <AccountEdit account={undefined} fields={this.props.userOptions.fields} editHandler={this.props.editHandler} closeHandler={()=>this.selectView(AuthenticatedView.List)} deleteHandler={this.props.deleteHandler} transformer={this.props.transformer} showMessage={this.props.showMessage} />
         );
       case AuthenticatedView.History:
         return (
@@ -129,12 +128,12 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
         );
       case AuthenticatedView.Import:
         return (
-          <ImportCsv availableFields={this.props.fields} bulkAddHandler={this.props.bulkAddHandler} showMessage={this.props.showMessage}/>
+          <ImportCsv availableFields={this.props.userOptions.fields} bulkAddHandler={this.props.bulkAddHandler} showMessage={this.props.showMessage}/>
         );
       case AuthenticatedView.Options:
         return (
           <UserConfiguration 
-            options={this.props.backend.userOptions} 
+            options={this.props.userOptions} 
             showMessage={this.props.showMessage}
             doStoreOptions={this.props.doStoreOptions}
           />
