@@ -1,4 +1,6 @@
+.App-header {
+  padding: 0.5em;
+}
 .Logout {
-  margin-left: auto;
-  margin-right: 10px;
+  margin-right: 1em;
 }

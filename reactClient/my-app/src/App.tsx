@@ -21,6 +21,9 @@ import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-reac
 import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
 import { HistoryItem } from '@pm-server/pm-server-react-client';
 import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import { BoxArrowLeft } from 'react-bootstrap-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -238,10 +241,24 @@ export default class App extends React.Component<AppProps, AppState> {
 	  return (
 	    <div className="App">
 	      <header className="App-header">
-          Password Manager
-          {this.state.authenticated &&
-            <Button className={styles.Logout} onClick={this.doLogout.bind(this)} variant="secondary" ><BoxArrowLeft/>Logout</Button>
-          }
+          <Container fluid>
+            <Row>
+              <Col xl={{ span: 4, offset: 4 }} lg={{ span: 6, offset: 3 }} md={{ span: 6, offset: 3 }} xs={{ span: 6, offset: 1 }} >
+                Password Manager
+              </Col>
+              <Col xl={{ span: 2, offset: 2 }} lg={{ span: 2, offset: 1 }} md={{ span: 3, offset: 0 }} xs={{ span: 3, offset: 2 }} className="text-right">
+                {this.state.authenticated &&
+                  <Button 
+                    className={styles.Logout} 
+                    onClick={this.doLogout.bind(this)} 
+                    variant="secondary" 
+                  >
+                    <BoxArrowLeft/>Logout
+                  </Button>
+                }
+              </Col>
+            </Row>
+          </Container>
 	      </header>
         <Message 
             messages={this.state.messages} 
