@@ -12,28 +12,28 @@ export class TagsPlugin extends BasePlugin implements IPluginWithMainView, IPlug
     super(pluginSystem);
   }
 
-  MainViewJSX() {
+  MainViewJSX(): JSX.Element {
     return ( <TagViewComponent key="TagViewComponent" tags={this.tags} filterCallback={this.filterCallback.bind(this)} ref={this.tagList}/> );
   }
 
-  resetFilter() {
+  resetFilter(): void {
     if (this.tagList.current) {
       this.tagList.current.clearSelected();
     }
   }
 
-  accountsReady(accounts: Array<Account>) {
+  accountsReady(accounts: Array<Account>): void {
     this.tags = this.gatherDistinctTags(accounts);
   }
 
-  filterCallback(tagsFilter: Array<string>) {
+  filterCallback(tagsFilter: Array<string>): void {
     let filter = undefined;
     if (tagsFilter.length > 0) {
       filter = (acc: Account): boolean=> {
         if (!("tags" in acc.other)) {
           return false;
         }
-        let accTags = acc.other["tags"].split(',').map(function (str: string){return str.trim();});
+        const accTags = acc.other["tags"].split(',').map(function (str: string){return str.trim();});
         return tagsFilter.every(tag => accTags.includes(tag));
         }
     }
@@ -41,15 +41,15 @@ export class TagsPlugin extends BasePlugin implements IPluginWithMainView, IPlug
   }
 
   private gatherDistinctTags(accounts: Array<Account>) {
-    var tags: Array<string> = [];
-    for (let x of accounts) {
+    let tags: Array<string> = [];
+    for (const x of accounts) {
       if (!("tags" in x.other))
         continue;
       if (x.other["tags"].length>0)
         tags = tags.concat(x.other["tags"].split(',').map(function (str: string){return str.trim();}));
     }
-    var unique: Array<string> = [];
-    for (let tag of tags ) {
+    const unique: Array<string> = [];
+    for (const tag of tags ) {
       if(! unique.includes(tag)) {
         unique.push(tag);
       }

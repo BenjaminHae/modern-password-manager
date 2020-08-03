@@ -11,19 +11,15 @@ export class AccountTransformerService {
   }
 
   async encryptAccount(account: Account, credentials?: ICredentialProvider): Promise<encryptedAccount> {
-    let name: CryptedObject;
-    let other: CryptedObject;
-    name = await this.crypto.encryptChar(account.name, undefined, credentials)
-    other = await this.crypto.encryptChar(account.getOtherJSON(), undefined, credentials);
+    const name = await this.crypto.encryptChar(account.name, undefined, credentials)
+    const other = await this.crypto.encryptChar(account.getOtherJSON(), undefined, credentials);
     return new encryptedAccount(account.index, name, account.enpassword, other);
   }
 
   async decryptAccount(encrypted: encryptedAccount): Promise<Account> {
-    let name: string;
-    let other: string;
-    name = await this.crypto.decryptChar(encrypted.name);
-    other = await this.crypto.decryptChar(encrypted.other);
-    let account = new Account(encrypted.index, name, encrypted.password);
+    const name = await this.crypto.decryptChar(encrypted.name);
+    const other = await this.crypto.decryptChar(encrypted.other);
+    const account = new Account(encrypted.index, name, encrypted.password);
     account.other = JSON.parse(other);
     return account;
   }

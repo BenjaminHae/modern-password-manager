@@ -1,8 +1,8 @@
 import { RequestContext } from '@pm-server/pm-server-react-client';
 
 export class CSRFMiddleware {
-  csrfToken: string = 'test';
-  async pre(params: RequestContext) {
+  csrfToken = 'test';
+  async pre(params: RequestContext): Promise<RequestContext> {
     if (!params.init.headers) {
       params.init.headers = new Headers();
     }

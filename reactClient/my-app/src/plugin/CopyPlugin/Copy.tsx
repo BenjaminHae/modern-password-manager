@@ -9,13 +9,13 @@ import { ClipboardData } from 'react-bootstrap-icons';
 export class CopyPlugin extends BasePlugin implements IPluginWithAccountList, IPluginRequiresTransformer {
   transformer?: AccountTransformerService;
  
-  setTransformer(transformer: AccountTransformerService) {
+  setTransformer(transformer: AccountTransformerService): void {
     this.transformer = transformer;
   }
   accountList(column: IDataTableColumn<Account>): IDataTableColumn<Account> {
     if (column.name === "Password") {
       if (column.cell !== undefined) {
-        let oldCell = column.cell;
+        const oldCell = column.cell;
         column.cell = (row: Account) => {
           return [oldCell(row),this.showCopyPassword(row)]
         }
@@ -26,13 +26,13 @@ export class CopyPlugin extends BasePlugin implements IPluginWithAccountList, IP
     }
     return column;
   }
-  showCopyPassword(account: Account) {
+  showCopyPassword(account: Account): void | JSX.Element{
     if(!navigator.clipboard) {
       return;
     }
     return (<Button onClick={() => this.copyPassword(account)} size="sm"><ClipboardData/></Button>)
   }
-  async copyPassword(account: Account) {
+  async copyPassword(account: Account):Promise<void> {
     if (!this.transformer)
       return;
     navigator.clipboard.writeText(await this.transformer.getPassword(account))

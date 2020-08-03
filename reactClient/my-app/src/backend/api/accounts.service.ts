@@ -16,7 +16,7 @@ export class AccountsService {
   //}
 
   async getAccounts(): Promise<Array<encryptedAccount>> {
-    let outAccounts = await this.accountsService.getAccounts()
+    const outAccounts = await this.accountsService.getAccounts()
     return outAccounts.map((account: AccountId) => {
         return this.accountTransformer.encryptedAccountFromOpenAPI(account);
         });
@@ -27,14 +27,14 @@ export class AccountsService {
   }
 
   async addAccounts(accounts: Array<encryptedAccount>): Promise<Array<encryptedAccount>> {
-    let outAccounts = await this.accountsService.addAccounts({account: accounts.map(this.accountTransformer.encryptedAccountToOpenAPI)})
+    const outAccounts = await this.accountsService.addAccounts({account: accounts.map(this.accountTransformer.encryptedAccountToOpenAPI)})
     return outAccounts.map((account: AccountId) => {
         return this.accountTransformer.encryptedAccountFromOpenAPI(account);
         });
   }
 
   async updateAccount(account: encryptedAccount): Promise<Array<encryptedAccount>> {
-    let outAccounts = await this.accountsService.updateAccount(
+    const outAccounts = await this.accountsService.updateAccount(
                           { 
                             id: account.index, 
                             account: this.accountTransformer.encryptedAccountToOpenAPI(account)
@@ -47,8 +47,8 @@ export class AccountsService {
             );
   }
 
-  async deleteAccount(index: number) {
-    let outAccounts = await this.accountsService.deleteAccount({ id: index})
+  async deleteAccount(index: number): Promise<Array<encryptedAccount>> {
+    const outAccounts = await this.accountsService.deleteAccount({ id: index})
     return outAccounts.map((account: AccountId) => {
         return this.accountTransformer.encryptedAccountFromOpenAPI(account);
         });

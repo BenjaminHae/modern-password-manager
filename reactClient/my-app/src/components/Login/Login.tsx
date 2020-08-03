@@ -33,25 +33,25 @@ class Login extends React.Component<LoginProps, LoginState> {
     this.handleGenericChange = this.handleGenericChange.bind(this);
     this.doLogon = this.doLogon.bind(this);
   }
-  handleGenericChange(event: React.ChangeEvent<HTMLInputElement>) {
+  handleGenericChange(event: React.ChangeEvent<HTMLInputElement>): void {
     if (event.target.name in (this.state as LoginFormValues)) {
       this.setState({[event.target.name]: event.target.value} as Pick<LoginFormValues, keyof LoginFormValues>);
     }
   }
-  async doLogon(event: React.FormEvent<HTMLFormElement>) {
+  async doLogon(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     if (!event.currentTarget.checkValidity()) {
       this.setState({validated: true});
       return;
     }
-    let password = this.state.password;
+    const password = this.state.password;
     this.setState({ password: "", waiting: true });
     await this.props.doLogin(this.state.username, password);
     this.setState({ waiting: false, validated: false });
   }
-  render () {
+  render (): JSX.Element {
     return (
-	  <div className={styles.Login}>
+    <div className={styles.Login}>
       <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
         <h2>Login</h2>
         <Form onSubmit={this.doLogon} noValidate validated={this.state.validated} >

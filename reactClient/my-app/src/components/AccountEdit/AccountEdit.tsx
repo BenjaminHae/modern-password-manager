@@ -30,51 +30,51 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
     this.state = { fields: this.generateFieldContents(), waiting: false};
   }
 
-  componentDidUpdate(prevProps: AccountEditProps) {
+  componentDidUpdate(prevProps: AccountEditProps): void {
     if (this.props.account !== prevProps.account) {
       this.setState({fields: this.generateFieldContents()});
     }
   }
 
   generateFieldContents(): {[index: string]:string} {
-    let newFields: {[index: string]:string} = { name: "", password: "" };
-    for (let item of this.props.fields) {
+    const newFields: {[index: string]:string} = { name: "", password: "" };
+    for (const item of this.props.fields) {
       newFields[item.selector] = "";
     }
     if (this.props.account) {
       newFields["name"] = this.props.account.name;
-      for (let otherKey in this.props.account.other) {
+      for (const otherKey in this.props.account.other) {
         newFields[otherKey] = this.props.account.other[otherKey];
       }
     }
     return newFields;
   }
-  handleGenericChange(event: React.ChangeEvent<HTMLInputElement>) {
-    let currentFields = this.state.fields;
+  handleGenericChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    const currentFields = this.state.fields;
     currentFields[event.target.name] = event.target.value;
     this.setState({fields: currentFields});
   }
-  cleanUp() {
-    let newFields: {[index: string]:string} = { name: "", password: "" };
-    for (let item of this.props.fields) {
+  cleanUp(): void {
+    const newFields: {[index: string]:string} = { name: "", password: "" };
+    for (const item of this.props.fields) {
       newFields[item.selector] = "";
     }
     this.setState({fields: newFields});
   }
-  async showPassword() {
+  async showPassword(): Promise<void> {
     if (this.props.account) {
-      let currentFields = this.state.fields;
+      const currentFields = this.state.fields;
       currentFields["password"] = await this.props.getAccountPasswordHandler(this.props.account);
       this.setState({fields: currentFields});
     }
   }
-  renderFormFields() {
-    let fields = [ (
+  renderFormFields(): Array<JSX.Element> {
+    const fields = [ (
         <Form.Group controlId="formUsername" key="account">
           <Form.Label>Account Name</Form.Label>
           <Form.Control type="text" placeholder="Account name" name="name" onChange={this.handleGenericChange} value={this.state.fields["name"]} />
         </Form.Group>
-	   ), 
+     ), 
            (
         <Form.Group controlId="formPassword" key="password">
           <Form.Label>Password</Form.Label>
@@ -87,8 +87,8 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
             }
           </InputGroup>
         </Form.Group>
-	   )];
-    let sortFunc = (a: FieldOptions, b: FieldOptions) => {
+     )];
+    const sortFunc = (a: FieldOptions, b: FieldOptions) => {
       if (!a.colNumber) {
         if (!b.colNumber) {
           return 0;
@@ -100,8 +100,8 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
       }
       return a.colNumber - b.colNumber
     }
-    for (let field of this.props.fields.sort(sortFunc)) {
-      let fieldOut = (
+    for (const field of this.props.fields.sort(sortFunc)) {
+      const fieldOut = (
         <Form.Group controlId={"form" + field.selector} key={field.selector} >
           <Form.Label>{field.name}</Form.Label>
           <Form.Control type="text" placeholder={field.name} name={field.selector} onChange={this.handleGenericChange} value={this.state.fields[field.selector]} />
@@ -116,7 +116,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
     }
     return fields;
   }
-  async submitForm(event: React.FormEvent) {
+  async submitForm(event: React.FormEvent): Promise<void> {
     try {
       event.preventDefault();
       this.setState({waiting: true});
@@ -131,7 +131,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
       this.setState({waiting: false});
     }
   }
-  async deleteHandler() {
+  async deleteHandler(): Promise<void> {
     if (this.props.account) {
       try {
         this.setState({waiting: true});
@@ -147,7 +147,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
       }
     }
   }
-  render() {
+  render(): JSX.Element {
     return (
       <div className={styles.AccountEdit} >
         <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>

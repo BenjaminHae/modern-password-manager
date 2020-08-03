@@ -66,16 +66,16 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
       selectedAccount: undefined
     }
   }
-  selectView(view: AuthenticatedView) {
+  selectView(view: AuthenticatedView): void {
     this.setState({view: view});
   }
-  editAccountSelect(account: Account) {
+  editAccountSelect(account: Account): void {
     this.setState({view: AuthenticatedView.Edit, selectedAccount: account});
   }
-  addAccountSelect() {
+  addAccountSelect(): void {
     this.setState({view: AuthenticatedView.Add});
   }
-  render () {
+  render (): JSX.Element {
     return (
       <div className={styles.Authenticated}>
         <Container fluid >{this.renderSelectors()}</Container>
@@ -83,8 +83,8 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
       </div>
     );
   }
-  renderSelectors() {
-    let buttons = this.viewButtons.filter((viewButton)=>viewButton.selectable).map((viewButton)=>{
+  renderSelectors(): JSX.Element {
+    const buttons = this.viewButtons.filter((viewButton)=>viewButton.selectable).map((viewButton)=>{
       return (
         <Dropdown.Item key={viewButton.view} onSelect={()=>{this.selectView(viewButton.view)}} active={this.state.view === viewButton.view }>{viewButton.name}</Dropdown.Item>
       )
@@ -98,7 +98,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
       </Dropdown>
     )
   }
-  renderSwitchAuthenticatedView() {
+  renderSwitchAuthenticatedView(): JSX.Element {
     switch(this.state.view) {
       case AuthenticatedView.List:
         return (

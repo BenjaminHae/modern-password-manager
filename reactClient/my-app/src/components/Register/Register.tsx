@@ -39,9 +39,9 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
     this.handleGenericChange = this.handleGenericChange.bind(this);
   }
-  async doRegister(event: React.FormEvent<HTMLFormElement>) {
+  async doRegister(): Promise<void> {
     try {
-      let password = this.state.password;
+      const password = this.state.password;
       this.setState({ waiting: true, password: "" });
       await this.props.doRegister(this.state.username, password, this.state.email);
       this.setState({ 
@@ -55,7 +55,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       this.props.showMessage("Registration failed: " + e.toString(), { autoClose: false, variant: "danger" } );
     }
   }
-  async submitForm(event: React.FormEvent<HTMLFormElement>) {
+  async submitForm(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     const form = event.currentTarget;
     if (!form.checkValidity()) {
@@ -67,19 +67,19 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       this.props.showMessage("Password repeat must match password", { autoClose: false, variant: "danger" });
       return
     }
-    await this.doRegister(event);
+    await this.doRegister();
   }
-  handleGenericChange(event: React.ChangeEvent<HTMLInputElement>) {
+  handleGenericChange(event: React.ChangeEvent<HTMLInputElement>): void {
     if (event.target.name in (this.state as RegisterFormValues)) {
       this.setState({[event.target.name]: event.target.value} as Pick<RegisterFormValues, keyof RegisterFormValues>);
     }
   }
-  render () {
+  render (): JSX.Element {
     return (
-	  <div className={styles.Register}>
+    <div className={styles.Register}>
       <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
-	    <h2>Register</h2>
-	    <Form onSubmit={this.submitForm.bind(this)} noValidate validated={this.state.validated} >
+      <h2>Register</h2>
+      <Form onSubmit={this.submitForm.bind(this)} noValidate validated={this.state.validated} >
         <fieldset disabled={this.state.waiting}>
           <Form.Group controlId="registerFormUsername">
             <Form.Label>Username</Form.Label>

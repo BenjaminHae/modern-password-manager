@@ -15,10 +15,10 @@ class TagViewComponent extends React.Component<TagViewProps, TagViewState> {
     super(props);
     this.state = {selectedTags: []};
   }
-  clearSelected() {
+  clearSelected(): void {
     this.setState({selectedTags: []});
   }
-  selectTag(tag: string) {
+  selectTag(tag: string): void {
     let newSelectedTags = this.state.selectedTags
     if (newSelectedTags.includes(tag)) {
       newSelectedTags = newSelectedTags.filter(t => t !== tag);
@@ -29,13 +29,13 @@ class TagViewComponent extends React.Component<TagViewProps, TagViewState> {
     this.setState({selectedTags: newSelectedTags});
     this.props.filterCallback(newSelectedTags);
   }
-  printTags() {
+  printTags(): Array<JSX.Element> {
     return this.props.tags.map(
       (tag: string) => 
         ( <Button key={tag} size="sm" variant={this.state.selectedTags.includes(tag) ? "info" : "outline-info"} onClick={()=>this.selectTag(tag)}>{tag}</Button> )
     );
   }
-  render() {
+  render(): JSX.Element {
     return (
         <Col className={styles.TagViewComponent} lg={3} xl={3} sm={6} xs={12}>
           <h3>Tags</h3>

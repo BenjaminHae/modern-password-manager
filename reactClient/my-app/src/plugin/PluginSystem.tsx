@@ -12,7 +12,7 @@ type AccountFilter = (account: Account) => boolean;
 export class PluginSystem {
   filterChangeHandler?: (filter: AccountsFilter) => void;
   filters: { [index: string]: AccountFilter } = {};
-  filterPresent: boolean = false;
+  filterPresent = false;
   
   mainViewCallback: Array<() => JSX.Element> = [];
   resetFilterCallback: Array<() => void> = [];
@@ -27,20 +27,20 @@ export class PluginSystem {
     this.activatePlugins(ActivatedPlugins);
   }
   
-  activatePlugins(plugins: Array<new (pluginSystem: PluginSystem) => BasePlugin>) {
+  activatePlugins(plugins: Array<new (pluginSystem: PluginSystem) => BasePlugin>): void {
     this.clearPlugins();
-    for (let Plugin of plugins) {
+    for (const Plugin of plugins) {
       this.registerPlugin(new Plugin(this));
     }
   }
 
-  clearPlugins() {
+  clearPlugins(): void {
     this.mainViewCallback = [];
     this.resetFilterCallback = [];
     this.accountsReadyCallback = [];
   }
 
-  registerPlugin(plugin: BasePlugin) {
+  registerPlugin(plugin: BasePlugin): void {
     //requires
     if (instanceOfIPluginRequiresTransformer(plugin)) {
       plugin.setTransformer(this.transformer);
@@ -60,7 +60,7 @@ export class PluginSystem {
     }
   }
 
-  private accountsReady(accounts: Array<Account>) {
+  private accountsReady(accounts: Array<Account>): void {
     this.accountsReadyCallback.forEach(ready => ready(accounts));
   }
 
@@ -69,12 +69,12 @@ export class PluginSystem {
     return
   }*/
 
-  setFilterChangeHandler(filterChangeHandler: (filter:AccountsFilter) => void) {
+  setFilterChangeHandler(filterChangeHandler: (filter:AccountsFilter) => void): void {
     this.filterChangeHandler = filterChangeHandler;
     this.updateFilter();
   }
 
-  setFilter(key: string, filter?: AccountFilter) {
+  setFilter(key: string, filter?: AccountFilter): void {
     this.filterPresent = true;
     if (filter === undefined) {
       delete this.filters[key];
@@ -85,14 +85,14 @@ export class PluginSystem {
     this.updateFilter();
   }
 
-  clearFilters() {
+  clearFilters(): void {
     this.filters = {};
     this.filterPresent = false;
     this.resetFilterCallback.forEach(reset => reset());
     this.updateFilter();
   }
 
-  updateFilter() {
+  updateFilter(): void {
     this.filterPresent = Object.keys(this.filters).length > 0;
     if (!this.filterChangeHandler)
       return ;
@@ -103,19 +103,19 @@ export class PluginSystem {
 
   private doFilter(accounts: Array<Account>): Array<Account> {
     let filtered = accounts;
-    for (let key in this.filters) {
+    for (const key in this.filters) {
       filtered = filtered.filter( this.filters[key] );
     }
     return filtered;
   }
 
-  getMainView() {
+  getMainView(): Array<JSX.Element> {
     return this.mainViewCallback.map(view => view());
   }
 
   manipulateAccountListItem(column: IDataTableColumn<Account>): IDataTableColumn<Account> {
     let result = column;
-    for (let callback of this.accountListCallback) {
+    for (const callback of this.accountListCallback) {
       result = callback(result);
     }
     return result;

@@ -24,7 +24,6 @@ const History: React.FC<IHistoryProps> = (props: IHistoryProps) => {
     {name: 'IP', selector: 'iP'},
     {name: 'User-Agent', selector: 'userAgent'},
   ];
-  let loaded = false;
 
   const conditionalRowStyles = [{
     when: (event:HistoryItem) =>  !event.eventResult || event.eventResult.toLowerCase().includes("failed") ,

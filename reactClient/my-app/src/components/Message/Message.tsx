@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './Message.module.css';
 import Alert from 'react-bootstrap/Alert';
-import Fade from 'react-bootstrap/Fade';
 
 export interface IMessageProps {
   messages: Array<IMessage>;

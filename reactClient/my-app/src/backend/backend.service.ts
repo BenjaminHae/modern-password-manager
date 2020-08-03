@@ -1,5 +1,4 @@
 import { Account } from './models/account';
-import { CryptedObject } from './models/cryptedObject';
 import { encryptedAccount } from './models/encryptedAccount';
 import { UserOptions, UserOptionsFromJSON } from './models/UserOptions';
 import { MaintenanceService, BackendOptions } from './api/maintenance.service';
@@ -45,7 +44,7 @@ export class BackendService {
   }
 
   async logon(username: string, password: string): Promise<ILogonInformation> {
-    let credentialProvider = new CredentialProviderPassword();
+    const credentialProvider = new CredentialProviderPassword();
     await credentialProvider.generateFromPassword(password);
     return await this.logonWithCredentials(credentialProvider, username);
   }
@@ -54,7 +53,7 @@ export class BackendService {
     this.credentials.setProvider(credentialProvider);
     let response: ILogonInformation = {};
     if (username) {
-      let passwordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
+      const passwordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
       response = await this.userService.logon(username, passwordHash)
     }
     await this.afterLogin();
@@ -74,8 +73,8 @@ export class BackendService {
     const newCredentials = new CredentialProviderPassword();
     await newCredentials.generateFromPassword(newPassword)
     const newPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12), newCredentials)
-    let newAccounts: Array<encryptedAccount> = [];
-    for (let account of this.accounts) {
+    const newAccounts: Array<encryptedAccount> = [];
+    for (const account of this.accounts) {
       newAccounts.push(await this.reencryptAccount(account, newCredentials));
     }
     await this.userService.changePassword(oldPasswordHash, newPasswordHash, newAccounts);
@@ -84,24 +83,23 @@ export class BackendService {
   }
 
   async verifyPassword(password: string): Promise<boolean> {
-    let testCredentials = new CredentialProviderPassword();
+    const testCredentials = new CredentialProviderPassword();
     await testCredentials.generateFromPassword(password)
-    let newPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12), testCredentials)
-    let oldPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
+    const newPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12), testCredentials)
+    const oldPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
     return oldPasswordHash.toBase64JSON() === newPasswordHash.toBase64JSON();
   }
 
   async reencryptAccount(account: Account, newCredentials: ICredentialProvider): Promise<encryptedAccount> {
-    let password = await this.accountTransformer.getPassword(account)
-    let enpassword = await this.crypto.encryptChar(password, undefined, newCredentials);
+    const password = await this.accountTransformer.getPassword(account)
+    const enpassword = await this.crypto.encryptChar(password, undefined, newCredentials);
           //todo! File-Keys?
     account.enpassword = enpassword;
     return await this.accountTransformer.encryptAccount(account, newCredentials);
   }
 
-  async getUserOptions() {
+  async getUserOptions(): Promise<void> {
     const encryptedUserConfiguration = await this.userService.getUserSettings();
-    const defaultUserOptions: UserOptions = 
     this.userOptions = {
         fields: [
         { name: "username", colNumber: 1, selector: "user", visible: true, sortable: true },
@@ -111,7 +109,7 @@ export class BackendService {
     };
     if (encryptedUserConfiguration) {
       try {
-        let data = JSON.parse(await this.crypto.decryptChar(encryptedUserConfiguration));
+        const data = JSON.parse(await this.crypto.decryptChar(encryptedUserConfiguration));
         this.userOptions = UserOptionsFromJSON(data, this.userOptions);
       }
       catch {
@@ -130,16 +128,16 @@ export class BackendService {
 
   async afterLogin(): Promise<void> {
     subscriptionExecutor(this.loginObservers);
-    let accounts = await this.accountsService.getAccounts()
+    const accounts = await this.accountsService.getAccounts()
     await this.getUserOptions();
     return await this.parseAccounts(accounts)
   }
 
   private async parseAccounts(encAccounts: Array<encryptedAccount>): Promise<void> {
     console.log("received " + encAccounts.length + " accounts");
-    let accounts: Array<Account> = [];
-    for (let encAccount of encAccounts) {
-        let decAccount =  await this.accountTransformer.decryptAccount(encAccount);
+    const accounts: Array<Account> = [];
+    for (const encAccount of encAccounts) {
+        const decAccount =  await this.accountTransformer.decryptAccount(encAccount);
         accounts.push( decAccount );
     }
     this.accounts = accounts;
@@ -147,10 +145,10 @@ export class BackendService {
   }
 
   async register(username: string, password: string, email: string): Promise<void> {
-    let newCredentials = new CredentialProviderPassword();
+    const newCredentials = new CredentialProviderPassword();
     await newCredentials.generateFromPassword(password)
     this.credentials.setProvider(newCredentials);
-    let ciphertext = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
+    const ciphertext = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
     return await this.userService.register(username, ciphertext, email)
   }
 
@@ -159,23 +157,23 @@ export class BackendService {
   }
 
   async addAccounts(newAccounts: Array<Account>): Promise<void> {
-    let encAccounts: Array<encryptedAccount> = [];
-    for (let account of newAccounts) {
-      let encAccount = await this.accountTransformer.encryptAccount(account);
+    const encAccounts: Array<encryptedAccount> = [];
+    for (const account of newAccounts) {
+      const encAccount = await this.accountTransformer.encryptAccount(account);
       encAccounts.push(encAccount);
     }
-    let accounts = await this.accountsService.addAccounts(encAccounts)
+    const accounts = await this.accountsService.addAccounts(encAccounts)
     return await this.parseAccounts(accounts)
   }
 
   async updateAccount(account: Account): Promise<void> {
-    let encAccount = await this.accountTransformer.encryptAccount(account)
-    let accounts = await this.accountsService.updateAccount(encAccount)
+    const encAccount = await this.accountTransformer.encryptAccount(account)
+    const accounts = await this.accountsService.updateAccount(encAccount)
     return await this.parseAccounts(accounts)
   }
 
   async deleteAccount(account: Account): Promise<void> {
-    let accounts = await this.accountsService.deleteAccount(account.index)
+    const accounts = await this.accountsService.deleteAccount(account.index)
     return await this.parseAccounts(accounts)
   }
 

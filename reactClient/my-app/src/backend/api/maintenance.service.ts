@@ -9,11 +9,11 @@ export class MaintenanceService {
   constructor(private maintenanceService: OpenAPIMaintenanceService, private csrfMiddleware: CSRFMiddleware) { }
 
   async retrieveInfo(): Promise<BackendOptions> {
-    let serverInformation = await this.maintenanceService.serverInformation()
+    const serverInformation = await this.maintenanceService.serverInformation()
     if (serverInformation.csrfToken) {
       this.csrfMiddleware.csrfToken = serverInformation.csrfToken;
     }
-    let registrationAllowed: boolean = false;
+    let registrationAllowed = false;
     if (serverInformation.allowRegistration) {
       registrationAllowed = serverInformation.allowRegistration
     }

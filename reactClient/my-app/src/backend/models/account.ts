@@ -15,36 +15,35 @@ export class Account {
         this.file = null;
     }
 
-    clearOther() {
+    clearOther(): void {
         this.other = {};
     }
-    clearVisibleOther() {
-        for (let item in this.other) {
+    clearVisibleOther(): void {
+        for (const item in this.other) {
             if (item.substring(0,1) !== "_") {
                 delete this.other[item];
             }
         }
     }
     get availableOthers(): Array<string> {
-        let availableOthers = [];
-        for (let otherName in this.other) {
+        const availableOthers = [];
+        for (const otherName in this.other) {
             availableOthers.push(otherName);
         }
         return availableOthers;
     }
-    getOtherJSON() {
+    getOtherJSON(): string {
         return JSON.stringify(this.other);
     }
-    addEncryptedFile(name: string, fkey: any) {
-        var self = this;
-        self.file = { "name":"", "key": fkey };
+    addEncryptedFile(name: string, fkey: any): void {
+        this.file = { "name":"", "key": fkey };
         //return self.encryptionWrapper.decryptChar(name)
         //    .then(function(decryptedName) {
         //        self.file.name = decryptedName;
         //        return self.file;
         //    });
     }
-    hasFile() {
+    hasFile(): boolean {
         return 'file' in this;
     }
 }

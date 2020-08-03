@@ -11,10 +11,8 @@ interface PluginMainViewProps {
 //  backend: BackendService,
   pluginSystem: PluginSystem;
 }
-interface PluginMainViewState {
-}
-class PluginMainView extends React.Component<PluginMainViewProps, PluginMainViewState> {
-  render () {
+class PluginMainView extends React.Component<PluginMainViewProps> {
+  render (): JSX.Element {
     return (
       <Container className={styles.PluginMainView}>
         <Row>

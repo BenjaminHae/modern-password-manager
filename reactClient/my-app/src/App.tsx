@@ -38,15 +38,13 @@ interface AppState {
   historyItems: Array<HistoryItem>;
   filter?: AccountsFilter;
 }
-interface AppProps {
-}
-export default class App extends React.Component<AppProps, AppState> {
-	backend: BackendService;
+export default class App extends React.Component<{}, AppState> {
+  backend: BackendService;
   accountTransformerService: AccountTransformerService;
   crypto: CryptoService;
   plugins: PluginSystem;
 
-  constructor (props: AppProps) {
+  constructor (props: {}) {
     super(props);
     this.state = {
       ready: false,
@@ -58,15 +56,15 @@ export default class App extends React.Component<AppProps, AppState> {
       historyItems: []
     }
 
-    let csrfMiddleware = new CSRFMiddleware();
+    const csrfMiddleware = new CSRFMiddleware();
     let basePath = "";
     if (process.env.REACT_APP_API_BASE_URL) {
       basePath = process.env.REACT_APP_API_BASE_URL;
     }
-		let APIconfiguration = new OpenAPIConfiguration({ basePath: basePath, middleware: [csrfMiddleware]});
-		let credentialService = new CredentialService();
-		this.crypto = new CryptoService(credentialService);
-		this.accountTransformerService = new AccountTransformerService(this.crypto); 
+    const APIconfiguration = new OpenAPIConfiguration({ basePath: basePath, middleware: [csrfMiddleware]});
+    const credentialService = new CredentialService();
+    this.crypto = new CryptoService(credentialService);
+    this.accountTransformerService = new AccountTransformerService(this.crypto); 
     this.backend = new BackendService(
         new MaintenanceService(new OpenAPIMaintenanceService(APIconfiguration), csrfMiddleware), 
         new UserService(new OpenAPIUserService(APIconfiguration), this.accountTransformerService),
@@ -89,8 +87,8 @@ export default class App extends React.Component<AppProps, AppState> {
           console.log("(react) received options: " + userOptions);
           this.setState({userOptions : userOptions});
           });
-	}
-  componentDidMount() {
+  }
+  componentDidMount(): void {
     this.backend.waitForBackend()
       .then((backendOptions: BackendOptions) => {
           this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed});
@@ -100,7 +98,7 @@ export default class App extends React.Component<AppProps, AppState> {
   doLogin(username:string, password: string):Promise<void> {
     return this.backend.logon(username, password)
       .then((info: ILogonInformation) => {
-        let options: IMessageOptions = {};
+        const options: IMessageOptions = {};
         let message = "";
         if (info.lastLogin) {
           message += `Your last login was on ${info.lastLogin.toLocaleString(navigator.language)}. `;
@@ -141,7 +139,7 @@ export default class App extends React.Component<AppProps, AppState> {
         updatedAccount.enpassword = await this.crypto.encryptChar(fields.password);
       }
       delete fields.password;
-      for (let item in fields) {
+      for (const item in fields) {
         updatedAccount.other[item] = fields[item];
       }
     }
@@ -156,7 +154,6 @@ export default class App extends React.Component<AppProps, AppState> {
     }
   }
   async generateNewAccount(fields: {[index: string]:string}): Promise<Account> {
-    let updatedAccount: Account;
     if (!("password" in fields)) {
       throw new Error("Account has no password");
     }
@@ -164,18 +161,18 @@ export default class App extends React.Component<AppProps, AppState> {
       throw new Error("No Account name set");
     }
     // Todo auto-generate password
-    let cryptedPassword = await this.crypto.encryptChar(fields["password"]);
+    const cryptedPassword = await this.crypto.encryptChar(fields["password"]);
     delete fields.password;
-    updatedAccount = new Account(-1, fields.name, cryptedPassword);
+    const updatedAccount = new Account(-1, fields.name, cryptedPassword);
     delete fields.name;
-    for (let item in fields) {
+    for (const item in fields) {
       updatedAccount.other[item] = fields[item];
     }
     return updatedAccount;
   }
   async bulkAddAccounts(newFields: Array<{[index: string]:string}>): Promise<void> {
-    let newAccounts: Array<Account> = [];
-    for (let fields of newFields) {
+    const newAccounts: Array<Account> = [];
+    for (const fields of newFields) {
       newAccounts.push(await this.generateNewAccount(fields));
     }
     await this.backend.addAccounts(newAccounts);
@@ -232,15 +229,15 @@ export default class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  closeMessage(id: number) {
+  closeMessage(id: number): void {
     const newMessages = this.state.messages.filter((m)=> m.id !== id);
     this.setState({messages: newMessages});
   }
 
-	render() {
-	  return (
-	    <div className="App">
-	      <header className="App-header">
+  render(): JSX.Element {
+    return (
+      <div className="App">
+        <header className="App-header">
           <Container fluid>
             <Row>
               <Col xl={{ span: 4, offset: 4 }} lg={{ span: 6, offset: 3 }} md={{ span: 6, offset: 3 }} xs={{ span: 6, offset: 1 }} className="text-center">
@@ -259,13 +256,13 @@ export default class App extends React.Component<AppProps, AppState> {
               </Col>
             </Row>
           </Container>
-	      </header>
+        </header>
         <Message 
             messages={this.state.messages} 
             closeHandler={this.closeMessage.bind(this)}
         />
-	      {this.state.authenticated &&
-	       <Authenticated 
+        {this.state.authenticated &&
+         <Authenticated 
             accounts={this.filterAccounts(this.state.accounts)} 
             historyItems={this.state.historyItems} 
             userOptions={this.state.userOptions}
@@ -291,8 +288,8 @@ export default class App extends React.Component<AppProps, AppState> {
         {!this.state.authenticated && !this.state.ready 
           && <span>Waiting for server</span> }
         <footer className="App-footer">Version: {process.env.REACT_APP_GIT_SHA}</footer>
-	    </div>
-	  );
-	}
+      </div>
+    );
+  }
 }
 

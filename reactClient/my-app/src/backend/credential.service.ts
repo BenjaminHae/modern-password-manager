@@ -8,7 +8,7 @@ export class CredentialService {
     this.credentialProvider = new CredentialProviderUndefined();
   }
 
-  setProvider(newProvider: ICredentialProvider) {
+  setProvider(newProvider: ICredentialProvider): void {
     this.credentialProvider = newProvider;
   }
 

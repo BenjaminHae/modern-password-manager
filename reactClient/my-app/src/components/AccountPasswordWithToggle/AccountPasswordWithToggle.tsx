@@ -23,7 +23,7 @@ class AccountPasswordWithToggle extends React.Component<PasswordProps, PasswordS
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
   }
-  componentDidUpdate(prevProps: PasswordProps, prevState: PasswordState) {
+  componentDidUpdate(prevProps: PasswordProps, prevState: PasswordState): void {
     if (this.state.visible !== prevState.visible) {
       if (this.state.visible) {
         this.getPassword();
@@ -33,7 +33,7 @@ class AccountPasswordWithToggle extends React.Component<PasswordProps, PasswordS
       }
     }
   }
-  render () {
+  render (): JSX.Element {
     return (
       <>
       { !this.state.visible ?
@@ -44,16 +44,16 @@ class AccountPasswordWithToggle extends React.Component<PasswordProps, PasswordS
       </>
     )
   }
-  async getPassword() {
+  async getPassword(): Promise<void> {
     this.setState({password: await this.props.getAccountPasswordHandler(this.props.account)});
   }
-  clearPassword() {
+  clearPassword(): void {
     this.setState({password: ""});
   }
-  show() {
+  show(): void {
     this.setState({visible: true});
   }
-  hide() {
+  hide(): void {
     this.setState({visible: false});
   }
 }

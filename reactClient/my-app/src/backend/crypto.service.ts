@@ -9,16 +9,16 @@ export class CryptoService {
   constructor(private credentials: CredentialService) {
   }
 
-  setCredentials(credentials: CredentialService) {
+  setCredentials(credentials: CredentialService): void {
     this.credentials = credentials;
   }
 
   async decryptChar(crypt: CryptedObject, credentials: ICredentialProvider=this.credentials.credentialProvider): Promise<string> {
-    let key = credentials.getKey()
+    const key = credentials.getKey()
     if (!key) {
       throw new Error("key is not defined")
     }
-    let plaintext = await window.crypto.subtle.decrypt(
+    const plaintext = await window.crypto.subtle.decrypt(
       {
         name: "AES-GCM",
         iv: crypt.iv,
@@ -30,11 +30,11 @@ export class CryptoService {
   }
 
   async encryptChar(plaintext: string, iv = window.crypto.getRandomValues(new Uint8Array(12)), credentials: ICredentialProvider=this.credentials.credentialProvider): Promise<CryptedObject> {
-    let key = credentials.getKey()
+    const key = credentials.getKey()
     if (!key) {
       throw new Error("key is not defined")
     }
-    let ciphertext = await window.crypto.subtle.encrypt(
+    const ciphertext = await window.crypto.subtle.encrypt(
       {
         name: "AES-GCM",
         iv: iv,
@@ -51,8 +51,8 @@ export class CryptoService {
   }
 
   private str2ab(str: string): ArrayBuffer {
-    var bufView = new Uint16Array(str.length);
-    for (var i=0, strLen=str.length; i < strLen; i++) {
+    const bufView = new Uint16Array(str.length);
+    for (let i=0, strLen=str.length; i < strLen; i++) {
       bufView[i] = str.charCodeAt(i);
     }
     return bufView.buffer;
@@ -71,13 +71,13 @@ export class CryptoService {
 
   private removePadding(buf: ArrayBuffer): ArrayBuffer {
     function findPaddingStart(buf: Uint16Array): number {
-      let lastOne = buf.lastIndexOf(1);
+      const lastOne = buf.lastIndexOf(1);
       if (lastOne < 0) {
         throw new Error("no padding found");
       }
       return lastOne;
     }
-    let length = findPaddingStart(new Uint16Array(buf));
+    const length = findPaddingStart(new Uint16Array(buf));
     return buf.slice(0,2*length);
   }
 }

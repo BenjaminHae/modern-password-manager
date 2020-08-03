@@ -8,8 +8,8 @@ export class CsvConverter {
   }
 
   getKeyMappedTo(findValue: string): string | null {
-    let keyFound: string = "";
-    let found: boolean = false;
+    let keyFound = "";
+    let found = false;
     this.headerMapping.forEach((value, key) => {
       if (findValue === value) {
         keyFound = key;
@@ -24,7 +24,7 @@ export class CsvConverter {
 
   setHeaderMapping(csvName: string, internalName: string|null): boolean {
     let duplicates = false;
-    this.headerMapping.forEach((value, key) => {
+    this.headerMapping.forEach((value) => {
         if (value) {
           if (value === internalName) {
             duplicates = true;
@@ -44,7 +44,7 @@ export class CsvConverter {
     if (this.availableFields) {
       toMap = toMap.concat(this.availableFields);
     }
-    for (let item of headers) {
+    for (const item of headers) {
       if (toMap.includes(item)) {
         this.setHeaderMapping(item, item);
       }
@@ -55,7 +55,7 @@ export class CsvConverter {
   }
 
   createAccountFromData(data: {[index: string]:string}): {[index: string]:string} {
-    let fields: {[index: string]:string} = {};
+    const fields: {[index: string]:string} = {};
     let mappedTo = this.getKeyMappedTo("password");
     if (!mappedTo) {
       throw new Error("Password not selected");
@@ -66,8 +66,8 @@ export class CsvConverter {
       throw new Error("Account-name not selected");
     }
     fields["name"] = data[mappedTo];
-    for (let item of this.availableFields) {
-      let key = this.getKeyMappedTo(item);
+    for (const item of this.availableFields) {
+      const key = this.getKeyMappedTo(item);
       if (key) {
         fields[item] = data[key];
       }

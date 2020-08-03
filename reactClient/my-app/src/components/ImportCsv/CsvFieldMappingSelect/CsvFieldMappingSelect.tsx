@@ -17,25 +17,25 @@ interface OptionInfo {
 }
 class CsvFieldMappingSelect extends React.Component<CsvFieldMappingSelectProps, CsvFieldMappingSelectState> {
 
-  getOptions() {
-    let options: Array<OptionInfo> = [
+  getOptions(): Array<JSX.Element> {
+    const options: Array<OptionInfo> = [
       { name: "", selector: ""},
       { name: "Password", selector: "password"},
       { name: "Name", selector: "name"}
       ]
-    for (let field of this.props.availableFields) {
+    for (const field of this.props.availableFields) {
       options.push({ name: field.name, selector: field.selector})
     }
 
     return options.map((field) => (<option value={field.selector} key={field.selector} >{field.name}</option>));
   }
 
-  handleSelect(event: React.ChangeEvent<HTMLSelectElement>) {
+  handleSelect(event: React.ChangeEvent<HTMLSelectElement>): void {
     this.props.changeHandler(this.props.header, event.target.value);
     event.preventDefault();
   }
 
-  render () {
+  render (): JSX.Element {
     return (
       <Form.Group>
         <Form.Control as="select" className={styles.CsvFieldMappingSelect} value={this.props.mappedFieldSelector} onChange={this.handleSelect.bind(this)} >

@@ -25,7 +25,7 @@ class ChangePassword extends React.Component<ChangePasswordProps, ChangePassword
     this.state = { oldPassword: '', newPassword: '', newPassword2: '', waiting: false};
     this.handleGenericChange = this.handleGenericChange.bind(this);
   }
-  handleGenericChange(event: React.ChangeEvent<HTMLInputElement>) {
+  handleGenericChange(event: React.ChangeEvent<HTMLInputElement>): void {
     if (event.target.name in (this.state as ChangePasswordFormValues)) {
       this.setState({[event.target.name]: event.target.value} as Pick<ChangePasswordFormValues, keyof ChangePasswordFormValues>);
     }
@@ -50,9 +50,9 @@ class ChangePassword extends React.Component<ChangePasswordProps, ChangePassword
       this.props.showMessage("New Password and repeat do not match");
     }
   }
-  render () {
+  render (): JSX.Element {
     return (
-	  <div className={styles.Login}>
+    <div className={styles.Login}>
       <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
         <h2>ChangePassword</h2>
         <Form onSubmit={this.doChange.bind(this)}>
@@ -73,7 +73,7 @@ class ChangePassword extends React.Component<ChangePasswordProps, ChangePassword
           </fieldset>
         </Form>
       </Col>
-	  </div>
+    </div>
     );
   }
 }

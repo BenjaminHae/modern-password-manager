@@ -16,14 +16,14 @@ class SearchInputComponent extends React.Component<SearchInputProps, SearchInput
     super(props);
     this.state = {expression: ""};
   }
-  clearInput() {
+  clearInput(): void {
     this.setState({expression: ""});
   }
-  handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
+  handleSearchChange(event: React.ChangeEvent<HTMLInputElement>): void {
     this.setState({expression: event.target.value});
     this.props.filterCallback(event.target.value);
   }
-  render() {
+  render(): JSX.Element {
     return (
         <Col className={styles.SearchInputComponent} lg={3} xl={3} sm={6} xs={12}>
           <Form.Group className={styles.SearchInput}>

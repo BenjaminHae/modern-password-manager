@@ -16,7 +16,7 @@ export class SearchPlugin extends BasePlugin implements IPluginWithFilter, IPlug
     }
   }
  
-  filterCallback(searchExpression: string) {
+  filterCallback(searchExpression: string): void {
     if (searchExpression !== "") {
       const filter = (acc: Account): boolean=> {
         if (acc.name.includes(searchExpression)) {

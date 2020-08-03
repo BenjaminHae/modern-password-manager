@@ -41,7 +41,7 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
     }
   }
 
-  fileUploadHandler(event: React.ChangeEvent<HTMLInputElement>) {
+  fileUploadHandler(event: React.ChangeEvent<HTMLInputElement>): void {
     let newFile: File | undefined = undefined;
     if (event.target.files) {
       if (event.target.files.length > 0) {
@@ -62,9 +62,9 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
           });
   }
   getColumns(headers: Array<string>, mappings: Map<string, string | null>): Array<IDataTableColumn<{[index: string]:string}>> {
-    let columns: Array<IDataTableColumn<{[index: string]:string}>> = []
-    for (let head of this.parser.getHeaders()) {
-      let name = mappings.get(head);
+    const columns: Array<IDataTableColumn<{[index: string]:string}>> = []
+    for (const head of this.parser.getHeaders()) {
+      const name = mappings.get(head);
       if (name !== null) {
         columns.push( { 
           name: name, 
@@ -77,15 +77,15 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
 
   async importAccounts(): Promise<void> {
     this.setState({waiting: true});
-    let newAccounts = this.importer.createAccounts(this.state.data);
+    const newAccounts = this.importer.createAccounts(this.state.data);
     await this.props.bulkAddHandler(newAccounts);
     this.props.showMessage(`imported ${newAccounts.length} accounts`);
     this.setState({ data: [], waiting: false});
   }
 
   showInformation(): void {
-    let headers = this.parser.getHeaders();
-    let mapping = this.importer.getHeaderMappings();
+    const headers = this.parser.getHeaders();
+    const mapping = this.importer.getHeaderMappings();
     this.setState({
       headers: headers,
       mapping: mapping,
@@ -95,8 +95,8 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
     //this.headersSelector = this.headers.map(s => s+"_selector");
   }
 
-  getColumnNameBySelector(selector: string) {
-    for (let item of this.props.availableFields) {
+  getColumnNameBySelector(selector: string): string {
+    for (const item of this.props.availableFields) {
       if (item.selector === selector) {
         return item.name;
       }
@@ -104,22 +104,22 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
     return selector;
   }
 
-  mappingChangeHandler(header: string, newMapping: string) {
+  mappingChangeHandler(header: string, newMapping: string): void {
     if (newMapping === "") {
       this.importer.setHeaderMapping(header, null);
     }
     else {
       this.importer.setHeaderMapping(header, newMapping);
     }
-    let mapping = this.importer.getHeaderMappings()
-    let columns = this.getColumns(this.parser.getHeaders(), mapping)
+    const mapping = this.importer.getHeaderMappings()
+    const columns = this.getColumns(this.parser.getHeaders(), mapping)
     this.setState({mapping: mapping, columns: columns});
   }
 
-  renderHeaders() {
+  renderHeaders(): Array<JSX.Element> {
     return this.state.headers.map((header: string) => (<th key={header}>{header}</th>) );
   }
-  renderMapping() {
+  renderMapping(): Array<JSX.Element> {
     return this.state.headers.map((header: string)=> { 
        let mapped = this.state.mapping.get(header);
        let title = header
@@ -137,7 +137,7 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
 //    <mat-option *ngFor="let field of availableFields" [value]="field">{{field}}</mat-option>
 //  </mat-select>
   }
-  render () {
+  render (): JSX.Element{
     return (
       <div className={styles.ImportCsv}>
         <Form>

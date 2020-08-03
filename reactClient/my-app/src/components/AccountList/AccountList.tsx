@@ -28,17 +28,17 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
       columns: this.getColumns()
     }
   }
-  componentDidUpdate(prevProps: AccountListProps) {
+  componentDidUpdate(prevProps: AccountListProps): void {
     if (this.props.fields !== prevProps.fields) {
       this.getColumns();
       this.setState({columns: this.getColumns()});
     }
   }
-  getTableActions() {
+  getTableActions(): JSX.Element {
     return <Button onClick={this.props.addAccountHandler} variant="success" size="sm" ><Plus/> Add Account</Button>
   }
   getColumns(): Array<IDataTableColumn<Account>> {
-    let columns: Array<IDataTableColumn<Account>> = [
+    const columns: Array<IDataTableColumn<Account>> = [
       { 
         name: "Name", 
         selector: "name", 
@@ -51,7 +51,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
         cell: (row: Account) => <AccountPasswordWithToggle account={row} getAccountPasswordHandler={this.props.getAccountPasswordHandler}/> 
       }
     ];
-    let sortFunc = (a: FieldOptions, b: FieldOptions) => {
+    const sortFunc = (a: FieldOptions, b: FieldOptions) => {
       if (!a.colNumber) {
         if (!b.colNumber) {
           return 0;
@@ -63,11 +63,11 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
       }
       return a.colNumber - b.colNumber
     }
-    for (let field of this.props.fields.sort(sortFunc)) {
+    for (const field of this.props.fields.sort(sortFunc)) {
       if (!field.visible) {
         continue;
       }
-      let column: IDataTableColumn<Account> = {
+      const column: IDataTableColumn<Account> = {
           name: field.name, 
           selector: (row: Account) => row.other[field.selector],
           sortable: field.sortable
@@ -84,9 +84,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
     }
     return columns;
   }
-  handlePasswordShow() {
-  }
-  render () {
+  render(): JSX.Element {
 /*
     let accounts = this.props.accounts.map((item, key) =>
 	<li key={item.index}>{item.name}</li>

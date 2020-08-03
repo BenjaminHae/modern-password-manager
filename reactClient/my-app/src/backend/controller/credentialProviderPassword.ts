@@ -5,8 +5,8 @@ export class CredentialProviderPassword implements ICredentialProvider {
   private key?: CryptoKey;
 
   async generateFromPassword(password: string): Promise<CryptoKey>{
-    let enc = new TextEncoder();
-    let keyMaterial = await window.crypto.subtle.importKey(
+    const enc = new TextEncoder();
+    const keyMaterial = await window.crypto.subtle.importKey(
         "raw",
         enc.encode(password),
         {
@@ -18,7 +18,7 @@ export class CredentialProviderPassword implements ICredentialProvider {
         false,
         ["deriveBits", "deriveKey"]
         )
-    let key = await window.crypto.subtle.deriveKey(
+    const key = await window.crypto.subtle.deriveKey(
             {"name": "PBKDF2", salt:new ArrayBuffer(0), "iterations": 100000, "hash": "SHA-256" },
             keyMaterial,
             { name: "AES-GCM", length:256, },

@@ -19,26 +19,26 @@ export class UserService {
   }
 
   async logon(username: string, password: CryptedObject): Promise<ILogonInformation> {
-    let response = await this.userService.loginUser({ logonInformation: { "username": username, "password": password.toBase64JSON()  }});
+    const response = await this.userService.loginUser({ logonInformation: { "username": username, "password": password.toBase64JSON()  }});
     this.checkForSuccess(response);
     if (response.failedLogins === undefined)
       throw new Error("failedLogin undefined");
-    let result = { failedLogins: response.failedLogins, lastLogin: response.lastLogin}
+    const result = { failedLogins: response.failedLogins, lastLogin: response.lastLogin}
     return result;
   }
 
   async logout(): Promise<void> {
-    let response = await this.userService.logoutUser();
+    const response = await this.userService.logoutUser();
     this.checkForSuccess(response);
   }
 
   async register(username: string, password: CryptedObject, email: string): Promise<void> {
-    let response = await this.userService.registerUser({ "registrationInformation": {"username": username, "password": password.toBase64JSON(), "email": email} });
+    const response = await this.userService.registerUser({ "registrationInformation": {"username": username, "password": password.toBase64JSON(), "email": email} });
     this.checkForSuccess(response);
   }
 
   async changePassword(oldHash: CryptedObject, newHash: CryptedObject, accounts: Array<encryptedAccount>): Promise<void> {
-    let requestData: OpenAPIChangePassword = {
+    const requestData: OpenAPIChangePassword = {
           oldPassword: oldHash.toBase64JSON(),
           newPassword: newHash.toBase64JSON(),
           accounts: []
@@ -46,7 +46,7 @@ export class UserService {
     requestData.accounts = accounts.map((account) => {
         return this.accountTransformer.encryptedAccountToOpenAPI(account);
         });
-    let response = await this.userService.changePassword({changePassword: requestData});
+    const response = await this.userService.changePassword({changePassword: requestData});
     this.checkForSuccess(response);
   }
 

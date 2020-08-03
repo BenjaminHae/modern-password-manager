@@ -13,7 +13,7 @@ export function FieldOptionsFromJSON(json: any): FieldOptions {
     return json;
   }
   const required = ["name", "selector", "visible"];
-  for (let item of required) {
+  for (const item of required) {
     if (!exists(json, item)) {
       throw new Error(`required key "${item}" is not present in field`);
     }
