@@ -72,7 +72,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
     const fields = [ (
         <Form.Group controlId="formUsername" key="account">
           <Form.Label>Account Name</Form.Label>
-          <Form.Control type="text" placeholder="Account name" name="name" onChange={this.handleGenericChange} value={this.state.fields["name"]} />
+          <Form.Control type="text" autoFocus placeholder="Account name" name="name" onChange={this.handleGenericChange} value={this.state.fields["name"]} />
         </Form.Group>
      ), 
            (

@@ -59,7 +59,7 @@ class ChangePassword extends React.Component<ChangePasswordProps, ChangePassword
           <fieldset disabled={this.state.waiting}>
             <Form.Group controlId="changePwOldPassword">
               <Form.Label>Old Password</Form.Label>
-              <PasswordInputWithToggle onChange={this.handleGenericChange} placeholder="Old Password" name="oldPassword" />
+              <PasswordInputWithToggle autoFocus={true} onChange={this.handleGenericChange} placeholder="Old Password" name="oldPassword" />
             </Form.Group>
             <Form.Group controlId="changePwNewPassword">
               <Form.Label>New Password</Form.Label>

@@ -58,7 +58,7 @@ class Login extends React.Component<LoginProps, LoginState> {
           <fieldset disabled={this.state.waiting}>
             <Form.Group controlId="formUsername">
               <Form.Label>Username</Form.Label>
-              <Form.Control type="text" placeholder="Enter Username" name="username" onChange={this.handleGenericChange} required />
+              <Form.Control type="text" autoFocus placeholder="Enter Username" name="username" onChange={this.handleGenericChange} required />
               <Form.Control.Feedback type="invalid">
                 Username is required
               </Form.Control.Feedback>
