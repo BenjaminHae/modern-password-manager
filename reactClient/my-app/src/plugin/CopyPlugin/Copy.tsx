@@ -12,12 +12,12 @@ export class CopyPlugin extends BasePlugin implements IPluginWithAccountList, IP
   setTransformer(transformer: AccountTransformerService): void {
     this.transformer = transformer;
   }
-  accountList(column: IDataTableColumn<Account>): IDataTableColumn<Account> {
+  accountList(column: IDataTableColumn): IDataTableColumn {
     if (column.name === "Password") {
       if (column.cell !== undefined) {
         const oldCell = column.cell;
-        column.cell = (row: Account) => {
-          return [oldCell(row),this.showCopyPassword(row)]
+        column.cell = (row: Account, rowIndex: number, column: IDataTableColumn, id: string | number) => {
+          return [oldCell(row, rowIndex, column, id),this.showCopyPassword(row)]
         }
       }
       else {

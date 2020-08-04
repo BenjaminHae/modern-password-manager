@@ -3,11 +3,11 @@ import { parse, ParseResult } from 'papaparse';
 // CsvParser class using papaparse
 
 export class CsvParser {
-  private result?: ParseResult;
+  private result?: ParseResult<{[index: string]:string}>;
 
   parseFile(file: File, preview = 0): PromiseLike<void> {
     return new Promise((resolve, reject) => {
-        parse(file, {
+        parse<{[index: string]:string}>(file, {
           header: true,
           preview: preview,
           complete: (result) => {

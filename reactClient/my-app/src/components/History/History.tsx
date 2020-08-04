@@ -9,7 +9,7 @@ interface IHistoryProps {
   loadHistoryHandler: () => Promise<void>;
 }
 const History: React.FC<IHistoryProps> = (props: IHistoryProps) => {
-  const columns: Array<IDataTableColumn<HistoryItem>> = [
+  const columns: Array<IDataTableColumn> = [
     {
       name: 'Timestamp', 
       cell: (row: HistoryItem) => { 

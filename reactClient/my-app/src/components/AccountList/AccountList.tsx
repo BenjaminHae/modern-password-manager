@@ -19,7 +19,7 @@ interface AccountListProps {
   pluginSystem: PluginSystem
 }
 interface AccountListState {
-  columns: Array<IDataTableColumn<Account>>;
+  columns: Array<IDataTableColumn>;
 }
 class AccountList extends React.Component<AccountListProps, AccountListState> {
   constructor(props: AccountListProps) {
@@ -37,8 +37,8 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
   getTableActions(): JSX.Element {
     return <Button onClick={this.props.addAccountHandler} variant="success" size="sm" ><Plus/> Add Account</Button>
   }
-  getColumns(): Array<IDataTableColumn<Account>> {
-    const columns: Array<IDataTableColumn<Account>> = [
+  getColumns(): Array<IDataTableColumn> {
+    const columns: Array<IDataTableColumn> = [
       { 
         name: "Name", 
         selector: "name", 
@@ -47,7 +47,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
       },
       { 
         name: "Password",  
-        ignoreOnRowClick: true, 
+        ignoreRowClick: true, 
         cell: (row: Account) => <AccountPasswordWithToggle account={row} getAccountPasswordHandler={this.props.getAccountPasswordHandler}/> 
       }
     ];
@@ -67,7 +67,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
       if (!field.visible) {
         continue;
       }
-      const column: IDataTableColumn<Account> = {
+      const column: IDataTableColumn = {
           name: field.name, 
           selector: (row: Account) => row.other[field.selector],
           sortable: field.sortable

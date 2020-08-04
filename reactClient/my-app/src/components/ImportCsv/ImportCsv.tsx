@@ -19,7 +19,7 @@ interface ImportCsvProps {
 }
 interface ImportCsvState {
   data: Array<{[index: string]:string}>;
-  columns: Array<IDataTableColumn<{[index: string]:string}>>;
+  columns: Array<IDataTableColumn>;
   headers: Array<string>;
   mapping: Map<string, string | null>;
   waiting: boolean;
@@ -61,8 +61,8 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
             this.props.showMessage(`file read, using delimiter '${this.parser.getDelimiter()}'`);
           });
   }
-  getColumns(headers: Array<string>, mappings: Map<string, string | null>): Array<IDataTableColumn<{[index: string]:string}>> {
-    const columns: Array<IDataTableColumn<{[index: string]:string}>> = []
+  getColumns(headers: Array<string>, mappings: Map<string, string | null>): Array<IDataTableColumn> {
+    const columns: Array<IDataTableColumn> = []
     for (const head of this.parser.getHeaders()) {
       const name = mappings.get(head);
       if (name !== null) {
