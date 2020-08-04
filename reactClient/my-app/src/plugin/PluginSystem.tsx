@@ -3,11 +3,14 @@ import { BackendService } from '../backend/backend.service';
 import { AccountTransformerService } from '../backend/controller/account-transformer.service';
 import { ActivatedPlugins } from './ActivatedPlugins';
 import { IDataTableColumn } from 'react-data-table-component';
-import { BasePlugin, instanceOfIPluginWithMainView, instanceOfIPluginWithFilter, instanceOfIPluginWithAccountsReady, instanceOfIPluginWithAccountList, instanceOfIPluginRequiresTransformer } from './BasePlugin';
+import { BasePlugin, instanceOfIPluginWithMainView, instanceOfIPluginWithFilter, instanceOfIPluginWithAccountsReady, instanceOfIPluginWithAccountList, instanceOfIPluginWithPreLogout, instanceOfIPluginWithLoginSuccessful, instanceOfIPluginRequiresTransformer } from './BasePlugin';
 
 export type AccountsFilter = (accounts: Array<Account>) => Array<Account>;
 type AccountFilter = (account: Account) => boolean;
 
+declare global {
+  interface Window { pluginSystem: PluginSystem; }
+}
 
 export class PluginSystem {
   filterChangeHandler?: (filter: AccountsFilter) => void;
@@ -17,9 +20,12 @@ export class PluginSystem {
   mainViewCallback: Array<() => JSX.Element> = [];
   resetFilterCallback: Array<() => void> = [];
   accountsReadyCallback: Array<(accounts: Array<Account>) => void> = [];
-  accountListCallback: Array<(column: IDataTableColumn<Account>) => IDataTableColumn<Account>> = [];
+  accountListCallback: Array<(column: IDataTableColumn) => IDataTableColumn> = [];
+  loginSuccessfulCallback: Array<(username: string, key: any) => void> = [];
+  preLogoutCallback: Array<() => void> = [];
 
   constructor (private backend: BackendService, private transformer: AccountTransformerService) {
+    window.pluginSystem = this;
     this.backend.accountsObservable
       .subscribe((accounts: Array<Account>) => {
           this.accountsReady(accounts);
@@ -58,10 +64,24 @@ export class PluginSystem {
     if (instanceOfIPluginWithAccountList(plugin)) {
       this.accountListCallback.push(plugin.accountList.bind(plugin));
     }
+    if (instanceOfIPluginWithLoginSuccessful(plugin)) {
+      this.loginSuccessfulCallback.push(plugin.loginSuccessful.bind(plugin));
+    }
+    if (instanceOfIPluginWithPreLogout(plugin)) {
+      this.preLogoutCallback.push(plugin.preLogout.bind(plugin));
+    }
   }
 
-  private accountsReady(accounts: Array<Account>): void {
+  accountsReady(accounts: Array<Account>): void {
     this.accountsReadyCallback.forEach(ready => ready(accounts));
+  }
+
+  loginSuccessful(username: string, key: any) {
+    this.loginSuccessfulCallback.forEach(loginSuccessful => loginSuccessful(username, key));
+  }
+
+  preLogout(): void {
+    this.preLogoutCallback.forEach(preLogout => preLogout());
   }
 
 /*
@@ -113,7 +133,7 @@ export class PluginSystem {
     return this.mainViewCallback.map(view => view());
   }
 
-  manipulateAccountListItem(column: IDataTableColumn<Account>): IDataTableColumn<Account> {
+  manipulateAccountListItem(column: IDataTableColumn): IDataTableColumn {
     let result = column;
     for (const callback of this.accountListCallback) {
       result = callback(result);

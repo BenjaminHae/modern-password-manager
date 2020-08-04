@@ -39,10 +39,11 @@ interface AppState {
   filter?: AccountsFilter;
 }
 export default class App extends React.Component<{}, AppState> {
-  backend: BackendService;
-  accountTransformerService: AccountTransformerService;
-  crypto: CryptoService;
-  plugins: PluginSystem;
+  private backend: BackendService;
+  private accountTransformerService: AccountTransformerService;
+  private crypto: CryptoService;
+  private credential: CredentialService;
+  private plugins: PluginSystem;
 
   constructor (props: {}) {
     super(props);
@@ -62,14 +63,14 @@ export default class App extends React.Component<{}, AppState> {
       basePath = process.env.REACT_APP_API_BASE_URL;
     }
     const APIconfiguration = new OpenAPIConfiguration({ basePath: basePath, middleware: [csrfMiddleware]});
-    const credentialService = new CredentialService();
-    this.crypto = new CryptoService(credentialService);
+    this.credential = new CredentialService();
+    this.crypto = new CryptoService(this.credential);
     this.accountTransformerService = new AccountTransformerService(this.crypto); 
     this.backend = new BackendService(
         new MaintenanceService(new OpenAPIMaintenanceService(APIconfiguration), csrfMiddleware), 
         new UserService(new OpenAPIUserService(APIconfiguration), this.accountTransformerService),
         new AccountsService(new OpenAPIAccountsService(APIconfiguration), this.accountTransformerService), 
-        credentialService, 
+        this.credential, 
         this.accountTransformerService, 
         this.crypto);
     this.plugins = new PluginSystem(this.backend, this.accountTransformerService);
@@ -98,6 +99,7 @@ export default class App extends React.Component<{}, AppState> {
   doLogin(username:string, password: string):Promise<void> {
     return this.backend.logon(username, password)
       .then((info: ILogonInformation) => {
+        this.plugins.loginSuccessful(username, this.credential.getKey());
         const options: IMessageOptions = {};
         let message = "";
         if (info.lastLogin) {
@@ -120,6 +122,7 @@ export default class App extends React.Component<{}, AppState> {
     return this.backend.register(username, password, email);
   }
   async doLogout(): Promise<void> {
+    this.plugins.preLogout();
     await this.backend.logout();
     this.setState({authenticated: false});
     window.location.reload(false);

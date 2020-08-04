@@ -21,7 +21,15 @@ export interface IPluginWithAccountsReady {
 }
 
 export interface IPluginWithAccountList {
-  accountList: (column: IDataTableColumn<Account>) => IDataTableColumn<Account>;
+  accountList: (column: IDataTableColumn) => IDataTableColumn;
+}
+
+export interface IPluginWithLoginSuccessful {
+  loginSuccessful: (username: string, key: any) => void;
+}
+
+export interface IPluginWithPreLogout {
+  preLogout: () => void;
 }
 
 export interface IPluginRequiresTransformer {
@@ -42,6 +50,14 @@ export function instanceOfIPluginWithAccountsReady(object: any): object is IPlug
 
 export function instanceOfIPluginWithAccountList(object: any): object is IPluginWithAccountList {
   return 'accountList' in object;
+}
+
+export function instanceOfIPluginWithLoginSuccessful(object: any): object is IPluginWithLoginSuccessful {
+  return 'loginSuccessful' in object;
+}
+
+export function instanceOfIPluginWithPreLogout(object: any): object is IPluginWithPreLogout {
+  return 'preLogout' in object;
 }
 
 export function instanceOfIPluginRequiresTransformer(object: any): object is IPluginRequiresTransformer {
