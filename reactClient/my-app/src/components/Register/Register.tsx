@@ -46,6 +46,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       await this.props.doRegister(this.state.username, password, this.state.email);
       this.setState({ 
         ...this.emptyInput,
+        validated: false,
         waiting: false
       });
       this.props.showMessage("Registered successfully, please log in");
