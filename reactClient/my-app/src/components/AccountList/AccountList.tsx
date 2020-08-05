@@ -70,7 +70,8 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
       const column: IDataTableColumn = {
           name: field.name, 
           selector: (row: Account) => row.other[field.selector],
-          sortable: field.sortable
+          sortable: field.sortable,
+          hide: field.hideInTable || 'md'
         };
       if (field.colNumber) {
         columns.splice(field.colNumber, 0, column);

@@ -6,6 +6,7 @@ export interface FieldOptions {
     visible: boolean;
     colNumber?: number;
     sortable?: boolean;
+    hideInTable?: 'sm' | 'md' | 'lg' | number;
 }
 
 export function FieldOptionsFromJSON(json: any): FieldOptions {
@@ -26,5 +27,6 @@ export function FieldOptionsFromJSON(json: any): FieldOptions {
     'visible': json['visible'],
     'colNumber': !exists(json, 'colNumber') ? undefined : json['colNumber'],
     'sortable': !exists(json, 'sortable') ? undefined : json['sortable'],
+    'hideInTable': !exists(json, 'hideInTable') ? undefined : json['hideInTable'],
   };
 }
