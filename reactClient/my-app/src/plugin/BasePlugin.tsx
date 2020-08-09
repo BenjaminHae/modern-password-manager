@@ -32,6 +32,10 @@ export interface IPluginWithPreLogout {
   preLogout: () => void;
 }
 
+export interface IPluginWithLoginViewReady {
+  loginViewReady: () => void;
+}
+
 export interface IPluginRequiresTransformer {
   setTransformer: (transformer: AccountTransformerService) => void;
 }
@@ -60,6 +64,9 @@ export function instanceOfIPluginWithPreLogout(object: any): object is IPluginWi
   return 'preLogout' in object;
 }
 
+export function instanceOfIPluginWithLoginViewReady(object: any): object is IPluginWithLoginViewReady {
+  return 'loginViewReady' in object;
+}
 export function instanceOfIPluginRequiresTransformer(object: any): object is IPluginRequiresTransformer {
   return 'setTransformer' in object;
 }

@@ -3,7 +3,7 @@ import { BackendService } from '../backend/backend.service';
 import { AccountTransformerService } from '../backend/controller/account-transformer.service';
 import { ActivatedPlugins } from './ActivatedPlugins';
 import { IDataTableColumn } from 'react-data-table-component';
-import { BasePlugin, instanceOfIPluginWithMainView, instanceOfIPluginWithFilter, instanceOfIPluginWithAccountsReady, instanceOfIPluginWithAccountList, instanceOfIPluginWithPreLogout, instanceOfIPluginWithLoginSuccessful, instanceOfIPluginRequiresTransformer } from './BasePlugin';
+import { BasePlugin, instanceOfIPluginWithMainView, instanceOfIPluginWithFilter, instanceOfIPluginWithAccountsReady, instanceOfIPluginWithAccountList, instanceOfIPluginWithPreLogout, instanceOfIPluginWithLoginSuccessful, instanceOfIPluginWithLoginViewReady, instanceOfIPluginRequiresTransformer } from './BasePlugin';
 
 export type AccountsFilter = (accounts: Array<Account>) => Array<Account>;
 type AccountFilter = (account: Account) => boolean;
@@ -22,6 +22,7 @@ export class PluginSystem {
   accountsReadyCallback: Array<(accounts: Array<Account>) => void> = [];
   accountListCallback: Array<(column: IDataTableColumn) => IDataTableColumn> = [];
   loginSuccessfulCallback: Array<(username: string, key: any) => void> = [];
+  loginViewReadyCallback: Array<() => void> = [];
   preLogoutCallback: Array<() => void> = [];
 
   constructor (private backend: BackendService, private transformer: AccountTransformerService) {
@@ -70,6 +71,9 @@ export class PluginSystem {
     if (instanceOfIPluginWithPreLogout(plugin)) {
       this.preLogoutCallback.push(plugin.preLogout.bind(plugin));
     }
+    if (instanceOfIPluginWithLoginViewReady(plugin)) {
+      this.loginViewReadyCallback.push(plugin.loginViewReady.bind(plugin));
+    }
   }
 
   accountsReady(accounts: Array<Account>): void {
@@ -84,6 +88,9 @@ export class PluginSystem {
     this.preLogoutCallback.forEach(preLogout => preLogout());
   }
 
+  loginViewReady(): void {
+    this.loginViewReadyCallback.forEach(loginViewReady => loginViewReady());
+  }
 /*
   async callHook<InputData,OutputData=void>(data:InputData): Promise<OutputData> {
     return
