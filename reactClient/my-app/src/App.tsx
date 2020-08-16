@@ -27,6 +27,10 @@ import Row from 'react-bootstrap/Row';
 import { BoxArrowLeft } from 'react-bootstrap-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+declare global {
+  interface Window { pluginSystem: PluginSystem; }
+}
+
 
 interface AppState {
   ready: boolean;
@@ -57,11 +61,11 @@ export default class App extends React.Component<{}, AppState> {
       historyItems: []
     }
 
-    const csrfMiddleware = new CSRFMiddleware();
     let basePath = "";
     if (process.env.REACT_APP_API_BASE_URL) {
       basePath = process.env.REACT_APP_API_BASE_URL;
     }
+    const csrfMiddleware = new CSRFMiddleware();
     const APIconfiguration = new OpenAPIConfiguration({ basePath: basePath, middleware: [csrfMiddleware]});
     this.credential = new CredentialService();
     this.crypto = new CryptoService(this.credential);
@@ -74,6 +78,7 @@ export default class App extends React.Component<{}, AppState> {
         this.accountTransformerService, 
         this.crypto);
     this.plugins = new PluginSystem(this.backend, this.accountTransformerService);
+    window.pluginSystem = this.plugins;
     this.backend.loginObservable
       .subscribe(()=>{
           this.setState({authenticated : true});

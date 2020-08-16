@@ -8,10 +8,6 @@ import { BasePlugin, instanceOfIPluginWithMainView, instanceOfIPluginWithFilter,
 export type AccountsFilter = (accounts: Array<Account>) => Array<Account>;
 type AccountFilter = (account: Account) => boolean;
 
-declare global {
-  interface Window { pluginSystem: PluginSystem; }
-}
-
 export class PluginSystem {
   filterChangeHandler?: (filter: AccountsFilter) => void;
   filters: { [index: string]: AccountFilter } = {};
@@ -26,7 +22,6 @@ export class PluginSystem {
   preLogoutCallback: Array<() => void> = [];
 
   constructor (private backend: BackendService, private transformer: AccountTransformerService) {
-    window.pluginSystem = this;
     this.backend.accountsObservable
       .subscribe((accounts: Array<Account>) => {
           this.accountsReady(accounts);
