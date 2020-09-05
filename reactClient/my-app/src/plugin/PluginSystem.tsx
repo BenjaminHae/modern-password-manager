@@ -8,6 +8,11 @@ import { BasePlugin, instanceOfIPluginWithMainView, instanceOfIPluginWithFilter,
 export type AccountsFilter = (accounts: Array<Account>) => Array<Account>;
 type AccountFilter = (account: Account) => boolean;
 
+interface IAuthenticatedUIHandler {
+  editAccountSelect(account: Account): void;
+  addAccountSelect(proposals?: {[index: string]:string}): void;
+}
+
 export class PluginSystem {
   filterChangeHandler?: (filter: AccountsFilter) => void;
   filters: { [index: string]: AccountFilter } = {};
@@ -20,6 +25,7 @@ export class PluginSystem {
   loginSuccessfulCallback: Array<(username: string, key: any) => void> = [];
   loginViewReadyCallback: Array<() => void> = [];
   preLogoutCallback: Array<() => void> = [];
+  authenticatedUIHandler?: IAuthenticatedUIHandler;
 
   constructor (private backend: BackendService, private transformer: AccountTransformerService) {
     this.backend.accountsObservable
@@ -71,6 +77,12 @@ export class PluginSystem {
     }
   }
 
+  registerAuthenticatedUIHandler(handler: IAuthenticatedUIHandler) {
+    this.authenticatedUIHandler = handler;
+  }
+  
+  //callbacks from password manager
+
   accountsReady(accounts: Array<Account>): void {
     this.accountsReadyCallback.forEach(ready => ready(accounts));
   }
@@ -90,6 +102,28 @@ export class PluginSystem {
   async callHook<InputData,OutputData=void>(data:InputData): Promise<OutputData> {
     return
   }*/
+
+  // calling functions in UI through plugins:
+ 
+  UIeditAccountSelect(account: Account): void {
+    if (this.authenticatedUIHandler) {
+      this.authenticatedUIHandler.editAccountSelect(account);
+    }
+  }
+
+  UIaddAccountSelect(proposals?: {[index: string]:string}): void {
+    if (this.authenticatedUIHandler) {
+      this.authenticatedUIHandler.addAccountSelect(proposals);
+    }
+  }
+
+  // calling backend functions through plugins
+
+  backendLogin(credentialProvider: ICredentialProvider, username?: string): void {
+    this.backend.logonWithCredentials(credentialProvider, username);
+  }
+  
+  // handling account filtering through plugins:
 
   setFilterChangeHandler(filterChangeHandler: (filter:AccountsFilter) => void): void {
     this.filterChangeHandler = filterChangeHandler;
