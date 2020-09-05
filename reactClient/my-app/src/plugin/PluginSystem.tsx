@@ -124,6 +124,10 @@ export class PluginSystem {
     this.backend.logonWithCredentials(credentialProvider, username);
   }
   
+  backendLogout(): void {
+    this.backend.logout();
+  }
+  
   // handling account filtering through plugins:
 
   setFilterChangeHandler(filterChangeHandler: (filter:AccountsFilter) => void): void {
