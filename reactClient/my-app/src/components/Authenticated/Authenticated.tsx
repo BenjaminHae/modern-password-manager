@@ -45,6 +45,7 @@ interface AuthenticatedProps {
 interface AuthenticatedState {
   view: AuthenticatedView;
   selectedAccount?: Account;
+  addAccountProposals?: {[index: string]:string};
 }
 class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedState> {
   readonly viewButtons = [
@@ -59,6 +60,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
   constructor(props: AuthenticatedProps) {
     super(props);
     this.state = this.defaultViewState();
+    this.props.pluginSystem.registerAuthenticatedUIHandler(this);
   }
   defaultViewState(): AuthenticatedState {
     return {
@@ -72,8 +74,12 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
   editAccountSelect(account: Account): void {
     this.setState({view: AuthenticatedView.Edit, selectedAccount: account});
   }
-  addAccountSelect(): void {
-    this.setState({view: AuthenticatedView.Add});
+  addAccountSelect(proposals?: {[index: string]:string}): void {
+    this.setState({
+        view: AuthenticatedView.Add, 
+        addAccountProposals: proposals,
+        selectedAccount: undefined
+      });
   }
   render (): JSX.Element {
     return (
@@ -136,6 +142,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
               deleteHandler={this.props.deleteHandler} 
               getAccountPasswordHandler={this.props.getAccountPasswordHandler}
               showMessage={this.props.showMessage}
+              proposals={this.state.addAccountProposals}
             />
         );
       case AuthenticatedView.History:

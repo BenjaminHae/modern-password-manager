@@ -11,6 +11,7 @@ import { Eye } from 'react-bootstrap-icons';
 
 interface AccountEditProps {
   account?: Account;
+  proposals?: {[index: string]:string};
   fields: Array<FieldOptions>;
   editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>;
   deleteHandler: (account: Account) => Promise<void>;
@@ -45,6 +46,11 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
       newFields["name"] = this.props.account.name;
       for (const otherKey in this.props.account.other) {
         newFields[otherKey] = this.props.account.other[otherKey];
+      }
+    }
+    else if (this.props.proposals) {
+      for (const key in this.props.proposals) {
+        newFields[key] = this.props.proposals[key];
       }
     }
     return newFields;
