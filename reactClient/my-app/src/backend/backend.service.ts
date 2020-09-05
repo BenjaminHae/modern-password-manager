@@ -127,6 +127,7 @@ export class BackendService {
   }
 
   async afterLogin(): Promise<void> {
+    //todo: handle response of login request
     subscriptionExecutor(this.loginObservers);
     const accounts = await this.accountsService.getAccounts()
     await this.getUserOptions();
