@@ -1,5 +1,6 @@
 import { Account } from '../backend/models/account';
 import { BackendService } from '../backend/backend.service';
+import { ICredentialProvider } from '../backend/controller/credentialProvider';
 import { AccountTransformerService } from '../backend/controller/account-transformer.service';
 import { ActivatedPlugins } from './ActivatedPlugins';
 import { IDataTableColumn } from 'react-data-table-component';
