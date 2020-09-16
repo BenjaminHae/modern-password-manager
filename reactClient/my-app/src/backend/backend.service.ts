@@ -49,6 +49,8 @@ export class BackendService {
     return await this.logonWithCredentials(credentialProvider, username);
   }
 
+  // when username is provided, the logon endpoint on the server side is called
+  // if it is not provided a valid server side session is assumed
   async logonWithCredentials(credentialProvider: ICredentialProvider, username?: string): Promise<ILogonInformation> {
     this.credentials.setProvider(credentialProvider);
     let response: ILogonInformation = {};

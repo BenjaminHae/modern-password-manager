@@ -98,7 +98,7 @@ export default class App extends React.Component<{}, AppState> {
     this.backend.waitForBackend()
       .then((backendOptions: BackendOptions) => {
           this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed});
-          this.pluginSystem.loginViewReady();
+          this.plugins.loginViewReady();
           });
     this.plugins.setFilterChangeHandler(this.filterChangeHandler.bind(this));
   }
