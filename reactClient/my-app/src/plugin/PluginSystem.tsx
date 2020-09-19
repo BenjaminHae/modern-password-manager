@@ -82,6 +82,9 @@ export class PluginSystem {
     this.authenticatedUIHandler = handler;
   }
   
+  getAccountByIndex(index: number): Account? {
+    return this.backend.accounts.find(account => account.index === index);
+  }
   //callbacks from password manager
 
   accountsReady(accounts: Array<Account>): void {
