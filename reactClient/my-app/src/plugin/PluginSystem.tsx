@@ -14,6 +14,10 @@ interface IAuthenticatedUIHandler {
   addAccountSelect(proposals?: {[index: string]:string}): void;
 }
 
+interface IAppHandler {
+  doLogout(): Promise<void>;
+}
+
 export class PluginSystem {
   filterChangeHandler?: (filter: AccountsFilter) => void;
   filters: { [index: string]: AccountFilter } = {};
@@ -27,6 +31,7 @@ export class PluginSystem {
   loginViewReadyCallback: Array<() => void> = [];
   preLogoutCallback: Array<() => void> = [];
   authenticatedUIHandler?: IAuthenticatedUIHandler;
+  appHandler?: IAppHandler;
 
   constructor (private backend: BackendService, private transformer: AccountTransformerService) {
     this.backend.accountsObservable
@@ -81,6 +86,10 @@ export class PluginSystem {
   registerAuthenticatedUIHandler(handler: IAuthenticatedUIHandler) {
     this.authenticatedUIHandler = handler;
   }
+
+  registerAppHandler(handler: IAppHandler) {
+    this.appHandler = handler;
+  }
   
   getAccountByIndex(index: number): Account | undefined {
     return this.backend.accounts.find(account => account.index === index);
@@ -127,8 +136,10 @@ export class PluginSystem {
     this.backend.logonWithCredentials(credentialProvider, username);
   }
   
-  backendLogout(): void {
-    this.backend.logout();
+  logout(): void {
+    if (this.appHandler) {
+      this.appHandler.doLogout();
+    }
   }
   
   // handling account filtering through plugins:

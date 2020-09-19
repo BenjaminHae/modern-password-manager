@@ -78,6 +78,7 @@ export default class App extends React.Component<{}, AppState> {
         this.accountTransformerService, 
         this.crypto);
     this.plugins = new PluginSystem(this.backend, this.accountTransformerService);
+    this.plugins.registerAppHandler(this);
     window.pluginSystem = this.plugins;
     this.backend.loginObservable
       .subscribe(()=>{
