@@ -21,6 +21,7 @@ export class CopyPlugin extends BasePlugin implements IPluginWithPasswordButton,
     if (!this.transformer)
       return;
     navigator.clipboard.writeText(await this.transformer.getPassword(account))
+    this.pluginSystem.UIshowMessage(`Password for Account "${account.name}"copied to clipboard`, {variant: "success"});
   }
 }
 

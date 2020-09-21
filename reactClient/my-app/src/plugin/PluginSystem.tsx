@@ -4,6 +4,7 @@ import { ICredentialProvider } from '../backend/controller/credentialProvider';
 import { AccountTransformerService } from '../backend/controller/account-transformer.service';
 import { ActivatedPlugins } from './ActivatedPlugins';
 import { BasePlugin, instanceOfIPluginWithMainView, instanceOfIPluginWithFilter, instanceOfIPluginWithAccountsReady, instanceOfIPluginWithAccountButton, instanceOfIPluginWithPasswordButton, instanceOfIPluginWithPreLogout, instanceOfIPluginWithLoginSuccessful, instanceOfIPluginWithLoginViewReady, instanceOfIPluginRequiresTransformer } from './BasePlugin';
+import { IMessageOptions } from '../components/Message/Message';
 
 export type AccountsFilter = (accounts: Array<Account>) => Array<Account>;
 type AccountFilter = (account: Account) => boolean;
@@ -15,6 +16,7 @@ interface IAuthenticatedUIHandler {
 
 interface IAppHandler {
   doLogout(): Promise<void>;
+  showMessage(text: string, options: IMessageOptions): void;
 }
 
 export class PluginSystem {
@@ -133,6 +135,12 @@ export class PluginSystem {
     }
   }
 
+  UIshowMessage(text: string, options: IMessageOptions = {}): void {
+    if (this.appHandler) {
+      this.appHandler.showMessage(text, options);
+    }
+  }
+  
   // calling backend functions through plugins
 
   backendLogin(credentialProvider: ICredentialProvider, username?: string): void {
@@ -144,7 +152,7 @@ export class PluginSystem {
       this.appHandler.doLogout();
     }
   }
-  
+
   // handling account filtering through plugins:
 
   setFilterChangeHandler(filterChangeHandler: (filter:AccountsFilter) => void): void {
