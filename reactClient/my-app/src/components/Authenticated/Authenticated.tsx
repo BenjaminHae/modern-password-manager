@@ -14,7 +14,7 @@ import Container from 'react-bootstrap/Container';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { BoxArrowUpLeft } from 'react-bootstrap-icons';
+import { ArrowRepeat, BoxArrowUpLeft, CloudArrowUp, List, Plus, PencilFill, ClockHistory, Sliders } from 'react-bootstrap-icons';
 import { PluginSystem } from '../../plugin/PluginSystem';
 import PluginMainView from '../../plugin/PluginMainView/PluginMainView';
 import { HistoryItem } from '@pm-server/pm-server-react-client';
@@ -49,13 +49,13 @@ interface AuthenticatedState {
 }
 class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedState> {
   readonly viewButtons = [
-    { view: AuthenticatedView.List, name: "Account List", selectable: true },
-    { view: AuthenticatedView.Import, name: "Import Accounts", selectable: true },
-    { view: AuthenticatedView.ChangePassword, name: "Change Password", selectable: true  },
-    { view: AuthenticatedView.Options, name: "Customization", selectable: true  },
-    { view: AuthenticatedView.History, name: "History", selectable: true  },
-    { view: AuthenticatedView.Edit, name: "Edit Account", selectable: false  },
-    { view: AuthenticatedView.Add, name: "Add Account", selectable: false  },
+    { view: AuthenticatedView.List, name: "Account List", icon: (<List/>), selectable: true },
+    { view: AuthenticatedView.Import, name: "Import Accounts", icon: (<CloudArrowUp/>), selectable: true },
+    { view: AuthenticatedView.ChangePassword, name: "Change Password", icon: (<ArrowRepeat/>), selectable: true },
+    { view: AuthenticatedView.Options, name: "Customization", icon: (<Sliders/>), selectable: true  },
+    { view: AuthenticatedView.History, name: "History", icon: (<ClockHistory/>), selectable: true },
+    { view: AuthenticatedView.Edit, name: "Edit Account", icon: (<PencilFill/>), selectable: false },
+    { view: AuthenticatedView.Add, name: "Add Account", icon: (<Plus/>), selectable: false },
   ];
   constructor(props: AuthenticatedProps) {
     super(props);
@@ -92,12 +92,16 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
   renderSelectors(): JSX.Element {
     const buttons = this.viewButtons.filter((viewButton)=>viewButton.selectable).map((viewButton)=>{
       return (
-        <Dropdown.Item key={viewButton.view} onSelect={()=>{this.selectView(viewButton.view)}} active={this.state.view === viewButton.view }>{viewButton.name}</Dropdown.Item>
+        <Dropdown.Item key={viewButton.view} onSelect={()=>{this.selectView(viewButton.view)}} active={this.state.view === viewButton.view }>{viewButton.icon && viewButton.icon } {viewButton.name}</Dropdown.Item>
       )
     });
+    const currentButton = this.viewButtons.filter((viewButton)=>viewButton.view === this.state.view)[0];
+    const currentTitle = (
+      <>{currentButton.icon && currentButton.icon } {currentButton.name}</>
+    )
     return (
       <Dropdown as={ButtonGroup} className={styles.Selectors}>
-        <DropdownButton title={this.viewButtons.filter((viewButton)=>viewButton.view === this.state.view)[0].name} id="dropdownView" variant="secondary">
+        <DropdownButton title={currentTitle} id="dropdownView" variant="secondary">
           {buttons}
         </DropdownButton>
         {this.state.view !== AuthenticatedView.List && <Button variant="info" onClick={()=>this.selectView(AuthenticatedView.List)} ><BoxArrowUpLeft/></Button> }
