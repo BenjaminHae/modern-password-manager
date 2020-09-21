@@ -1,7 +1,6 @@
 import { PluginSystem } from './PluginSystem';
 import { Account } from '../backend/models/account';
 import { AccountTransformerService } from '../backend/controller/account-transformer.service';
-import { IDataTableColumn } from 'react-data-table-component';
 
 export abstract class BasePlugin {
   constructor (protected pluginSystem: PluginSystem) {
@@ -20,8 +19,12 @@ export interface IPluginWithAccountsReady {
   accountsReady: (accounts: Array<Account>) => void;
 }
 
-export interface IPluginWithAccountList {
-  accountList: (column: IDataTableColumn) => IDataTableColumn;
+export interface IPluginWithAccountButton {
+  accountButton: (account: Account) => void | JSX.Element;
+}
+
+export interface IPluginWithPasswordButton {
+  passwordButton: (account: Account) => void | JSX.Element;
 }
 
 export interface IPluginWithLoginSuccessful {
@@ -52,8 +55,12 @@ export function instanceOfIPluginWithAccountsReady(object: any): object is IPlug
   return 'accountsReady' in object;
 }
 
-export function instanceOfIPluginWithAccountList(object: any): object is IPluginWithAccountList {
-  return 'accountList' in object;
+export function instanceOfIPluginWithAccountButton(object: any): object is IPluginWithAccountButton {
+  return 'accountButton' in object;
+}
+
+export function instanceOfIPluginWithPasswordButton(object: any): object is IPluginWithPasswordButton {
+  return 'passwordButton' in object;
 }
 
 export function instanceOfIPluginWithLoginSuccessful(object: any): object is IPluginWithLoginSuccessful {

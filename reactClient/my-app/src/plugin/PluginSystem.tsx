@@ -3,8 +3,7 @@ import { BackendService } from '../backend/backend.service';
 import { ICredentialProvider } from '../backend/controller/credentialProvider';
 import { AccountTransformerService } from '../backend/controller/account-transformer.service';
 import { ActivatedPlugins } from './ActivatedPlugins';
-import { IDataTableColumn } from 'react-data-table-component';
-import { BasePlugin, instanceOfIPluginWithMainView, instanceOfIPluginWithFilter, instanceOfIPluginWithAccountsReady, instanceOfIPluginWithAccountList, instanceOfIPluginWithPreLogout, instanceOfIPluginWithLoginSuccessful, instanceOfIPluginWithLoginViewReady, instanceOfIPluginRequiresTransformer } from './BasePlugin';
+import { BasePlugin, instanceOfIPluginWithMainView, instanceOfIPluginWithFilter, instanceOfIPluginWithAccountsReady, instanceOfIPluginWithAccountButton, instanceOfIPluginWithPasswordButton, instanceOfIPluginWithPreLogout, instanceOfIPluginWithLoginSuccessful, instanceOfIPluginWithLoginViewReady, instanceOfIPluginRequiresTransformer } from './BasePlugin';
 
 export type AccountsFilter = (accounts: Array<Account>) => Array<Account>;
 type AccountFilter = (account: Account) => boolean;
@@ -26,7 +25,8 @@ export class PluginSystem {
   mainViewCallback: Array<() => JSX.Element> = [];
   resetFilterCallback: Array<() => void> = [];
   accountsReadyCallback: Array<(accounts: Array<Account>) => void> = [];
-  accountListCallback: Array<(column: IDataTableColumn) => IDataTableColumn> = [];
+  passwordButtonCallback: Array<(account: Account) => void | JSX.Element > = [];
+  accountButtonCallback: Array<(account: Account) => void | JSX.Element > = [];
   loginSuccessfulCallback: Array<(username: string, key: any) => void> = [];
   loginViewReadyCallback: Array<() => void> = [];
   preLogoutCallback: Array<() => void> = [];
@@ -69,8 +69,11 @@ export class PluginSystem {
     if (instanceOfIPluginWithAccountsReady(plugin)) {
       this.accountsReadyCallback.push(plugin.accountsReady.bind(plugin));
     }
-    if (instanceOfIPluginWithAccountList(plugin)) {
-      this.accountListCallback.push(plugin.accountList.bind(plugin));
+    if (instanceOfIPluginWithPasswordButton(plugin)) {
+      this.passwordButtonCallback.push(plugin.passwordButton.bind(plugin));
+    }
+    if (instanceOfIPluginWithAccountButton(plugin)) {
+      this.accountButtonCallback.push(plugin.accountButton.bind(plugin));
     }
     if (instanceOfIPluginWithLoginSuccessful(plugin)) {
       this.loginSuccessfulCallback.push(plugin.loginSuccessful.bind(plugin));
@@ -184,15 +187,18 @@ export class PluginSystem {
     return filtered;
   }
 
+  /* filling UI elements in */
+
   getMainView(): Array<JSX.Element> {
     return this.mainViewCallback.map(view => view());
   }
 
-  manipulateAccountListItem(column: IDataTableColumn): IDataTableColumn {
-    let result = column;
-    for (const callback of this.accountListCallback) {
-      result = callback(result);
-    }
-    return result;
+  accountButtons(account: Account): Array<void | JSX.Element> {
+    return this.accountButtonCallback.map(button => button(account));
   }
+
+  passwordButtons(account: Account): Array<void | JSX.Element> {
+    return this.passwordButtonCallback.map(button => button(account));
+  }
+
 }

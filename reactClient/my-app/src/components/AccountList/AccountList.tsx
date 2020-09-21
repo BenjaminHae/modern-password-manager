@@ -7,6 +7,7 @@ import DataTable from 'react-data-table-component';
 import { IDataTableColumn } from 'react-data-table-component';
 import { PluginSystem } from '../../plugin/PluginSystem';
 import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { Plus, Pencil } from 'react-bootstrap-icons';
 
 
@@ -37,18 +38,38 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
   getTableActions(): JSX.Element {
     return <Button onClick={this.props.addAccountHandler} variant="success" size="sm" ><Plus/> Add Account</Button>
   }
+  
+  getAccountButtons(account: Account) {
+    let buttons : Array <void | JSX.Element> = [<Button onClick={()=>{this.props.editAccountHandler(account)}}><Pencil/></Button>];
+    buttons = buttons.concat(this.props.pluginSystem.accountButtons(account));
+    return (
+      <ButtonGroup size="sm" className={styles.TableButtonGroup}>
+        {buttons}
+      </ButtonGroup>
+    )
+  }
+  
+  getPasswordButtons(account: Account) {
+    const buttons = this.props.pluginSystem.passwordButtons(account);
+    return (
+      <ButtonGroup size="sm" className={styles.TableButtonGroup}>
+        {buttons}
+      </ButtonGroup>
+    )
+  }
+  
   getColumns(): Array<IDataTableColumn> {
     const columns: Array<IDataTableColumn> = [
       { 
         name: "Name", 
         selector: "name", 
         sortable:true,
-        cell: (row: Account) => <>{row.name} <Button size="sm" onClick={()=>{this.props.editAccountHandler(row)}}><Pencil/></Button></>
+        cell: (row: Account) => [<>{row.name}</>, this.getAccountButtons(row)]
       },
       { 
         name: "Password",  
         ignoreRowClick: true, 
-        cell: (row: Account) => <AccountPasswordWithToggle account={row} getAccountPasswordHandler={this.props.getAccountPasswordHandler}/> 
+        cell: (row: Account) => [ <AccountPasswordWithToggle account={row} getAccountPasswordHandler={this.props.getAccountPasswordHandler}/>, this.getPasswordButtons(row)]
       }
     ];
     const sortFunc = (a: FieldOptions, b: FieldOptions) => {
@@ -79,9 +100,6 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
       else {
         columns.push(column);
       }
-    }
-    for (let column of columns) {
-      column = this.props.pluginSystem.manipulateAccountListItem(column);
     }
     return columns;
   }
