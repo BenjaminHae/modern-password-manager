@@ -2,7 +2,7 @@ import { Account } from '../backend/models/account';
 import { BackendService } from '../backend/backend.service';
 import { ICredentialProvider } from '../backend/controller/credentialProvider';
 import { AccountTransformerService } from '../backend/controller/account-transformer.service';
-import { ActivatedPlugins } from './ActivatedPlugins';
+import activatedPlugins from './ActivatedPlugins';
 import { BasePlugin, instanceOfIPluginWithMainView, instanceOfIPluginWithFilter, instanceOfIPluginWithAccountsReady, instanceOfIPluginWithAccountButton, instanceOfIPluginWithPasswordButton, instanceOfIPluginWithPreLogout, instanceOfIPluginWithLoginSuccessful, instanceOfIPluginWithLoginViewReady, instanceOfIPluginRequiresTransformer } from './BasePlugin';
 import { IMessageOptions } from '../components/Message/Message';
 
@@ -40,7 +40,7 @@ export class PluginSystem {
       .subscribe((accounts: Array<Account>) => {
           this.accountsReady(accounts);
           });
-    this.activatePlugins(ActivatedPlugins);
+    this.activatePlugins(activatedPlugins());
   }
   
   activatePlugins(plugins: Array<new (pluginSystem: PluginSystem) => BasePlugin>): void {

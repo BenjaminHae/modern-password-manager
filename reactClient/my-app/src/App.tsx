@@ -27,11 +27,6 @@ import Row from 'react-bootstrap/Row';
 import { BoxArrowLeft } from 'react-bootstrap-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-declare global {
-  interface Window { pluginSystem: PluginSystem; }
-}
-
-
 interface AppState {
   ready: boolean;
   messages: Array<IMessage>;
@@ -79,7 +74,6 @@ export default class App extends React.Component<{}, AppState> {
         this.crypto);
     this.plugins = new PluginSystem(this.backend, this.accountTransformerService);
     this.plugins.registerAppHandler(this);
-    window.pluginSystem = this.plugins;
     this.backend.loginObservable
       .subscribe(()=>{
           this.setState({authenticated : true});
