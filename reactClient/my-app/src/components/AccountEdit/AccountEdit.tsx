@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './AccountEdit.module.css';
 import { Account } from '../../backend/models/account';
 import { FieldOptions } from '../../backend/models/fieldOptions';
+import { PluginSystem } from '../../plugin/PluginSystem';
 import { IMessageOptions } from '../Message/Message';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -17,7 +18,8 @@ interface AccountEditProps {
   deleteHandler: (account: Account) => Promise<void>;
   closeHandler: () => void;
   getAccountPasswordHandler: (account: Account) => Promise<string>;
-  showMessage: (message: string, options: IMessageOptions) => void,
+  showMessage: (message: string, options: IMessageOptions) => void;
+  pluginSystem: PluginSystem;
 }
 interface AccountEditState {
   fields: {[index: string]:string};
@@ -27,7 +29,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
 
   constructor(props: AccountEditProps) {
     super(props);
-    this.handleGenericChange = this.handleGenericChange.bind(this);
+    this.handleGenericChangeByChangeEvent = this.handleGenericChangeByChangeEvent.bind(this);
     this.state = { fields: this.generateFieldContents(), waiting: false};
   }
 
@@ -53,11 +55,15 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
         newFields[key] = this.props.proposals[key];
       }
     }
+    this.props.pluginSystem.editPreShow(newFields, this.props.account);
     return newFields;
   }
-  handleGenericChange(event: React.ChangeEvent<HTMLInputElement>): void {
+  handleGenericChangeByChangeEvent(event: React.ChangeEvent<HTMLInputElement>): void {
+    this.handleGenericChange(event.target.name, event.target.value);
+  }
+  handleGenericChange(key: string, value: string): void {
     const currentFields = this.state.fields;
-    currentFields[event.target.name] = event.target.value;
+    currentFields[key] = value;
     this.setState({fields: currentFields});
   }
   cleanUp(): void {
@@ -74,23 +80,34 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
       this.setState({fields: currentFields});
     }
   }
+  getButtons(inputKey: string, currentValue: string, account?: Account): Array<JSX.Element | void> {
+    return this.props.pluginSystem.editInputButtons(inputKey, currentValue, (val:string) => {
+        this.handleGenericChange(inputKey, val);
+      }, account);
+  }
   renderFormFields(): Array<JSX.Element> {
     const fields = [ (
         <Form.Group controlId="formUsername" key="account">
           <Form.Label>Account Name</Form.Label>
-          <Form.Control type="text" autoFocus placeholder="Account name" name="name" onChange={this.handleGenericChange} value={this.state.fields["name"]} />
+          <InputGroup>
+            <Form.Control type="text" autoFocus placeholder="Account name" name="name" onChange={this.handleGenericChangeByChangeEvent} value={this.state.fields["name"]} />
+            <InputGroup.Append>
+              {this.getButtons("name", this.state.fields["name"], this.props.account)}
+            </InputGroup.Append>
+          </InputGroup>
         </Form.Group>
      ), 
            (
         <Form.Group controlId="formPassword" key="password">
           <Form.Label>Password</Form.Label>
           <InputGroup>
-            <Form.Control type="text" placeholder="Password" name="password" onChange={this.handleGenericChange} value={this.state.fields["password"]} />
-            {this.props.account && 
-              <InputGroup.Append>
+            <Form.Control type="text" placeholder="Password" name="password" onChange={this.handleGenericChangeByChangeEvent} value={this.state.fields["password"]} />
+            <InputGroup.Append>
+              {this.getButtons("password", this.state.fields["password"], this.props.account)}
+              {this.props.account && 
                 <Button variant="info" onClick={this.showPassword.bind(this)}><Eye/></Button>
-              </InputGroup.Append>
-            }
+              }
+            </InputGroup.Append>
           </InputGroup>
         </Form.Group>
      )];
@@ -110,7 +127,12 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
       const fieldOut = (
         <Form.Group controlId={"form" + field.selector} key={field.selector} >
           <Form.Label>{field.name}</Form.Label>
-          <Form.Control type="text" placeholder={field.name} name={field.selector} onChange={this.handleGenericChange} value={this.state.fields[field.selector]} />
+          <InputGroup>
+            <Form.Control type="text" placeholder={field.name} name={field.selector} onChange={this.handleGenericChangeByChangeEvent} value={this.state.fields[field.selector]} />
+            <InputGroup.Append>
+              {this.getButtons(field.selector, this.state.fields[field.selector], this.props.account)}
+            </InputGroup.Append>
+          </InputGroup>
         </Form.Group>
         );
       if (field.colNumber) {

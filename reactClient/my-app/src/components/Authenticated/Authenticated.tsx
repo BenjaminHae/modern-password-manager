@@ -39,8 +39,8 @@ interface AuthenticatedProps {
   getAccountPasswordHandler: (account: Account) => Promise<string>,
   pluginSystem: PluginSystem,
   showMessage: (message: string, options?: IMessageOptions) => void,
-  loadHistoryHandler: () => Promise<void>;
-  doStoreOptions: (options: UserOptions) => Promise<void>;
+  loadHistoryHandler: () => Promise<void>,
+  doStoreOptions: (options: UserOptions) => Promise<void>,
 }
 interface AuthenticatedState {
   view: AuthenticatedView;
@@ -134,6 +134,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
               deleteHandler={this.props.deleteHandler} 
               getAccountPasswordHandler={this.props.getAccountPasswordHandler}
               showMessage={this.props.showMessage}
+              pluginSystem={this.props.pluginSystem}
             />
         );
       case AuthenticatedView.Add:
@@ -147,6 +148,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
               getAccountPasswordHandler={this.props.getAccountPasswordHandler}
               showMessage={this.props.showMessage}
               proposals={this.state.addAccountProposals}
+              pluginSystem={this.props.pluginSystem}
             />
         );
       case AuthenticatedView.History:
