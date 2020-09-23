@@ -38,6 +38,7 @@ export class PluginSystem {
   appHandler?: IAppHandler;
 
   constructor (private backend: BackendService, private transformer: AccountTransformerService) {
+    this.clearPlugins();
     this.backend.accountsObservable
       .subscribe((accounts: Array<Account>) => {
           this.accountsReady(accounts);
@@ -56,6 +57,13 @@ export class PluginSystem {
     this.mainViewCallback = [];
     this.resetFilterCallback = [];
     this.accountsReadyCallback = [];
+    this.passwordButtonCallback = [];
+    this.accountButtonCallback = [];
+    this.editInputButtonCallback = [];
+    this.editPreShowCallback = [];
+    this.loginSuccessfulCallback = [];
+    this.loginViewReadyCallback = [];
+    this.preLogoutCallback = [];
   }
 
   registerPlugin(plugin: BasePlugin.BasePlugin): void {
