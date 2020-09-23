@@ -102,7 +102,7 @@ class BrowserExtensionPlugin extends BasePlugin {
   }
   passwordButton(account: Account): JSX.Element | void {
     if (this.isActive)
-      return (<Button variant="info" onClick={() => this.selectAccount(account)}><CloudCheck/></Button>)
+      return (<Button key="BrowserExtensionPlugin" variant="info" onClick={() => this.selectAccount(account)}><CloudCheck/></Button>)
   }
 
   setActive() {
