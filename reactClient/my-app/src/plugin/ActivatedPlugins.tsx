@@ -7,7 +7,7 @@ import BrowserExtensionPlugin from './BrowserExtensionPlugin/BrowserExtensionPlu
 
 function activatedPlugins(): Array<new (pluginSystem: PluginSystem) => BasePlugin> { 
   let plugins: Array<new (pluginSystem: PluginSystem) => BasePlugin> = [TagsPlugin, CopyPlugin, SearchPlugin];
-  if (process.env.ALLOW_BROWSER_EXTENSION === "true") {
+  if (process.env.REACT_APP_ALLOW_BROWSER_EXTENSION === "true") {
     plugins.push(BrowserExtensionPlugin);
   }
   return plugins;
