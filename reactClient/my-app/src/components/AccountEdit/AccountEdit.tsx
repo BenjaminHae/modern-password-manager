@@ -29,7 +29,6 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
 
   constructor(props: AccountEditProps) {
     super(props);
-    this.handleGenericChangeByChangeEvent = this.handleGenericChangeByChangeEvent.bind(this);
     this.state = { fields: this.generateFieldContents(), waiting: false};
   }
 
@@ -90,7 +89,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
         <Form.Group controlId="formUsername" key="account">
           <Form.Label>Account Name</Form.Label>
           <InputGroup>
-            <Form.Control type="text" autoFocus placeholder="Account name" name="name" onChange={this.handleGenericChangeByChangeEvent} value={this.state.fields["name"]} />
+            <Form.Control type="text" autoFocus placeholder="Account name" name="name" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.handleGenericChangeByChangeEvent(event)} value={this.state.fields["name"]} />
             <InputGroup.Append>
               {this.getButtons("name", this.state.fields["name"], this.props.account)}
             </InputGroup.Append>
@@ -101,7 +100,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
         <Form.Group controlId="formPassword" key="password">
           <Form.Label>Password</Form.Label>
           <InputGroup>
-            <Form.Control type="text" placeholder="Password" name="password" onChange={this.handleGenericChangeByChangeEvent} value={this.state.fields["password"]} />
+            <Form.Control type="text" placeholder="Password" name="password" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.handleGenericChangeByChangeEvent(event)} value={this.state.fields["password"]} />
             <InputGroup.Append>
               {this.getButtons("password", this.state.fields["password"], this.props.account)}
               {this.props.account && 
@@ -128,7 +127,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
         <Form.Group controlId={"form" + field.selector} key={field.selector} >
           <Form.Label>{field.name}</Form.Label>
           <InputGroup>
-            <Form.Control type="text" placeholder={field.name} name={field.selector} onChange={this.handleGenericChangeByChangeEvent} value={this.state.fields[field.selector]} />
+            <Form.Control type="text" placeholder={field.name} name={field.selector} onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.handleGenericChangeByChangeEvent(event)} value={this.state.fields[field.selector]} /> 
             <InputGroup.Append>
               {this.getButtons(field.selector, this.state.fields[field.selector], this.props.account)}
             </InputGroup.Append>
@@ -144,9 +143,12 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
     }
     return fields;
   }
-  async submitForm(event: React.FormEvent): Promise<void> {
+  submitForm(event: React.FormEvent): void {
+    event.preventDefault();
+    this.submitData();
+  }
+  async submitData(): Promise<void> {
     try {
-      event.preventDefault();
       this.setState({waiting: true});
       await this.props.editHandler(this.state.fields, this.props.account);
       this.cleanUp();
@@ -183,9 +185,9 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
           <Form onSubmit={this.submitForm.bind(this)}>
             <fieldset disabled={this.state.waiting}>
               {this.renderFormFields()}
-              <span> <Button variant="secondary" onClick={() => {this.props.closeHandler()} }>Abort</Button></span>
+              <span> <Button variant="secondary" onClick={() => this.props.closeHandler() }>Abort</Button></span>
               <span> <Button variant="primary" type="submit">store</Button></span>
-              { this.props.account && <span> <Button variant="warning" onClick={this.deleteHandler.bind(this)}>delete</Button></span> }
+              { this.props.account && <span> <Button variant="warning" onClick={() => this.deleteHandler()}>delete</Button></span> }
             </fieldset>
           </Form>
         </Col>
