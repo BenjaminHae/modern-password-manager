@@ -5,9 +5,10 @@ import { CopyPlugin } from './CopyPlugin/Copy';
 import { SearchPlugin } from './SearchPlugin/Search';
 import BrowserExtensionPlugin from './BrowserExtensionPlugin/BrowserExtensionPlugin';
 import OpenURLPlugin from './OpenURLPlugin/Open';
+import PasswordGeneratorPlugin from './PasswordGeneratorPlugin/PasswordGenerator';
 
 function activatedPlugins(): Array<new (pluginSystem: PluginSystem) => BasePlugin> { 
-  const plugins: Array<new (pluginSystem: PluginSystem) => BasePlugin> = [TagsPlugin, CopyPlugin, SearchPlugin, OpenURLPlugin];
+  const plugins: Array<new (pluginSystem: PluginSystem) => BasePlugin> = [TagsPlugin, CopyPlugin, SearchPlugin, OpenURLPlugin, PasswordGeneratorPlugin];
   if (process.env.REACT_APP_ALLOW_BROWSER_EXTENSION === "true") {
     plugins.push(BrowserExtensionPlugin);
   }
