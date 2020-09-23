@@ -15,7 +15,7 @@ export class CopyPlugin extends BasePlugin implements IPluginWithPasswordButton,
     if(!navigator.clipboard) {
       return;
     }
-    return (<Button onClick={() => this.copyPassword(account)}><ClipboardData/></Button>)
+    return (<Button key="CopyPlugin" onClick={() => this.copyPassword(account)}><ClipboardData/></Button>)
   }
   async copyPassword(account: Account):Promise<void> {
     if (!this.transformer)
