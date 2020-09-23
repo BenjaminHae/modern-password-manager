@@ -3,7 +3,7 @@ import { BackendService } from '../backend/backend.service';
 import { ICredentialProvider } from '../backend/controller/credentialProvider';
 import { AccountTransformerService } from '../backend/controller/account-transformer.service';
 import activatedPlugins from './ActivatedPlugins';
-import { BasePlugin, instanceOfIPluginWithMainView, instanceOfIPluginWithFilter, instanceOfIPluginWithAccountsReady, instanceOfIPluginWithAccountButton, instanceOfIPluginWithPasswordButton, instanceOfIPluginWithPreLogout, instanceOfIPluginWithLoginSuccessful, instanceOfIPluginWithLoginViewReady, instanceOfIPluginRequiresTransformer } from './BasePlugin';
+import * as BasePlugin from './BasePlugin';
 import { IMessageOptions } from '../components/Message/Message';
 
 export type AccountsFilter = (accounts: Array<Account>) => Array<Account>;
@@ -29,6 +29,8 @@ export class PluginSystem {
   accountsReadyCallback: Array<(accounts: Array<Account>) => void> = [];
   passwordButtonCallback: Array<(account: Account) => void | JSX.Element > = [];
   accountButtonCallback: Array<(account: Account) => void | JSX.Element > = [];
+  editInputButtonCallback: Array<(inputKey: string,  currentValue: string, setValue: (val: string) => void, account?: Account) => JSX.Element | void> = [];
+  editPreShowCallback: Array<(fields: {[index: string]:string}, account?: Account) => void> = [];
   loginSuccessfulCallback: Array<(username: string, key: any) => void> = [];
   loginViewReadyCallback: Array<() => void> = [];
   preLogoutCallback: Array<() => void> = [];
@@ -43,7 +45,7 @@ export class PluginSystem {
     this.activatePlugins(activatedPlugins());
   }
   
-  activatePlugins(plugins: Array<new (pluginSystem: PluginSystem) => BasePlugin>): void {
+  activatePlugins(plugins: Array<new (pluginSystem: PluginSystem) => BasePlugin.BasePlugin>): void {
     this.clearPlugins();
     for (const Plugin of plugins) {
       this.registerPlugin(new Plugin(this));
@@ -56,35 +58,41 @@ export class PluginSystem {
     this.accountsReadyCallback = [];
   }
 
-  registerPlugin(plugin: BasePlugin): void {
+  registerPlugin(plugin: BasePlugin.BasePlugin): void {
     //requires
-    if (instanceOfIPluginRequiresTransformer(plugin)) {
+    if (BasePlugin.instanceOfIPluginRequiresTransformer(plugin)) {
       plugin.setTransformer(this.transformer);
     }
     //callbacks
-    if (instanceOfIPluginWithMainView(plugin)) {
+    if (BasePlugin.instanceOfIPluginWithMainView(plugin)) {
       this.mainViewCallback.push(plugin.MainViewJSX.bind(plugin));
     }
-    if (instanceOfIPluginWithFilter(plugin)) {
+    if (BasePlugin.instanceOfIPluginWithFilter(plugin)) {
       this.resetFilterCallback.push(plugin.resetFilter.bind(plugin));
     }
-    if (instanceOfIPluginWithAccountsReady(plugin)) {
+    if (BasePlugin.instanceOfIPluginWithAccountsReady(plugin)) {
       this.accountsReadyCallback.push(plugin.accountsReady.bind(plugin));
     }
-    if (instanceOfIPluginWithPasswordButton(plugin)) {
+    if (BasePlugin.instanceOfIPluginWithPasswordButton(plugin)) {
       this.passwordButtonCallback.push(plugin.passwordButton.bind(plugin));
     }
-    if (instanceOfIPluginWithAccountButton(plugin)) {
+    if (BasePlugin.instanceOfIPluginWithAccountButton(plugin)) {
       this.accountButtonCallback.push(plugin.accountButton.bind(plugin));
     }
-    if (instanceOfIPluginWithLoginSuccessful(plugin)) {
+    if (BasePlugin.instanceOfIPluginWithLoginSuccessful(plugin)) {
       this.loginSuccessfulCallback.push(plugin.loginSuccessful.bind(plugin));
     }
-    if (instanceOfIPluginWithPreLogout(plugin)) {
+    if (BasePlugin.instanceOfIPluginWithPreLogout(plugin)) {
       this.preLogoutCallback.push(plugin.preLogout.bind(plugin));
     }
-    if (instanceOfIPluginWithLoginViewReady(plugin)) {
+    if (BasePlugin.instanceOfIPluginWithLoginViewReady(plugin)) {
       this.loginViewReadyCallback.push(plugin.loginViewReady.bind(plugin));
+    }
+    if (BasePlugin.instanceOfIPluginWithEditInputButton(plugin)) {
+      this.editInputButtonCallback.push(plugin.editInputButton.bind(plugin));
+    }
+    if (BasePlugin.instanceOfIPluginWithEditPreShow(plugin)) {
+      this.editPreShowCallback.push(plugin.editPreShow.bind(plugin));
     }
   }
 
@@ -207,6 +215,14 @@ export class PluginSystem {
 
   passwordButtons(account: Account): Array<void | JSX.Element> {
     return this.passwordButtonCallback.map(button => button(account));
+  }
+
+  editInputButtons(inputKey: string, currentValue: string, setValue: (val: string) => void, account?: Account): Array<JSX.Element | void> {
+    return this.editInputButtonCallback.map(button => button(inputKey, currentValue, setValue, account));
+  }
+
+  editPreShow(fields: {[index: string]:string}, account?: Account): void {
+    this.editPreShowCallback.forEach(pluginCallback => pluginCallback(fields, account));
   }
 
 }

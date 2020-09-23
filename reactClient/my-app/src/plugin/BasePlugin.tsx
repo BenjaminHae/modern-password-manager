@@ -7,6 +7,12 @@ export abstract class BasePlugin {
   }
 }
 
+/* Possible callbacks:
+  editInputPrepend(inputKey: string, value: string, account?: Account): JSX.Element | void
+  editInputAppend(inputKey: string, value: string, account?: Account): JSX.Element | void
+  accountPreStore(newAccount, oldAccount: Account): Account 
+  }*/
+
 export interface IPluginWithMainView {
   MainViewJSX: () => JSX.Element;
 }
@@ -37,6 +43,14 @@ export interface IPluginWithPreLogout {
 
 export interface IPluginWithLoginViewReady {
   loginViewReady: () => void;
+}
+
+export interface IPluginWithEditPreShow {
+  editPreShow: (fields: {[index: string]:string}, account?: Account) => void;
+}
+
+export interface IPluginWithEditInputButton {
+  editInputButton: (inputKey: string, currentValue: string, setValue: (val: string) => void, account?: Account) => JSX.Element | void;
 }
 
 export interface IPluginRequiresTransformer {
@@ -74,6 +88,15 @@ export function instanceOfIPluginWithPreLogout(object: any): object is IPluginWi
 export function instanceOfIPluginWithLoginViewReady(object: any): object is IPluginWithLoginViewReady {
   return 'loginViewReady' in object;
 }
+
+export function instanceOfIPluginWithEditInputButton(object: any): object is IPluginWithEditInputButton {
+  return 'editInputButton' in object;
+}
+
+export function instanceOfIPluginWithEditPreShow(object: any): object is IPluginWithEditPreShow {
+  return 'editPreShow' in object;
+}
+
 export function instanceOfIPluginRequiresTransformer(object: any): object is IPluginRequiresTransformer {
   return 'setTransformer' in object;
 }
