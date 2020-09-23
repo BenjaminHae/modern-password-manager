@@ -17,13 +17,14 @@ export class SearchPlugin extends BasePlugin implements IPluginWithFilter, IPlug
   }
  
   filterCallback(searchExpression: string): void {
+    searchExpression = searchExpression.toLowerCase();
     if (searchExpression !== "") {
       const filter = (acc: Account): boolean=> {
-        if (acc.name.includes(searchExpression)) {
+        if (acc.name.toLowerCase().includes(searchExpression)) {
           return true;
         }
         for (const key in acc.other) {
-          if (acc.other[key].includes(searchExpression))
+          if (acc.other[key].toLowerCase().includes(searchExpression))
             return true;
         }
         return false;
