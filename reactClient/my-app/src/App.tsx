@@ -165,6 +165,9 @@ export default class App extends React.Component<{}, AppState> {
       throw new Error("No Account name set");
     }
     // Todo auto-generate password
+    if (!fields["password"]) {
+      throw new Error("Account with undefined password");
+    }
     const cryptedPassword = await this.crypto.encryptChar(fields["password"]);
     delete fields.password;
     const updatedAccount = new Account(-1, fields.name, cryptedPassword);

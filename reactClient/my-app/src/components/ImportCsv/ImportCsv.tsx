@@ -82,11 +82,16 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
       this.props.showMessage(`no file loaded`, {variant: "warning", autoClose: true});
       return;
     }
-    await this.parser.parseFile(this.state.file);
-    const newAccounts = this.importer.createAccounts(this.parser.getRows());
-    await this.props.bulkAddHandler(newAccounts);
-    this.props.showMessage(`imported ${newAccounts.length} accounts`);
-    this.setState({ file: undefined, data: [], waiting: false});
+    try {
+      await this.parser.parseFile(this.state.file);
+      const newAccounts = this.importer.createAccounts(this.parser.getRows());
+      await this.props.bulkAddHandler(newAccounts);
+      this.props.showMessage(`imported ${newAccounts.length} accounts`);
+      this.setState({ file: undefined, data: [], waiting: false});
+    }
+    catch(e) {
+      this.props.showMessage(`There was an error when importing: ${e.toString()}`, {variant: "warning", autoClose: false});
+    }
   }
 
   showInformation(): void {

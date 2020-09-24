@@ -10,6 +10,7 @@ export class CsvParser {
         parse<{[index: string]:string}>(file, {
           header: true,
           preview: preview,
+          skipEmptyLines: true,
           complete: (result) => {
             this.result = result;
             resolve();
