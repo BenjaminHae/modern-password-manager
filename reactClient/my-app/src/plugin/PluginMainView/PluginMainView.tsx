@@ -15,7 +15,7 @@ class PluginMainView extends React.Component<PluginMainViewProps> {
   render (): JSX.Element {
     return (
       <Container className={styles.PluginMainView}>
-        <Row>
+        <Row className="container">
           { this.props.pluginSystem.getMainView() }
           <Col className={styles.ResetFilterCol} xl={2} lg={2} sm={3} xs={12}>
             { this.props.pluginSystem.filterPresent && <Button className={styles.ResetFilter} onClick={()=> {this.props.pluginSystem.clearFilters()}} size="sm" >Clear Filters</Button> }
