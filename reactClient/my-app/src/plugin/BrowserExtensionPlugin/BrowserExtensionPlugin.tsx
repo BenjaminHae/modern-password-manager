@@ -44,13 +44,19 @@ class BrowserExtensionPlugin extends BasePlugin {
   // this callback reacts to accounts in backend being ready
   // it is possibly necessary to react to the "account view" being ready
   accountsReady() {
+    let firstLoad = !this.accountsLoaded;
     this.accountsLoaded = true;
     if (!this.isActive)
       return
     if (this.actionsReceived) {
       this.performAction();
     }
-    this.sendEvent("accountViewReady");
+    if (firstLoad) {
+      this.sendEvent("accountViewReady");
+    }
+    else {
+      this.sendEvent("accountReload");
+    }
   }
 
   preLogout() {
