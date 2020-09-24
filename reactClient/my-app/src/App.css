@@ -45,3 +45,10 @@
     transform: rotate(360deg);
   }
 }
+
+.btn-group-xs > .btn, .btn-xs {
+  padding: .25rem .4rem !important;
+  font-size: .8rem !important;
+  line-height: .8rem !important;
+  border-radius: .2rem !important;
+}

@@ -32,12 +32,12 @@ class TagViewComponent extends React.Component<TagViewProps, TagViewState> {
   printTags(): Array<JSX.Element> {
     return this.props.tags.map(
       (tag: string) => 
-        ( <Button key={tag} size="sm" variant={this.state.selectedTags.includes(tag) ? "info" : "outline-info"} onClick={()=>this.selectTag(tag)}>{tag}</Button> )
+        ( <Button key={tag} className="btn-xs" variant={this.state.selectedTags.includes(tag) ? "info" : "outline-info"} onClick={()=>this.selectTag(tag)}>{tag}</Button> )
     );
   }
   render(): JSX.Element {
     return (
-        <Col className={styles.TagViewComponent} lg={3} xl={3} sm={6} xs={12}>
+        <Col className={styles.TagViewComponent} lg={3} xl={4} sm={6} xs={12}>
           <h3>Tags</h3>
           {this.printTags()}
         </Col>
