@@ -110,7 +110,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
 	);*/
     return (
       <div className={styles.AccountList}>
-        <DataTable title="Passwords" columns={this.state.columns} data={this.props.accounts} striped actions={this.getTableActions()} />
+        <DataTable title="Passwords" columns={this.state.columns} data={this.props.accounts} striped pagination actions={this.getTableActions()} />
       </div>
     );
   }
