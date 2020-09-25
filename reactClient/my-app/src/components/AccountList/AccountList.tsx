@@ -36,7 +36,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
     }
   }
   getTableActions(): JSX.Element {
-    return <Button onClick={this.props.addAccountHandler} variant="success" size="sm" ><Plus/> Add Account</Button>
+    return <Button onClick={() => this.props.addAccountHandler()} variant="success" size="sm" ><Plus/> Add Account</Button>
   }
   
   getAccountButtons(account: Account) {
