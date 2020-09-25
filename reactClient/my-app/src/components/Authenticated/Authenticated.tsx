@@ -7,6 +7,7 @@ import AccountList from '../AccountList/AccountList';
 import AccountEdit from '../AccountEdit/AccountEdit';
 import UserConfiguration from '../UserConfiguration/UserConfiguration';
 import ImportCsv from '../ImportCsv/ImportCsv';
+import ExportCsv from '../ExportCsv/ExportCsv';
 import ChangePassword from '../ChangePassword/ChangePassword';
 import History from '../History/History';
 import Button from 'react-bootstrap/Button';
@@ -14,7 +15,7 @@ import Container from 'react-bootstrap/Container';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { ArrowRepeat, BoxArrowUpLeft, CloudArrowUp, List, Plus, PencilFill, ClockHistory, Sliders } from 'react-bootstrap-icons';
+import { ArrowRepeat, BoxArrowUpLeft, CloudArrowUp, CloudArrowDown, List, Plus, PencilFill, ClockHistory, Sliders } from 'react-bootstrap-icons';
 import { PluginSystem } from '../../plugin/PluginSystem';
 import PluginMainView from '../../plugin/PluginMainView/PluginMainView';
 import { HistoryItem } from '@pm-server/pm-server-react-client';
@@ -24,6 +25,7 @@ enum AuthenticatedView {
   Edit,
   Add,
   Import,
+  Export,
   Options,
   ChangePassword,
   History
@@ -51,6 +53,7 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
   readonly viewButtons = [
     { view: AuthenticatedView.List, name: "Account List", icon: (<List/>), selectable: true },
     { view: AuthenticatedView.Import, name: "Import Accounts", icon: (<CloudArrowUp/>), selectable: true },
+    { view: AuthenticatedView.Export, name: "Export Accounts", icon: (<CloudArrowDown/>), selectable: true },
     { view: AuthenticatedView.ChangePassword, name: "Change Password", icon: (<ArrowRepeat/>), selectable: true },
     { view: AuthenticatedView.Options, name: "Customization", icon: (<Sliders/>), selectable: true  },
     { view: AuthenticatedView.History, name: "History", icon: (<ClockHistory/>), selectable: true },
@@ -161,7 +164,18 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
         );
       case AuthenticatedView.Import:
         return (
-          <ImportCsv availableFields={this.props.userOptions.fields} bulkAddHandler={this.props.bulkAddHandler} showMessage={this.props.showMessage}/>
+          <ImportCsv 
+            availableFields={this.props.userOptions.fields} 
+            bulkAddHandler={this.props.bulkAddHandler} 
+            showMessage={this.props.showMessage}
+          />
+        );
+      case AuthenticatedView.Export:
+        return (
+          <ExportCsv 
+            accounts={this.props.accounts}
+            getAccountPasswordHandler={this.props.getAccountPasswordHandler}
+          />
         );
       case AuthenticatedView.Options:
         return (
