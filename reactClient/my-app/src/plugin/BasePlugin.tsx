@@ -14,7 +14,7 @@ export abstract class BasePlugin {
   }*/
 
 export interface IPluginWithMainView {
-  MainViewJSX: () => JSX.Element;
+  MainViewJSX: () => JSX.Element | void;
 }
 
 export interface IPluginWithFilter {

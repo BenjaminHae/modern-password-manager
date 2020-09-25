@@ -24,7 +24,7 @@ export class PluginSystem {
   filters: { [index: string]: AccountFilter } = {};
   filterPresent = false;
   
-  mainViewCallback: Array<() => JSX.Element> = [];
+  mainViewCallback: Array<() => JSX.Element | void> = [];
   resetFilterCallback: Array<() => void> = [];
   accountsReadyCallback: Array<(accounts: Array<Account>) => void> = [];
   passwordButtonCallback: Array<(account: Account) => void | JSX.Element > = [];
@@ -213,7 +213,7 @@ export class PluginSystem {
 
   /* filling UI elements in */
 
-  getMainView(): Array<JSX.Element> {
+  getMainView(): Array<JSX.Element | void> {
     return this.mainViewCallback.map(view => view());
   }
 

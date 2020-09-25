@@ -12,7 +12,9 @@ export class TagsPlugin extends BasePlugin implements IPluginWithMainView, IPlug
     super(pluginSystem);
   }
 
-  MainViewJSX(): JSX.Element {
+  MainViewJSX(): JSX.Element | void {
+    if (this.tags.length === 0)
+      return
     return ( <TagViewComponent key="TagViewComponent" tags={this.tags} filterCallback={this.filterCallback.bind(this)} ref={this.tagList}/> );
   }
 

@@ -39,7 +39,7 @@ class TagViewComponent extends React.Component<TagViewProps, TagViewState> {
   }
   render(): JSX.Element {
     return (
-        <Col className={styles.TagViewComponent} xl={4} lg={4} sm={12} xs={12}>
+        <Col className={styles.TagViewComponent} xl={5} lg={5} sm={12} xs={12}>
           <h3>Tags <Button size="sm" className="d-lg-none" onClick={()=>this.setState({show: !this.state.show})}>{this.state.show ? "Hide" : "Show"}</Button> </h3>
           <Container className={this.state.show ? "" : "d-none d-lg-block"} >
             {this.printTags()}
