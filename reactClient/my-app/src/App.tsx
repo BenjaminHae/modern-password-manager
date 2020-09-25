@@ -98,6 +98,7 @@ export default class App extends React.Component<{}, AppState> {
     this.plugins.setFilterChangeHandler(this.filterChangeHandler.bind(this));
   }
   doLogin(username:string, password: string):Promise<void> {
+    this.clearMessages();
     return this.backend.logon(username, password)
       .then((info: ILogonInformation) => {
         this.plugins.loginSuccessful(username, this.credential.getKey());
@@ -218,6 +219,10 @@ export default class App extends React.Component<{}, AppState> {
     return accounts;
   }
 
+  clearMessages(): void {
+    this.setState({messages: []});
+  }
+
   showMessage(text: string, options: IMessageOptions = {}): void {
     const newMessages = this.state.messages;
     const message = {message: text, id: Date.now(), show: true, ...options}
@@ -257,7 +262,7 @@ export default class App extends React.Component<{}, AppState> {
                     onClick={this.doLogout.bind(this)} 
                     variant="secondary" 
                   >
-                    <BoxArrowLeft/>Logout
+                    <BoxArrowLeft/> Logout
                   </Button>
                 }
               </Col>

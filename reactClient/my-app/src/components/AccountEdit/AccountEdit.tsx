@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
-import { Eye } from 'react-bootstrap-icons';
+import { Eye, X, Check2, Trash } from 'react-bootstrap-icons';
 
 interface AccountEditProps {
   account?: Account;
@@ -185,9 +185,9 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
           <Form onSubmit={this.submitForm.bind(this)}>
             <fieldset disabled={this.state.waiting}>
               {this.renderFormFields()}
-              <span> <Button variant="secondary" onClick={() => this.props.closeHandler() }>Abort</Button></span>
-              <span> <Button variant="primary" type="submit">store</Button></span>
-              { this.props.account && <span> <Button variant="warning" onClick={() => this.deleteHandler()}>delete</Button></span> }
+              <span> <Button variant="secondary" onClick={() => this.props.closeHandler() }><X/> Abort</Button></span>
+              <span> <Button variant="primary" type="submit"><Check2/> Store</Button></span>
+              { this.props.account && <span> <Button variant="warning" onClick={() => this.deleteHandler()}><Trash/> Delete</Button></span> }
             </fieldset>
           </Form>
         </Col>
