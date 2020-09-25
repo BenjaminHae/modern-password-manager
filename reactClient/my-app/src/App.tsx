@@ -116,11 +116,21 @@ export default class App extends React.Component<{}, AppState> {
         this.showMessage(message, options);
       })
       .catch((e) => {
-        this.showMessage("login failed: " + e.toString(), { autoClose: false });
+        let msg = e.toString();
+        if ("status" in e) {
+          if (e.status === 500) {
+            msg = "please reload page";
+          }
+          if (e.status === 401) {
+            msg = "invalid credentials";
+          }
+        }
+        this.showMessage("Login failed, " + msg, { autoClose: false });
         this.setState({ authenticated: false });
       });
   }
   async doRegister(username: string, password: string, email: string): Promise<void> {
+    this.clearMessages();
     return this.backend.register(username, password, email);
   }
   async doLogout(): Promise<void> {
