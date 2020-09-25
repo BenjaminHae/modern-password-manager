@@ -29,8 +29,9 @@ class LoginListener
     public function onSecurityAuthenticationFailure(AuthenticationFailureEvent $event) {
         // Get the User entity.
         $UNAUTHENTICATEDuser = $this->userRepository->findOneByUsernameUNAUTHENTICATED($event->getAuthenticationToken()->getUser());
-        
-        $this->eventController->StoreEvent($UNAUTHENTICATEDuser, "Login", "failed");
+        if ($UNAUTHENTICATEDuser) {
+            $this->eventController->StoreEvent($UNAUTHENTICATEDuser, "Login", "failed");
+        }
     }
 }
 ?>
