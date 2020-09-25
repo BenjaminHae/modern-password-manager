@@ -24,7 +24,7 @@ export class SearchPlugin extends BasePlugin implements IPluginWithFilter, IPlug
           return true;
         }
         for (const key in acc.other) {
-          if (acc.other[key].toLowerCase().includes(searchExpression))
+          if (acc.other[key] && acc.other[key].toLowerCase().includes(searchExpression))
             return true;
         }
         return false;
