@@ -2,7 +2,11 @@
 
 ## Building React client
 
- todo
+ 1. Do everything in `reactClient/my-app/`
+ 2. Use Node 12.x
+ 3. run `npm install`
+ 4. run `npm link OpenAPIReactClient/`
+ 5. run `npm run build`
 
 ## Deployment
 
