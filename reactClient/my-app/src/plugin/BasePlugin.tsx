@@ -70,7 +70,7 @@ export function instanceOfIPluginWithFilter(object: unknown): object is IPluginW
 }
 
 export function instanceOfIPluginWithAccountsReady(object: unknown): object is IPluginWithAccountsReady {
-  return checkForObjectAndMethod('accountsReady');
+  return checkForObjectAndMethod(object, 'accountsReady');
 }
 
 export function instanceOfIPluginWithAccountButton(object: unknown): object is IPluginWithAccountButton {
