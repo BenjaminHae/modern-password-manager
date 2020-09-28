@@ -31,7 +31,7 @@ export class PluginSystem {
   accountButtonCallback: Array<(account: Account) => void | JSX.Element > = [];
   editInputButtonCallback: Array<(inputKey: string,  currentValue: string, setValue: (val: string) => void, account?: Account) => JSX.Element | void> = [];
   editPreShowCallback: Array<(fields: {[index: string]:string}, account?: Account) => void> = [];
-  loginSuccessfulCallback: Array<(username: string, key: any) => void> = [];
+  loginSuccessfulCallback: Array<(username: string, key: CryptoKey) => void> = [];
   loginViewReadyCallback: Array<() => void> = [];
   preLogoutCallback: Array<() => void> = [];
   authenticatedUIHandler?: IAuthenticatedUIHandler;
@@ -104,11 +104,11 @@ export class PluginSystem {
     }
   }
 
-  registerAuthenticatedUIHandler(handler: IAuthenticatedUIHandler) {
+  registerAuthenticatedUIHandler(handler: IAuthenticatedUIHandler): void {
     this.authenticatedUIHandler = handler;
   }
 
-  registerAppHandler(handler: IAppHandler) {
+  registerAppHandler(handler: IAppHandler): void {
     this.appHandler = handler;
   }
   
@@ -121,7 +121,7 @@ export class PluginSystem {
     this.accountsReadyCallback.forEach(ready => ready(accounts));
   }
 
-  loginSuccessful(username: string, key: any) {
+  loginSuccessful(username: string, key: CryptoKey): void {
     this.loginSuccessfulCallback.forEach(loginSuccessful => loginSuccessful(username, key));
   }
 
