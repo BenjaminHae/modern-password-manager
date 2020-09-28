@@ -62,7 +62,7 @@ function checkForObjectAndMethods(thing: unknown, items: Array<string>): boolean
 }
 
 function checkForObjectAndMethods(thing: unknown, item: string): boolean {
-  return (typof thing === "object") && (item in thing);
+  return (typeof thing === "object") && (item in thing);
 }
 
 export function instanceOfIPluginWithMainView(object: unknown): object is IPluginWithMainView {
