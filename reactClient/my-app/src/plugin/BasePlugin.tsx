@@ -57,55 +57,51 @@ export interface IPluginRequiresTransformer {
   setTransformer: (transformer: AccountTransformerService) => void;
 }
 
-function checkForObjectAndMethods(thing: unknown, items: Array<string>): boolean {
-  return (typeof thing === "object")  && (items.every((item) => item in thing));
-}
-
-function checkForObjectAndMethods(thing: unknown, item: string): boolean {
+function checkForObjectAndMethod(thing: unknown, item: string): boolean {
   return (typeof thing === "object") && (item in thing);
 }
 
 export function instanceOfIPluginWithMainView(object: unknown): object is IPluginWithMainView {
-  return checkForObjectAndMethods('MainViewJSX');
+  return checkForObjectAndMethod('MainViewJSX');
 }
 
 export function instanceOfIPluginWithFilter(object: unknown): object is IPluginWithFilter {
-  return checkForObjectAndMethods('resetFilter');
+  return checkForObjectAndMethod('resetFilter');
 }
 
 export function instanceOfIPluginWithAccountsReady(object: unknown): object is IPluginWithAccountsReady {
-  return checkForObjectAndMethods('accountsReady');
+  return checkForObjectAndMethod('accountsReady');
 }
 
 export function instanceOfIPluginWithAccountButton(object: unknown): object is IPluginWithAccountButton {
-  return checkForObjectAndMethods('accountButton');
+  return checkForObjectAndMethod('accountButton');
 }
 
 export function instanceOfIPluginWithPasswordButton(object: unknown): object is IPluginWithPasswordButton {
-  return checkForObjectAndMethods('passwordButton');
+  return checkForObjectAndMethod('passwordButton');
 }
 
 export function instanceOfIPluginWithLoginSuccessful(object: unknown): object is IPluginWithLoginSuccessful {
-  return checkForObjectAndMethods('loginSuccessful');
+  return checkForObjectAndMethod('loginSuccessful');
 }
 
 export function instanceOfIPluginWithPreLogout(object: unknown): object is IPluginWithPreLogout {
-  return checkForObjectAndMethods('preLogout');
+  return checkForObjectAndMethod('preLogout');
 }
 
 export function instanceOfIPluginWithLoginViewReady(object: unknown): object is IPluginWithLoginViewReady {
-  return checkForObjectAndMethods('loginViewReady');
+  return checkForObjectAndMethod('loginViewReady');
 }
 
 export function instanceOfIPluginWithEditInputButton(object: unknown): object is IPluginWithEditInputButton {
-  return checkForObjectAndMethods('editInputButton');
+  return checkForObjectAndMethod('editInputButton');
 }
 
 export function instanceOfIPluginWithEditPreShow(object: unknown): object is IPluginWithEditPreShow {
-  return checkForObjectAndMethods('editPreShow');
+  return checkForObjectAndMethod('editPreShow');
 }
 
 export function instanceOfIPluginRequiresTransformer(object: unknown): object is IPluginRequiresTransformer {
-  return checkForObjectAndMethods('setTransformer');
+  return checkForObjectAndMethod('setTransformer');
 }
 
