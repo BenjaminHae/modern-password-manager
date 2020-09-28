@@ -1,6 +1,32 @@
 # Modern password manager
 
-## Building React client
+## Installation
+
+### Productive use
+
+You need a webspace with PHP 7.4.
+
+ 1. Extract the ZIP file for the release to your server. Point apache to the folder `public`
+ 2. Copy the configuration file `.env` to `.env.local` and adjust the contents to your needs.
+    You need to at least configure your database:
+    ```
+    DATABASE_URL=mysql://user:password[@127.0.0.1:3306/database_name?serverVersion=mariadb-10.3.23
+    ```
+    Also update the APP_SECRET variable to a new random value.
+ 3. Afterwards run the script bin/console like that:
+    ```
+    bin/console doctrine:schema:update --force
+    ```
+    
+The password manager only works when you access it through https or on localhost, otherwise current browser do not accept it as secure origin and do not offer the cryptography APIs.
+
+### Docker (only for testing purposes)
+
+TBA
+
+## Manual build
+
+### Building React client
 
  1. Do everything in `reactClient/my-app/`
  2. Use Node 12.x
@@ -8,7 +34,7 @@
  4. run `npm link OpenAPIReactClient/`
  5. run `npm run build`
 
-## Deployment
+### Deploying PHP
 
  1. Copy the whole repository to your server
  2. Go to the `Symfony-API/` directory
