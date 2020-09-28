@@ -58,7 +58,7 @@ export interface IPluginRequiresTransformer {
 }
 
 function checkForObjectAndMethod(thing: unknown, item: string): boolean {
-  return (typeof thing === "object") && (item in thing);
+  return (typeof thing === "object") && (thing !== null) && (item in thing);
 }
 
 export function instanceOfIPluginWithMainView(object: unknown): object is IPluginWithMainView {
