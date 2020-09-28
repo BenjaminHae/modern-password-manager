@@ -34,7 +34,7 @@ export interface IPluginWithPasswordButton {
 }
 
 export interface IPluginWithLoginSuccessful {
-  loginSuccessful: (username: string, key: any) => void;
+  loginSuccessful: (username: string, key: CryptoKey) => void;
 }
 
 export interface IPluginWithPreLogout {
@@ -57,47 +57,47 @@ export interface IPluginRequiresTransformer {
   setTransformer: (transformer: AccountTransformerService) => void;
 }
 
-export function instanceOfIPluginWithMainView(object: any): object is IPluginWithMainView {
+export function instanceOfIPluginWithMainView(object: unknown): object is IPluginWithMainView {
   return 'MainViewJSX' in object;
 }
 
-export function instanceOfIPluginWithFilter(object: any): object is IPluginWithFilter {
+export function instanceOfIPluginWithFilter(object: unknown): object is IPluginWithFilter {
   return 'resetFilter' in object;
 }
 
-export function instanceOfIPluginWithAccountsReady(object: any): object is IPluginWithAccountsReady {
+export function instanceOfIPluginWithAccountsReady(object: unknown): object is IPluginWithAccountsReady {
   return 'accountsReady' in object;
 }
 
-export function instanceOfIPluginWithAccountButton(object: any): object is IPluginWithAccountButton {
+export function instanceOfIPluginWithAccountButton(object: unknown): object is IPluginWithAccountButton {
   return 'accountButton' in object;
 }
 
-export function instanceOfIPluginWithPasswordButton(object: any): object is IPluginWithPasswordButton {
+export function instanceOfIPluginWithPasswordButton(object: unknown): object is IPluginWithPasswordButton {
   return 'passwordButton' in object;
 }
 
-export function instanceOfIPluginWithLoginSuccessful(object: any): object is IPluginWithLoginSuccessful {
+export function instanceOfIPluginWithLoginSuccessful(object: unknown): object is IPluginWithLoginSuccessful {
   return 'loginSuccessful' in object;
 }
 
-export function instanceOfIPluginWithPreLogout(object: any): object is IPluginWithPreLogout {
+export function instanceOfIPluginWithPreLogout(object: unknown): object is IPluginWithPreLogout {
   return 'preLogout' in object;
 }
 
-export function instanceOfIPluginWithLoginViewReady(object: any): object is IPluginWithLoginViewReady {
+export function instanceOfIPluginWithLoginViewReady(object: unknown): object is IPluginWithLoginViewReady {
   return 'loginViewReady' in object;
 }
 
-export function instanceOfIPluginWithEditInputButton(object: any): object is IPluginWithEditInputButton {
+export function instanceOfIPluginWithEditInputButton(object: unknown): object is IPluginWithEditInputButton {
   return 'editInputButton' in object;
 }
 
-export function instanceOfIPluginWithEditPreShow(object: any): object is IPluginWithEditPreShow {
+export function instanceOfIPluginWithEditPreShow(object: unknown): object is IPluginWithEditPreShow {
   return 'editPreShow' in object;
 }
 
-export function instanceOfIPluginRequiresTransformer(object: any): object is IPluginRequiresTransformer {
+export function instanceOfIPluginRequiresTransformer(object: unknown): object is IPluginRequiresTransformer {
   return 'setTransformer' in object;
 }
 
