@@ -102,7 +102,7 @@ export class BackendService {
 
   async getUserOptions(): Promise<void> {
     const encryptedUserConfiguration = await this.userService.getUserSettings();
-    this.userOptions = {
+    const defaultUserOptions = {
         fields: [
         { name: "username", colNumber: 1, selector: "user", visible: true, sortable: true },
         { name: "url", selector: "url", visible: false },
@@ -115,6 +115,7 @@ export class BackendService {
         this.userOptions = UserOptionsFromJSON(data, this.userOptions);
       }
       catch {
+        this.userOptions = defaultUserOptions;
       }
     }
     subscriptionExecutor<UserOptions>(this.optionsObservers, this.userOptions);
