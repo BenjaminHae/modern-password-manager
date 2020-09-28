@@ -58,11 +58,11 @@ export interface IPluginRequiresTransformer {
 }
 
 function checkForObjectAndMethods(thing: unknown, items: Array<string>): boolean {
-  return thing is object && items.every((item) => item in thing);
+  return (typeof thing === "object")  && (items.every((item) => item in thing));
 }
 
-function checkForObjectAndMethods(thing: unknown, items: string): boolean {
-  return thing is object && item in thing;
+function checkForObjectAndMethods(thing: unknown, item: string): boolean {
+  return (typof thing === "object") && (item in thing);
 }
 
 export function instanceOfIPluginWithMainView(object: unknown): object is IPluginWithMainView {
