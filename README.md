@@ -22,7 +22,11 @@ The password manager only works when you access it through https or on localhost
 
 ### Docker (only for testing purposes)
 
-TBA
+ 1. run `docker build -t mpm` in the extracted release.
+ 2. start the container: `docker run --rm -d --name mpm -p 80:80 mpm`
+ 3. Visit `http://localhost´
+
+Data is stored within the container and not persisted!
 
 ## Manual build
 
