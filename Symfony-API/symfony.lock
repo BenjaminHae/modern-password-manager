@@ -83,6 +83,9 @@
             "ref": "fe60ce509ef04a3f40da96e3979bc8d9b13b2372"
         }
     },
+    "lbuchs/webauthn": {
+        "version": "dev-master"
+    },
     "nikic/php-parser": {
         "version": "v4.2.0"
     },

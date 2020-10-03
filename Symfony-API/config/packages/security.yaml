@@ -16,8 +16,11 @@ security:
             security: false
         main:
             anonymous: true
-            json_login:
-                check_path: /user/login
+            #json_login:
+            #    check_path: /user/login
+            guard:
+                authenticators:
+                    - App\Security\WebAuthnAuthenticator
             logout:
                 path: /user/logout
                 success_handler: App\Api\UserApi
