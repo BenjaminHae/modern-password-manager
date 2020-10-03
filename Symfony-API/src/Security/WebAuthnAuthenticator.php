@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Entity\WebAuthnPublicKey;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,7 +45,7 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
         }
         $data = json_decode($request->getContent(), true);
         //check for valid data
-        $keys = [ "clientDataJSON", "authenticatorData", "signature", "pubKeyId", "userHandle" ];
+        $keys = [ "clientDataJSON", "authenticatorData", "signature", "pubKey", "userHandle" ];
         foreach ($keys as $key) {
             if (! array_key_exists($key, $data))
                 return false;
@@ -60,7 +61,7 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
     {
         $data = json_decode($request->getContent(), true);
         //check for valid data
-        $keys = [ "clientDataJSON", "authenticatorData", "signature", "pubKeyId", "userHandle" ];
+        $keys = [ "clientDataJSON", "authenticatorData", "signature", "pubKey", "userHandle" ];
         $credentials = [];
         //extract credentials
         foreach ($keys as $key) {
@@ -83,17 +84,16 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
             // Code 401 "Unauthorized"
             return null;
         }
-        //todo identify user by public key or something similar
-
-        // if a User is returned, checkCredentials() is called
-        return $this->em->getRepository(User::class)//WebAuthnPublicKey->findOneBy(
-            ->findOneBy(['apiToken' => $credentials])
-        ;
+        $pk = $this->em->getRepository(WebAuthnPublicKey::class)
+            ->findOneByPublicKey($credentials["pubKey"]);
+        if (null === $pk) {
+            return null;
+        }
+        return $pk->getUser();
     }
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        // todo validate credentials using the webauthn library
         $challenge = $this->session->get(challenge, null); 
         if ($challenge === null) {
             return false;
@@ -101,10 +101,10 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
         $configuration = $this->getRp();
         $webAuthn = new WebAuthn($configuration["name"], $configuration["id"]);
         return $webAuthn->processGet(
-            $credentials->clientDataJSON,
-            $credentials->authenticatorData, 
-            $credentials->signature, 
-            $user->credentialPublicKey, 
+            $credentials["clientDataJSON"],
+            $credentials["authenticatorData"], 
+            $credentials["signature"], 
+            $credentials["pubKey"], 
             $challenge, 
             null, 
             true, 
@@ -121,7 +121,7 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
     {
         $data = [
             // you may want to customize or obfuscate the message first
-            'message' => strtr("login failed", "login failed")
+            'message' => "login failed"
 
             // or to translate this message
             // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
