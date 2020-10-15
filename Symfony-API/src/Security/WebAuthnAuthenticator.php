@@ -94,7 +94,7 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        $challenge = $this->session->get(challenge, null); 
+        $challenge = $this->session->get("webAuthnChallenge", null); 
         if ($challenge === null) {
             return false;
         } 
