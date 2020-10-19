@@ -36,14 +36,34 @@ import {
     UserSettings,
     UserSettingsFromJSON,
     UserSettingsToJSON,
+    UserWebAuthnChallenge,
+    UserWebAuthnChallengeFromJSON,
+    UserWebAuthnChallengeToJSON,
+    UserWebAuthnCreate,
+    UserWebAuthnCreateFromJSON,
+    UserWebAuthnCreateToJSON,
+    UserWebAuthnCred,
+    UserWebAuthnCredFromJSON,
+    UserWebAuthnCredToJSON,
+    UserWebAuthnGet,
+    UserWebAuthnGetFromJSON,
+    UserWebAuthnGetToJSON,
 } from '../models';
 
 export interface ChangePasswordRequest {
     changePassword: ChangePassword;
 }
 
+export interface CreateUserWebAuthnRequest {
+    userWebAuthnCreate: UserWebAuthnCreate;
+}
+
 export interface LoginUserRequest {
     logonInformation: LogonInformation;
+}
+
+export interface LoginUserWebAuthnGetRequest {
+    userWebAuthnGet: UserWebAuthnGet;
 }
 
 export interface RegisterUserRequest {
@@ -95,6 +115,45 @@ export class UserApi extends runtime.BaseAPI {
      */
     async changePassword(requestParameters: ChangePasswordRequest): Promise<GenericSuccessMessage> {
         const response = await this.changePasswordRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * add webauthn
+     * add a webauthn credential
+     */
+    async createUserWebAuthnRaw(requestParameters: CreateUserWebAuthnRequest): Promise<runtime.ApiResponse<GenericSuccessMessage>> {
+        if (requestParameters.userWebAuthnCreate === null || requestParameters.userWebAuthnCreate === undefined) {
+            throw new runtime.RequiredError('userWebAuthnCreate','Required parameter requestParameters.userWebAuthnCreate was null or undefined when calling createUserWebAuthn.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-CSRF-TOKEN"] = this.configuration.apiKey("X-CSRF-TOKEN"); // csrf authentication
+        }
+
+        const response = await this.request({
+            path: `/user/webauthn`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UserWebAuthnCreateToJSON(requestParameters.userWebAuthnCreate),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GenericSuccessMessageFromJSON(jsonValue));
+    }
+
+    /**
+     * add webauthn
+     * add a webauthn credential
+     */
+    async createUserWebAuthn(requestParameters: CreateUserWebAuthnRequest): Promise<GenericSuccessMessage> {
+        const response = await this.createUserWebAuthnRaw(requestParameters);
         return await response.value();
     }
 
@@ -151,6 +210,32 @@ export class UserApi extends runtime.BaseAPI {
     }
 
     /**
+     * get all registered WebAuthn credentials for the user
+     */
+    async getUserWebAuthnCredsRaw(): Promise<runtime.ApiResponse<Array<UserWebAuthnCred>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/user/webauthn`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserWebAuthnCredFromJSON));
+    }
+
+    /**
+     * get all registered WebAuthn credentials for the user
+     */
+    async getUserWebAuthnCreds(): Promise<Array<UserWebAuthnCred>> {
+        const response = await this.getUserWebAuthnCredsRaw();
+        return await response.value();
+    }
+
+    /**
      * login
      */
     async loginUserRaw(requestParameters: LoginUserRequest): Promise<runtime.ApiResponse<LogonResult>> {
@@ -184,6 +269,71 @@ export class UserApi extends runtime.BaseAPI {
      */
     async loginUser(requestParameters: LoginUserRequest): Promise<LogonResult> {
         const response = await this.loginUserRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get WebAuthn challenge
+     */
+    async loginUserWebAuthnChallengeRaw(): Promise<runtime.ApiResponse<UserWebAuthnChallenge>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/user/login/webauthn`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserWebAuthnChallengeFromJSON(jsonValue));
+    }
+
+    /**
+     * get WebAuthn challenge
+     */
+    async loginUserWebAuthnChallenge(): Promise<UserWebAuthnChallenge> {
+        const response = await this.loginUserWebAuthnChallengeRaw();
+        return await response.value();
+    }
+
+    /**
+     * add webauthn
+     * login user with WebAuthn
+     */
+    async loginUserWebAuthnGetRaw(requestParameters: LoginUserWebAuthnGetRequest): Promise<runtime.ApiResponse<LogonResult>> {
+        if (requestParameters.userWebAuthnGet === null || requestParameters.userWebAuthnGet === undefined) {
+            throw new runtime.RequiredError('userWebAuthnGet','Required parameter requestParameters.userWebAuthnGet was null or undefined when calling loginUserWebAuthnGet.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-CSRF-TOKEN"] = this.configuration.apiKey("X-CSRF-TOKEN"); // csrf authentication
+        }
+
+        const response = await this.request({
+            path: `/user/login/webauthn`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UserWebAuthnGetToJSON(requestParameters.userWebAuthnGet),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => LogonResultFromJSON(jsonValue));
+    }
+
+    /**
+     * add webauthn
+     * login user with WebAuthn
+     */
+    async loginUserWebAuthnGet(requestParameters: LoginUserWebAuthnGetRequest): Promise<LogonResult> {
+        const response = await this.loginUserWebAuthnGetRaw(requestParameters);
         return await response.value();
     }
 

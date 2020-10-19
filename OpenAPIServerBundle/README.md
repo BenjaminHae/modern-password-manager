@@ -130,9 +130,13 @@ Class | Method | HTTP request | Description
 *AccountsApiInterface* | [**updateAccount**](Resources/docs/Api/AccountsApiInterface.md#updateaccount) | **POST** /accounts/{id} | Update a stored account
 *MaintenanceApiInterface* | [**serverInformation**](Resources/docs/Api/MaintenanceApiInterface.md#serverinformation) | **GET** /info | get information about the server for the client
 *UserApiInterface* | [**changePassword**](Resources/docs/Api/UserApiInterface.md#changepassword) | **POST** /user/changepassword | change user password
+*UserApiInterface* | [**createUserWebAuthn**](Resources/docs/Api/UserApiInterface.md#createuserwebauthn) | **POST** /user/webauthn | add a webauthn credential
 *UserApiInterface* | [**getUserHistory**](Resources/docs/Api/UserApiInterface.md#getuserhistory) | **GET** /user/history | Returns a history of successful and failed logins
 *UserApiInterface* | [**getUserSettings**](Resources/docs/Api/UserApiInterface.md#getusersettings) | **GET** /user/settings | Returns the client settings of the current user
+*UserApiInterface* | [**getUserWebAuthnCreds**](Resources/docs/Api/UserApiInterface.md#getuserwebauthncreds) | **GET** /user/webauthn | get all registered WebAuthn credentials for the user
 *UserApiInterface* | [**loginUser**](Resources/docs/Api/UserApiInterface.md#loginuser) | **POST** /user/login | login
+*UserApiInterface* | [**loginUserWebAuthnChallenge**](Resources/docs/Api/UserApiInterface.md#loginuserwebauthnchallenge) | **GET** /user/login/webauthn | get WebAuthn challenge
+*UserApiInterface* | [**loginUserWebAuthnGet**](Resources/docs/Api/UserApiInterface.md#loginuserwebauthnget) | **POST** /user/login/webauthn | login user with WebAuthn
 *UserApiInterface* | [**logoutUser**](Resources/docs/Api/UserApiInterface.md#logoutuser) | **GET** /user/logout | Logs out current logged in user session
 *UserApiInterface* | [**registerUser**](Resources/docs/Api/UserApiInterface.md#registeruser) | **PUT** /user | registration
 *UserApiInterface* | [**setUserSettings**](Resources/docs/Api/UserApiInterface.md#setusersettings) | **POST** /user/settings | change client settings of current user
@@ -154,6 +158,12 @@ Class | Method | HTTP request | Description
  - [ServerInformation](Resources/docs/Model/ServerInformation.md)
  - [UserInformation](Resources/docs/Model/UserInformation.md)
  - [UserSettings](Resources/docs/Model/UserSettings.md)
+ - [UserWebAuthnChallenge](Resources/docs/Model/UserWebAuthnChallenge.md)
+ - [UserWebAuthnCreate](Resources/docs/Model/UserWebAuthnCreate.md)
+ - [UserWebAuthnCreateResponse](Resources/docs/Model/UserWebAuthnCreateResponse.md)
+ - [UserWebAuthnCred](Resources/docs/Model/UserWebAuthnCred.md)
+ - [UserWebAuthnGet](Resources/docs/Model/UserWebAuthnGet.md)
+ - [UserWebAuthnGetResponse](Resources/docs/Model/UserWebAuthnGetResponse.md)
 
 
 ## Documentation For Authorization

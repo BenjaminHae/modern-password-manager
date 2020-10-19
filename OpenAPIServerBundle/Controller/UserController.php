@@ -43,6 +43,10 @@ use OpenAPI\Server\Model\LogonInformation;
 use OpenAPI\Server\Model\LogonResult;
 use OpenAPI\Server\Model\RegistrationInformation;
 use OpenAPI\Server\Model\UserSettings;
+use OpenAPI\Server\Model\UserWebAuthnChallenge;
+use OpenAPI\Server\Model\UserWebAuthnCreate;
+use OpenAPI\Server\Model\UserWebAuthnCred;
+use OpenAPI\Server\Model\UserWebAuthnGet;
 
 /**
  * UserController Class Doc Comment
@@ -120,6 +124,101 @@ class UserController extends Controller
             $responseCode = 200;
             $responseHeaders = [];
             $result = $handler->changePassword($changePassword, $responseCode, $responseHeaders);
+
+            // Find default response message
+            $message = '';
+
+            // Find a more specific message, if available
+            switch ($responseCode) {
+                case 200:
+                    $message = 'OK';
+                    break;
+                case 403:
+                    $message = 'Unauthorized';
+                    break;
+            }
+
+            return new Response(
+                $result !== null ?$this->serialize($result, $responseFormat):'',
+                $responseCode,
+                array_merge(
+                    $responseHeaders,
+                    [
+                        'Content-Type' => $responseFormat,
+                        'X-OpenAPI-Message' => $message
+                    ]
+                )
+            );
+        } catch (Exception $fallthrough) {
+            return $this->createErrorResponse(new HttpException(500, 'An unsuspected error occurred.', $fallthrough));
+        }
+    }
+
+    /**
+     * Operation createUserWebAuthn
+     *
+     * add a webauthn credential
+     *
+     * @param Request $request The Symfony request to handle.
+     * @return Response The Symfony response.
+     */
+    public function createUserWebAuthnAction(Request $request)
+    {
+        // Make sure that the client is providing something that we can consume
+        $consumes = ['application/json'];
+        if (!static::isContentTypeAllowed($request, $consumes)) {
+            // We can't consume the content that the client is sending us
+            return new Response('', 415);
+        }
+
+        // Figure out what data format to return to the client
+        $produces = ['application/json'];
+        // Figure out what the client accepts
+        $clientAccepts = $request->headers->has('Accept')?$request->headers->get('Accept'):'*/*';
+        $responseFormat = $this->getOutputFormat($clientAccepts, $produces);
+        if ($responseFormat === null) {
+            return new Response('', 406);
+        }
+
+        // Handle authentication
+        // Authentication 'csrf' required
+        // Set key with prefix in header
+        $securitycsrf = $request->headers->get('X-CSRF-TOKEN');
+
+        // Read out all input parameter values into variables
+        $userWebAuthnCreate = $request->getContent();
+
+        // Use the default value if no value was provided
+
+        // Deserialize the input values that needs it
+        try {
+            $inputFormat = $request->getMimeType($request->getContentType());
+            $userWebAuthnCreate = $this->deserialize($userWebAuthnCreate, 'OpenAPI\Server\Model\UserWebAuthnCreate', $inputFormat);
+        } catch (SerializerRuntimeException $exception) {
+            return $this->createBadRequestResponse($exception->getMessage());
+        }
+
+        // Validate the input values
+        $asserts = [];
+        $asserts[] = new Assert\NotNull();
+        $asserts[] = new Assert\Type("OpenAPI\Server\Model\UserWebAuthnCreate");
+        $asserts[] = new Assert\Valid();
+        $response = $this->validate($userWebAuthnCreate, $asserts);
+        if ($response instanceof Response) {
+            return $response;
+        }
+
+
+        try {
+            $handler = $this->getApiHandler();
+
+            // Set authentication method 'csrf'
+            $handler->setcsrf($securitycsrf);
+            
+            // Make the call to the business logic
+            $responseCode = 200;
+            $responseHeaders = [];
+            $result = $handler->createUserWebAuthn($userWebAuthnCreate, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -283,6 +382,72 @@ class UserController extends Controller
     }
 
     /**
+     * Operation getUserWebAuthnCreds
+     *
+     * get all registered WebAuthn credentials for the user
+     *
+     * @param Request $request The Symfony request to handle.
+     * @return Response The Symfony response.
+     */
+    public function getUserWebAuthnCredsAction(Request $request)
+    {
+        // Figure out what data format to return to the client
+        $produces = ['application/json'];
+        // Figure out what the client accepts
+        $clientAccepts = $request->headers->has('Accept')?$request->headers->get('Accept'):'*/*';
+        $responseFormat = $this->getOutputFormat($clientAccepts, $produces);
+        if ($responseFormat === null) {
+            return new Response('', 406);
+        }
+
+        // Handle authentication
+
+        // Read out all input parameter values into variables
+
+        // Use the default value if no value was provided
+
+        // Validate the input values
+
+
+        try {
+            $handler = $this->getApiHandler();
+
+            
+            // Make the call to the business logic
+            $responseCode = 200;
+            $responseHeaders = [];
+            $result = $handler->getUserWebAuthnCreds($responseCode, $responseHeaders);
+
+            // Find default response message
+            $message = '';
+
+            // Find a more specific message, if available
+            switch ($responseCode) {
+                case 200:
+                    $message = 'list of stored WebAuthn credentials';
+                    break;
+                case 403:
+                    $message = 'Unauthorized';
+                    break;
+            }
+
+            return new Response(
+                $result !== null ?$this->serialize($result, $responseFormat):'',
+                $responseCode,
+                array_merge(
+                    $responseHeaders,
+                    [
+                        'Content-Type' => $responseFormat,
+                        'X-OpenAPI-Message' => $message
+                    ]
+                )
+            );
+        } catch (Exception $fallthrough) {
+            return $this->createErrorResponse(new HttpException(500, 'An unsuspected error occurred.', $fallthrough));
+        }
+    }
+
+    /**
      * Operation loginUser
      *
      * login
@@ -347,6 +512,164 @@ class UserController extends Controller
             $responseCode = 200;
             $responseHeaders = [];
             $result = $handler->loginUser($logonInformation, $responseCode, $responseHeaders);
+
+            // Find default response message
+            $message = '';
+
+            // Find a more specific message, if available
+            switch ($responseCode) {
+                case 200:
+                    $message = 'OK';
+                    break;
+                case 405:
+                    $message = 'Invalid input';
+                    break;
+            }
+
+            return new Response(
+                $result !== null ?$this->serialize($result, $responseFormat):'',
+                $responseCode,
+                array_merge(
+                    $responseHeaders,
+                    [
+                        'Content-Type' => $responseFormat,
+                        'X-OpenAPI-Message' => $message
+                    ]
+                )
+            );
+        } catch (Exception $fallthrough) {
+            return $this->createErrorResponse(new HttpException(500, 'An unsuspected error occurred.', $fallthrough));
+        }
+    }
+
+    /**
+     * Operation loginUserWebAuthnChallenge
+     *
+     * get WebAuthn challenge
+     *
+     * @param Request $request The Symfony request to handle.
+     * @return Response The Symfony response.
+     */
+    public function loginUserWebAuthnChallengeAction(Request $request)
+    {
+        // Figure out what data format to return to the client
+        $produces = ['application/json'];
+        // Figure out what the client accepts
+        $clientAccepts = $request->headers->has('Accept')?$request->headers->get('Accept'):'*/*';
+        $responseFormat = $this->getOutputFormat($clientAccepts, $produces);
+        if ($responseFormat === null) {
+            return new Response('', 406);
+        }
+
+        // Handle authentication
+
+        // Read out all input parameter values into variables
+
+        // Use the default value if no value was provided
+
+        // Validate the input values
+
+
+        try {
+            $handler = $this->getApiHandler();
+
+            
+            // Make the call to the business logic
+            $responseCode = 200;
+            $responseHeaders = [];
+            $result = $handler->loginUserWebAuthnChallenge($responseCode, $responseHeaders);
+
+            // Find default response message
+            $message = '';
+
+            // Find a more specific message, if available
+            switch ($responseCode) {
+                case 200:
+                    $message = 'returns challenge';
+                    break;
+            }
+
+            return new Response(
+                $result !== null ?$this->serialize($result, $responseFormat):'',
+                $responseCode,
+                array_merge(
+                    $responseHeaders,
+                    [
+                        'Content-Type' => $responseFormat,
+                        'X-OpenAPI-Message' => $message
+                    ]
+                )
+            );
+        } catch (Exception $fallthrough) {
+            return $this->createErrorResponse(new HttpException(500, 'An unsuspected error occurred.', $fallthrough));
+        }
+    }
+
+    /**
+     * Operation loginUserWebAuthnGet
+     *
+     * login user with WebAuthn
+     *
+     * @param Request $request The Symfony request to handle.
+     * @return Response The Symfony response.
+     */
+    public function loginUserWebAuthnGetAction(Request $request)
+    {
+        // Make sure that the client is providing something that we can consume
+        $consumes = ['application/json'];
+        if (!static::isContentTypeAllowed($request, $consumes)) {
+            // We can't consume the content that the client is sending us
+            return new Response('', 415);
+        }
+
+        // Figure out what data format to return to the client
+        $produces = ['application/json'];
+        // Figure out what the client accepts
+        $clientAccepts = $request->headers->has('Accept')?$request->headers->get('Accept'):'*/*';
+        $responseFormat = $this->getOutputFormat($clientAccepts, $produces);
+        if ($responseFormat === null) {
+            return new Response('', 406);
+        }
+
+        // Handle authentication
+        // Authentication 'csrf' required
+        // Set key with prefix in header
+        $securitycsrf = $request->headers->get('X-CSRF-TOKEN');
+
+        // Read out all input parameter values into variables
+        $userWebAuthnGet = $request->getContent();
+
+        // Use the default value if no value was provided
+
+        // Deserialize the input values that needs it
+        try {
+            $inputFormat = $request->getMimeType($request->getContentType());
+            $userWebAuthnGet = $this->deserialize($userWebAuthnGet, 'OpenAPI\Server\Model\UserWebAuthnGet', $inputFormat);
+        } catch (SerializerRuntimeException $exception) {
+            return $this->createBadRequestResponse($exception->getMessage());
+        }
+
+        // Validate the input values
+        $asserts = [];
+        $asserts[] = new Assert\NotNull();
+        $asserts[] = new Assert\Type("OpenAPI\Server\Model\UserWebAuthnGet");
+        $asserts[] = new Assert\Valid();
+        $response = $this->validate($userWebAuthnGet, $asserts);
+        if ($response instanceof Response) {
+            return $response;
+        }
+
+
+        try {
+            $handler = $this->getApiHandler();
+
+            // Set authentication method 'csrf'
+            $handler->setcsrf($securitycsrf);
+            
+            // Make the call to the business logic
+            $responseCode = 200;
+            $responseHeaders = [];
+            $result = $handler->loginUserWebAuthnGet($userWebAuthnGet, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';

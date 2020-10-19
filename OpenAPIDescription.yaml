@@ -86,6 +86,49 @@ paths:
           description: Invalid input
       security:
         - csrf: []
+  /user/login/webauthn:
+    get:
+      tags:
+        - user
+      summary: "get WebAuthn challenge"
+      description: ""
+      operationId: loginUserWebAuthnChallenge
+      responses: 
+        "200":
+          description: returns challenge
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserWebAuthnChallenge"
+    post:
+      tags:
+        - user
+      summary: "login user with WebAuthn"
+      description: "add webauthn"
+      operationId: loginUserWebAuthnGet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserWebAuthnGet"
+        description: WebAuthnCreate Object
+        required: true
+      responses:
+        "200":
+          description: OK
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: SESSIONID=1234567890; Path=/; HttpOnly; Secure; SameSite
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogonResult"
+        "405":
+          description: Invalid input
+      security:
+        - csrf: []
   /user/logout:
     get:
       tags:
@@ -113,6 +156,46 @@ paths:
             schema:
               $ref: "#/components/schemas/ChangePassword"
         description: ChangePassword Object
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericSuccessMessage"
+        "403":
+          description: Unauthorized
+      security:
+        - csrf: []
+  /user/webauthn:
+    get:
+      tags:
+        - user
+      summary: "get all registered WebAuthn credentials for the user"
+      description: ""
+      operationId: getUserWebAuthnCreds
+      responses: 
+        "200":
+          description: list of stored WebAuthn credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserWebAuthnCreds"
+        "403":
+          description: Unauthorized
+    post:
+      tags:
+        - user
+      summary: "add a webauthn credential"
+      description: "add webauthn"
+      operationId: createUserWebAuthn
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserWebAuthnCreate"
+        description: WebAuthnCreate Object
         required: true
       responses:
         "200":
@@ -361,6 +444,79 @@ components:
         - encryptedUserSettings
       properties:
         encryptedUserSettings:
+          type: string
+    UserWebAuthnChallenge:
+      type: object
+      required:
+        - challenge
+      properties:
+        challenge:
+          type: string
+    UserWebAuthnCred:
+      type: object
+      required:
+        - name
+        - id
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+    UserWebAuthnCreds:
+      type: array
+      items:
+        $ref: "#/components/schemas/UserWebAuthnCred"
+    UserWebAuthnCreate:
+      type: object
+      required:
+        - id
+        - response
+      properties:
+        id:
+          type: string
+        response:
+          $ref: "#/components/schemas/UserWebAuthnCreateResponse"
+    UserWebAuthnCreateResponse:
+      type: object
+      required:
+        - attestationObject
+        - clientDataJSON
+        - type
+      properties:
+        attestationObject:
+          type: string
+        clientDataJSON:
+          type: string
+        type:
+          type: string
+    UserWebAuthnGet:
+      type: object
+      required:
+        - id
+        - response
+      properties:
+        id:
+          type: string
+        response:
+          $ref: "#/components/schemas/UserWebAuthnGetResponse"
+    UserWebAuthnGetResponse:
+      type: object
+      required:
+        - authenticatorData
+        - clientDataJSON
+        - type
+        - signature
+        - userHandle
+      properties:
+        authenticatorData:
+          type: string
+        clientDataJSON:
+          type: string
+        type:
+          type: string
+        signature:
+          type: string
+        userHandle:
           type: string
     ChangePassword:
       type: object
