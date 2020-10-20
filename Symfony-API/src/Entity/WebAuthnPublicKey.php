@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\WebAuthnPublicKeyRepository;
 use Doctrine\ORM\Mapping as ORM;
+use OpenAPI\Server\Model\UserWebAuthnCred as OpenAPIUserWebAuthnCred;
 
 /**
  * @ORM\Entity(repositoryClass=WebAuthnPublicKeyRepository::class)
@@ -36,22 +37,12 @@ class WebAuthnPublicKey
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $type;
-
-    /**
-     * @ORM\Column(type="string", length=1024)
-     */
-    private $attestationObject;
-
-    /**
-     * @ORM\Column(type="string", length=1024)
-     */
-    private $clientDataJSON;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     private $deviceName;
+
+    /**
+     * @ORM\Column(type="string", length=1024)
+     */
+    private $PublicKeyId;
 
     public function getId(): ?int
     {
@@ -94,42 +85,6 @@ class WebAuthnPublicKey
         return $this;
     }
 
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function setType(string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function getAttestationObject(): ?string
-    {
-        return $this->attestationObject;
-    }
-
-    public function setAttestationObject(string $attestationObject): self
-    {
-        $this->attestationObject = $attestationObject;
-
-        return $this;
-    }
-
-    public function getClientDataJSON(): ?string
-    {
-        return $this->clientDataJSON;
-    }
-
-    public function setClientDataJSON(string $clientDataJSON): self
-    {
-        $this->clientDataJSON = $clientDataJSON;
-
-        return $this;
-    }
-
     public function getDeviceName(): ?string
     {
         return $this->deviceName;
@@ -141,4 +96,26 @@ class WebAuthnPublicKey
 
         return $this;
     }
+
+    public function getAsOpenAPIUserWebAuthnCred(): OpenAPIUserWebAuthnCred
+    {
+        $contents = [
+            "name"=> $this->getDeviceName(),
+            "id"=> $this->getId()
+        ];
+        return new OpenAPIUserWebAuthnCred($contents);
+    }
+
+    public function getPublicKeyId(): ?string
+    {
+        return $this->PublicKeyId;
+    }
+
+    public function setPublicKeyId(string $PublicKeyId): self
+    {
+        $this->PublicKeyId = $PublicKeyId;
+
+        return $this;
+    }
+
 }

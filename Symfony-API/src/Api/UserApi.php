@@ -5,12 +5,16 @@ namespace App\Api;
 use App\Controller\AccountController;
 use App\Entity\User;
 use App\Controller\EventController;
+use App\Controller\WebAuthnController;
 use Doctrine\ORM\EntityManagerInterface;
 use OpenAPI\Server\Api\UserApiInterface;
 use OpenAPI\Server\Model\UserSettings as OpenAPIUserSettings;
 use OpenAPI\Server\Model\AccountId;
 use OpenAPI\Server\Model\ChangePassword;
 use OpenAPI\Server\Model\LogonInformation;
+use OpenAPI\Server\Model\UserWebAuthnGet;
+use OpenAPI\Server\Model\UserWebAuthnCreate;
+use OpenAPI\Server\Model\UserWebAuthnChallenge;
 use OpenAPI\Server\Model\Registration;
 use OpenAPI\Server\Model\RegistrationInformation;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -78,6 +82,24 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
         return $this->generateApiError("failed to log in");
     }
 
+    public function loginUserWebAuthnGet(UserWebAuthnGet $request, &$responseCode, array &$responseHeaders) {
+        $currentUser = $this->security->getUser();
+        if ($currentUser)
+        {
+            $username = $currentUser->getUsername();
+            $loginReport = $currentUser->getLastSuccessfulLoginTimeAndUnsuccessfulCount();
+            $pkName = $this->entityManager->getRepository(WebAuthnPublicKey::class)
+                ->findOneByPublicKeyId($request->getId())->getDeviceName();
+            $result = $this->generateApiSuccess("logged in as " . $username . " using WebAuthn key for " . $pkName);
+            if ($loginReport[0] !== null) {
+                $result["lastLogin"] = $loginReport[0]->format('Y-m-d\TH:i:s.u');
+            }
+            $result["failedLogins"] = $loginReport[1];
+            return $result;
+        }
+        return $this->generateApiError("failed to log in");
+    }
+
     public function logoutUser(&$responseCode, array &$responseHeaders) 
     {
         $currentUser = $this->security->getUser();
@@ -103,10 +125,43 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
         return $this->generateApiSuccess("successfully registered");
     }
 
+    public function loginUserWebAuthnChallenge(&$responseCode, array &$responseHeaders) {
+        $webAuthnController = new WebAuthnController($this->entityManager, $this->session);
+        $challenge = base64_encode($webAuthnController->createChallenge()->getBinaryString());
+        return new UserWebAuthnChallenge(["challenge" => $challenge]);
+    }
+
+    public function createUserWebAuthn(UserWebAuthnCreate $request, &$responseCode, array &$responseHeaders) {
+        $currentUser = $this->security->getUser();
+        if (!$currentUser) {
+            $responseCode = 403;
+            return $this->generateApiError("unauthorized");
+        }
+        $webAuthnController = new WebAuthnController($this->entityManager, $this->session);
+        $webAuthn = $webAuthnController->registerWebAuthnDevice($currentUser, $request);
+        $this->eventController->StoreEvent($currentUser, "WebAuthn Store", "Device Name: " . $webAuthn->getDeviceName());
+        return $this->generateApiSuccess("successfully registered webauthn credential");
+    }
+
+    public function deleteUserWebAuthn($id, &$responseCode, array &$responseHeaders) {
+        $currentUser = $this->security->getUser();
+        $webAuthnController = new WebAuthnController($this->entityManager, $this->session);
+        $webAuthnController->deleteWebAuthnDevice($currentUser, $id);
+        return $webAuthnController->getWebAuthnDevices($currentUser);
+    }
+
     public function getUserHistory(&$responseCode, array &$responseHeaders) 
     {
         $currentUser = $this->security->getUser();
         return $currentUser->getEvents()->map(function($event) { return $event->getAsOpenAPIHistoryItem(); } );
+    }
+
+    public function getUserWebAuthnCreds(&$responseCode, array &$responseHeaders) 
+    {
+        $currentUser = $this->security->getUser();
+        $webAuthnController = new WebAuthnController($this->entityManager, $this->session);
+        return $webAuthnController->getWebAuthnDevices($currentUser);
+        
     }
 
     public function getUserSettings(&$responseCode, array &$responseHeaders) 

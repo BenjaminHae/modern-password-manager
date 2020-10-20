@@ -36,10 +36,10 @@ class WebAuthnPublicKeyRepository extends ServiceEntityRepository
     }
     */
 
-    public function findOneByPublicKey($value): ?WebAuthnPublicKey
+    public function findOneByPublicKeyId($value): ?WebAuthnPublicKey
     {
         return $this->createQueryBuilder('w')
-            ->andWhere('w.publicKey = :val')
+            ->andWhere('w.PublicKeyId = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()
