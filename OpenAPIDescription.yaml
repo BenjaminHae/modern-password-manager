@@ -111,7 +111,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/UserWebAuthnGet"
-        description: WebAuthnCreate Object
+        description: WebAuthnGet Object
         required: true
       responses:
         "200":
@@ -208,6 +208,31 @@ paths:
           description: Unauthorized
       security:
         - csrf: []
+  /user/webauthn/{id}:
+    delete:
+      tags:
+        - user
+      summary: Delete a stored WebAuthn Public Key
+      description: ""
+      operationId: deleteUserWebAuthn
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the WebAuthn Public Key to delete
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserWebAuthnCreds"
+        "400":
+          description: Invalid status value
+        "403":
+          description: Unauthorized
   /user/settings:
     get:
       tags:
@@ -471,8 +496,11 @@ components:
       required:
         - id
         - response
+        - name
       properties:
         id:
+          type: string
+        name:
           type: string
         response:
           $ref: "#/components/schemas/UserWebAuthnCreateResponse"

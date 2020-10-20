@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**changePassword**](UserApiInterface.md#changePassword) | **POST** /user/changepassword | change user password
 [**createUserWebAuthn**](UserApiInterface.md#createUserWebAuthn) | **POST** /user/webauthn | add a webauthn credential
+[**deleteUserWebAuthn**](UserApiInterface.md#deleteUserWebAuthn) | **DELETE** /user/webauthn/{id} | Delete a stored WebAuthn Public Key
 [**getUserHistory**](UserApiInterface.md#getUserHistory) | **GET** /user/history | Returns a history of successful and failed logins
 [**getUserSettings**](UserApiInterface.md#getUserSettings) | **GET** /user/settings | Returns the client settings of the current user
 [**getUserWebAuthnCreds**](UserApiInterface.md#getUserWebAuthnCreds) | **GET** /user/webauthn | get all registered WebAuthn credentials for the user
@@ -149,6 +150,58 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+## **deleteUserWebAuthn**
+> OpenAPI\Server\Model\UserWebAuthnCred deleteUserWebAuthn($id)
+
+Delete a stored WebAuthn Public Key
+
+### Example Implementation
+```php
+<?php
+// src/Acme/MyBundle/Api/UserApiInterface.php
+
+namespace Acme\MyBundle\Api;
+
+use OpenAPI\Server\Api\UserApiInterface;
+
+class UserApi implements UserApiInterface
+{
+
+    // ...
+
+    /**
+     * Implementation of UserApiInterface#deleteUserWebAuthn
+     */
+    public function deleteUserWebAuthn($id)
+    {
+        // Implement the operation ...
+    }
+
+    // ...
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **int**| The id of the WebAuthn Public Key to delete |
+
+### Return type
+
+[**OpenAPI\Server\Model\UserWebAuthnCred**](../Model/UserWebAuthnCred.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
@@ -454,7 +507,7 @@ class UserApi implements UserApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **userWebAuthnGet** | [**OpenAPI\Server\Model\UserWebAuthnGet**](../Model/UserWebAuthnGet.md)| WebAuthnCreate Object |
+ **userWebAuthnGet** | [**OpenAPI\Server\Model\UserWebAuthnGet**](../Model/UserWebAuthnGet.md)| WebAuthnGet Object |
 
 ### Return type
 

@@ -51,6 +51,15 @@ class UserWebAuthnCreate
     protected $id;
 
     /**
+     * @var string
+     * @SerializedName("name")
+     * @Assert\NotNull()
+     * @Assert\Type("string")
+     * @Type("string")
+     */
+    protected $name;
+
+    /**
      * @var OpenAPI\Server\Model\UserWebAuthnCreateResponse
      * @SerializedName("response")
      * @Assert\NotNull()
@@ -66,6 +75,7 @@ class UserWebAuthnCreate
     public function __construct(array $data = null)
     {
         $this->id = isset($data['id']) ? $data['id'] : null;
+        $this->name = isset($data['name']) ? $data['name'] : null;
         $this->response = isset($data['response']) ? $data['response'] : null;
     }
 
@@ -89,6 +99,30 @@ class UserWebAuthnCreate
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Gets name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Sets name.
+     *
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
 
         return $this;
     }

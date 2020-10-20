@@ -131,6 +131,7 @@ Class | Method | HTTP request | Description
 *MaintenanceApiInterface* | [**serverInformation**](Resources/docs/Api/MaintenanceApiInterface.md#serverinformation) | **GET** /info | get information about the server for the client
 *UserApiInterface* | [**changePassword**](Resources/docs/Api/UserApiInterface.md#changepassword) | **POST** /user/changepassword | change user password
 *UserApiInterface* | [**createUserWebAuthn**](Resources/docs/Api/UserApiInterface.md#createuserwebauthn) | **POST** /user/webauthn | add a webauthn credential
+*UserApiInterface* | [**deleteUserWebAuthn**](Resources/docs/Api/UserApiInterface.md#deleteuserwebauthn) | **DELETE** /user/webauthn/{id} | Delete a stored WebAuthn Public Key
 *UserApiInterface* | [**getUserHistory**](Resources/docs/Api/UserApiInterface.md#getuserhistory) | **GET** /user/history | Returns a history of successful and failed logins
 *UserApiInterface* | [**getUserSettings**](Resources/docs/Api/UserApiInterface.md#getusersettings) | **GET** /user/settings | Returns the client settings of the current user
 *UserApiInterface* | [**getUserWebAuthnCreds**](Resources/docs/Api/UserApiInterface.md#getuserwebauthncreds) | **GET** /user/webauthn | get all registered WebAuthn credentials for the user

@@ -34,12 +34,6 @@
 ./Service/ValidatorInterface.php
 ./Tests/AppKernel.php
 ./Tests/Controller/ControllerTest.php
-./Tests/Model/UserWebAuthnChallengeTest.php
-./Tests/Model/UserWebAuthnCreateResponseTest.php
-./Tests/Model/UserWebAuthnCreateTest.php
-./Tests/Model/UserWebAuthnCredTest.php
-./Tests/Model/UserWebAuthnGetResponseTest.php
-./Tests/Model/UserWebAuthnGetTest.php
 ./Tests/test_config.yml
 .coveralls.yml
 .gitignore

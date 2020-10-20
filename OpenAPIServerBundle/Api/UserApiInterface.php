@@ -90,6 +90,20 @@ interface UserApiInterface
     public function createUserWebAuthn(UserWebAuthnCreate $userWebAuthnCreate, &$responseCode, array &$responseHeaders);
 
     /**
+     * Operation deleteUserWebAuthn
+     *
+     * Delete a stored WebAuthn Public Key
+     *
+     * @param  int $id  The id of the WebAuthn Public Key to delete (required)
+     * @param  integer $responseCode     The HTTP response code to return
+     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     *
+     * @return OpenAPI\Server\Model\UserWebAuthnCred[]
+     *
+     */
+    public function deleteUserWebAuthn($id, &$responseCode, array &$responseHeaders);
+
+    /**
      * Operation getUserHistory
      *
      * Returns a history of successful and failed logins
@@ -160,7 +174,7 @@ interface UserApiInterface
      *
      * login user with WebAuthn
      *
-     * @param  OpenAPI\Server\Model\UserWebAuthnGet $userWebAuthnGet  WebAuthnCreate Object (required)
+     * @param  OpenAPI\Server\Model\UserWebAuthnGet $userWebAuthnGet  WebAuthnGet Object (required)
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *

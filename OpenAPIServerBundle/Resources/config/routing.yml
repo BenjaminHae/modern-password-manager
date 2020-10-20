@@ -51,6 +51,14 @@ open_api_server_user_createuserwebauthn:
     defaults:
         _controller: open_api_server.controller.user:createUserWebAuthnAction
 
+open_api_server_user_deleteuserwebauthn:
+    path:     /user/webauthn/{id}
+    methods:  [DELETE]
+    defaults:
+        _controller: open_api_server.controller.user:deleteUserWebAuthnAction
+    requirements:
+        id: '\d+'
+
 open_api_server_user_getuserhistory:
     path:     /user/history
     methods:  [GET]

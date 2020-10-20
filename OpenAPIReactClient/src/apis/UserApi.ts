@@ -58,6 +58,10 @@ export interface CreateUserWebAuthnRequest {
     userWebAuthnCreate: UserWebAuthnCreate;
 }
 
+export interface DeleteUserWebAuthnRequest {
+    id: number;
+}
+
 export interface LoginUserRequest {
     logonInformation: LogonInformation;
 }
@@ -154,6 +158,36 @@ export class UserApi extends runtime.BaseAPI {
      */
     async createUserWebAuthn(requestParameters: CreateUserWebAuthnRequest): Promise<GenericSuccessMessage> {
         const response = await this.createUserWebAuthnRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * Delete a stored WebAuthn Public Key
+     */
+    async deleteUserWebAuthnRaw(requestParameters: DeleteUserWebAuthnRequest): Promise<runtime.ApiResponse<Array<UserWebAuthnCred>>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteUserWebAuthn.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/user/webauthn/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserWebAuthnCredFromJSON));
+    }
+
+    /**
+     * Delete a stored WebAuthn Public Key
+     */
+    async deleteUserWebAuthn(requestParameters: DeleteUserWebAuthnRequest): Promise<Array<UserWebAuthnCred>> {
+        const response = await this.deleteUserWebAuthnRaw(requestParameters);
         return await response.value();
     }
 

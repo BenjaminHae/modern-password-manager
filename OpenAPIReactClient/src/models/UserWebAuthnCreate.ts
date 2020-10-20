@@ -34,6 +34,12 @@ export interface UserWebAuthnCreate {
     id: string;
     /**
      * 
+     * @type {string}
+     * @memberof UserWebAuthnCreate
+     */
+    name: string;
+    /**
+     * 
      * @type {UserWebAuthnCreateResponse}
      * @memberof UserWebAuthnCreate
      */
@@ -51,6 +57,7 @@ export function UserWebAuthnCreateFromJSONTyped(json: any, ignoreDiscriminator: 
     return {
         
         'id': json['id'],
+        'name': json['name'],
         'response': UserWebAuthnCreateResponseFromJSON(json['response']),
     };
 }
@@ -65,6 +72,7 @@ export function UserWebAuthnCreateToJSON(value?: UserWebAuthnCreate | null): any
     return {
         
         'id': value.id,
+        'name': value.name,
         'response': UserWebAuthnCreateResponseToJSON(value.response),
     };
 }
