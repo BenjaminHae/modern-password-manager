@@ -271,7 +271,7 @@ class User implements UserInterface
         $unsuccessfulCriteria = Criteria::create();
         $unsuccessfulCriteria
             ->where(Criteria::expr()->eq('EventType', "Login"))
-            ->andWhere(Criteria::expr()->eq('EventResult', "failed"));
+            ->andWhere(Criteria::expr()->neq('EventResult', "success"));
         if ($lastLogin !== null) {
             $lastLoginTime = $lastLogin->getTime();
             $unsuccessfulCriteria
