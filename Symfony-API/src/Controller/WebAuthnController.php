@@ -7,6 +7,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use OpenAPI\Server\Model\UserWebAuthnCreate;
 use lbuchs\WebAuthn\WebAuthn;
 use lbuchs\WebAuthn\Binary\ByteBuffer;
@@ -70,7 +71,7 @@ class WebAuthnController
         return $challenge;
     }
 
-    public function checkCredentials($credentials) {
+    public function checkCredentials($credentials, UserInterface $user) {
         $challenge = $this->getChallenge(); 
         if ($challenge === null) {
             return false;
@@ -89,7 +90,7 @@ class WebAuthnController
                 true, 
                 true);
         }
-        catch (Exception $e) {
+        catch (\Exception $e) {
             $this->eventController->StoreEvent($user, "Login", "WebAuthn failed: " . $e->getMessage());
             throw $e;
         }

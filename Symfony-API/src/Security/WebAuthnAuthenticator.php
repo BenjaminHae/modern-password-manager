@@ -4,6 +4,7 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Entity\WebAuthnPublicKey;
+use App\Controller\EventController;
 use App\Controller\WebAuthnController;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,11 +24,12 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
     private $session;
     private $security;
 
-    public function __construct(EntityManagerInterface $em, SessionInterface $session, Security $security)
+    public function __construct(EntityManagerInterface $em, SessionInterface $session, Security $security, EventController $eventController)
     {
         $this->em = $em;
         $this->session = $session;
         $this->security = $security;
+        $this->eventController = $eventController;
     }
 
     /**
@@ -100,8 +102,8 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        $webAuthn = new WebAuthnController($this->em, $this->session);
-        return $webAuthn->checkCredentials($credentials);
+        $webAuthn = new WebAuthnController($this->em, $this->session, $this->eventController);
+        return $webAuthn->checkCredentials($credentials, $user);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
