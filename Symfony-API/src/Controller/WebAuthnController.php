@@ -16,11 +16,13 @@ class WebAuthnController
     private $entityManager;
     private $session;
     private $webAuthn;
+    private $eventController;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session)
+    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, EventController $eventController)
     {
         $this->entityManager = $entityManager;
         $this->session = $session;
+        $this->eventController = $eventController;
         $configuration = $this->getRp();
         $this->webAuthn = new WebAuthn($configuration["name"], $configuration["id"], $configuration["allowedFormats"]);
     }
@@ -75,15 +77,23 @@ class WebAuthnController
         } 
         $pk = $this->entityManager->getRepository(WebAuthnPublicKey::class)
             ->findOneByPublicKeyId($credentials["id"]);
-        return $this->webAuthn->processGet(
-            base64_decode($credentials["clientDataJSON"]),
-            base64_decode($credentials["authenticatorData"]), 
-            base64_decode($credentials["signature"]), 
-            $pk->getPublicKey(), 
-            $challenge, 
-            null, 
-            true, 
-            true);
+        $result = null;
+        try {
+            $result = $this->webAuthn->processGet(
+                base64_decode($credentials["clientDataJSON"]),
+                base64_decode($credentials["authenticatorData"]), 
+                base64_decode($credentials["signature"]), 
+                $pk->getPublicKey(), 
+                $challenge, 
+                null, 
+                true, 
+                true);
+        }
+        catch (Exception $e) {
+            $this->eventController->StoreEvent($user, "Login", "WebAuthn failed: " . $e->getMessage());
+            throw $e;
+        }
+        return $result;
     }
 
     public function getWebAuthnDevices($user) {
