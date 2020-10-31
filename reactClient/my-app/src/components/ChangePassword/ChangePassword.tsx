@@ -4,7 +4,6 @@ import { IMessageOptions } from '../Message/Message';
 import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWithToggle';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
 
 interface ChangePasswordProps {
   changePasswordHandler: (oldPassword: string, newPassword: string) => Promise<void>;
@@ -53,8 +52,6 @@ class ChangePassword extends React.Component<ChangePasswordProps, ChangePassword
   render (): JSX.Element {
     return (
     <div className={styles.Login}>
-      <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
-        <h2>ChangePassword</h2>
         <Form onSubmit={this.doChange.bind(this)}>
           <fieldset disabled={this.state.waiting}>
             <Form.Group controlId="changePwOldPassword">
@@ -72,7 +69,6 @@ class ChangePassword extends React.Component<ChangePasswordProps, ChangePassword
             <Button variant="primary" type="submit">Change Password</Button>
           </fieldset>
         </Form>
-      </Col>
     </div>
     );
   }
