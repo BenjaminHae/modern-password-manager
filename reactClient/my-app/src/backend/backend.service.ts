@@ -3,7 +3,7 @@ import { encryptedAccount } from './models/encryptedAccount';
 import { UserOptions, UserOptionsFromJSON } from './models/UserOptions';
 import { MaintenanceService, BackendOptions } from './api/maintenance.service';
 import { UserService, ILogonInformation } from './api/user.service';
-import { HistoryItem } from '@pm-server/pm-server-react-client';
+import { HistoryItem, UserWebAuthnCred } from '@pm-server/pm-server-react-client';
 import { AccountsService } from './api/accounts.service';
 import { ServerSettings } from './models/serverSettings';
 import { AccountTransformerService } from './controller/account-transformer.service';
@@ -187,6 +187,10 @@ export class BackendService {
 
   async getHistory(): Promise<Array<HistoryItem>> {
     return await this.userService.getHistory();
+  }
+
+  async getWebAuthnCreds(): Promise<Array<UserWebAuthnCred>> {
+    return await this.userService.getWebAuthnCreds();
   }
 
   async getPassword(account: Account): Promise<string> {
