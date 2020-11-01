@@ -38,6 +38,7 @@ interface AppState {
   historyItems: Array<HistoryItem>;
   filter?: AccountsFilter;
   webAuthnCreds: Array<UserWebAuthnCred>;
+  webAuthnPresent: boolean;
 }
 export default class App extends React.Component<{}, AppState> {
   private backend: BackendService;
@@ -56,7 +57,8 @@ export default class App extends React.Component<{}, AppState> {
       accounts: [],
       userOptions: {fields:[]},
       historyItems: [],
-      webAuthnCreds: []
+      webAuthnCreds: [],
+      webAuthnPresent: false
     }
 
     let basePath = "";
@@ -99,6 +101,7 @@ export default class App extends React.Component<{}, AppState> {
           this.plugins.loginViewReady();
           });
     this.plugins.setFilterChangeHandler(this.filterChangeHandler.bind(this));
+    this.webAuthnTryLogin();
   }
   doLogin(username:string, password: string):Promise<void> {
     this.clearMessages();
@@ -228,6 +231,16 @@ export default class App extends React.Component<{}, AppState> {
     let credential = await webAuthn.createCredential(challenge, 'Password-Manager', {id:(new TextEncoder()).encode("bla"), displayName:"bla",name:"bla"});
     let attestationResponse = credential.response as AuthenticatorAttestationResponse;
     this.backend.createWebAuthn(credential.id, name, attestationResponse.attestationObject, attestationResponse.clientDataJSON, credential.type);
+  }
+
+  async webAuthnTryLogin(): Promise<void> {
+    let webAuthn = new WebAuthn();
+    let credsAvailable = webAuthn.credentialsAvailable();
+    this.setState({webAuthnPresent: credsAvailable});
+    if (credsAvailable) {
+      let credentials = webAuthn.getCredential(await this.backend.getWebAuthnChallenge());
+      this.backend.doWebAuthnLogin();
+    }
   }
 
   async getAccountPassword(account: Account): Promise<string> {

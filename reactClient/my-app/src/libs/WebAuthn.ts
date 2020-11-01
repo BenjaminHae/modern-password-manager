@@ -4,6 +4,7 @@ interface User {
   name: string
 }
 export default class WebAuthn {
+  readonly localStoreKey = "webAuthnPresent";
   async createCredential(challenge: ArrayBuffer, rpName: string, user: User): Promise<PublicKeyCredential> {
     let credentials = await navigator.credentials.create({
       publicKey: {
@@ -35,19 +36,18 @@ export default class WebAuthn {
         rpId: document.domain,
         userVerification: "required",
       }
-    });
+    }) as PublicKeyCredential;
   }
 
   rememberStorage() {
-    //todo store existence of key in local storage
+    window.localStorage.setItem(this.localStoreKey, "yes")
   }
 
   clearStorage() {
-    //todo remove existence of key in local storage
+    window.localStorage.removeItem(this.localStoreKey)
   }
 
   credentialsAvailable(): boolean {
-    //todo retrieve existence of key in local storage
-    return true;
+    return window.localStorage.getItem(this.localStoreKey) === "yes";
   }
 }
