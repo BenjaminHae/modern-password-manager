@@ -30,9 +30,9 @@ enum AuthenticatedView {
 }
 interface IAuthenticatedProps extends IUserSettingsProps, IHistoryProps {
   accounts: Array<Account>,
-  editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>,
+  editAccountHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>,
   bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>,
-  deleteHandler: (account: Account) => Promise<void>,
+  deleteAccountHandler: (account: Account) => Promise<void>,
   getAccountPasswordHandler: (account: Account) => Promise<string>,
   pluginSystem: PluginSystem,
   showMessage: (message: string, options?: IMessageOptions) => void,
@@ -111,11 +111,11 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
             <PluginMainView pluginSystem={this.props.pluginSystem} />
             <AccountList 
               accounts={this.props.accounts} 
-              getAccountPasswordHandler={this.props.getAccountPasswordHandler}
               fields={this.props.userOptions.fields} 
               editAccountHandler={this.editAccountSelect.bind(this)} 
               addAccountHandler={this.addAccountSelect.bind(this)} 
               pluginSystem={this.props.pluginSystem} 
+              getAccountPasswordHandler={this.props.getAccountPasswordHandler}
             />
           </>
         );
@@ -124,26 +124,18 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
             <AccountEdit 
               account={this.state.selectedAccount} 
               fields={this.props.userOptions.fields} 
-              editHandler={this.props.editHandler} 
               closeHandler={()=>this.selectView(AuthenticatedView.List)} 
-              deleteHandler={this.props.deleteHandler} 
-              getAccountPasswordHandler={this.props.getAccountPasswordHandler}
-              showMessage={this.props.showMessage}
-              pluginSystem={this.props.pluginSystem}
+              {...this.props}
             />
         );
       case AuthenticatedView.Add:
         return (
             <AccountEdit 
               account={undefined} 
-              fields={this.props.userOptions.fields} 
-              editHandler={this.props.editHandler} 
-              closeHandler={()=>this.selectView(AuthenticatedView.List)} 
-              deleteHandler={this.props.deleteHandler} 
-              getAccountPasswordHandler={this.props.getAccountPasswordHandler}
-              showMessage={this.props.showMessage}
               proposals={this.state.addAccountProposals}
-              pluginSystem={this.props.pluginSystem}
+              fields={this.props.userOptions.fields} 
+              closeHandler={()=>this.selectView(AuthenticatedView.List)} 
+              {...this.props}
             />
         );
       case AuthenticatedView.History:

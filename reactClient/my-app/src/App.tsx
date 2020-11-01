@@ -295,10 +295,10 @@ export default class App extends React.Component<{}, AppState> {
             historyItems={this.state.historyItems} 
             userOptions={this.state.userOptions}
             pluginSystem={this.plugins} 
-            editHandler={this.editHandler.bind(this)} 
+            editAccountHandler={this.editHandler.bind(this)} 
             getAccountPasswordHandler={this.getAccountPassword.bind(this)}
             bulkAddHandler={this.bulkAddAccounts.bind(this)} 
-            deleteHandler={this.deleteHandler.bind(this)} 
+            deleteAccountHandler={this.deleteHandler.bind(this)} 
             changePasswordHandler={this.changePasswordHandler.bind(this)} 
             loadHistoryHandler={this.loadHistory.bind(this)} 
             showMessage={this.showMessage.bind(this)} 
