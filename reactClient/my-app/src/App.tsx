@@ -19,7 +19,7 @@ import { MaintenanceApi as OpenAPIMaintenanceService } from '@pm-server/pm-serve
 import { UserApi as OpenAPIUserService } from '@pm-server/pm-server-react-client';
 import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-react-client';
 import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
-import { HistoryItem } from '@pm-server/pm-server-react-client';
+import { HistoryItem, UserWebAuthnCred } from '@pm-server/pm-server-react-client';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
@@ -36,6 +36,7 @@ interface AppState {
   userOptions: UserOptions;
   historyItems: Array<HistoryItem>;
   filter?: AccountsFilter;
+  webAuthnCreds: Array<UserWebAuthnCred>;
 }
 export default class App extends React.Component<{}, AppState> {
   private backend: BackendService;
@@ -53,7 +54,8 @@ export default class App extends React.Component<{}, AppState> {
       registrationAllowed: false,
       accounts: [],
       userOptions: {fields:[]},
-      historyItems: []
+      historyItems: [],
+      webAuthnCreds: []
     }
 
     let basePath = "";
@@ -214,6 +216,10 @@ export default class App extends React.Component<{}, AppState> {
     );
     this.setState({ historyItems: history });
   }
+  async loadWebAuthnCreds(): Promise<void> {
+    let creds = await this.backend.getWebAuthnCreds()
+    this.setState({ webAuthnCreds: creds });
+  }
   async getAccountPassword(account: Account): Promise<string> {
     return await this.backend.getPassword(account);
   }
@@ -297,6 +303,13 @@ export default class App extends React.Component<{}, AppState> {
             loadHistoryHandler={this.loadHistory.bind(this)} 
             showMessage={this.showMessage.bind(this)} 
             doStoreOptions={this.doStoreOptions.bind(this)}
+
+            //webAuthn
+            webAuthnDevices={this.state.webAuthnCreds}
+            webAuthnThisDeviceRegistered={false}
+            webAuthnLoadHandler={this.loadWebAuthnCreds.bind(this)}
+            webAuthnCreateCredHandler={() => {return Promise.resolve()}}
+            webAuthnDeleteCredHandler={(creds: UserWebAuthnCred) => {return Promise.resolve()}}
         />
               }
         {!this.state.authenticated

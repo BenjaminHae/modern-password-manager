@@ -1,24 +1,23 @@
 import React from 'react';
 import styles from './Authenticated.module.css';
 import { Account } from '../../backend/models/account';
-import { UserOptions } from '../../backend/models/UserOptions';
 import { IMessageOptions } from '../Message/Message';
 import AccountList from '../AccountList/AccountList';
 import AccountEdit from '../AccountEdit/AccountEdit';
-import UserConfiguration from '../UserConfiguration/UserConfiguration';
 import ImportCsv from '../ImportCsv/ImportCsv';
 import ExportCsv from '../ExportCsv/ExportCsv';
-import ChangePassword from '../ChangePassword/ChangePassword';
 import History from '../History/History';
+import UserSettings from '../UserSettings/UserSettings';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { ArrowRepeat, BoxArrowUpLeft, CloudArrowUp, CloudArrowDown, List, Plus, PencilFill, ClockHistory, Sliders } from 'react-bootstrap-icons';
+import { BoxArrowUpLeft, CloudArrowUp, CloudArrowDown, List, Plus, PencilFill, ClockHistory, Sliders } from 'react-bootstrap-icons';
 import { PluginSystem } from '../../plugin/PluginSystem';
 import PluginMainView from '../../plugin/PluginMainView/PluginMainView';
-import { HistoryItem } from '@pm-server/pm-server-react-client';
+import { IUserSettingsProps } from '../UserSettings/UserSettings';
+import { IHistoryProps } from '../History/History';
 
 enum AuthenticatedView {
   List,
@@ -27,40 +26,33 @@ enum AuthenticatedView {
   Import,
   Export,
   Options,
-  ChangePassword,
   History
 }
-interface AuthenticatedProps {
+interface IAuthenticatedProps extends IUserSettingsProps, IHistoryProps {
   accounts: Array<Account>,
-  historyItems: Array<HistoryItem>,
-  userOptions: UserOptions,
   editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>,
   bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>,
   deleteHandler: (account: Account) => Promise<void>,
-  changePasswordHandler: (oldPassword: string, newPassword: string) => Promise<void>,
   getAccountPasswordHandler: (account: Account) => Promise<string>,
   pluginSystem: PluginSystem,
   showMessage: (message: string, options?: IMessageOptions) => void,
-  loadHistoryHandler: () => Promise<void>,
-  doStoreOptions: (options: UserOptions) => Promise<void>,
 }
 interface AuthenticatedState {
   view: AuthenticatedView;
   selectedAccount?: Account;
   addAccountProposals?: {[index: string]:string};
 }
-class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedState> {
+class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedState> {
   readonly viewButtons = [
     { view: AuthenticatedView.List, name: "Account List", icon: (<List/>), selectable: true },
     { view: AuthenticatedView.Import, name: "Import Accounts", icon: (<CloudArrowUp/>), selectable: true },
     { view: AuthenticatedView.Export, name: "Export Accounts", icon: (<CloudArrowDown/>), selectable: true },
-    { view: AuthenticatedView.ChangePassword, name: "Change Password", icon: (<ArrowRepeat/>), selectable: true },
-    { view: AuthenticatedView.Options, name: "Customization", icon: (<Sliders/>), selectable: true  },
+    { view: AuthenticatedView.Options, name: "Settings", icon: (<Sliders/>), selectable: true  },
     { view: AuthenticatedView.History, name: "History", icon: (<ClockHistory/>), selectable: true },
     { view: AuthenticatedView.Edit, name: "Edit Account", icon: (<PencilFill/>), selectable: false },
     { view: AuthenticatedView.Add, name: "Add Account", icon: (<Plus/>), selectable: false },
   ];
-  constructor(props: AuthenticatedProps) {
+  constructor(props: IAuthenticatedProps) {
     super(props);
     this.state = this.defaultViewState();
     this.props.pluginSystem.registerAuthenticatedUIHandler(this);
@@ -158,10 +150,6 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
         return (
           <History historyItems={this.props.historyItems} loadHistoryHandler={this.props.loadHistoryHandler} />
         );
-      case AuthenticatedView.ChangePassword:
-        return (
-          <ChangePassword changePasswordHandler={this.props.changePasswordHandler} showMessage={this.props.showMessage}/>
-        );
       case AuthenticatedView.Import:
         return (
           <ImportCsv 
@@ -179,10 +167,8 @@ class Authenticated extends React.Component<AuthenticatedProps, AuthenticatedSta
         );
       case AuthenticatedView.Options:
         return (
-          <UserConfiguration 
-            options={this.props.userOptions} 
-            showMessage={this.props.showMessage}
-            doStoreOptions={this.props.doStoreOptions}
+          <UserSettings 
+            {...this.props}
           />
         );
     }

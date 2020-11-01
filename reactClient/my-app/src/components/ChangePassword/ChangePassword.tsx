@@ -5,7 +5,7 @@ import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWit
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-interface ChangePasswordProps {
+export interface IChangePasswordProps {
   changePasswordHandler: (oldPassword: string, newPassword: string) => Promise<void>;
   showMessage: (message: string, options?: IMessageOptions) => void;
 }
@@ -18,8 +18,8 @@ interface ChangePasswordState extends ChangePasswordFormValues {
   waiting: boolean;
 }
 
-class ChangePassword extends React.Component<ChangePasswordProps, ChangePasswordState> {
-  constructor(props: ChangePasswordProps) {
+class ChangePassword extends React.Component<IChangePasswordProps, ChangePasswordState> {
+  constructor(props: IChangePasswordProps) {
     super(props);
     this.state = { oldPassword: '', newPassword: '', newPassword2: '', waiting: false};
     this.handleGenericChange = this.handleGenericChange.bind(this);

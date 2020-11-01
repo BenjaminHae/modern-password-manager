@@ -4,8 +4,8 @@ import { HistoryItem } from '@pm-server/pm-server-react-client';
 import DataTable from 'react-data-table-component';
 import { IDataTableColumn } from 'react-data-table-component';
 
-interface IHistoryProps {
-  historyItems: Array<HistoryItem>
+export interface IHistoryProps {
+  historyItems: Array<HistoryItem>;
   loadHistoryHandler: () => Promise<void>;
 }
 const History: React.FC<IHistoryProps> = (props: IHistoryProps) => {

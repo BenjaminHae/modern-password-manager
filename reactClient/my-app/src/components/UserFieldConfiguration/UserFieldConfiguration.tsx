@@ -6,15 +6,15 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 
-interface UserFieldConfigurationProps {
-  options: UserOptions;
+export interface IUserFieldConfigurationProps {
+  userOptions: UserOptions;
   showMessage: (message: string, options: IMessageOptions) => void;
   doStoreOptions: (options: UserOptions) => Promise<void>;
 }
-const UserFieldConfiguration: React.FC<UserFieldConfigurationProps> = (props: UserFieldConfigurationProps) => {
-  const [options, setOptions] = useState(JSON.stringify(props.options, null, 2));
+const UserFieldConfiguration: React.FC<IUserFieldConfigurationProps> = (props: IUserFieldConfigurationProps) => {
+  const [options, setOptions] = useState(JSON.stringify(props.userOptions, null, 2));
   const [waiting, setWaiting] = useState(false);
-  useEffect( () => { setOptions(JSON.stringify(props.options, null, 2)) }, [props.options]);
+  useEffect( () => { setOptions(JSON.stringify(props.userOptions, null, 2)) }, [props.userOptions]);
   const submit = async (e: React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
     setWaiting(true);
