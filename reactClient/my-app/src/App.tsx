@@ -19,6 +19,7 @@ import { MaintenanceApi as OpenAPIMaintenanceService } from '@pm-server/pm-serve
 import { UserApi as OpenAPIUserService } from '@pm-server/pm-server-react-client';
 import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-react-client';
 import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
+import WebAuthn from './libs/WebAuthn';
 import { HistoryItem, UserWebAuthnCred } from '@pm-server/pm-server-react-client';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -220,6 +221,15 @@ export default class App extends React.Component<{}, AppState> {
     let creds = await this.backend.getWebAuthnCreds()
     this.setState({ webAuthnCreds: creds });
   }
+
+  async webAuthnCreate(name: string = "TODO DEVICE"): Promise<void> {
+    let challenge = await this.backend.getWebAuthnChallenge();
+    let webAuthn = new WebAuthn();
+    let credential = await webAuthn.createCredential(challenge, 'Password-Manager', {id:(new TextEncoder()).encode("bla"), displayName:"bla",name:"bla"});
+    let attestationResponse = credential.response as AuthenticatorAttestationResponse;
+    this.backend.createWebAuthn(credential.id, name, attestationResponse.attestationObject, attestationResponse.clientDataJSON, credential.type);
+  }
+
   async getAccountPassword(account: Account): Promise<string> {
     return await this.backend.getPassword(account);
   }
@@ -308,7 +318,7 @@ export default class App extends React.Component<{}, AppState> {
             webAuthnDevices={this.state.webAuthnCreds}
             webAuthnThisDeviceRegistered={false}
             webAuthnLoadHandler={this.loadWebAuthnCreds.bind(this)}
-            webAuthnCreateCredHandler={() => {return Promise.resolve()}}
+            webAuthnCreateCredHandler={this.webAuthnCreate.bind(this)}
             webAuthnDeleteCredHandler={(creds: UserWebAuthnCred) => {return Promise.resolve()}}
         />
               }

@@ -193,6 +193,14 @@ export class BackendService {
     return await this.userService.getWebAuthnCreds();
   }
 
+  async getWebAuthnChallenge(): Promise<ArrayBuffer> {
+    return await this.userService.getWebAuthnChallenge();
+  }
+
+  async createWebAuthn(id: string, name: string, attestationObject: ArrayBuffer, clientDataJSON: ArrayBuffer, keyType: string ): Promise<void> {
+    return await this.userService.registerWebAuthn(id, name, attestationObject, clientDataJSON, keyType);
+  }
+
   async getPassword(account: Account): Promise<string> {
     return await this.accountTransformer.getPassword(account);
   }

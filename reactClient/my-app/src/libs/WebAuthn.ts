@@ -4,7 +4,7 @@ interface User {
   name: string
 }
 export default class WebAuthn {
-  async createCredential(challenge: ArrayBuffer, rpName: string, user: User): Promise<any> {
+  async createCredential(challenge: ArrayBuffer, rpName: string, user: User): Promise<PublicKeyCredential> {
     let credentials = await navigator.credentials.create({
       publicKey: {
         authenticatorSelection: {
@@ -21,7 +21,11 @@ export default class WebAuthn {
       }
     });
     this.rememberStorage(); 
-    return credentials;
+    if(!credentials)
+      throw new Error("no credentials created");
+    if(credentials.type !== "public-key")
+      throw new Error("wrong type of credentials");
+    return credentials as PublicKeyCredential;
   }
 
   async getCredential(challenge: ArrayBuffer) {

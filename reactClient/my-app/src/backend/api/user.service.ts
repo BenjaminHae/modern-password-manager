@@ -17,6 +17,25 @@ export class UserService {
       throw new Error(response.message);
     }
   }
+  private base64ToArrayBuffer(base64: string): ArrayBuffer {
+    var binary_string = window.atob(base64);
+    var len = binary_string.length;
+    var bytes = new Uint8Array(len);
+    for (var i = 0; i < len; i++) {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;
+  }
+
+  private arrayBufferToBase64( buffer:ArrayBuffer ): string {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
+  }
 
   async logon(username: string, password: CryptedObject): Promise<ILogonInformation> {
     const response = await this.userService.loginUser({ logonInformation: { "username": username, "password": password.toBase64JSON()  }});
@@ -56,6 +75,16 @@ export class UserService {
 
   async getWebAuthnCreds(): Promise<Array<UserWebAuthnCred>> {
     return this.userService.getUserWebAuthnCreds();
+  }
+
+  async registerWebAuthn( id: string, name: string, attestationObject: ArrayBuffer, clientDataJSON: ArrayBuffer, keyType: string ): Promise<void> {
+    let response = await this.userService.createUserWebAuthn({ userWebAuthnCreate: { id: id, name: name, response: { attestationObject: this.arrayBufferToBase64(attestationObject), clientDataJSON: this.arrayBufferToBase64(clientDataJSON), "type": keyType } } });
+    this.checkForSuccess(response);
+  }
+
+  async getWebAuthnChallenge(): Promise<ArrayBuffer> {
+    let response = await this.userService.loginUserWebAuthnChallenge();
+    return this.base64ToArrayBuffer(response.challenge);
   }
 
   async getUserSettings(): Promise<CryptedObject | null> {
