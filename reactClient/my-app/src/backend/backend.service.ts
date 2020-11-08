@@ -9,6 +9,7 @@ import { ServerSettings } from './models/serverSettings';
 import { AccountTransformerService } from './controller/account-transformer.service';
 import { CredentialService } from './credential.service';
 import { CredentialProviderPassword } from './controller/credentialProviderPassword';
+import { CredentialProviderUndefined } from './controller/credentialProviderUndefined';
 import { ICredentialProvider } from './controller/credentialProvider';
 import { CryptoService } from './crypto.service';
 import { Observable, Subscriber, TeardownLogic } from 'rxjs';
@@ -59,6 +60,12 @@ export class BackendService {
       response = await this.userService.logon(username, passwordHash)
     }
     await this.afterLogin();
+    return response;
+  }
+
+  async logonWithWebAuthn( id: string, authenticatorData: ArrayBuffer, clientDataJSON: ArrayBuffer, signature: ArrayBuffer, keyType: string, userHandle: ArrayBuffer | null ): Promise<ILogonInformation> {
+    let response = await this.userService.loginWebAuthn(id, authenticatorData, clientDataJSON, signature, keyType, userHandle)
+    await this.logonWithCredentials(new CredentialProviderUndefined());
     return response;
   }
 

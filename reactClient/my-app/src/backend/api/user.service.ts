@@ -78,8 +78,39 @@ export class UserService {
   }
 
   async registerWebAuthn( id: string, name: string, attestationObject: ArrayBuffer, clientDataJSON: ArrayBuffer, keyType: string ): Promise<void> {
-    let response = await this.userService.createUserWebAuthn({ userWebAuthnCreate: { id: id, name: name, response: { attestationObject: this.arrayBufferToBase64(attestationObject), clientDataJSON: this.arrayBufferToBase64(clientDataJSON), "type": keyType } } });
+    let response = await this.userService.createUserWebAuthn({ userWebAuthnCreate: 
+      { 
+        id: id, 
+        name: name, 
+        response: { 
+          attestationObject: this.arrayBufferToBase64(attestationObject), 
+          clientDataJSON: this.arrayBufferToBase64(clientDataJSON), 
+          "type": keyType 
+        } 
+      } });
     this.checkForSuccess(response);
+  }
+
+  async loginWebAuthn( id: string, authenticatorData: ArrayBuffer, clientDataJSON: ArrayBuffer, signature: ArrayBuffer, keyType: string, userHandle: ArrayBuffer | null ): Promise<ILogonInformation> {
+    let user: string = "";
+    if (userHandle) {
+      user = this.arrayBufferToBase64(userHandle);
+    }
+    let response = await this.userService.loginUserWebAuthnGet({userWebAuthnGet: 
+      {
+        id: id, 
+        response: {
+          authenticatorData: this.arrayBufferToBase64(authenticatorData),
+          clientDataJSON: this.arrayBufferToBase64(clientDataJSON),
+          signature: this.arrayBufferToBase64(signature),
+          type: keyType,
+          userHandle: user
+        }
+      }})
+    this.checkForSuccess(response);
+    if (response.failedLogins === undefined)
+      throw new Error("failedLogin undefined");
+    return { failedLogins: response.failedLogins, lastLogin: response.lastLogin};
   }
 
   async getWebAuthnChallenge(): Promise<ArrayBuffer> {

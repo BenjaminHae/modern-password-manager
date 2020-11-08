@@ -98,13 +98,17 @@ export default class App extends React.Component<{}, AppState> {
     this.backend.waitForBackend()
       .then((backendOptions: BackendOptions) => {
           this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed});
+          this.webAuthnTryLogin();
           this.plugins.loginViewReady();
           });
     this.plugins.setFilterChangeHandler(this.filterChangeHandler.bind(this));
-    this.webAuthnTryLogin();
   }
   doLogin(username:string, password: string):Promise<void> {
     this.clearMessages();
+    if (!this.state.ready) {
+      this.showMessage("backend is not ready yet. Please try again in a second.");
+      return Promise.resolve();
+    }
     return this.backend.logon(username, password)
       .then((info: ILogonInformation) => {
         this.plugins.loginSuccessful(username, this.credential.getKey());
@@ -238,8 +242,9 @@ export default class App extends React.Component<{}, AppState> {
     let credsAvailable = webAuthn.credentialsAvailable();
     this.setState({webAuthnPresent: credsAvailable});
     if (credsAvailable) {
-      let credentials = webAuthn.getCredential(await this.backend.getWebAuthnChallenge());
-      this.backend.doWebAuthnLogin();
+      let credentials = await webAuthn.getCredential(await this.backend.getWebAuthnChallenge());
+      let response = credentials.response as AuthenticatorAssertionResponse;
+      this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, response.userHandle);
     }
   }
 
