@@ -4,6 +4,7 @@ namespace App\Api;
 
 use App\Controller\AccountController;
 use App\Entity\User;
+use App\Entity\WebAuthnPublicKey;
 use App\Controller\EventController;
 use App\Controller\WebAuthnController;
 use Doctrine\ORM\EntityManagerInterface;
