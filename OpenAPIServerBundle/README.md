@@ -148,6 +148,7 @@ Class | Method | HTTP request | Description
  - [Account](Resources/docs/Model/Account.md)
  - [AccountId](Resources/docs/Model/AccountId.md)
  - [ChangePassword](Resources/docs/Model/ChangePassword.md)
+ - [DecryptionKey](Resources/docs/Model/DecryptionKey.md)
  - [File](Resources/docs/Model/File.md)
  - [GenericSuccessMessage](Resources/docs/Model/GenericSuccessMessage.md)
  - [HistoryItem](Resources/docs/Model/HistoryItem.md)
@@ -162,9 +163,11 @@ Class | Method | HTTP request | Description
  - [UserWebAuthnChallenge](Resources/docs/Model/UserWebAuthnChallenge.md)
  - [UserWebAuthnCreate](Resources/docs/Model/UserWebAuthnCreate.md)
  - [UserWebAuthnCreateResponse](Resources/docs/Model/UserWebAuthnCreateResponse.md)
+ - [UserWebAuthnCreateWithKey](Resources/docs/Model/UserWebAuthnCreateWithKey.md)
  - [UserWebAuthnCred](Resources/docs/Model/UserWebAuthnCred.md)
  - [UserWebAuthnGet](Resources/docs/Model/UserWebAuthnGet.md)
  - [UserWebAuthnGetResponse](Resources/docs/Model/UserWebAuthnGetResponse.md)
+ - [UserWebAuthnLogonResult](Resources/docs/Model/UserWebAuthnLogonResult.md)
 
 
 ## Documentation For Authorization

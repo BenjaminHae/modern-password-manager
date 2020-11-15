@@ -39,15 +39,18 @@ import {
     UserWebAuthnChallenge,
     UserWebAuthnChallengeFromJSON,
     UserWebAuthnChallengeToJSON,
-    UserWebAuthnCreate,
-    UserWebAuthnCreateFromJSON,
-    UserWebAuthnCreateToJSON,
+    UserWebAuthnCreateWithKey,
+    UserWebAuthnCreateWithKeyFromJSON,
+    UserWebAuthnCreateWithKeyToJSON,
     UserWebAuthnCred,
     UserWebAuthnCredFromJSON,
     UserWebAuthnCredToJSON,
     UserWebAuthnGet,
     UserWebAuthnGetFromJSON,
     UserWebAuthnGetToJSON,
+    UserWebAuthnLogonResult,
+    UserWebAuthnLogonResultFromJSON,
+    UserWebAuthnLogonResultToJSON,
 } from '../models';
 
 export interface ChangePasswordRequest {
@@ -55,7 +58,7 @@ export interface ChangePasswordRequest {
 }
 
 export interface CreateUserWebAuthnRequest {
-    userWebAuthnCreate: UserWebAuthnCreate;
+    userWebAuthnCreateWithKey: UserWebAuthnCreateWithKey;
 }
 
 export interface DeleteUserWebAuthnRequest {
@@ -127,8 +130,8 @@ export class UserApi extends runtime.BaseAPI {
      * add a webauthn credential
      */
     async createUserWebAuthnRaw(requestParameters: CreateUserWebAuthnRequest): Promise<runtime.ApiResponse<GenericSuccessMessage>> {
-        if (requestParameters.userWebAuthnCreate === null || requestParameters.userWebAuthnCreate === undefined) {
-            throw new runtime.RequiredError('userWebAuthnCreate','Required parameter requestParameters.userWebAuthnCreate was null or undefined when calling createUserWebAuthn.');
+        if (requestParameters.userWebAuthnCreateWithKey === null || requestParameters.userWebAuthnCreateWithKey === undefined) {
+            throw new runtime.RequiredError('userWebAuthnCreateWithKey','Required parameter requestParameters.userWebAuthnCreateWithKey was null or undefined when calling createUserWebAuthn.');
         }
 
         const queryParameters: any = {};
@@ -146,7 +149,7 @@ export class UserApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: UserWebAuthnCreateToJSON(requestParameters.userWebAuthnCreate),
+            body: UserWebAuthnCreateWithKeyToJSON(requestParameters.userWebAuthnCreateWithKey),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => GenericSuccessMessageFromJSON(jsonValue));
@@ -336,7 +339,7 @@ export class UserApi extends runtime.BaseAPI {
      * add webauthn
      * login user with WebAuthn
      */
-    async loginUserWebAuthnGetRaw(requestParameters: LoginUserWebAuthnGetRequest): Promise<runtime.ApiResponse<LogonResult>> {
+    async loginUserWebAuthnGetRaw(requestParameters: LoginUserWebAuthnGetRequest): Promise<runtime.ApiResponse<UserWebAuthnLogonResult>> {
         if (requestParameters.userWebAuthnGet === null || requestParameters.userWebAuthnGet === undefined) {
             throw new runtime.RequiredError('userWebAuthnGet','Required parameter requestParameters.userWebAuthnGet was null or undefined when calling loginUserWebAuthnGet.');
         }
@@ -359,14 +362,14 @@ export class UserApi extends runtime.BaseAPI {
             body: UserWebAuthnGetToJSON(requestParameters.userWebAuthnGet),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => LogonResultFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserWebAuthnLogonResultFromJSON(jsonValue));
     }
 
     /**
      * add webauthn
      * login user with WebAuthn
      */
-    async loginUserWebAuthnGet(requestParameters: LoginUserWebAuthnGetRequest): Promise<LogonResult> {
+    async loginUserWebAuthnGet(requestParameters: LoginUserWebAuthnGetRequest): Promise<UserWebAuthnLogonResult> {
         const response = await this.loginUserWebAuthnGetRaw(requestParameters);
         return await response.value();
     }

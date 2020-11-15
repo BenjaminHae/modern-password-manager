@@ -93,7 +93,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 ## **createUserWebAuthn**
-> OpenAPI\Server\Model\GenericSuccessMessage createUserWebAuthn($userWebAuthnCreate)
+> OpenAPI\Server\Model\GenericSuccessMessage createUserWebAuthn($userWebAuthnCreateWithKey)
 
 add a webauthn credential
 
@@ -124,7 +124,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#createUserWebAuthn
      */
-    public function createUserWebAuthn(UserWebAuthnCreate $userWebAuthnCreate)
+    public function createUserWebAuthn(UserWebAuthnCreateWithKey $userWebAuthnCreateWithKey)
     {
         // Implement the operation ...
     }
@@ -137,7 +137,7 @@ class UserApi implements UserApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **userWebAuthnCreate** | [**OpenAPI\Server\Model\UserWebAuthnCreate**](../Model/UserWebAuthnCreate.md)| WebAuthnCreate Object |
+ **userWebAuthnCreateWithKey** | [**OpenAPI\Server\Model\UserWebAuthnCreateWithKey**](../Model/UserWebAuthnCreateWithKey.md)| WebAuthnCreate Object |
 
 ### Return type
 
@@ -463,7 +463,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 ## **loginUserWebAuthnGet**
-> OpenAPI\Server\Model\LogonResult loginUserWebAuthnGet($userWebAuthnGet)
+> OpenAPI\Server\Model\UserWebAuthnLogonResult loginUserWebAuthnGet($userWebAuthnGet)
 
 login user with WebAuthn
 
@@ -511,7 +511,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**OpenAPI\Server\Model\LogonResult**](../Model/LogonResult.md)
+[**OpenAPI\Server\Model\UserWebAuthnLogonResult**](../Model/UserWebAuthnLogonResult.md)
 
 ### Authorization
 

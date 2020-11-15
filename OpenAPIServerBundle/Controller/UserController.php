@@ -44,9 +44,10 @@ use OpenAPI\Server\Model\LogonResult;
 use OpenAPI\Server\Model\RegistrationInformation;
 use OpenAPI\Server\Model\UserSettings;
 use OpenAPI\Server\Model\UserWebAuthnChallenge;
-use OpenAPI\Server\Model\UserWebAuthnCreate;
+use OpenAPI\Server\Model\UserWebAuthnCreateWithKey;
 use OpenAPI\Server\Model\UserWebAuthnCred;
 use OpenAPI\Server\Model\UserWebAuthnGet;
+use OpenAPI\Server\Model\UserWebAuthnLogonResult;
 
 /**
  * UserController Class Doc Comment
@@ -186,14 +187,14 @@ class UserController extends Controller
         $securitycsrf = $request->headers->get('X-CSRF-TOKEN');
 
         // Read out all input parameter values into variables
-        $userWebAuthnCreate = $request->getContent();
+        $userWebAuthnCreateWithKey = $request->getContent();
 
         // Use the default value if no value was provided
 
         // Deserialize the input values that needs it
         try {
             $inputFormat = $request->getMimeType($request->getContentType());
-            $userWebAuthnCreate = $this->deserialize($userWebAuthnCreate, 'OpenAPI\Server\Model\UserWebAuthnCreate', $inputFormat);
+            $userWebAuthnCreateWithKey = $this->deserialize($userWebAuthnCreateWithKey, 'OpenAPI\Server\Model\UserWebAuthnCreateWithKey', $inputFormat);
         } catch (SerializerRuntimeException $exception) {
             return $this->createBadRequestResponse($exception->getMessage());
         }
@@ -201,9 +202,9 @@ class UserController extends Controller
         // Validate the input values
         $asserts = [];
         $asserts[] = new Assert\NotNull();
-        $asserts[] = new Assert\Type("OpenAPI\Server\Model\UserWebAuthnCreate");
+        $asserts[] = new Assert\Type("OpenAPI\Server\Model\UserWebAuthnCreateWithKey");
         $asserts[] = new Assert\Valid();
-        $response = $this->validate($userWebAuthnCreate, $asserts);
+        $response = $this->validate($userWebAuthnCreateWithKey, $asserts);
         if ($response instanceof Response) {
             return $response;
         }
@@ -218,7 +219,7 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            $result = $handler->createUserWebAuthn($userWebAuthnCreate, $responseCode, $responseHeaders);
+            $result = $handler->createUserWebAuthn($userWebAuthnCreateWithKey, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';

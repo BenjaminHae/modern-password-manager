@@ -37,9 +37,10 @@ use OpenAPI\Server\Model\LogonResult;
 use OpenAPI\Server\Model\RegistrationInformation;
 use OpenAPI\Server\Model\UserSettings;
 use OpenAPI\Server\Model\UserWebAuthnChallenge;
-use OpenAPI\Server\Model\UserWebAuthnCreate;
+use OpenAPI\Server\Model\UserWebAuthnCreateWithKey;
 use OpenAPI\Server\Model\UserWebAuthnCred;
 use OpenAPI\Server\Model\UserWebAuthnGet;
+use OpenAPI\Server\Model\UserWebAuthnLogonResult;
 
 /**
  * UserApiInterface Interface Doc Comment
@@ -80,14 +81,14 @@ interface UserApiInterface
      *
      * add a webauthn credential
      *
-     * @param  OpenAPI\Server\Model\UserWebAuthnCreate $userWebAuthnCreate  WebAuthnCreate Object (required)
+     * @param  OpenAPI\Server\Model\UserWebAuthnCreateWithKey $userWebAuthnCreateWithKey  WebAuthnCreate Object (required)
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return OpenAPI\Server\Model\GenericSuccessMessage
      *
      */
-    public function createUserWebAuthn(UserWebAuthnCreate $userWebAuthnCreate, &$responseCode, array &$responseHeaders);
+    public function createUserWebAuthn(UserWebAuthnCreateWithKey $userWebAuthnCreateWithKey, &$responseCode, array &$responseHeaders);
 
     /**
      * Operation deleteUserWebAuthn
@@ -178,7 +179,7 @@ interface UserApiInterface
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
-     * @return OpenAPI\Server\Model\LogonResult
+     * @return OpenAPI\Server\Model\UserWebAuthnLogonResult
      *
      */
     public function loginUserWebAuthnGet(UserWebAuthnGet $userWebAuthnGet, &$responseCode, array &$responseHeaders);

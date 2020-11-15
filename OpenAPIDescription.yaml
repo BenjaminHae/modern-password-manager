@@ -124,7 +124,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LogonResult"
+                $ref: "#/components/schemas/UserWebAuthnLogonResult"
         "405":
           description: Invalid input
       security:
@@ -194,7 +194,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserWebAuthnCreate"
+              $ref: "#/components/schemas/UserWebAuthnCreateWithKey"
         description: WebAuthnCreate Object
         required: true
       responses:
@@ -421,6 +421,11 @@ components:
         allOf:
           - $ref: "#/components/schemas/GenericSuccessMessage"
           - $ref: "#/components/schemas/LogonSecurityInformation"
+    DecryptionKey:
+      type: object
+      properties:
+        decryptionKey:
+          type: string
     LogonSecurityInformation:
       type: object
       properties:
@@ -504,6 +509,11 @@ components:
           type: string
         response:
           $ref: "#/components/schemas/UserWebAuthnCreateResponse"
+    UserWebAuthnCreateWithKey:
+      type: object
+      allOf:
+       - $ref: "#/components/schemas/UserWebAuthnCreate"
+       - $ref: "#/components/schemas/DecryptionKey"
     UserWebAuthnCreateResponse:
       type: object
       required:
@@ -546,6 +556,11 @@ components:
           type: string
         userHandle:
           type: string
+    UserWebAuthnLogonResult:
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/LogonResult"
+      - $ref: "#/components/schemas/DecryptionKey"
     ChangePassword:
       type: object
       required:
