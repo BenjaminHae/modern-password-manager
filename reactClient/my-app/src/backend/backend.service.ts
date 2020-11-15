@@ -94,6 +94,10 @@ export class BackendService {
   async verifyPassword(password: string): Promise<boolean> {
     const testCredentials = new CredentialProviderPassword();
     await testCredentials.generateFromPassword(password)
+    return this.verifyCredentials(testCredentials);
+  }
+
+  async verifyCredentials(testCredentials: ICredentialProvider): Promise<boolean> {
     const newPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12), testCredentials)
     const oldPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
     return oldPasswordHash.toBase64JSON() === newPasswordHash.toBase64JSON();
