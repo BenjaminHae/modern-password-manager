@@ -44,6 +44,12 @@ class WebAuthnPublicKey
      */
     private $PublicKeyId;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=DecryptionKey::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $decryptionKey;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -114,6 +120,18 @@ class WebAuthnPublicKey
     public function setPublicKeyId(string $PublicKeyId): self
     {
         $this->PublicKeyId = $PublicKeyId;
+
+        return $this;
+    }
+
+    public function getDecryptionKey(): ?DecryptionKey
+    {
+        return $this->decryptionKey;
+    }
+
+    public function setDecryptionKey(?DecryptionKey $decryptionKey): self
+    {
+        $this->decryptionKey = $decryptionKey;
 
         return $this;
     }

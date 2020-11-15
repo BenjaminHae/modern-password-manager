@@ -15,6 +15,7 @@ use OpenAPI\Server\Model\ChangePassword;
 use OpenAPI\Server\Model\LogonInformation;
 use OpenAPI\Server\Model\UserWebAuthnGet;
 use OpenAPI\Server\Model\UserWebAuthnCreate;
+use OpenAPI\Server\Model\UserWebAuthnCreateWithKey;
 use OpenAPI\Server\Model\UserWebAuthnChallenge;
 use OpenAPI\Server\Model\Registration;
 use OpenAPI\Server\Model\RegistrationInformation;
@@ -89,9 +90,10 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
         {
             $username = $currentUser->getUsername();
             $loginReport = $currentUser->getLastSuccessfulLoginTimeAndUnsuccessfulCount();
-            $pkName = $this->entityManager->getRepository(WebAuthnPublicKey::class)
-                ->findOneByPublicKeyId($request->getId())->getDeviceName();
-            $result = $this->generateApiSuccess("logged in as " . $username . " using WebAuthn key for " . $pkName);
+            $pk = $this->entityManager->getRepository(WebAuthnPublicKey::class)
+                ->findOneByPublicKeyId($request->getId());
+            $result = $this->generateApiSuccess("logged in as " . $username . " using WebAuthn key for " . $pk->getDeviceName());
+            $result["decryptionKey"] = $pk->getDecryptionKey()->getDecryptionKey();
             if ($loginReport[0] !== null) {
                 $result["lastLogin"] = $loginReport[0]->format('Y-m-d\TH:i:s.u');
             }
@@ -132,7 +134,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
         return new UserWebAuthnChallenge(["challenge" => $challenge]);
     }
 
-    public function createUserWebAuthn(UserWebAuthnCreate $request, &$responseCode, array &$responseHeaders) {
+    public function createUserWebAuthn(UserWebAuthnCreateWithKey $request, &$responseCode, array &$responseHeaders) {
         $currentUser = $this->security->getUser();
         if (!$currentUser) {
             $responseCode = 403;

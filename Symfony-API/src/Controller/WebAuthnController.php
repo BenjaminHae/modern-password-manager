@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\WebAuthnPublicKey;
 use App\Entity\User;
+use App\Entity\DecryptionKey;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -54,12 +55,17 @@ class WebAuthnController
         $webAuthnResponse = $request->getResponse();
         $webAuthnResult = $this->webAuthn->processCreate(base64_decode($webAuthnResponse->getClientDataJSON()), base64_decode($webAuthnResponse->getAttestationObject()), $this->getChallenge(), true, true);
 
+        $decryptionKey = new DecryptionKey();
+        $decryptionKey->setDecryptionKey($request->getKey());
         $webauthn = $this->fillWebAuthnPublicKeyFromAttestationResult($webAuthnResult, new WebAuthnPublicKey());
+        //TODO: Bekomme ich die id auch aus der Attestation?
         $webauthn->setPublicKeyId($request->getId());
         $webauthn->setDeviceName($request->getName());
         $webauthn->setCounter(0);
+        $webauthn->setDecryptionKey($decryptionKey);
 
         $user->addWebAuthnPublicKey($webauthn);
+        $this->entityManager->persist($decryptionKey);
         $this->entityManager->persist($webauthn);
         $this->entityManager->flush();
         return $webauthn;
@@ -89,6 +95,8 @@ class WebAuthnController
                 null, 
                 true, 
                 true);
+            //Todo: Update Counter
+            $this->rememberLogonKeyId($pk->getId());
         }
         catch (\Exception $e) {
             $this->eventController->StoreEvent($user, "Login", "WebAuthn failed: " . $e->getMessage());
@@ -103,8 +111,12 @@ class WebAuthnController
 
     public function deleteWebAuthnDevice(User $user, int $id) {
         $webauthn = $this->getSpecificWebAuthnForUser($user, $id);
+        $deviceName = $webAuthn->getDeviceName();
+        $decryptionKey = $webauthn->getDecryptionKey();
         $this->entityManager->remove($webauthn);
+        $this->entityManager->remove($decryptionKey);
         $this->entityManager->flush();
+        $this->eventController->StoreEvent($currentUser, "WebAuthn Delete", "Device Name: " . $deviceName);
         return true;
     }
 
@@ -114,6 +126,19 @@ class WebAuthnController
 
     public function getChallenge() {
         return $this->session->get("webAuthnChallenge", null); 
+    }
+
+    public function rememberLogonKeyId($keyId) {
+        $this->session->set("webAuthnLogonKeyId", $keyId); 
+    }
+
+    public function getLogonKey(): ?WebAuthnPublicKey {
+        $keyId = $this->session->get("webAuthnLogonKeyId", null); 
+        if ($keyId === null)
+            return null;
+        $pk = $this->entityManager->getRepository(WebAuthnPublicKey::class)
+            ->findOneById($keyId);
+        return $pk;
     }
     
 }
