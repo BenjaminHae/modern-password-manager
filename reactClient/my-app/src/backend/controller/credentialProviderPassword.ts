@@ -2,9 +2,16 @@ import { ICredentialProvider } from './credentialProvider';
 //todo make ciphers configurable
 
 export class CredentialProviderPassword implements ICredentialProvider {
-  private key?: CryptoKey;
+  protected key?: CryptoKey;
+
+  readonly keyAlgorithm = { name: "AES-GCM", length: 256}
+  readonly keyUsage: Array<KeyUsage> = ["encrypt","decrypt", "wrapKey", "unwrapKey"]
 
   async generateFromPassword(password: string): Promise<CryptoKey>{
+    return this.generateFromPasswordWithExtractable(password, false);
+  }
+
+  protected async generateFromPasswordWithExtractable(password: string, extractable: boolean = false): Promise<CryptoKey>{
     const enc = new TextEncoder();
     const keyMaterial = await window.crypto.subtle.importKey(
         "raw",
@@ -21,9 +28,9 @@ export class CredentialProviderPassword implements ICredentialProvider {
     const key = await window.crypto.subtle.deriveKey(
             {"name": "PBKDF2", salt:new ArrayBuffer(0), "iterations": 100000, "hash": "SHA-256" },
             keyMaterial,
-            { name: "AES-GCM", length:256, },
-            false,
-            ["encrypt","decrypt", "wrapKey", "unwrapKey"]
+            this.keyAlgorithm,
+            extractable,
+            this.keyUsage
             )
     this.key = key;
     return key;
@@ -37,6 +44,7 @@ export class CredentialProviderPassword implements ICredentialProvider {
   }
 
   cleanUp(): Promise<void>{
+    this.key = undefined;
     return Promise.resolve();
   }
 }
