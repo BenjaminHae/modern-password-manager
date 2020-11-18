@@ -72,14 +72,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
         $currentUser = $this->security->getUser();
         if ($currentUser)
         {
-            $username = $currentUser->getUsername();
-            $loginReport = $currentUser->getLastSuccessfulLoginTimeAndUnsuccessfulCount();
-            $result = $this->generateApiSuccess("logged in as " . $username);
-            if ($loginReport[0] !== null) {
-                $result["lastLogin"] = $loginReport[0]->format('Y-m-d\TH:i:s.u');
-            }
-            $result["failedLogins"] = $loginReport[1];
-            return $result;
+            return $this->loginResultGenerator($currentUser);
         }
         return $this->generateApiError("failed to log in");
     }
@@ -88,19 +81,24 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
         $currentUser = $this->security->getUser();
         if ($currentUser)
         {
-            $username = $currentUser->getUsername();
-            $loginReport = $currentUser->getLastSuccessfulLoginTimeAndUnsuccessfulCount();
             $pk = $this->entityManager->getRepository(WebAuthnPublicKey::class)
                 ->findOneByPublicKeyId($request->getId());
-            $result = $this->generateApiSuccess("logged in as " . $username . " using WebAuthn key for " . $pk->getDeviceName());
+            $result = $this->loginResultGenerator($currentUser, " using WebAuthn key for " . $pk->getDeviceName());
             $result["decryptionKey"] = $pk->getDecryptionKey()->getDecryptionKey();
-            if ($loginReport[0] !== null) {
-                $result["lastLogin"] = $loginReport[0]->format('Y-m-d\TH:i:s.u');
-            }
-            $result["failedLogins"] = $loginReport[1];
             return $result;
         }
         return $this->generateApiError("failed to log in");
+    }
+
+    private function loginResultGenerator($currentUser, String $extraMessage = "") {
+        $username = $currentUser->getUsername();
+        $loginReport = $currentUser->getLastSuccessfulLoginTimeAndUnsuccessfulCount();
+        $result = $this->generateApiSuccess("logged in as " . $username . $extraMessage);
+        if ($loginReport[0] !== null) {
+            $result["lastLogin"] = $loginReport[0]->format('Y-m-d\TH:i:s.u');
+        }
+        $result["failedLogins"] = $loginReport[1];
+        return $result;
     }
 
     public function logoutUser(&$responseCode, array &$responseHeaders) 

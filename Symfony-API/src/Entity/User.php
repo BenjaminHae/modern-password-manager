@@ -256,7 +256,7 @@ class User implements UserInterface
         $lastLoginCriteria = Criteria::create();
         $lastLoginCriteria
             ->where(Criteria::expr()->eq('EventType', "Login"))
-            ->andWhere(Criteria::expr()->eq('EventResult', "success"))
+            ->andWhere(Criteria::expr()->startsWith('EventResult', "success"))
             ->orderBy(['Time' => 'DESC']);
         $relevantLogin = $this->events->matching($lastLoginCriteria)->next();
         if ($relevantLogin) {
@@ -271,7 +271,7 @@ class User implements UserInterface
         $unsuccessfulCriteria = Criteria::create();
         $unsuccessfulCriteria
             ->where(Criteria::expr()->eq('EventType', "Login"))
-            ->andWhere(Criteria::expr()->neq('EventResult', "success"));
+            ->andWhere(Criteria::expr()->startsWith('EventResult', "failed"));
         if ($lastLogin !== null) {
             $lastLoginTime = $lastLogin->getTime();
             $unsuccessfulCriteria
