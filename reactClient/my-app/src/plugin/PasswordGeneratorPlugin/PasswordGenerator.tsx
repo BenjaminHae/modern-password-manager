@@ -13,7 +13,7 @@ export default class PasswordGeneratorPlugin extends BasePlugin implements IPlug
     let array = new Uint8Array(plength);
     window.crypto.getRandomValues(array);
     //return String.fromCharCode.apply(null,array.map((item) => { return alphabet.charAt(item % maxPos).charCodeAt(0);} ));
-    let password: string;
+    let password: string = "";
     array.reduce((password, x) => password += alphabet.charAt(x % maxPos), "");
     return password;
   }

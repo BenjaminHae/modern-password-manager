@@ -64,8 +64,8 @@ export class BackendService {
   }
 
   async logonWithWebAuthn( id: string, authenticatorData: ArrayBuffer, clientDataJSON: ArrayBuffer, signature: ArrayBuffer, keyType: string, userHandle: ArrayBuffer): Promise<ILogonInformation> {
-    let response = await this.userService.loginWebAuthn(id, authenticatorData, clientDataJSON, signature, keyType, userHandle)
-    let creds = new CredentialProviderPersist();
+    const response = await this.userService.loginWebAuthn(id, authenticatorData, clientDataJSON, signature, keyType, userHandle)
+    const creds = new CredentialProviderPersist();
     const userIdView = new DataView(userHandle);
     await creds.generateFromStoredKeys(response.wrappedServerKey, userIdView.getInt16(1));
     await this.logonWithCredentials(creds);

@@ -6,7 +6,7 @@ interface User {
 export default class WebAuthn {
   readonly localStoreKey = "webAuthnPresent";
   async createCredential(challenge: ArrayBuffer, rpName: string, user: User): Promise<PublicKeyCredential> {
-    let credentials = await navigator.credentials.create({
+    const credentials = await navigator.credentials.create({
       publicKey: {
         authenticatorSelection: {
           authenticatorAttachment: "platform",
@@ -29,7 +29,7 @@ export default class WebAuthn {
     return credentials as PublicKeyCredential;
   }
 
-  async getCredential(challenge: ArrayBuffer) {
+  async getCredential(challenge: ArrayBuffer): Promise<PublicKeyCredential> {
     return await navigator.credentials.get({
       publicKey: {
         challenge: challenge,
@@ -39,11 +39,11 @@ export default class WebAuthn {
     }) as PublicKeyCredential;
   }
 
-  rememberStorage() {
+  rememberStorage(): void {
     window.localStorage.setItem(this.localStoreKey, "yes")
   }
 
-  clearStorage() {
+  clearStorage(): void {
     window.localStorage.removeItem(this.localStoreKey)
   }
 
