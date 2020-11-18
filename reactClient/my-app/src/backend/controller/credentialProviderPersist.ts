@@ -5,12 +5,14 @@ import { CredentialProviderPassword } from './credentialProviderPassword';
 interface IDecryptionKeys {
   localKey: CryptoKey;
   wrappedKey: ArrayBuffer;
+  ivWrappedServerKey: ArrayBuffer;
+  ivWrappedKey: ArrayBuffer;
 }
 interface IPersistingResult {
   wrappedServerKey: ArrayBuffer;
   keyIndex: number;
 }
-export class CredentialProviderPersist extends CredentialProviderPassword implements ICredentialProvider {
+export default class CredentialProviderPersist extends CredentialProviderPassword implements ICredentialProvider {
   private serverKey?: CryptoKey;
   private localKey?: CryptoKey;
   private db?: IDBDatabase;
@@ -21,18 +23,21 @@ export class CredentialProviderPersist extends CredentialProviderPassword implem
   readonly storageKeysName ="keys";
 
   async generateFromPassword(password: string): Promise<CryptoKey> {
-    let key = this.generateFromPasswordWithExtractable(password, true);
-    this.preparePersistingKeys();
+    let key = await this.generateFromPasswordWithExtractable(password, true);
+    await this.preparePersistingKeys();
     return key;
   }
 
   async generateFromStoredKeys(encryptedServerKey: ArrayBuffer, keyId: number): Promise<CryptoKey> {
     let keys = await this.loadKeys(keyId);
+    let serverKeyParams = { ...this.wrapKeyAlgorithm, iv: keys.ivWrappedServerKey};
+    let keyParams = { ...this.wrapKeyAlgorithm, iv: keys.ivWrappedKey};
+    keyParams["iv"] = keys.ivWrappedKey;
     let serverKey = await window.crypto.subtle.unwrapKey(
       "raw",
       encryptedServerKey,
       keys.localKey,
-      this.wrapKeyAlgorithm,
+      serverKeyParams,
       this.wrapKeyAlgorithm,
       false,
       ["wrapKey", "unwrapKey"]
@@ -41,7 +46,7 @@ export class CredentialProviderPersist extends CredentialProviderPassword implem
       "raw",
       keys.wrappedKey,
       serverKey,
-      this.wrapKeyAlgorithm,
+      keyParams,
       this.keyAlgorithm,
       false,
       this.keyUsage
@@ -139,7 +144,7 @@ export class CredentialProviderPersist extends CredentialProviderPassword implem
       transaction.onerror = () => reject();
       let objectStore = transaction.objectStore(this.storageKeysName);
       let request = objectStore.get(id);
-      request.onerror = () => reject();
+      request.onerror = (e) => reject(e);
       request.onsuccess = () => resolve(request.result as IDecryptionKeys);
     });
   }
@@ -148,19 +153,21 @@ export class CredentialProviderPersist extends CredentialProviderPassword implem
     if (!this.key || !this.localKey || !this.serverKey) {
       throw new Error("no key present");
     }
+    let ivWrappedKey = window.crypto.getRandomValues(new Uint8Array(12));
     let encryptedKeyToStore = await window.crypto.subtle.wrapKey(
       "raw",
       this.key,
       this.serverKey,
-      { name: "AES-GCM", iv: window.crypto.getRandomValues(new Uint8Array(12))}
+      { name: "AES-GCM", iv: ivWrappedKey}
       );
+    let ivWrappedServerKey = window.crypto.getRandomValues(new Uint8Array(12));
     let encryptedServerWrapKey = await window.crypto.subtle.wrapKey(
       "raw",
       this.serverKey,
       this.localKey,
-      { name: "AES-GCM", iv: window.crypto.getRandomValues(new Uint8Array(12))}
+      { name: "AES-GCM", iv: ivWrappedServerKey}
       );
-    let keyId = await this.storeKeys({ localKey: this.localKey, wrappedKey: encryptedKeyToStore });
+    let keyId = await this.storeKeys({ localKey: this.localKey, wrappedKey: encryptedKeyToStore, ivWrappedKey: ivWrappedKey, ivWrappedServerKey: ivWrappedServerKey });
     await this.cleanUp();
     return { wrappedServerKey: encryptedServerWrapKey, keyIndex: keyId} ;
   }

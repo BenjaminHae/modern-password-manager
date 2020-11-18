@@ -9,7 +9,7 @@ import { ServerSettings } from './models/serverSettings';
 import { AccountTransformerService } from './controller/account-transformer.service';
 import { CredentialService } from './credential.service';
 import { CredentialProviderPassword } from './controller/credentialProviderPassword';
-import { CredentialProviderUndefined } from './controller/credentialProviderUndefined';
+import CredentialProviderPersist from './controller/credentialProviderPersist';
 import { ICredentialProvider } from './controller/credentialProvider';
 import { CryptoService } from './crypto.service';
 import { Observable, Subscriber, TeardownLogic } from 'rxjs';
@@ -63,9 +63,12 @@ export class BackendService {
     return response;
   }
 
-  async logonWithWebAuthn( id: string, authenticatorData: ArrayBuffer, clientDataJSON: ArrayBuffer, signature: ArrayBuffer, keyType: string, userHandle: ArrayBuffer | null ): Promise<ILogonInformation> {
+  async logonWithWebAuthn( id: string, authenticatorData: ArrayBuffer, clientDataJSON: ArrayBuffer, signature: ArrayBuffer, keyType: string, userHandle: ArrayBuffer): Promise<ILogonInformation> {
     let response = await this.userService.loginWebAuthn(id, authenticatorData, clientDataJSON, signature, keyType, userHandle)
-    await this.logonWithCredentials(new CredentialProviderUndefined());
+    let creds = new CredentialProviderPersist();
+    const userIdView = new DataView(userHandle);
+    await creds.generateFromStoredKeys(response.wrappedServerKey, userIdView.getInt16(1));
+    await this.logonWithCredentials(creds);
     return response;
   }
 
@@ -208,8 +211,8 @@ export class BackendService {
     return await this.userService.getWebAuthnChallenge();
   }
 
-  async createWebAuthn(id: string, name: string, attestationObject: ArrayBuffer, clientDataJSON: ArrayBuffer, keyType: string ): Promise<void> {
-    return await this.userService.registerWebAuthn(id, name, attestationObject, clientDataJSON, keyType);
+  async createWebAuthn(id: string, name: string, attestationObject: ArrayBuffer, clientDataJSON: ArrayBuffer, keyType: string, wrappedDecryptionKey: ArrayBuffer ): Promise<void> {
+    return await this.userService.registerWebAuthn(id, name, attestationObject, clientDataJSON, keyType, wrappedDecryptionKey);
   }
 
   async getPassword(account: Account): Promise<string> {

@@ -8,6 +8,10 @@ export interface ILogonInformation {
   failedLogins?: number;
 }
 
+export interface IWebAuthnLogonInformation extends ILogonInformation{
+  wrappedServerKey: ArrayBuffer;
+}
+
 export class UserService {
 
   constructor(private userService: OpenAPIUserService, private accountTransformer: AccountTransformerService) { }
@@ -77,8 +81,8 @@ export class UserService {
     return this.userService.getUserWebAuthnCreds();
   }
 
-  async registerWebAuthn( id: string, name: string, attestationObject: ArrayBuffer, clientDataJSON: ArrayBuffer, keyType: string ): Promise<void> {
-    let response = await this.userService.createUserWebAuthn({ userWebAuthnCreate: 
+  async registerWebAuthn( id: string, name: string, attestationObject: ArrayBuffer, clientDataJSON: ArrayBuffer, keyType: string, wrappedServerKey: ArrayBuffer ): Promise<void> {
+    let response = await this.userService.createUserWebAuthn({ userWebAuthnCreateWithKey: 
       { 
         id: id, 
         name: name, 
@@ -86,12 +90,13 @@ export class UserService {
           attestationObject: this.arrayBufferToBase64(attestationObject), 
           clientDataJSON: this.arrayBufferToBase64(clientDataJSON), 
           "type": keyType 
-        } 
+        }, 
+        decryptionKey: this.arrayBufferToBase64(wrappedServerKey)
       } });
     this.checkForSuccess(response);
   }
 
-  async loginWebAuthn( id: string, authenticatorData: ArrayBuffer, clientDataJSON: ArrayBuffer, signature: ArrayBuffer, keyType: string, userHandle: ArrayBuffer | null ): Promise<ILogonInformation> {
+  async loginWebAuthn( id: string, authenticatorData: ArrayBuffer, clientDataJSON: ArrayBuffer, signature: ArrayBuffer, keyType: string, userHandle: ArrayBuffer | null ): Promise<IWebAuthnLogonInformation> {
     let user: string = "";
     if (userHandle) {
       user = this.arrayBufferToBase64(userHandle);
@@ -110,7 +115,9 @@ export class UserService {
     this.checkForSuccess(response);
     if (response.failedLogins === undefined)
       throw new Error("failedLogin undefined");
-    return { failedLogins: response.failedLogins, lastLogin: response.lastLogin};
+    if (response.decryptionKey === undefined)
+      throw new Error("no decryption key specified");
+    return { failedLogins: response.failedLogins, lastLogin: response.lastLogin, wrappedServerKey: this.base64ToArrayBuffer(response.decryptionKey)};
   }
 
   async getWebAuthnChallenge(): Promise<ArrayBuffer> {
