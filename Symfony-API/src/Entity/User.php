@@ -67,10 +67,16 @@ class User implements UserInterface
      */
     private $events;
 
+    /**
+     * @ORM\OneToMany(targetEntity=WebAuthnPublicKey::class, mappedBy="User", orphanRemoval=true)
+     */
+    private $webAuthnPublicKeys;
+
     public function __construct()
     {
         $this->accounts = new ArrayCollection();
         $this->events = new ArrayCollection();
+        $this->webAuthnPublicKeys = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -250,7 +256,7 @@ class User implements UserInterface
         $lastLoginCriteria = Criteria::create();
         $lastLoginCriteria
             ->where(Criteria::expr()->eq('EventType', "Login"))
-            ->andWhere(Criteria::expr()->eq('EventResult', "success"))
+            ->andWhere(Criteria::expr()->startsWith('EventResult', "success"))
             ->orderBy(['Time' => 'DESC']);
         $relevantLogin = $this->events->matching($lastLoginCriteria)->next();
         if ($relevantLogin) {
@@ -265,7 +271,7 @@ class User implements UserInterface
         $unsuccessfulCriteria = Criteria::create();
         $unsuccessfulCriteria
             ->where(Criteria::expr()->eq('EventType', "Login"))
-            ->andWhere(Criteria::expr()->eq('EventResult', "failed"));
+            ->andWhere(Criteria::expr()->startsWith('EventResult', "failed"));
         if ($lastLogin !== null) {
             $lastLoginTime = $lastLogin->getTime();
             $unsuccessfulCriteria
@@ -273,5 +279,36 @@ class User implements UserInterface
         }
         $unsuccessful = $this->events->matching($unsuccessfulCriteria);
         return [$lastLoginTime, $unsuccessful->count()];
+    }
+
+    /**
+     * @return Collection|WebAuthnPublicKey[]
+     */
+    public function getWebAuthnPublicKeys(): Collection
+    {
+        return $this->webAuthnPublicKeys;
+    }
+
+    public function addWebAuthnPublicKey(WebAuthnPublicKey $webAuthnPublicKey): self
+    {
+        if (!$this->webAuthnPublicKeys->contains($webAuthnPublicKey)) {
+            $this->webAuthnPublicKeys[] = $webAuthnPublicKey;
+            $webAuthnPublicKey->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWebAuthnPublicKey(WebAuthnPublicKey $webAuthnPublicKey): self
+    {
+        if ($this->webAuthnPublicKeys->contains($webAuthnPublicKey)) {
+            $this->webAuthnPublicKeys->removeElement($webAuthnPublicKey);
+            // set the owning side to null (unless already changed)
+            if ($webAuthnPublicKey->getUser() === $this) {
+                $webAuthnPublicKey->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

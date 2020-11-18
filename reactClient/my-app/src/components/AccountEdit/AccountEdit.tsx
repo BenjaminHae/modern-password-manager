@@ -14,8 +14,8 @@ interface AccountEditProps {
   account?: Account;
   proposals?: {[index: string]:string};
   fields: Array<FieldOptions>;
-  editHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>;
-  deleteHandler: (account: Account) => Promise<void>;
+  editAccountHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>;
+  deleteAccountHandler: (account: Account) => Promise<void>;
   closeHandler: () => void;
   getAccountPasswordHandler: (account: Account) => Promise<string>;
   showMessage: (message: string, options: IMessageOptions) => void;
@@ -150,7 +150,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
   async submitData(): Promise<void> {
     try {
       this.setState({waiting: true});
-      await this.props.editHandler(this.state.fields, this.props.account);
+      await this.props.editAccountHandler(this.state.fields, this.props.account);
       this.cleanUp();
       this.props.closeHandler();
     }
@@ -165,7 +165,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
     if (this.props.account) {
       try {
         this.setState({waiting: true});
-        await this.props.deleteHandler(this.props.account);
+        await this.props.deleteAccountHandler(this.props.account);
         this.cleanUp();
         this.props.closeHandler();
       }

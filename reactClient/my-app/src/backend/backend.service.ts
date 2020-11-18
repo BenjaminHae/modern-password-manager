@@ -3,12 +3,13 @@ import { encryptedAccount } from './models/encryptedAccount';
 import { UserOptions, UserOptionsFromJSON } from './models/UserOptions';
 import { MaintenanceService, BackendOptions } from './api/maintenance.service';
 import { UserService, ILogonInformation } from './api/user.service';
-import { HistoryItem } from '@pm-server/pm-server-react-client';
+import { HistoryItem, UserWebAuthnCred } from '@pm-server/pm-server-react-client';
 import { AccountsService } from './api/accounts.service';
 import { ServerSettings } from './models/serverSettings';
 import { AccountTransformerService } from './controller/account-transformer.service';
 import { CredentialService } from './credential.service';
 import { CredentialProviderPassword } from './controller/credentialProviderPassword';
+import CredentialProviderPersist from './controller/credentialProviderPersist';
 import { ICredentialProvider } from './controller/credentialProvider';
 import { CryptoService } from './crypto.service';
 import { Observable, Subscriber, TeardownLogic } from 'rxjs';
@@ -62,6 +63,15 @@ export class BackendService {
     return response;
   }
 
+  async logonWithWebAuthn( id: string, authenticatorData: ArrayBuffer, clientDataJSON: ArrayBuffer, signature: ArrayBuffer, keyType: string, userHandle: ArrayBuffer): Promise<ILogonInformation> {
+    let response = await this.userService.loginWebAuthn(id, authenticatorData, clientDataJSON, signature, keyType, userHandle)
+    let creds = new CredentialProviderPersist();
+    const userIdView = new DataView(userHandle);
+    await creds.generateFromStoredKeys(response.wrappedServerKey, userIdView.getInt16(1));
+    await this.logonWithCredentials(creds);
+    return response;
+  }
+
   async logout(): Promise<void> {
     await this.userService.logout();
     this.parseAccounts([]);
@@ -87,6 +97,10 @@ export class BackendService {
   async verifyPassword(password: string): Promise<boolean> {
     const testCredentials = new CredentialProviderPassword();
     await testCredentials.generateFromPassword(password)
+    return this.verifyCredentials(testCredentials);
+  }
+
+  async verifyCredentials(testCredentials: ICredentialProvider): Promise<boolean> {
     const newPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12), testCredentials)
     const oldPasswordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
     return oldPasswordHash.toBase64JSON() === newPasswordHash.toBase64JSON();
@@ -187,6 +201,18 @@ export class BackendService {
 
   async getHistory(): Promise<Array<HistoryItem>> {
     return await this.userService.getHistory();
+  }
+
+  async getWebAuthnCreds(): Promise<Array<UserWebAuthnCred>> {
+    return await this.userService.getWebAuthnCreds();
+  }
+
+  async getWebAuthnChallenge(): Promise<ArrayBuffer> {
+    return await this.userService.getWebAuthnChallenge();
+  }
+
+  async createWebAuthn(id: string, name: string, attestationObject: ArrayBuffer, clientDataJSON: ArrayBuffer, keyType: string, wrappedDecryptionKey: ArrayBuffer ): Promise<void> {
+    return await this.userService.registerWebAuthn(id, name, attestationObject, clientDataJSON, keyType, wrappedDecryptionKey);
   }
 
   async getPassword(account: Account): Promise<string> {

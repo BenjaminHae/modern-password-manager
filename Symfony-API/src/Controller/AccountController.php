@@ -53,7 +53,6 @@ class AccountController
 
     public function deleteAccount($user, $id)
     {
-        $this->getSpecificAccountForUser($user, $id);
         $account = $this->getSpecificAccountForUser($user, $id);
         $this->entityManager->remove($account);
         $this->entityManager->flush();

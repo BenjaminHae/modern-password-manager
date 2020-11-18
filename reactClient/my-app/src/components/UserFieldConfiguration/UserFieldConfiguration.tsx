@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import styles from './UserConfiguration.module.css';
+import styles from './UserFieldConfiguration.module.css';
 import { UserOptions, UserOptionsFromJSON } from '../../backend/models/UserOptions';
 import { IMessageOptions } from '../Message/Message';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 
-interface UserConfigurationProps {
-  options: UserOptions;
+export interface IUserFieldConfigurationProps {
+  userOptions: UserOptions;
   showMessage: (message: string, options: IMessageOptions) => void;
   doStoreOptions: (options: UserOptions) => Promise<void>;
 }
-const UserConfiguration: React.FC<UserConfigurationProps> = (props: UserConfigurationProps) => {
-  const [options, setOptions] = useState(JSON.stringify(props.options, null, 2));
+const UserFieldConfiguration: React.FC<IUserFieldConfigurationProps> = (props: IUserFieldConfigurationProps) => {
+  const [options, setOptions] = useState(JSON.stringify(props.userOptions, null, 2));
   const [waiting, setWaiting] = useState(false);
-  useEffect( () => { setOptions(JSON.stringify(props.options, null, 2)) }, [props.options]);
+  useEffect( () => { setOptions(JSON.stringify(props.userOptions, null, 2)) }, [props.userOptions]);
   const submit = async (e: React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
     setWaiting(true);
@@ -41,9 +41,9 @@ const UserConfiguration: React.FC<UserConfigurationProps> = (props: UserConfigur
   }
   
   return (
-    <div className={styles.UserConfiguration}>
-      <Col lg={{ span: 6, offset: 3 }} md={{ span: 8, offset: 2 }} sm={{ span: 12 }}>
-        <h3>User Options</h3>
+    <div className={styles.UserFieldConfiguration}>
+      <Col>
+        <h3>User Field Options</h3>
         <Form onSubmit={submit} noValidate>
           <fieldset disabled={waiting}>
             <Form.Group controlId="UserOptionsForm.Text">
@@ -58,4 +58,4 @@ const UserConfiguration: React.FC<UserConfigurationProps> = (props: UserConfigur
     );
 }
 
-export default UserConfiguration;
+export default UserFieldConfiguration;

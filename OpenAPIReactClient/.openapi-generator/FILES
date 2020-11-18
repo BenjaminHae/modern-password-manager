@@ -10,6 +10,7 @@ src/index.ts
 src/models/Account.ts
 src/models/AccountId.ts
 src/models/ChangePassword.ts
+src/models/DecryptionKey.ts
 src/models/GenericSuccessMessage.ts
 src/models/HistoryItem.ts
 src/models/LogonInformation.ts
@@ -21,6 +22,14 @@ src/models/RegistrationInformation.ts
 src/models/ServerInformation.ts
 src/models/UserInformation.ts
 src/models/UserSettings.ts
+src/models/UserWebAuthnChallenge.ts
+src/models/UserWebAuthnCreate.ts
+src/models/UserWebAuthnCreateResponse.ts
+src/models/UserWebAuthnCreateWithKey.ts
+src/models/UserWebAuthnCred.ts
+src/models/UserWebAuthnGet.ts
+src/models/UserWebAuthnGetResponse.ts
+src/models/UserWebAuthnLogonResult.ts
 src/models/index.ts
 src/runtime.ts
 tsconfig.json

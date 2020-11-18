@@ -9,6 +9,7 @@
 ./Model/Account.php
 ./Model/AccountId.php
 ./Model/ChangePassword.php
+./Model/DecryptionKey.php
 ./Model/File.php
 ./Model/GenericSuccessMessage.php
 ./Model/HistoryItem.php
@@ -20,6 +21,14 @@
 ./Model/ServerInformation.php
 ./Model/UserInformation.php
 ./Model/UserSettings.php
+./Model/UserWebAuthnChallenge.php
+./Model/UserWebAuthnCreate.php
+./Model/UserWebAuthnCreateResponse.php
+./Model/UserWebAuthnCreateWithKey.php
+./Model/UserWebAuthnCred.php
+./Model/UserWebAuthnGet.php
+./Model/UserWebAuthnGetResponse.php
+./Model/UserWebAuthnLogonResult.php
 ./Service/JmsSerializer.php
 ./Service/SerializerInterface.php
 ./Service/StrictJsonDeserializationVisitor.php
@@ -28,6 +37,7 @@
 ./Service/ValidatorInterface.php
 ./Tests/AppKernel.php
 ./Tests/Controller/ControllerTest.php
+./Tests/Model/UserWebAuthnCreateWithKeyTest.php
 ./Tests/test_config.yml
 .coveralls.yml
 .gitignore
@@ -45,6 +55,7 @@ Resources/docs/Api/UserApiInterface.md
 Resources/docs/Model/Account.md
 Resources/docs/Model/AccountId.md
 Resources/docs/Model/ChangePassword.md
+Resources/docs/Model/DecryptionKey.md
 Resources/docs/Model/File.md
 Resources/docs/Model/GenericSuccessMessage.md
 Resources/docs/Model/HistoryItem.md
@@ -56,6 +67,14 @@ Resources/docs/Model/RegistrationInformation.md
 Resources/docs/Model/ServerInformation.md
 Resources/docs/Model/UserInformation.md
 Resources/docs/Model/UserSettings.md
+Resources/docs/Model/UserWebAuthnChallenge.md
+Resources/docs/Model/UserWebAuthnCreate.md
+Resources/docs/Model/UserWebAuthnCreateResponse.md
+Resources/docs/Model/UserWebAuthnCreateWithKey.md
+Resources/docs/Model/UserWebAuthnCred.md
+Resources/docs/Model/UserWebAuthnGet.md
+Resources/docs/Model/UserWebAuthnGetResponse.md
+Resources/docs/Model/UserWebAuthnLogonResult.md
 autoload.php
 composer.json
 git_push.sh

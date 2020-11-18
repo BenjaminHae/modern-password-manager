@@ -36,6 +36,11 @@ use OpenAPI\Server\Model\LogonInformation;
 use OpenAPI\Server\Model\LogonResult;
 use OpenAPI\Server\Model\RegistrationInformation;
 use OpenAPI\Server\Model\UserSettings;
+use OpenAPI\Server\Model\UserWebAuthnChallenge;
+use OpenAPI\Server\Model\UserWebAuthnCreateWithKey;
+use OpenAPI\Server\Model\UserWebAuthnCred;
+use OpenAPI\Server\Model\UserWebAuthnGet;
+use OpenAPI\Server\Model\UserWebAuthnLogonResult;
 
 /**
  * UserApiInterface Interface Doc Comment
@@ -72,6 +77,34 @@ interface UserApiInterface
     public function changePassword(ChangePassword $changePassword, &$responseCode, array &$responseHeaders);
 
     /**
+     * Operation createUserWebAuthn
+     *
+     * add a webauthn credential
+     *
+     * @param  OpenAPI\Server\Model\UserWebAuthnCreateWithKey $userWebAuthnCreateWithKey  WebAuthnCreate Object (required)
+     * @param  integer $responseCode     The HTTP response code to return
+     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     *
+     * @return OpenAPI\Server\Model\GenericSuccessMessage
+     *
+     */
+    public function createUserWebAuthn(UserWebAuthnCreateWithKey $userWebAuthnCreateWithKey, &$responseCode, array &$responseHeaders);
+
+    /**
+     * Operation deleteUserWebAuthn
+     *
+     * Delete a stored WebAuthn Public Key
+     *
+     * @param  int $id  The id of the WebAuthn Public Key to delete (required)
+     * @param  integer $responseCode     The HTTP response code to return
+     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     *
+     * @return OpenAPI\Server\Model\UserWebAuthnCred[]
+     *
+     */
+    public function deleteUserWebAuthn($id, &$responseCode, array &$responseHeaders);
+
+    /**
      * Operation getUserHistory
      *
      * Returns a history of successful and failed logins
@@ -98,6 +131,19 @@ interface UserApiInterface
     public function getUserSettings(&$responseCode, array &$responseHeaders);
 
     /**
+     * Operation getUserWebAuthnCreds
+     *
+     * get all registered WebAuthn credentials for the user
+     *
+     * @param  integer $responseCode     The HTTP response code to return
+     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     *
+     * @return OpenAPI\Server\Model\UserWebAuthnCred[]
+     *
+     */
+    public function getUserWebAuthnCreds(&$responseCode, array &$responseHeaders);
+
+    /**
      * Operation loginUser
      *
      * login
@@ -110,6 +156,33 @@ interface UserApiInterface
      *
      */
     public function loginUser(LogonInformation $logonInformation, &$responseCode, array &$responseHeaders);
+
+    /**
+     * Operation loginUserWebAuthnChallenge
+     *
+     * get WebAuthn challenge
+     *
+     * @param  integer $responseCode     The HTTP response code to return
+     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     *
+     * @return OpenAPI\Server\Model\UserWebAuthnChallenge
+     *
+     */
+    public function loginUserWebAuthnChallenge(&$responseCode, array &$responseHeaders);
+
+    /**
+     * Operation loginUserWebAuthnGet
+     *
+     * login user with WebAuthn
+     *
+     * @param  OpenAPI\Server\Model\UserWebAuthnGet $userWebAuthnGet  WebAuthnGet Object (required)
+     * @param  integer $responseCode     The HTTP response code to return
+     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     *
+     * @return OpenAPI\Server\Model\UserWebAuthnLogonResult
+     *
+     */
+    public function loginUserWebAuthnGet(UserWebAuthnGet $userWebAuthnGet, &$responseCode, array &$responseHeaders);
 
     /**
      * Operation logoutUser

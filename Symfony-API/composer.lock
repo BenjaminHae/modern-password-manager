@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba919c7b42f93af5b6c20d2ab1233012",
+    "content-hash": "b67febff441e76b52788082141286a21",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -1674,6 +1674,43 @@
                 "xml"
             ],
             "time": "2019-03-30T10:26:09+00:00"
+        },
+        {
+            "name": "lbuchs/webauthn",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "../../php-webauthn",
+                "reference": "6b2a5c49c6711092ae722e761756e9e96e765b4e"
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "lbuchs\\WebAuthn\\": "src"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lukas Buchs",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple PHP WebAuthn (FIDO2) server library",
+            "homepage": "https://github.com/lbuchs/webauthn",
+            "keywords": [
+                "authentication",
+                "webauthn"
+            ],
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
         },
         {
             "name": "ocramius/proxy-manager",
@@ -6135,6 +6172,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "lbuchs/webauthn": 20,
         "openapi/server-bundle": 20
     },
     "prefer-stable": false,

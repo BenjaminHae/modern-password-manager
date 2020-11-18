@@ -130,9 +130,14 @@ Class | Method | HTTP request | Description
 *AccountsApiInterface* | [**updateAccount**](Resources/docs/Api/AccountsApiInterface.md#updateaccount) | **POST** /accounts/{id} | Update a stored account
 *MaintenanceApiInterface* | [**serverInformation**](Resources/docs/Api/MaintenanceApiInterface.md#serverinformation) | **GET** /info | get information about the server for the client
 *UserApiInterface* | [**changePassword**](Resources/docs/Api/UserApiInterface.md#changepassword) | **POST** /user/changepassword | change user password
+*UserApiInterface* | [**createUserWebAuthn**](Resources/docs/Api/UserApiInterface.md#createuserwebauthn) | **POST** /user/webauthn | add a webauthn credential
+*UserApiInterface* | [**deleteUserWebAuthn**](Resources/docs/Api/UserApiInterface.md#deleteuserwebauthn) | **DELETE** /user/webauthn/{id} | Delete a stored WebAuthn Public Key
 *UserApiInterface* | [**getUserHistory**](Resources/docs/Api/UserApiInterface.md#getuserhistory) | **GET** /user/history | Returns a history of successful and failed logins
 *UserApiInterface* | [**getUserSettings**](Resources/docs/Api/UserApiInterface.md#getusersettings) | **GET** /user/settings | Returns the client settings of the current user
+*UserApiInterface* | [**getUserWebAuthnCreds**](Resources/docs/Api/UserApiInterface.md#getuserwebauthncreds) | **GET** /user/webauthn | get all registered WebAuthn credentials for the user
 *UserApiInterface* | [**loginUser**](Resources/docs/Api/UserApiInterface.md#loginuser) | **POST** /user/login | login
+*UserApiInterface* | [**loginUserWebAuthnChallenge**](Resources/docs/Api/UserApiInterface.md#loginuserwebauthnchallenge) | **GET** /user/login/webauthn | get WebAuthn challenge
+*UserApiInterface* | [**loginUserWebAuthnGet**](Resources/docs/Api/UserApiInterface.md#loginuserwebauthnget) | **POST** /user/login/webauthn | login user with WebAuthn
 *UserApiInterface* | [**logoutUser**](Resources/docs/Api/UserApiInterface.md#logoutuser) | **GET** /user/logout | Logs out current logged in user session
 *UserApiInterface* | [**registerUser**](Resources/docs/Api/UserApiInterface.md#registeruser) | **PUT** /user | registration
 *UserApiInterface* | [**setUserSettings**](Resources/docs/Api/UserApiInterface.md#setusersettings) | **POST** /user/settings | change client settings of current user
@@ -143,6 +148,7 @@ Class | Method | HTTP request | Description
  - [Account](Resources/docs/Model/Account.md)
  - [AccountId](Resources/docs/Model/AccountId.md)
  - [ChangePassword](Resources/docs/Model/ChangePassword.md)
+ - [DecryptionKey](Resources/docs/Model/DecryptionKey.md)
  - [File](Resources/docs/Model/File.md)
  - [GenericSuccessMessage](Resources/docs/Model/GenericSuccessMessage.md)
  - [HistoryItem](Resources/docs/Model/HistoryItem.md)
@@ -154,6 +160,14 @@ Class | Method | HTTP request | Description
  - [ServerInformation](Resources/docs/Model/ServerInformation.md)
  - [UserInformation](Resources/docs/Model/UserInformation.md)
  - [UserSettings](Resources/docs/Model/UserSettings.md)
+ - [UserWebAuthnChallenge](Resources/docs/Model/UserWebAuthnChallenge.md)
+ - [UserWebAuthnCreate](Resources/docs/Model/UserWebAuthnCreate.md)
+ - [UserWebAuthnCreateResponse](Resources/docs/Model/UserWebAuthnCreateResponse.md)
+ - [UserWebAuthnCreateWithKey](Resources/docs/Model/UserWebAuthnCreateWithKey.md)
+ - [UserWebAuthnCred](Resources/docs/Model/UserWebAuthnCred.md)
+ - [UserWebAuthnGet](Resources/docs/Model/UserWebAuthnGet.md)
+ - [UserWebAuthnGetResponse](Resources/docs/Model/UserWebAuthnGetResponse.md)
+ - [UserWebAuthnLogonResult](Resources/docs/Model/UserWebAuthnLogonResult.md)
 
 
 ## Documentation For Authorization

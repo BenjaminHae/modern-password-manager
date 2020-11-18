@@ -86,6 +86,49 @@ paths:
           description: Invalid input
       security:
         - csrf: []
+  /user/login/webauthn:
+    get:
+      tags:
+        - user
+      summary: "get WebAuthn challenge"
+      description: ""
+      operationId: loginUserWebAuthnChallenge
+      responses: 
+        "200":
+          description: returns challenge
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserWebAuthnChallenge"
+    post:
+      tags:
+        - user
+      summary: "login user with WebAuthn"
+      description: "add webauthn"
+      operationId: loginUserWebAuthnGet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserWebAuthnGet"
+        description: WebAuthnGet Object
+        required: true
+      responses:
+        "200":
+          description: OK
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: SESSIONID=1234567890; Path=/; HttpOnly; Secure; SameSite
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserWebAuthnLogonResult"
+        "405":
+          description: Invalid input
+      security:
+        - csrf: []
   /user/logout:
     get:
       tags:
@@ -125,6 +168,71 @@ paths:
           description: Unauthorized
       security:
         - csrf: []
+  /user/webauthn:
+    get:
+      tags:
+        - user
+      summary: "get all registered WebAuthn credentials for the user"
+      description: ""
+      operationId: getUserWebAuthnCreds
+      responses: 
+        "200":
+          description: list of stored WebAuthn credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserWebAuthnCreds"
+        "403":
+          description: Unauthorized
+    post:
+      tags:
+        - user
+      summary: "add a webauthn credential"
+      description: "add webauthn"
+      operationId: createUserWebAuthn
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserWebAuthnCreateWithKey"
+        description: WebAuthnCreate Object
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericSuccessMessage"
+        "403":
+          description: Unauthorized
+      security:
+        - csrf: []
+  /user/webauthn/{id}:
+    delete:
+      tags:
+        - user
+      summary: Delete a stored WebAuthn Public Key
+      description: ""
+      operationId: deleteUserWebAuthn
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the WebAuthn Public Key to delete
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserWebAuthnCreds"
+        "400":
+          description: Invalid status value
+        "403":
+          description: Unauthorized
   /user/settings:
     get:
       tags:
@@ -313,6 +421,11 @@ components:
         allOf:
           - $ref: "#/components/schemas/GenericSuccessMessage"
           - $ref: "#/components/schemas/LogonSecurityInformation"
+    DecryptionKey:
+      type: object
+      properties:
+        decryptionKey:
+          type: string
     LogonSecurityInformation:
       type: object
       properties:
@@ -362,6 +475,92 @@ components:
       properties:
         encryptedUserSettings:
           type: string
+    UserWebAuthnChallenge:
+      type: object
+      required:
+        - challenge
+      properties:
+        challenge:
+          type: string
+    UserWebAuthnCred:
+      type: object
+      required:
+        - name
+        - id
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+    UserWebAuthnCreds:
+      type: array
+      items:
+        $ref: "#/components/schemas/UserWebAuthnCred"
+    UserWebAuthnCreate:
+      type: object
+      required:
+        - id
+        - response
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        response:
+          $ref: "#/components/schemas/UserWebAuthnCreateResponse"
+    UserWebAuthnCreateWithKey:
+      type: object
+      allOf:
+       - $ref: "#/components/schemas/UserWebAuthnCreate"
+       - $ref: "#/components/schemas/DecryptionKey"
+    UserWebAuthnCreateResponse:
+      type: object
+      required:
+        - attestationObject
+        - clientDataJSON
+        - type
+      properties:
+        attestationObject:
+          type: string
+        clientDataJSON:
+          type: string
+        type:
+          type: string
+    UserWebAuthnGet:
+      type: object
+      required:
+        - id
+        - response
+      properties:
+        id:
+          type: string
+        response:
+          $ref: "#/components/schemas/UserWebAuthnGetResponse"
+    UserWebAuthnGetResponse:
+      type: object
+      required:
+        - authenticatorData
+        - clientDataJSON
+        - type
+        - signature
+        - userHandle
+      properties:
+        authenticatorData:
+          type: string
+        clientDataJSON:
+          type: string
+        type:
+          type: string
+        signature:
+          type: string
+        userHandle:
+          type: string
+    UserWebAuthnLogonResult:
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/LogonResult"
+      - $ref: "#/components/schemas/DecryptionKey"
     ChangePassword:
       type: object
       required:

@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './Message.module.css';
 import Alert from 'react-bootstrap/Alert';
+import Collapse from 'react-bootstrap/Collapse';
 
 export interface IMessageProps {
   messages: Array<IMessage>;
@@ -24,7 +25,7 @@ export interface IMessage extends IMessageOptions {
 const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
   function getMessages(props: IMessageProps) {
     return props.messages.map( (message: IMessage) => 
-        <Alert key={message.id} dismissible variant={ message.variant === undefined ? "info" : message.variant } onClose={()=>props.closeHandler(message.id)} transition={true} show={message.show} >
+        <Alert key={message.id} dismissible variant={ message.variant === undefined ? "info" : message.variant } onClose={()=>props.closeHandler(message.id)} transition={Collapse as any} show={message.show} >
         { message.message }
         </Alert>
         );
