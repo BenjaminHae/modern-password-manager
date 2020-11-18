@@ -10,6 +10,7 @@ import { MaintenanceService, BackendOptions } from './backend/api/maintenance.se
 import { UserService, ILogonInformation } from './backend/api/user.service';
 import { AccountsService } from './backend/api/accounts.service';
 import { AccountTransformerService } from './backend/controller/account-transformer.service';
+import CredentialProviderPersist from './backend/controller/credentialProviderPersist';
 import { CredentialService } from './backend/credential.service';
 import { CryptoService } from './backend/crypto.service';
 import { Account } from './backend/models/account';
@@ -111,19 +112,7 @@ export default class App extends React.Component<{}, AppState> {
     }
     return this.backend.logon(username, password)
       .then((info: ILogonInformation) => {
-        this.plugins.loginSuccessful(username, this.credential.getKey());
-        const options: IMessageOptions = {};
-        let message = "";
-        if (info.lastLogin) {
-          message += `Your last login was on ${info.lastLogin.toLocaleString(navigator.language)}. `;
-          options.variant = "info";
-        }
-        if (info.failedLogins && info.failedLogins > 0) {
-          message += `There were ${info.failedLogins} failed logins.`
-          options.autoClose = false;
-          options.variant = "danger";
-        }
-        this.showMessage(message, options);
+        this.handleLoginSuccess(info, username);
       })
       .catch((e) => {
         let msg = e.toString();
@@ -139,6 +128,23 @@ export default class App extends React.Component<{}, AppState> {
         this.setState({ authenticated: false });
       });
   }
+
+  handleLoginSuccess(info: ILogonInformation, username:string) {
+    this.plugins.loginSuccessful(username, this.credential.getKey());
+    const options: IMessageOptions = {};
+    let message = "";
+    if (info.lastLogin) {
+      message += `Your last login was on ${info.lastLogin.toLocaleString(navigator.language)}. `;
+      options.variant = "info";
+    }
+    if (info.failedLogins && info.failedLogins > 0) {
+      message += `There were ${info.failedLogins} failed logins.`
+        options.autoClose = false;
+      options.variant = "danger";
+    }
+    this.showMessage(message, options);
+  } 
+
   async doRegister(username: string, password: string, email: string): Promise<void> {
     this.clearMessages();
     return this.backend.register(username, password, email);
@@ -229,12 +235,26 @@ export default class App extends React.Component<{}, AppState> {
     this.setState({ webAuthnCreds: creds });
   }
 
-  async webAuthnCreate(name: string = "TODO DEVICE"): Promise<void> {
-    let challenge = await this.backend.getWebAuthnChallenge();
-    let webAuthn = new WebAuthn();
-    let credential = await webAuthn.createCredential(challenge, 'Password-Manager', {id:(new TextEncoder()).encode("bla"), displayName:"bla",name:"bla"});
-    let attestationResponse = credential.response as AuthenticatorAttestationResponse;
-    this.backend.createWebAuthn(credential.id, name, attestationResponse.attestationObject, attestationResponse.clientDataJSON, credential.type);
+  async webAuthnCreate(deviceName: string, userName: string, password: string): Promise<void> {
+    let creds = new CredentialProviderPersist();
+    await creds.generateFromPassword(password);
+    if (!await this.backend.verifyCredentials(creds)) {
+      return Promise.reject("password does not match");
+    }
+    let storedKey = await creds.persistKey();
+    try {
+      let challenge = await this.backend.getWebAuthnChallenge();
+      let webAuthn = new WebAuthn();
+      const userIdBuffer = new ArrayBuffer(16);
+      const idView = new DataView(userIdBuffer);
+      idView.setInt16(1, storedKey.keyIndex);
+      let webAuthCredential = await webAuthn.createCredential(challenge, 'Password-Manager', {id: userIdBuffer, displayName:userName, name:userName});
+      let attestationResponse = webAuthCredential.response as AuthenticatorAttestationResponse;
+      await this.backend.createWebAuthn(webAuthCredential.id, deviceName, attestationResponse.attestationObject, attestationResponse.clientDataJSON, webAuthCredential.type, storedKey.wrappedServerKey);
+    } catch(e) {
+      creds.removeKeys(storedKey.keyIndex);
+      throw e;
+    }
   }
 
   async webAuthnTryLogin(): Promise<void> {
@@ -244,7 +264,17 @@ export default class App extends React.Component<{}, AppState> {
     if (credsAvailable) {
       let credentials = await webAuthn.getCredential(await this.backend.getWebAuthnChallenge());
       let response = credentials.response as AuthenticatorAssertionResponse;
-      this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, response.userHandle);
+      if (!response.userHandle) {
+        throw new Error("no user Handle was specified");
+      }
+      try {
+        const info = await this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, response.userHandle);
+        this.handleLoginSuccess(info, "");
+      }
+      catch(e) {
+        this.showMessage(`WebAuthn Login failed: ${e.message}`, {autoClose: false, variant: "danger" });
+        throw e;
+      }
     }
   }
 
