@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use OpenAPI\Server\Model\UserWebAuthnCreate;
+use OpenAPI\Server\Model\UserWebAuthnCreateWithKey;
 use lbuchs\WebAuthn\WebAuthn;
 use lbuchs\WebAuthn\Binary\ByteBuffer;
 
@@ -46,7 +46,7 @@ class WebAuthnController
         return $user->getWebAuthnPublicKeys()->matching($idCriteria)[0];
     }
 
-    public function registerWebAuthnDevice(User $user, UserWebAuthnCreate $request) {
+    public function registerWebAuthnDevice(User $user, UserWebAuthnCreateWithKey $request) {
         $pk = $this->entityManager->getRepository(WebAuthnPublicKey::class)
             ->findOneByPublicKey($request->getId());
         if(null !== $pk) {
@@ -56,7 +56,7 @@ class WebAuthnController
         $webAuthnResult = $this->webAuthn->processCreate(base64_decode($webAuthnResponse->getClientDataJSON()), base64_decode($webAuthnResponse->getAttestationObject()), $this->getChallenge(), true, true);
 
         $decryptionKey = new DecryptionKey();
-        $decryptionKey->setDecryptionKey($request->getKey());
+        $decryptionKey->setDecryptionKey($request->getDecryptionKey());
         $webauthn = $this->fillWebAuthnPublicKeyFromAttestationResult($webAuthnResult, new WebAuthnPublicKey());
         //TODO: Bekomme ich die id auch aus der Attestation?
         $webauthn->setPublicKeyId($request->getId());

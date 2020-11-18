@@ -31,12 +31,12 @@ class LoginListener
         $user = $event->getAuthenticationToken()->getUser();
 
         $methodInfo = " using username and password";
-        $pk = $this->webAuth->getLogonKey();
+        $pk = $this->webAuthn->getLogonKey();
         if ($pk) {
             $methodInfo = " using WebAuthnKey for device " . $pk->getDeviceName();
         }
 
-        $this->eventController->StoreEvent($user, "Login", "success" . $webAuthnInfo);
+        $this->eventController->StoreEvent($user, "Login", "success" . $methodInfo);
     }
 
     public function onSecurityAuthenticationFailure(AuthenticationFailureEvent $event) {
