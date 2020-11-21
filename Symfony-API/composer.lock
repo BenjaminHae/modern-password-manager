@@ -1676,16 +1676,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BenjaminHae/WebAuthn.git",
-                "reference": "793eba3fa4f556f147278a3d0fdb69a60b2666f5"
+                "reference": "17f2d4660318619186d274f614fef8cd93a1e0f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BenjaminHae/WebAuthn/zipball/793eba3fa4f556f147278a3d0fdb69a60b2666f5",
-                "reference": "793eba3fa4f556f147278a3d0fdb69a60b2666f5",
+                "url": "https://api.github.com/repos/BenjaminHae/WebAuthn/zipball/17f2d4660318619186d274f614fef8cd93a1e0f0",
+                "reference": "17f2d4660318619186d274f614fef8cd93a1e0f0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0"
+                "php": ">=7.1"
             },
             "type": "library",
             "autoload": {
@@ -1711,7 +1711,7 @@
             "support": {
                 "source": "https://github.com/BenjaminHae/WebAuthn/tree/master"
             },
-            "time": "2020-11-18T17:52:09+00:00"
+            "time": "2020-11-19T19:03:13+00:00"
         },
         {
             "name": "ocramius/proxy-manager",

@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use OpenAPI\Server\Model\UserWebAuthnCreateWithKey;
 use lbuchs\WebAuthn\WebAuthn;
 use lbuchs\WebAuthn\Binary\ByteBuffer;
@@ -20,16 +21,16 @@ class WebAuthnController
     private $webAuthn;
     private $eventController;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, EventController $eventController)
+    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, EventController $eventController, RequestStack $requestStack)
     {
         $this->entityManager = $entityManager;
         $this->session = $session;
         $this->eventController = $eventController;
-        $configuration = $this->getRp();
+        $configuration = $this->getRp($requestStack->getCurrentRequest()->server->get("SERVER_NAME"));
         $this->webAuthn = new WebAuthn($configuration["name"], $configuration["id"], $configuration["allowedFormats"]);
     }
 
-    private function getRp() {
+    private function getRp($hostname) {
         return ["name"=>"Password Manager", "id"=>"debian-vms-hp.lab", "allowedFormats" => ["none"]];
     }
 

@@ -26,6 +26,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessHandlerInterface
 {
@@ -35,8 +36,9 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
     private $session;
     private $accountsController;
     private $eventController;
+    private $requestStack;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, Security $security, SessionInterface $session, EventController $eventController, CsrfTokenManagerInterface $csrfManager, $allowRegistration)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, Security $security, SessionInterface $session, EventController $eventController, CsrfTokenManagerInterface $csrfManager, RequestStack $requestStack, $allowRegistration)
     {
         parent::__construct($csrfManager);
         $this->entityManager = $entityManager;
@@ -45,6 +47,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
         $this->security = $security;
         $this->session = $session;
         $this->allowRegistration = strtolower($allowRegistration) === "true";
+        $this->requestStack = $requestStack;
     }
 
     private function getAccountsController()
@@ -127,7 +130,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
     }
 
     public function loginUserWebAuthnChallenge(&$responseCode, array &$responseHeaders) {
-        $webAuthnController = new WebAuthnController($this->entityManager, $this->session, $this->eventController);
+        $webAuthnController = new WebAuthnController($this->entityManager, $this->session, $this->eventController, $this->requestStack);
         $challenge = base64_encode($webAuthnController->createChallenge()->getBinaryString());
         return new UserWebAuthnChallenge(["challenge" => $challenge]);
     }
@@ -138,7 +141,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
             $responseCode = 403;
             return $this->generateApiError("unauthorized");
         }
-        $webAuthnController = new WebAuthnController($this->entityManager, $this->session, $this->eventController);
+        $webAuthnController = new WebAuthnController($this->entityManager, $this->session, $this->eventController, $this->requestStack);
         $webAuthn = $webAuthnController->registerWebAuthnDevice($currentUser, $request);
         $this->eventController->StoreEvent($currentUser, "WebAuthn Store", "Device Name: " . $webAuthn->getDeviceName());
         return $this->generateApiSuccess("successfully registered webauthn credential");
@@ -146,7 +149,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
 
     public function deleteUserWebAuthn($id, &$responseCode, array &$responseHeaders) {
         $currentUser = $this->security->getUser();
-        $webAuthnController = new WebAuthnController($this->entityManager, $this->session, $this->eventController);
+        $webAuthnController = new WebAuthnController($this->entityManager, $this->session, $this->eventController, $this->requestStack);
         $webAuthnController->deleteWebAuthnDevice($currentUser, $id);
         return $webAuthnController->getWebAuthnDevices($currentUser);
     }
@@ -160,7 +163,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
     public function getUserWebAuthnCreds(&$responseCode, array &$responseHeaders) 
     {
         $currentUser = $this->security->getUser();
-        $webAuthnController = new WebAuthnController($this->entityManager, $this->session, $this->eventController);
+        $webAuthnController = new WebAuthnController($this->entityManager, $this->session, $this->eventController, $this->requestStack);
         return $webAuthnController->getWebAuthnDevices($currentUser);
         
     }
