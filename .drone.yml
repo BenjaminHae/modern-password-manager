@@ -1,0 +1,12 @@
+kind: pipeline
+type: docker
+name: build
+steps:
+ - name: react
+   image: node:12
+   commands:
+    - cd reactClient/my-app
+    - npm install
+    - npm link ../../OpenAPIReactClient
+    - CI="" npm run build
+    
