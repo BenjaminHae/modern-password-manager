@@ -4,6 +4,8 @@ name: build
 steps:
  - name: react
    image: node:12
+   docker:
+     user: 1000
    commands:
     - cd reactClient/my-app
     - npm install
