@@ -9,4 +9,13 @@ steps:
     - npm install
     - npm link --unsafe-perm ../../OpenAPIReactClient
     - CI="" npm run build
-    
+ - name: symfony
+   image: composer:2
+   commands:
+    - cd ./Symfony-API
+    - composer install --no-suggest --no-dev --no-progress --optimize-autoloader --classmap-authoritative
+    - (cd /vendor/openapi && server-bundle && cp -r ../../../OpenAPIServerBundle/ server-bundle)
+    - cp -r ../reactClient/my-app/build public
+    - rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html
+    - cp ../dockerBuild/SymfonyDockerfile Dockerfile
+    - ls -laR
