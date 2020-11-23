@@ -14,7 +14,7 @@ steps:
    commands:
     - cd ./Symfony-API
     - composer install --no-suggest --no-dev --no-progress --optimize-autoloader --classmap-authoritative
-    - (cd vendor/openapi && cp -r ../../../OpenAPIServerBundle/ server-bundle)
+    - (cd vendor/openapi && rm server-bundle && cp -r ../../../OpenAPIServerBundle/ server-bundle)
     - cp -r ../reactClient/my-app/build public
     - rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html
     - cp ../dockerBuild/SymfonyDockerfile Dockerfile
