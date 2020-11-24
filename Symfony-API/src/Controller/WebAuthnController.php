@@ -111,13 +111,18 @@ class WebAuthnController
     }
 
     public function deleteWebAuthnDevice(User $user, int $id) {
-        $webauthn = $this->getSpecificWebAuthnForUser($user, $id);
-        $deviceName = $webAuthn->getDeviceName();
-        $decryptionKey = $webauthn->getDecryptionKey();
-        $this->entityManager->remove($webauthn);
-        $this->entityManager->remove($decryptionKey);
-        $this->entityManager->flush();
-        $this->eventController->StoreEvent($currentUser, "WebAuthn Delete", "Device Name: " . $deviceName);
+        $webAuthn = $this->getSpecificWebAuthnForUser($user, $id);
+        if ($webAuthn !== null) {
+            $deviceName = $webAuthn->getDeviceName();
+            $decryptionKey = $webAuthn->getDecryptionKey();
+            $this->entityManager->remove($webAuthn);
+            $this->entityManager->remove($decryptionKey);
+            $this->entityManager->flush();
+            $this->eventController->StoreEvent($user, "WebAuthn Delete", "Device Name: " . $deviceName);
+        }
+        else {
+            $this->eventController->StoreEvent($user, "WebAuthn Delete", "failed: Tried to delete inexistent key $id");
+        }
         return true;
     }
 
