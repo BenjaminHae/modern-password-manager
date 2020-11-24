@@ -97,7 +97,9 @@ class WebAuthnController
                 true, 
                 true);
             //Todo: Update Counter
+            $pk->setLastUsed(new \DateTime());
             $this->rememberLogonKeyId($pk->getId());
+            $this->entityManager->flush();
         }
         catch (\Exception $e) {
             $this->eventController->StoreEvent($user, "Login", "WebAuthn failed: " . $e->getMessage());

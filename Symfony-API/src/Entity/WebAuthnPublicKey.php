@@ -50,6 +50,11 @@ class WebAuthnPublicKey
      */
     private $decryptionKey;
 
+    /**
+     * @ORM\Column(type="datetimetz", nullable=true)
+     */
+    private $lastUsed;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,8 +111,9 @@ class WebAuthnPublicKey
     public function getAsOpenAPIUserWebAuthnCred(): OpenAPIUserWebAuthnCred
     {
         $contents = [
-            "name"=> $this->getDeviceName(),
-            "id"=> $this->getId()
+            "name" => $this->getDeviceName(),
+            "id" => $this->getId(),
+            "lastUsed" => $this->getLastUsed()
         ];
         return new OpenAPIUserWebAuthnCred($contents);
     }
@@ -132,6 +138,18 @@ class WebAuthnPublicKey
     public function setDecryptionKey(?DecryptionKey $decryptionKey): self
     {
         $this->decryptionKey = $decryptionKey;
+
+        return $this;
+    }
+
+    public function getLastUsed(): ?\DateTimeInterface
+    {
+        return $this->lastUsed;
+    }
+
+    public function setLastUsed(?\DateTimeInterface $lastUsed): self
+    {
+        $this->lastUsed = $lastUsed;
 
         return $this;
     }
