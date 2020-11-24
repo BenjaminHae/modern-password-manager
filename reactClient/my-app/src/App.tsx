@@ -99,7 +99,9 @@ export default class App extends React.Component<{}, AppState> {
     this.backend.waitForBackend()
       .then((backendOptions: BackendOptions) => {
           this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed});
-          this.webAuthnTryLogin();
+          if (new URLSearchParams(window.location.search).get('logout') === null) {
+            this.webAuthnTryLogin();
+          }
           this.plugins.loginViewReady();
           });
     this.plugins.setFilterChangeHandler(this.filterChangeHandler.bind(this));
@@ -153,7 +155,7 @@ export default class App extends React.Component<{}, AppState> {
     this.plugins.preLogout();
     await this.backend.logout();
     this.setState({authenticated: false});
-    window.location.reload(false);
+    window.location.replace(window.location.origin + window.location.pathname + '?logout');
   }
   async doStoreOptions(options: UserOptions): Promise<void> {
     await this.backend.storeUserOptions(options);
@@ -255,6 +257,10 @@ export default class App extends React.Component<{}, AppState> {
       creds.removeKeys(storedKey.keyIndex);
       throw e;
     }
+  }
+  async webAuthnDelete(webAuthnCreds: UserWebAuthnCred): Promise<void> {
+    let creds = await this.backend.deleteWebAuthn(webAuthnCreds.id);
+    this.setState({ webAuthnCreds: creds });
   }
 
   async webAuthnTryLogin(): Promise<void> {
@@ -367,7 +373,7 @@ export default class App extends React.Component<{}, AppState> {
             webAuthnThisDeviceRegistered={false}
             webAuthnLoadHandler={this.loadWebAuthnCreds.bind(this)}
             webAuthnCreateCredHandler={this.webAuthnCreate.bind(this)}
-            webAuthnDeleteCredHandler={(creds: UserWebAuthnCred) => {return Promise.resolve()}}
+            webAuthnDeleteCredHandler={this.webAuthnDelete.bind(this)}
         />
               }
         {!this.state.authenticated
