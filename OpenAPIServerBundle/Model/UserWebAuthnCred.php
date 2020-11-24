@@ -60,6 +60,14 @@ class UserWebAuthnCred
     protected $id;
 
     /**
+     * @var \DateTime|null
+     * @SerializedName("lastUsed")
+     * @Assert\DateTime()
+     * @Type("DateTime")
+     */
+    protected $lastUsed;
+
+    /**
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
@@ -67,6 +75,7 @@ class UserWebAuthnCred
     {
         $this->name = isset($data['name']) ? $data['name'] : null;
         $this->id = isset($data['id']) ? $data['id'] : null;
+        $this->lastUsed = isset($data['lastUsed']) ? $data['lastUsed'] : null;
     }
 
     /**
@@ -113,6 +122,30 @@ class UserWebAuthnCred
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Gets lastUsed.
+     *
+     * @return \DateTime|null
+     */
+    public function getLastUsed(): ?\DateTime
+    {
+        return $this->lastUsed;
+    }
+
+    /**
+     * Sets lastUsed.
+     *
+     * @param \DateTime|null $lastUsed
+     *
+     * @return $this
+     */
+    public function setLastUsed(\DateTime $lastUsed = null)
+    {
+        $this->lastUsed = $lastUsed;
 
         return $this;
     }
