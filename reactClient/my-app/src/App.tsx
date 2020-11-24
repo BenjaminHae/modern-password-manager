@@ -31,6 +31,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 interface AppState {
   ready: boolean;
+  autoLogin: boolean;
   messages: Array<IMessage>;
   authenticated: boolean;
   registrationAllowed: boolean;
@@ -52,6 +53,7 @@ export default class App extends React.Component<{}, AppState> {
     super(props);
     this.state = {
       ready: false,
+      autoLogin: new URLSearchParams(window.location.search).get('noAutoLogin') === null,
       messages: [],
       authenticated: false,
       registrationAllowed: false,
@@ -99,7 +101,7 @@ export default class App extends React.Component<{}, AppState> {
     this.backend.waitForBackend()
       .then((backendOptions: BackendOptions) => {
           this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed});
-          if (new URLSearchParams(window.location.search).get('logout') === null) {
+          if (this.state.autoLogin) {
             this.webAuthnTryLogin();
           }
           this.plugins.loginViewReady();
@@ -155,7 +157,7 @@ export default class App extends React.Component<{}, AppState> {
     this.plugins.preLogout();
     await this.backend.logout();
     this.setState({authenticated: false});
-    window.location.replace(window.location.origin + window.location.pathname + '?logout');
+    window.location.replace(window.location.origin + window.location.pathname + '?noAutoLogin');
   }
   async doStoreOptions(options: UserOptions): Promise<void> {
     await this.backend.storeUserOptions(options);
