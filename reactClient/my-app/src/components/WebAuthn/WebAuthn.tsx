@@ -49,7 +49,15 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
   getColumns(): Array<IDataTableColumn> {
     return [
       {name: 'Device Name', selector: 'name'},
-      {name: 'Last Used', cell: () => <>not implemented</>},
+      {
+        name: 'Last Used', 
+        cell: (row: UserWebAuthnCred) => { 
+          if (row.lastUsed) 
+            return ( <span>{row.lastUsed.toLocaleString(navigator.language)}</span> ); 
+          else 
+            return ( <span/> )
+        }
+      },
       { 
         name: "",  
         ignoreRowClick: true, 
