@@ -27,10 +27,16 @@ export interface UserWebAuthnCred {
     name: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof UserWebAuthnCred
      */
-    id: string;
+    id: number;
+    /**
+     * 
+     * @type {Date}
+     * @memberof UserWebAuthnCred
+     */
+    lastUsed?: Date;
 }
 
 export function UserWebAuthnCredFromJSON(json: any): UserWebAuthnCred {
@@ -45,6 +51,7 @@ export function UserWebAuthnCredFromJSONTyped(json: any, ignoreDiscriminator: bo
         
         'name': json['name'],
         'id': json['id'],
+        'lastUsed': !exists(json, 'lastUsed') ? undefined : (new Date(json['lastUsed'])),
     };
 }
 
@@ -59,6 +66,7 @@ export function UserWebAuthnCredToJSON(value?: UserWebAuthnCred | null): any {
         
         'name': value.name,
         'id': value.id,
+        'lastUsed': value.lastUsed === undefined ? undefined : (value.lastUsed.toISOString()),
     };
 }
 

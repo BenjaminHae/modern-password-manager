@@ -215,6 +215,10 @@ export class BackendService {
     return await this.userService.registerWebAuthn(id, name, attestationObject, clientDataJSON, keyType, wrappedDecryptionKey);
   }
 
+  async deleteWebAuthn(id: number): Promise<Array<UserWebAuthnCred>> {
+    return await this.userService.deleteWebAuthn(id);
+  }
+
   async getPassword(account: Account): Promise<string> {
     return await this.accountTransformer.getPassword(account);
   }

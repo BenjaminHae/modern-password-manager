@@ -51,13 +51,21 @@ class UserWebAuthnCred
     protected $name;
 
     /**
-     * @var string
+     * @var int
      * @SerializedName("id")
      * @Assert\NotNull()
-     * @Assert\Type("string")
-     * @Type("string")
+     * @Assert\Type("int")
+     * @Type("int")
      */
     protected $id;
+
+    /**
+     * @var \DateTime|null
+     * @SerializedName("lastUsed")
+     * @Assert\DateTime()
+     * @Type("DateTime")
+     */
+    protected $lastUsed;
 
     /**
      * Constructor
@@ -67,6 +75,7 @@ class UserWebAuthnCred
     {
         $this->name = isset($data['name']) ? $data['name'] : null;
         $this->id = isset($data['id']) ? $data['id'] : null;
+        $this->lastUsed = isset($data['lastUsed']) ? $data['lastUsed'] : null;
     }
 
     /**
@@ -96,7 +105,7 @@ class UserWebAuthnCred
     /**
      * Gets id.
      *
-     * @return string
+     * @return int
      */
     public function getId()
     {
@@ -106,13 +115,37 @@ class UserWebAuthnCred
     /**
      * Sets id.
      *
-     * @param string $id
+     * @param int $id
      *
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Gets lastUsed.
+     *
+     * @return \DateTime|null
+     */
+    public function getLastUsed(): ?\DateTime
+    {
+        return $this->lastUsed;
+    }
+
+    /**
+     * Sets lastUsed.
+     *
+     * @param \DateTime|null $lastUsed
+     *
+     * @return $this
+     */
+    public function setLastUsed(\DateTime $lastUsed = null)
+    {
+        $this->lastUsed = $lastUsed;
 
         return $this;
     }

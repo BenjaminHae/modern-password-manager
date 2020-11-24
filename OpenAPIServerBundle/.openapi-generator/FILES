@@ -37,7 +37,6 @@
 ./Service/ValidatorInterface.php
 ./Tests/AppKernel.php
 ./Tests/Controller/ControllerTest.php
-./Tests/Model/UserWebAuthnCreateWithKeyTest.php
 ./Tests/test_config.yml
 .coveralls.yml
 .gitignore

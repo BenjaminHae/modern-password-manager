@@ -219,7 +219,7 @@ paths:
         - name: id
           in: path
           required: true
-          description: The id of the WebAuthn Public Key to delete
+          description: The index of the WebAuthn Public Key to delete (not the public key id)
           schema:
             type: integer
       responses:
@@ -491,7 +491,10 @@ components:
         name:
           type: string
         id:
+          type: integer
+        lastUsed:
           type: string
+          format: date-time
     UserWebAuthnCreds:
       type: array
       items:

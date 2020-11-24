@@ -16,7 +16,7 @@ export class UserService {
 
   constructor(private userService: OpenAPIUserService, private accountTransformer: AccountTransformerService) { }
 
-  private checkForSuccess(response: GenericSuccessMessage) {
+  private checkForSuccess(response: GenericSuccessMessage): void {
     if (!response.success) {
       throw new Error(response.message);
     }
@@ -118,6 +118,10 @@ export class UserService {
     if (response.decryptionKey === undefined)
       throw new Error("no decryption key specified");
     return { failedLogins: response.failedLogins, lastLogin: response.lastLogin, wrappedServerKey: this.base64ToArrayBuffer(response.decryptionKey)};
+  }
+
+  async deleteWebAuthn(id: number): Promise<Array<UserWebAuthnCred>> {
+    return await this.userService.deleteUserWebAuthn({id: id});
   }
 
   async getWebAuthnChallenge(): Promise<ArrayBuffer> {
