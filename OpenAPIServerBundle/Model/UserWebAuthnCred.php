@@ -51,11 +51,11 @@ class UserWebAuthnCred
     protected $name;
 
     /**
-     * @var string
+     * @var int
      * @SerializedName("id")
      * @Assert\NotNull()
-     * @Assert\Type("string")
-     * @Type("string")
+     * @Assert\Type("int")
+     * @Type("int")
      */
     protected $id;
 
@@ -96,7 +96,7 @@ class UserWebAuthnCred
     /**
      * Gets id.
      *
-     * @return string
+     * @return int
      */
     public function getId()
     {
@@ -106,7 +106,7 @@ class UserWebAuthnCred
     /**
      * Sets id.
      *
-     * @param string $id
+     * @param int $id
      *
      * @return $this
      */

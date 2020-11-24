@@ -189,7 +189,7 @@ class UserApi implements UserApiInterface
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **int**| The id of the WebAuthn Public Key to delete |
+ **id** | **int**| The index of the WebAuthn Public Key to delete (not the public key id) |
 
 ### Return type
 

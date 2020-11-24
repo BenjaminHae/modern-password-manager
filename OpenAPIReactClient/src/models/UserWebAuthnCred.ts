@@ -27,10 +27,10 @@ export interface UserWebAuthnCred {
     name: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof UserWebAuthnCred
      */
-    id: string;
+    id: number;
 }
 
 export function UserWebAuthnCredFromJSON(json: any): UserWebAuthnCred {

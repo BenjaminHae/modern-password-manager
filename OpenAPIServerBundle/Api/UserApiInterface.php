@@ -95,7 +95,7 @@ interface UserApiInterface
      *
      * Delete a stored WebAuthn Public Key
      *
-     * @param  int $id  The id of the WebAuthn Public Key to delete (required)
+     * @param  int $id  The index of the WebAuthn Public Key to delete (not the public key id) (required)
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
