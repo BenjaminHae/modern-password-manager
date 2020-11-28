@@ -45,7 +45,7 @@ steps:
     # transfer to host
      - scp -i ~/.ssh/id_drone mpm.zip "$${SSH_USER}@$${SSH_HOST}:tmp/"
     # extract to destination
-     - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" 'cd ~/tmp; unzip -q mpm.zip -o -d ~/htdocs/pwman/'
+     - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" 'cd ~/tmp; unzip -o -q mpm.zip -d ~/htdocs/pwman/'
     # execute db update
      - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" 'cd ~/htdocs/pwman/Symfony-API && echo ${PHP_VERSION} bin/console doctrine:schema:update --force && echo ${PHP_VERSION} bin/console cache:clear'
    #when:
