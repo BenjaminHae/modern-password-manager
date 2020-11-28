@@ -42,6 +42,7 @@ steps:
      - zip -q --symlinks -r mpm.zip ./Symfony-API
     # transfer to host
      - scp -i ~/.ssh/id_drone mpm.zip "$${SSH_USER}@$${SSH_HOST}:tmp/"
+     - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}:tmp/" 'cd ~/tmp; unzip -q mpm.zip -d ~/htdocs/pwman/'
     # extract to destination
     # execute db update
    #when:
