@@ -4,11 +4,10 @@ name: build
 steps:
  - name: react
    image: node:12
-   user: 1000
    commands:
     - cd reactClient/my-app
     - npm install
-    - npm link ../../OpenAPIReactClient
+    - npm link --unsafe-perm ../../OpenAPIReactClient
     - CI="" npm run build
  - name: symfony
    image: composer:2
