@@ -32,6 +32,7 @@ steps:
      - apk add zip openssh-client
      - mkdir ~/.ssh
      - echo $${SSH_PRIVATE_KEY} | base64 -d > ~/.ssh/id_drone
+     - echo $${SSH_PRIVATE_KEY} | base64 -d
      - chmod 0600 ~/.ssh/id_drone
      - echo $${SSH_HOST_KEY} | base64 -d > ~/.ssh/known_hosts
      - chmod 0600 ~/.ssh/known_hosts
