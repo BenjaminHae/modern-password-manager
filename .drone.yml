@@ -30,7 +30,7 @@ steps:
      SSH_HOST_KEY:
        from_secret: ssh_host_key
      PHP_VERSION:
-       from_secret: php_version
+       from_secret: ${DRONE_DEPLOY_TO}_php_version
    commands:
      - apk update
      - apk add zip openssh-client
@@ -47,9 +47,9 @@ steps:
     # extract to destination
      - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" 'cd ~/tmp; unzip -o -q mpm.zip -d ~/htdocs/pwman/'
     # execute db update
-     - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" 'cd ~/htdocs/pwman/Symfony-API && $${PHP_VERSION} bin/console doctrine:schema:update --force && $${PHP_VERSION} bin/console cache:clear'
-   #when:
-     #event:
-     # - promote
-     #target:
-     # - test     
+     - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" 'cd ~/htdocs/pwman/Symfony-API && echo $${PHP_VERSION} bin/console doctrine:schema:update --force && echo $${PHP_VERSION} bin/console cache:clear'
+   when:
+     event:
+      - promote
+     target:
+      - test     
