@@ -15,14 +15,22 @@ steps:
     - cd ./Symfony-API
     - composer install --no-suggest --no-dev --no-progress --optimize-autoloader --classmap-authoritative
     - (cd vendor/openapi && rm server-bundle && cp -r ../../../OpenAPIServerBundle/ server-bundle)
-    - cp -r ../reactClient/my-app/build public
+    - cp -r ../reactClient/my-app/build/ public
     - rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html
     - cp ../dockerBuild/SymfonyDockerfile Dockerfile
-    - ls -laR
+    - ls -laR public/
  - name: deploy to test
    image: alpine:3.12
+   environment:
+     SSH_PRIVATE_KEY:
+       from_secret: ssh_private_key
+     SSH_HOST:
+       from_secret: ssh_host
    commands:
-    - echo "deploying to ${DRONE_DEPLOY_TO}"
+    # create zip archive
+    # transfer to host
+    # extract to destination
+    # execute db update
    when:
      event:
       - promote
