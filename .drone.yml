@@ -2,22 +2,22 @@ kind: pipeline
 type: docker
 name: build
 steps:
- #- name: react
- #  image: node:12
- #  commands:
- #   - cd reactClient/my-app
- #   - npm install
- #   - npm link --unsafe-perm ../../OpenAPIReactClient
- #   - CI="" npm run build
- #- name: symfony
- #  image: composer:2
- #  commands:
- #   - cd ./Symfony-API
- #   - composer install --no-suggest --no-dev --no-progress --optimize-autoloader --classmap-authoritative
- #   - (cd vendor/openapi && rm server-bundle && cp -r ../../../OpenAPIServerBundle/ server-bundle)
- #   - cp -r ../reactClient/my-app/build/. public/
- #   - rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html
- #   - cp ../dockerBuild/SymfonyDockerfile Dockerfile
+ - name: react
+   image: node:12
+   commands:
+    - cd reactClient/my-app
+    - npm install
+    - npm link --unsafe-perm ../../OpenAPIReactClient
+    - CI="" npm run build
+ - name: symfony
+   image: composer:2
+   commands:
+    - cd ./Symfony-API
+    - composer install --no-suggest --no-dev --no-progress --optimize-autoloader --classmap-authoritative
+    - (cd vendor/openapi && rm server-bundle && cp -r ../../../OpenAPIServerBundle/ server-bundle)
+    - cp -r ../reactClient/my-app/build/. public/
+    - rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html
+    - cp ../dockerBuild/SymfonyDockerfile Dockerfile
  - name: deploy to test
    image: alpine:3.12
    environment:
@@ -32,18 +32,15 @@ steps:
    commands:
      - apk update
      - apk add zip openssh-client
+    # setup ssh
      - mkdir ~/.ssh
      - echo $${SSH_PRIVATE_KEY} | base64 -d > ~/.ssh/id_drone
-     - cat ~/.ssh/id_drone
      - chmod 0600 ~/.ssh/id_drone
      - echo $${SSH_HOST_KEY} | base64 -d > ~/.ssh/known_hosts
      - chmod 0600 ~/.ssh/known_hosts
-     - cat ~/.ssh/known_hosts
-     - ls -lR
     # create zip archive
      - zip -q --symlinks -r mpm.zip ./Symfony-API
     # transfer to host
-     - ping -c 1 $${SSH_HOST}
      - scp -i ~/.ssh/id_drone mpm.zip "$${SSH_USER}@$${SSH_HOST}:tmp/"
     # extract to destination
     # execute db update
