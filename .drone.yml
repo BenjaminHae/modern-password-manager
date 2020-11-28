@@ -4,10 +4,11 @@ name: build
 steps:
  - name: react
    image: node:12
+   user: 1000
    commands:
     - cd reactClient/my-app
     - npm install
-    - npm link --unsafe-perm ../../OpenAPIReactClient
+    - npm link ../../OpenAPIReactClient
     - CI="" npm run build
  - name: symfony
    image: composer:2
@@ -19,7 +20,7 @@ steps:
     - rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html
     - cp ../dockerBuild/SymfonyDockerfile Dockerfile
  - name: deploy to test
-   image: debian:testing-slim
+   image: alpine:3.12
    environment:
      SSH_PRIVATE_KEY:
        from_secret: ssh_private_key
@@ -28,6 +29,8 @@ steps:
      SSH_USER:
        from_secret: ssh_user
    commands:
+     - apk update
+     - apk add zip openssh-clien
     # create zip archive
      - zip --symlinks -r mpm.zip ./Symfony-API
     # transfer to host
@@ -35,7 +38,7 @@ steps:
     # extract to destination
     # execute db update
    when:
-     event:
-      - promote
+     #event:
+     # - promote
      target:
       - test     
