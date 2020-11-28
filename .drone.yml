@@ -30,12 +30,12 @@ steps:
    commands:
      - apk update
      - apk add zip openssh-client
-     - echo ${SSH_PRIVATE_KEY} | base64 -d > ~/id_drone
+     - echo $${SSH_PRIVATE_KEY} | base64 -d > ~/id_drone
      - chmod 0600 ~/id_drone
     # create zip archive
      - zip -q --symlinks -r mpm.zip ./Symfony-API
     # transfer to host
-     - scp -i ~/id_drone mpm.zip "${SSH_USER}@${SSH_HOST}:tmp/"
+     - scp -i ~/id_drone mpm.zip "$${SSH_USER}@$${SSH_HOST}:tmp/"
     # extract to destination
     # execute db update
    #when:
