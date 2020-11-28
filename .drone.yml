@@ -32,6 +32,7 @@ steps:
      PHP_VERSION:
        from_secret: ${DRONE_DEPLOY_TO}_php_version
    commands:
+     - echo ${DRONE_DEPLOY_TO}
      - apk update
      - apk add zip openssh-client
     # setup ssh
