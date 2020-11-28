@@ -27,6 +27,8 @@ steps:
        from_secret: ssh_host
      SSH_USER:
        from_secret: ssh_user
+     SSH_HOST_KEY:
+       from_secret: ssh_host_key
    commands:
      - apk update
      - apk add zip openssh-client
@@ -41,7 +43,7 @@ steps:
     # create zip archive
      - zip -q --symlinks -r mpm.zip ./Symfony-API
     # transfer to host
-     - ping -n 1 $${SSH_HOST}
+     - ping -c 1 $${SSH_HOST}
      - scp -i ~/.ssh/id_drone mpm.zip "$${SSH_USER}@$${SSH_HOST}:tmp/"
     # extract to destination
     # execute db update
