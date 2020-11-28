@@ -29,7 +29,7 @@ steps:
        from_secret: ssh_user
    commands:
      - apk update
-     - apk add zip openssh-clien
+     - apk add zip openssh-client
     # create zip archive
      - zip --symlinks -r mpm.zip ./Symfony-API
     # transfer to host
