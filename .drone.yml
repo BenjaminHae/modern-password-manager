@@ -19,7 +19,7 @@ steps:
     - rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html
     - cp ../dockerBuild/SymfonyDockerfile Dockerfile
  - name: deploy to test
-   image: alpine:3.12
+   image: debian:testing-slim
    environment:
      SSH_PRIVATE_KEY:
        from_secret: ssh_private_key
