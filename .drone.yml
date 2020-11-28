@@ -47,8 +47,7 @@ steps:
     # extract to destination
      - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" 'cd ~/tmp; unzip -q mpm.zip -d ~/htdocs/pwman/'
     # execute db update
-     - cd ~/htdocs/pwman/Symfony-API && echo ${PHP_VERSION} bin/console doctrine:schema:update --force && echo ${PHP_VERSION} bin/console cache:clear
-                
+     - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" 'cd ~/htdocs/pwman/Symfony-API && echo ${PHP_VERSION} bin/console doctrine:schema:update --force && echo ${PHP_VERSION} bin/console cache:clear'
    #when:
      #event:
      # - promote
