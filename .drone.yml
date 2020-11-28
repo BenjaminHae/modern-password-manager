@@ -31,8 +31,10 @@ steps:
        from_secret: ssh_host_key
      PHP_VERSION:
        from_secret: ${DRONE_DEPLOY_TO}_php_version
+     TEST_BY_TARGET: "Target_variable_${DRONE_DEPLOY_TO}"
    commands:
      - echo ${DRONE_DEPLOY_TO}
+     - echo $${TEST_BY_TARGET}
      - apk update
      - apk add zip openssh-client
     # setup ssh
