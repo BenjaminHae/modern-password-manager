@@ -18,7 +18,6 @@ steps:
     - cp -r ../reactClient/my-app/build/. public/
     - rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html
     - cp ../dockerBuild/SymfonyDockerfile Dockerfile
-    - ls -laR public/
  - name: deploy to test
    image: alpine:3.12
    environment:
@@ -26,9 +25,13 @@ steps:
        from_secret: ssh_private_key
      SSH_HOST:
        from_secret: ssh_host
+     SSH_USER:
+       from_secret: ssh_user
    commands:
     # create zip archive
+     - zip --symlinks -r mpm.zip ./Symfony-API
     # transfer to host
+     - scp -i mpm.zip "${SSH_USER}@${SSH_HOST}:tmp/"
     # extract to destination
     # execute db update
    when:
