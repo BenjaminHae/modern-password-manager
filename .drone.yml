@@ -33,7 +33,7 @@ steps:
      - echo ${SSH_PRIVATE_KEY} | base64 -d > ~/.ssh/id_drone
      - chmod 0600 ~/.ssh/id_rsa
     # create zip archive
-     - zip --symlinks -r mpm.zip ./Symfony-API
+     - zip -q --symlinks -r mpm.zip ./Symfony-API
     # transfer to host
      - scp -i ~/.ssh/id_drone mpm.zip "${SSH_USER}@${SSH_HOST}:tmp/"
     # extract to destination
