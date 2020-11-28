@@ -36,8 +36,8 @@ steps:
      - scp -i mpm.zip "${SSH_USER}@${SSH_HOST}:tmp/"
     # extract to destination
     # execute db update
-   when:
+   #when:
      #event:
      # - promote
-     target:
-      - test     
+     #target:
+     # - test     
