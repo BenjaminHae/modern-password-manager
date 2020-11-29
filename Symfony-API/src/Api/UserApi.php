@@ -142,8 +142,14 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
             return $this->generateApiError("unauthorized");
         }
         $webAuthnController = new WebAuthnController($this->entityManager, $this->session, $this->eventController, $this->requestStack);
-        $webAuthn = $webAuthnController->registerWebAuthnDevice($currentUser, $request);
-        $this->eventController->StoreEvent($currentUser, "WebAuthn Store", "Device Name: " . $webAuthn->getDeviceName());
+        try {
+            $webAuthn = $webAuthnController->registerWebAuthnDevice($currentUser, $request);
+            $this->eventController->StoreEvent($currentUser, "WebAuthn Store", "Device Name: " . $webAuthn->getDeviceName());
+        }
+        catch (\Exception $e) {
+            $this->eventController->StoreEvent($currentUser, "WebAuthn Store", "failed: " . $e->getMessage());
+            throw $e;
+        }
         return $this->generateApiSuccess("successfully registered webauthn credential");
     }
 
