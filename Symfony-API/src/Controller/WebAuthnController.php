@@ -31,7 +31,7 @@ class WebAuthnController
     }
 
     private function getRp($hostname) {
-        return ["name"=>"Password Manager", "id"=>"debian-vms-hp.lab", "allowedFormats" => ["none"]];
+        return ["name"=>"Password Manager", "id"=> $hostname, "allowedFormats" => ["none"]];
     }
 
     private function fillWebAuthnPublicKeyFromAttestationResult($data, WebAuthnPublicKey $webauthn)
