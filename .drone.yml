@@ -51,7 +51,7 @@ steps:
     # extract to destination
      - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" "unzip -o -q $${COPY_PATH} -d $${DEPLOY_PATH} && rm $${COPY_PATH}"
     # execute db update
-     - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" "cd $${DEPLOY_PATH}Symfony-API && $${${DRONE_DEPLOY_TO^^}PHP_VERSION} bin/console doctrine:schema:update --force && $${${DRONE_DEPLOY_TO^^}PHP_VERSION} bin/console cache:clear"
+     - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" "cd $${DEPLOY_PATH} && $${${DRONE_DEPLOY_TO^^}PHP_VERSION} bin/console doctrine:schema:update --force && $${${DRONE_DEPLOY_TO^^}PHP_VERSION} bin/console cache:clear"
    when:
      event:
       - promote
