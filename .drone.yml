@@ -47,7 +47,7 @@ steps:
     # create zip archive
      - zip -q --symlinks -r mpm.zip ./Symfony-API
     # transfer to host
-     - scp -i ~/.ssh/id_drone mpm.zip "$${SSH_USER}@$${SSH_HOST}:$${COPY_REMOTE_PATH}}"
+     - scp -i ~/.ssh/id_drone mpm.zip "$${SSH_USER}@$${SSH_HOST}:$${COPY_REMOTE_PATH}"
     # extract to destination
      - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" "unzip -o -q $${COPY_PATH} -d $${DEPLOY_PATH} && rm $${COPY_PATH}"
     # execute db update
