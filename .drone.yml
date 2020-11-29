@@ -31,7 +31,7 @@ steps:
        from_secret: "${DRONE_DEPLOY_TO}_ssh_host_key"
      DEPLOY_PATH: "~/htdocs/pwman-${DRONE_DEPLOY_TO}/"
      COPY_PATH: "~/tmp/mpm.zip"
-     COPY_REMOTE_PATH: "tmp/mpm.zip"
+     COPY_REMOTE_PATH: "tmp/
      DEV_PHP_VERSION: "php7.3"
      TEST_PHP_VERSION: "php7.4"
      PROD_PHP_VERSION: "php7.4"
