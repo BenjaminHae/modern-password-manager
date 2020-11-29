@@ -18,7 +18,7 @@ steps:
     - cp -r ../reactClient/my-app/build/. public/
     - rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html
     - cp ../dockerBuild/SymfonyDockerfile Dockerfile
- - name: deploy to test
+ - name: deploy to environment
    image: alpine:3.12
    environment:
      SSH_PRIVATE_KEY:
@@ -57,3 +57,4 @@ steps:
       - promote
      target:
       - test
+      - prod
