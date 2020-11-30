@@ -18,7 +18,7 @@ steps:
     - cp -r ../reactClient/my-app/build/. public/
     - rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html
     - cp ../dockerBuild/SymfonyDockerfile Dockerfile
- - name: deploy to environment
+ - name: "deploy to environment ${DRONE_DEPLOY_TO}"
    image: alpine:3.12
    environment:
      SSH_PRIVATE_KEY:
