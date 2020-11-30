@@ -413,7 +413,7 @@ export default class App extends React.Component<{}, AppState> {
           && <span>Waiting for server</span> }
         {this.state.debugCount >= 1 &&
           <DebugViewer messages={this.state.debug} counter={this.state.debugCount*10}/> }
-        <footer className="App-footer"><Button variant="link" onClick={()=>{this.setState({ debugCount: this.state.debugCount + 1 })}}>Version: {process.env.REACT_APP_GIT_SHA}</Button></footer>
+        <footer className="App-footer"><span onClick={()=>{this.setState({ debugCount: this.state.debugCount + 1 })}}>Version: {process.env.REACT_APP_GIT_SHA}</span></footer>
       </div>
     );
   }
