@@ -1,4 +1,5 @@
 import React from 'react';
+import DebugViewer from './components/DebugViewer/DebugViewer';
 import Authenticated from './components/Authenticated/Authenticated';
 import Unauthenticated from './components/Unauthenticated/Unauthenticated';
 import Message, { IMessageOptions, IMessage } from './components/Message/Message';
@@ -41,6 +42,8 @@ interface AppState {
   filter?: AccountsFilter;
   webAuthnCreds: Array<UserWebAuthnCred>;
   webAuthnPresent: boolean;
+  debug: Array<string>;
+  debugCount: number;
 }
 export default class App extends React.Component<{}, AppState> {
   private backend: BackendService;
@@ -61,7 +64,9 @@ export default class App extends React.Component<{}, AppState> {
       userOptions: {fields:[]},
       historyItems: [],
       webAuthnCreds: [],
-      webAuthnPresent: false
+      webAuthnPresent: false,
+      debug: [],
+      debugCount: -5
     }
 
     let basePath = "";
@@ -96,6 +101,10 @@ export default class App extends React.Component<{}, AppState> {
           console.log("(react) received options: " + userOptions);
           this.setState({userOptions : userOptions});
           });
+  }
+  debug(line: string): void {
+    this.state.debug.unshift(line);
+    this.setState({debug: this.state.debug});
   }
   componentDidMount(): void {
     this.backend.waitForBackend()
@@ -266,20 +275,34 @@ export default class App extends React.Component<{}, AppState> {
   }
 
   async webAuthnTryLogin(): Promise<void> {
+    this.debug("trying webauthn login");
     let webAuthn = new WebAuthn();
     let credsAvailable = webAuthn.credentialsAvailable();
+    this.debug(`Are credsAvailable: ${credsAvailable}`);
     this.setState({webAuthnPresent: credsAvailable});
     if (credsAvailable) {
-      let credentials = await webAuthn.getCredential(await this.backend.getWebAuthnChallenge());
+      this.debug(`Trying to do webAuthn get`);
+      let credentials: PublicKeyCredential
+      try {
+        credentials = await webAuthn.getCredential(await this.backend.getWebAuthnChallenge());
+      }
+      catch(e) {
+        this.debug(`WebAuthn get failed: ${e.message}`);
+        throw e;
+      }
       let response = credentials.response as AuthenticatorAssertionResponse;
       if (!response.userHandle) {
+        this.debug(`no user Handle was specified`);
         throw new Error("no user Handle was specified");
       }
       try {
+        this.debug(`sending webauthn to server`);
         const info = await this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, response.userHandle);
+        this.debug(`successful`);
         this.handleLoginSuccess(info, "");
       }
       catch(e) {
+        this.debug(`WebAuthn Login failed: ${e.message}`);
         this.showMessage(`WebAuthn Login failed: ${e.message}`, {autoClose: false, variant: "danger" });
         throw e;
       }
@@ -388,7 +411,9 @@ export default class App extends React.Component<{}, AppState> {
               /> }
         {!this.state.authenticated && !this.state.ready 
           && <span>Waiting for server</span> }
-        <footer className="App-footer">Version: {process.env.REACT_APP_GIT_SHA}</footer>
+        {this.state.debugCount >= 1 &&
+          <DebugViewer messages={this.state.debug} counter={this.state.debugCount*10}/> }
+        <footer className="App-footer"><Button variant="link" onClick={()=>{this.setState({ debugCount: this.state.debugCount + 1 })}}>Version: {process.env.REACT_APP_GIT_SHA}</Button></footer>
       </div>
     );
   }
