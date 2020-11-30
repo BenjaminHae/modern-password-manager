@@ -43,6 +43,7 @@ interface AppState {
   webAuthnCreds: Array<UserWebAuthnCred>;
   webAuthnPresent: boolean;
   debug: Array<string>;
+  debugCount: number;
 }
 export default class App extends React.Component<{}, AppState> {
   private backend: BackendService;
@@ -64,7 +65,8 @@ export default class App extends React.Component<{}, AppState> {
       historyItems: [],
       webAuthnCreds: [],
       webAuthnPresent: false,
-      debug: []
+      debug: [],
+      debugCount: -5
     }
 
     let basePath = "";
@@ -101,7 +103,7 @@ export default class App extends React.Component<{}, AppState> {
           });
   }
   debug(line: string): void {
-    this.state.debug.push(line);
+    this.state.debug.unshift(line);
     this.setState({debug: this.state.debug});
   }
   componentDidMount(): void {
@@ -409,8 +411,9 @@ export default class App extends React.Component<{}, AppState> {
               /> }
         {!this.state.authenticated && !this.state.ready 
           && <span>Waiting for server</span> }
-        <DebugViewer messages={this.state.debug} />
-        <footer className="App-footer">Version: {process.env.REACT_APP_GIT_SHA}</footer>
+        {this.state.debugCount >= 1 &&
+          <DebugViewer messages={this.state.debug} counter={this.state.debugCount*10}/> }
+        <footer className="App-footer"><Button variant="link" onClick={()=>{this.setState({ debugCount: this.state.debugCount + 1 })}}>Version: {process.env.REACT_APP_GIT_SHA}</Button></footer>
       </div>
     );
   }
