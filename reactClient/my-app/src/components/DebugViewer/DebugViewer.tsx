@@ -6,11 +6,9 @@ interface IDebugProps {
   counter: number;
 }
 const DebugViewer: React.FC<IDebugProps> = (props: IDebugProps) => {
-  const items = props.messages.slice(0, props.messages.length).map((message: string, idx: number) => (
-    <p key= {idx}>{message}</p>
-    ));
   return (
     <div className={styles.DebugViewer}>
+      <span>Showing { props.counter * 10 } debug messages</span>
       <pre>{props.messages.slice(0, props.messages.length).join("\r\n")}</pre>
     </div>
   );
