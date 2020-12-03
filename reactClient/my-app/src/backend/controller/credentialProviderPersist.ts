@@ -1,12 +1,14 @@
 import { ICredentialProvider } from './credentialProvider';
 import { CredentialProviderPassword } from './credentialProviderPassword';
 //todo make ciphers configurable
+//todo create helper class for db
 
 interface IDecryptionKeys {
   localKey: CryptoKey;
   wrappedKey: ArrayBuffer;
   ivWrappedServerKey: ArrayBuffer;
   ivWrappedKey: ArrayBuffer;
+  credentialId?: ArrayBuffer;
 }
 interface IPersistingResult {
   wrappedServerKey: ArrayBuffer;
@@ -149,6 +151,25 @@ export default class CredentialProviderPersist extends CredentialProviderPasswor
     });
   }
 
+  async keysAvailable(): Promise<boolean> {
+    if (!this.db) {
+      await this.initStorage();
+    }
+    return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject();
+        return;
+      }
+      let transaction = this.db.transaction([this.storageKeysName], "readonly");
+      transaction.oncomplete = () => {};
+      transaction.onerror = () => reject();
+      let objectStore = transaction.objectStore(this.storageKeysName);
+      let request = objectStore.count();
+      request.onerror = (e) => reject(e);
+      request.onsuccess = () => resolve((request.result as number) > 0);
+    });
+  }
+
   async persistKey(): Promise<IPersistingResult> {
     if (!this.key || !this.localKey || !this.serverKey) {
       throw new Error("no key present");
@@ -170,6 +191,53 @@ export default class CredentialProviderPersist extends CredentialProviderPasswor
     let keyId = await this.storeKeys({ localKey: this.localKey, wrappedKey: encryptedKeyToStore, ivWrappedKey: ivWrappedKey, ivWrappedServerKey: ivWrappedServerKey });
     await this.cleanUp();
     return { wrappedServerKey: encryptedServerWrapKey, keyIndex: keyId} ;
+  }
+
+  async appendCredentialId(keyId: number, credentialId: ArrayBuffer): Promise<void> {
+    if (!this.db) {
+      await this.initStorage();
+    }
+    return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject();
+        return;
+      }
+      let transaction = this.db.transaction([this.storageKeysName], "readwrite");
+      transaction.oncomplete = () => {};
+      transaction.onerror = () => reject();
+      const objectStore = transaction.objectStore(this.storageKeysName);
+      const request = objectStore.get(keyId);
+      request.onerror = (e) => reject(e);
+      request.onsuccess = () => {
+        let keys = request.result;
+        keys.credentialId = credentialId;
+        const updateRequest = objectStore.put(keys);
+        updateRequest.onsuccess = () => resolve();
+        updateRequest.onerror = (e) => reject(e);
+      }
+    });
+  }
+
+  async getCredentialIds(): Promise<Array<ArrayBuffer>> {
+    if (!this.db) {
+      await this.initStorage();
+    }
+    return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject();
+        return;
+      }
+      let transaction = this.db.transaction([this.storageKeysName], "readonly");
+      transaction.oncomplete = () => {};
+      transaction.onerror = () => reject();
+      let objectStore = transaction.objectStore(this.storageKeysName);
+      let request = objectStore.getAll();
+      request.onerror = (e) => reject(e);
+      request.onsuccess = () => {
+        const keysWithId = request.result.filter(o => o.hasOwnProperty('credentialId'));
+        resolve(keysWithId.map(k => k.credentialId));
+      }
+    });
   }
 
   getKey(): CryptoKey{
