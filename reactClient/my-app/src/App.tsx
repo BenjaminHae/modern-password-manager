@@ -262,6 +262,7 @@ export default class App extends React.Component<{}, AppState> {
       const idView = new DataView(userIdBuffer);
       idView.setInt16(1, storedKey.keyIndex);
       let webAuthCredential = await webAuthn.createCredential(challenge, 'Password-Manager', {id: userIdBuffer, displayName:userName, name:userName});
+      creds.appendCredentialId(storedKey.keyIndex, webAuthCredential.rawId);
       let attestationResponse = webAuthCredential.response as AuthenticatorAttestationResponse;
       await this.backend.createWebAuthn(webAuthCredential.id, deviceName, attestationResponse.attestationObject, attestationResponse.clientDataJSON, webAuthCredential.type, storedKey.wrappedServerKey);
     } catch(e) {
@@ -277,14 +278,17 @@ export default class App extends React.Component<{}, AppState> {
   async webAuthnTryLogin(): Promise<void> {
     this.debug("trying webauthn login");
     let webAuthn = new WebAuthn();
-    let credsAvailable = webAuthn.credentialsAvailable();
+    let credentialProvider = new CredentialProviderPersist();
+    let credIds = await credentialProvider.getCredentialIds();
+    let credsAvailable = webAuthn.credentialsAvailable();// todo replace by credIds.length > 0
     this.debug(`Are credsAvailable: ${credsAvailable}`);
+    this.debug(`KeyIds: ${credIds}`);
     this.setState({webAuthnPresent: credsAvailable});
     if (credsAvailable) {
       this.debug(`Trying to do webAuthn get`);
-      let credentials: PublicKeyCredential
+      let credentials: PublicKeyCredential;
       try {
-        credentials = await webAuthn.getCredential(await this.backend.getWebAuthnChallenge());
+        credentials = await webAuthn.getCredential(await this.backend.getWebAuthnChallenge(), credIds);
       }
       catch(e) {
         this.debug(`WebAuthn get failed: ${e.message}`);
