@@ -22,6 +22,7 @@ import { UserApi as OpenAPIUserService } from '@pm-server/pm-server-react-client
 import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-react-client';
 import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
 import WebAuthn from './libs/WebAuthn';
+import PersistDecryptionKey from './libs/PersistDecryptionKey';
 import { HistoryItem, UserWebAuthnCred } from '@pm-server/pm-server-react-client';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -249,7 +250,8 @@ export default class App extends React.Component<{}, AppState> {
   }
 
   async webAuthnCreate(deviceName: string, userName: string, password: string): Promise<void> {
-    let creds = new CredentialProviderPersist();
+    let persistor = new PersistDecryptionKey()
+    let creds = new CredentialProviderPersist(persistor);
     await creds.generateFromPassword(password);
     if (!await this.backend.verifyCredentials(creds)) {
       return Promise.reject("password does not match");
@@ -262,11 +264,11 @@ export default class App extends React.Component<{}, AppState> {
       const idView = new DataView(userIdBuffer);
       idView.setInt16(1, storedKey.keyIndex);
       let webAuthCredential = await webAuthn.createCredential(challenge, 'Password-Manager', {id: userIdBuffer, displayName:userName, name:userName});
-      creds.appendCredentialId(storedKey.keyIndex, webAuthCredential.rawId);
+      persistor.appendCredentialId(storedKey.keyIndex, webAuthCredential.rawId, webAuthCredential.id, userName);
       let attestationResponse = webAuthCredential.response as AuthenticatorAttestationResponse;
       await this.backend.createWebAuthn(webAuthCredential.id, deviceName, attestationResponse.attestationObject, attestationResponse.clientDataJSON, webAuthCredential.type, storedKey.wrappedServerKey);
     } catch(e) {
-      creds.removeKeys(storedKey.keyIndex);
+      persistor.removeKeys(storedKey.keyIndex);
       throw e;
     }
   }
@@ -278,9 +280,9 @@ export default class App extends React.Component<{}, AppState> {
   async webAuthnTryLogin(): Promise<void> {
     this.debug("trying webauthn login");
     let webAuthn = new WebAuthn();
-    let credentialProvider = new CredentialProviderPersist();
-    let credIds = await credentialProvider.getCredentialIds();
-    let credsAvailable = webAuthn.credentialsAvailable();// todo replace by credIds.length > 0
+    let persistor = new PersistDecryptionKey();
+    let credIds = await persistor.getCredentialIds();
+    let credsAvailable = credIds.length > 0;
     this.debug(`Are credsAvailable: ${credsAvailable}`);
     this.debug(`KeyIds: ${credIds}`);
     this.setState({webAuthnPresent: credsAvailable});
@@ -295,13 +297,23 @@ export default class App extends React.Component<{}, AppState> {
         throw e;
       }
       let response = credentials.response as AuthenticatorAssertionResponse;
+      let keyIndex: number | undefined;
       if (!response.userHandle) {
         this.debug(`no user Handle was specified`);
-        throw new Error("no user Handle was specified");
+        keyIndex = await persistor.indexByCredentialId(credentials.id);
+        this.debug(`Trying to get by id`);
+        if (!keyIndex) {
+          this.debug(`could not get key by id`);
+          throw new Error("no user Handle or keyId was specified");
+        }
+      }
+      else {
+        const userIdView = new DataView(response.userHandle);
+        keyIndex = userIdView.getInt16(1)
       }
       try {
         this.debug(`sending webauthn to server`);
-        const info = await this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, response.userHandle);
+        const info = await this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, keyIndex, persistor);
         this.debug(`successful`);
         this.handleLoginSuccess(info, "");
       }

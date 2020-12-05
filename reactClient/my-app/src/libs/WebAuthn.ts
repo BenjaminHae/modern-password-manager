@@ -26,7 +26,6 @@ export default class WebAuthn {
         ]
       }
     });
-    this.rememberStorage(); 
     if(!credentials)
       throw new Error("no credentials created");
     if(credentials.type !== "public-key")
@@ -49,15 +48,4 @@ export default class WebAuthn {
     return ids.map(id => ({ id: id, "type": "public-key" }));
   }
 
-  rememberStorage(): void {
-    window.localStorage.setItem(this.localStoreKey, "yes")
-  }
-
-  clearStorage(): void {
-    window.localStorage.removeItem(this.localStoreKey)
-  }
-
-  credentialsAvailable(): boolean {
-    return window.localStorage.getItem(this.localStoreKey) === "yes";
-  }
 }
