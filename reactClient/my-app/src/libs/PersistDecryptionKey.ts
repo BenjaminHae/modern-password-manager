@@ -104,7 +104,7 @@ export default class PersistDecryptionKey {
       const objectStore = transaction.objectStore(this.storageKeysName);
       const index = objectStore.index("credentialId");
       const request = index.getKey(credentialId);
-      request.onerror = (e) => resolve("could not find credentialId");
+      request.onerror = (e) => resolve();
       request.onsuccess = () => resolve(request.result as number);
     });
   }
