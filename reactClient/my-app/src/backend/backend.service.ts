@@ -9,7 +9,7 @@ import { ServerSettings } from './models/serverSettings';
 import { AccountTransformerService } from './controller/account-transformer.service';
 import { CredentialService } from './credential.service';
 import { CredentialProviderPassword } from './controller/credentialProviderPassword';
-import CredentialProviderPersist from './controller/credentialProviderPersist';
+import CredentialProviderPersist, { IPersistingMechanism }  from './controller/credentialProviderPersist';
 import { ICredentialProvider } from './controller/credentialProvider';
 import { CryptoService } from './crypto.service';
 import { Observable, Subscriber, TeardownLogic } from 'rxjs';
@@ -63,11 +63,10 @@ export class BackendService {
     return response;
   }
 
-  async logonWithWebAuthn( id: string, authenticatorData: ArrayBuffer, clientDataJSON: ArrayBuffer, signature: ArrayBuffer, keyType: string, userHandle: ArrayBuffer): Promise<ILogonInformation> {
-    const response = await this.userService.loginWebAuthn(id, authenticatorData, clientDataJSON, signature, keyType, userHandle)
-    const creds = new CredentialProviderPersist();
-    const userIdView = new DataView(userHandle);
-    await creds.generateFromStoredKeys(response.wrappedServerKey, userIdView.getInt16(1));
+  async logonWithWebAuthn( id: string, authenticatorData: ArrayBuffer, clientDataJSON: ArrayBuffer, signature: ArrayBuffer, keyType: string, keyIndex: number, persistor: IPersistingMechanism): Promise<ILogonInformation> {
+    const response = await this.userService.loginWebAuthn(id, authenticatorData, clientDataJSON, signature, keyType)
+    const creds = new CredentialProviderPersist(persistor);
+    await creds.generateFromStoredKeys(response.wrappedServerKey, keyIndex);
     await this.logonWithCredentials(creds);
     return response;
   }
