@@ -70,6 +70,8 @@ export default class App extends React.Component<{}, AppState> {
       debugCount: -5
     }
 
+    window.addEventListener('error', (event) => {this.debug(event.message);});
+
     let basePath = "";
     if (process.env.REACT_APP_API_BASE_URL) {
       basePath = process.env.REACT_APP_API_BASE_URL;
