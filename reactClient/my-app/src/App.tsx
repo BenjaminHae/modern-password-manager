@@ -302,8 +302,14 @@ export default class App extends React.Component<{}, AppState> {
       let keyIndex: number | undefined;
       if (!response.userHandle) {
         this.debug(`no user Handle was specified`);
-        keyIndex = await persistor.indexByCredentialId(credentials.id);
         this.debug(`Trying to get by id`);
+        try {
+          keyIndex = await persistor.indexByCredentialId(credentials.id);
+        }
+        catch(e) {
+          this.debug(`Finding credential in indexdb failed: ${e.message}`);
+          throw e;
+        }
         if (!keyIndex) {
           this.debug(`could not get key by id`);
           throw new Error("no user Handle or keyId was specified");
