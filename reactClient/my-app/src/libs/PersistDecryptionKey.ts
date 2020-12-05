@@ -100,11 +100,11 @@ export default class PersistDecryptionKey {
       }
       const transaction = this.db.transaction([this.storageKeysName], "readonly");
       transaction.oncomplete = () => {};
-      transaction.onerror = () => reject();
+      transaction.onerror = () => reject("indexdb transaction failed");
       const objectStore = transaction.objectStore(this.storageKeysName);
       const index = objectStore.index("credentialId");
       const request = index.getKey(credentialId);
-      request.onerror = (e) => resolve();
+      request.onerror = (e) => resolve("could not find credentialId");
       request.onsuccess = () => resolve(request.result as number);
     });
   }
