@@ -2,8 +2,10 @@ import { IDecryptionKeys } from '../backend/controller/credentialProviderPersist
 
 export default class PersistDecryptionKey {
   readonly storageDbName = "localDecryptionKey";
-  readonly storageDbVersion = 2;
-  readonly storageKeysName ="keys";
+  readonly storageDbVersion = 3;
+  readonly storageKeysName = "keys";
+  readonly storageKeysCredentialIndex = "credentialId";
+  readonly storageKeysUserIndex = "displayName";
 
   private db?: IDBDatabase;
 
@@ -22,32 +24,25 @@ export default class PersistDecryptionKey {
       };
       request.onupgradeneeded = (event: any) => {
         if (event && event.target && event.target.result) {
+          console.log(`Database upgrade needed: ${event.oldVersion} to ${event.newVersion}`);
           const db = event.target.result;
-          const oldVersion = event.oldVersion;
-          let upgradePromise = Promise.resolve();
-          if (oldVersion < 1) {
-            let objectStore = db.createObjectStore(this.storageKeysName, { autoIncrement: true });
-            upgradePromise = upgradePromise.then(() => new Promise((resolve, reject) => {
-              objectStore.transaction.oncomplete = () => {
-                this.db = db;
-                resolve();
-              };
-              }));
+          const upgradeTransaction = event.target.transaction;
+          let objectStore: IDBObjectStore;
+          if (!db.objectStoreNames.contains(this.storageKeysName)) {
+            console.log(`Creating object store: ${this.storageKeysName}`);
+            objectStore = db.createObjectStore(this.storageKeysName, { autoIncrement: true });
           }
-          if (oldVersion < 2) {
-            upgradePromise = upgradePromise.then(() => new Promise((resolve, reject) => {
-              let transaction = db.transaction([this.storageKeysName], "readwrite");
-              transaction.oncomplete = () => { resolve() };
-              transaction.onerror = () => reject();
-              let objectStore = transaction.objectStore(this.storageKeysName);
-              objectStore.createIndex("displayName", "displayName", {unique: true});
-              objectStore.createIndex("credentialId", "credentialIdString", {unique: true});
-            }));
+          else {
+            objectStore = upgradeTransaction.objectStore(this.storageKeysName);
           }
-          upgradePromise.then(()=> {
-            resolve_db();
-          })
-          .catch(()=> { reject_db() });
+          if (!objectStore.indexNames.contains(this.storageKeysCredentialIndex)) {
+            console.log(`Creating index: ${this.storageKeysCredentialIndex}`);
+            objectStore.createIndex(this.storageKeysCredentialIndex, "credentialIdString", {unique: true});
+          }
+          if (!objectStore.indexNames.contains(this.storageKeysUserIndex)) {
+            console.log(`Creating index: ${this.storageKeysUserIndex}`);
+            objectStore.createIndex(this.storageKeysUserIndex, "displayName", {unique: true});
+          }
         }
       };
     })
@@ -102,7 +97,7 @@ export default class PersistDecryptionKey {
       transaction.oncomplete = () => {};
       transaction.onerror = () => reject("indexdb transaction failed");
       const objectStore = transaction.objectStore(this.storageKeysName);
-      const index = objectStore.index("credentialId");
+      const index = objectStore.index(this.storageKeysCredentialIndex);
       const request = index.getKey(credentialId);
       request.onerror = (e) => resolve();
       request.onsuccess = () => resolve(request.result as number);
