@@ -255,22 +255,33 @@ export default class App extends React.Component<{}, AppState> {
   async webAuthnCreate(deviceName: string, userName: string, password: string): Promise<void> {
     let persistor = new PersistDecryptionKey()
     let creds = new CredentialProviderPersist(persistor);
+    debug('starting registration of WebAuthN keys');
     await creds.generateFromPassword(password);
     if (!await this.backend.verifyCredentials(creds)) {
+      debug('Password did not match');
       return Promise.reject("password does not match");
     }
+    debug('persist decryption key locally');
     let storedKey = await creds.persistKey();
     try {
+      debug('Retrieving challenge');
       let challenge = await this.backend.getWebAuthnChallenge();
+      debug('Received Challenge');
       let webAuthn = new WebAuthn();
       const userIdBuffer = new ArrayBuffer(16);
       const idView = new DataView(userIdBuffer);
       idView.setInt16(1, storedKey.keyIndex);
+      debug('Requesting credential from device');
       let webAuthCredential = await webAuthn.createCredential(challenge, 'Password-Manager', {id: userIdBuffer, displayName:userName, name:userName});
+      debug(`Device handled registration successfully`);
       persistor.appendCredentialId(storedKey.keyIndex, webAuthCredential.rawId, webAuthCredential.id, userName);
       let attestationResponse = webAuthCredential.response as AuthenticatorAttestationResponse;
+      debug(`Sending registration to backend`);
       await this.backend.createWebAuthn(webAuthCredential.id, deviceName, attestationResponse.attestationObject, attestationResponse.clientDataJSON, webAuthCredential.type, storedKey.wrappedServerKey);
+      debug(`Success`);
     } catch(e) {
+      debug(`Registration failed: ${e.message}`);
+      debug(`Removing persisted keys`);
       persistor.removeKeys(storedKey.keyIndex);
       throw e;
     }
