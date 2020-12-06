@@ -302,7 +302,7 @@ export default class App extends React.Component<{}, AppState> {
       let keyIndex: number | undefined;
       if (!response.userHandle) {
         this.debug(`no user Handle was specified`);
-        this.debug(`Trying to get by id`);
+        this.debug(`Trying to get by id ${credentials.id}`);
         try {
           keyIndex = await persistor.indexByCredentialId(credentials.id);
         }
