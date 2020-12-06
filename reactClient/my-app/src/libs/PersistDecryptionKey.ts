@@ -11,7 +11,7 @@ export default class PersistDecryptionKey {
 
   private initStorage(): Promise<void> {
     return new Promise<void>((resolve_db, reject_db) => {
-      var request = window.indexedDB.open(this.storageDbName, this.storageDbVersion);
+      const request = window.indexedDB.open(this.storageDbName, this.storageDbVersion);
       request.onerror = () => reject_db();
       request.onsuccess = (event: any) => {
         if (event && event.target && "result" in event.target && event.target.result) {
@@ -57,11 +57,10 @@ export default class PersistDecryptionKey {
         reject();
         return;
       }
-      let transaction = this.db.transaction([this.storageKeysName], "readwrite");
-      transaction.oncomplete = () => {};
+      const transaction = this.db.transaction([this.storageKeysName], "readwrite");
       transaction.onerror = () => reject();
-      let objectStore = transaction.objectStore(this.storageKeysName);
-      let request = objectStore.add(decryptionKeys);
+      const objectStore = transaction.objectStore(this.storageKeysName);
+      const request = objectStore.add(decryptionKeys);
       request.onsuccess = (event: any) => resolve(event.target.result);
     });
   }
@@ -75,11 +74,10 @@ export default class PersistDecryptionKey {
         reject();
         return;
       }
-      let transaction = this.db.transaction([this.storageKeysName], "readwrite");
-      transaction.oncomplete = () => {};
+      const transaction = this.db.transaction([this.storageKeysName], "readwrite");
       transaction.onerror = () => reject();
-      let objectStore = transaction.objectStore(this.storageKeysName);
-      let request = objectStore.delete(id);
+      const objectStore = transaction.objectStore(this.storageKeysName);
+      const request = objectStore.delete(id);
       request.onsuccess = () => resolve();
     });
   }
@@ -94,12 +92,11 @@ export default class PersistDecryptionKey {
         return;
       }
       const transaction = this.db.transaction([this.storageKeysName], "readonly");
-      transaction.oncomplete = () => {};
       transaction.onerror = () => reject("indexdb transaction failed");
       const objectStore = transaction.objectStore(this.storageKeysName);
       const index = objectStore.index(this.storageKeysCredentialIndex);
       const request = index.getKey(credentialId);
-      request.onerror = (e) => resolve();
+      request.onerror = () => resolve();
       request.onsuccess = () => resolve(request.result as number);
     });
   }
