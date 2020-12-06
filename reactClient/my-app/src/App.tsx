@@ -119,6 +119,7 @@ export default class App extends React.Component<{}, AppState> {
           this.plugins.loginViewReady();
           });
     this.plugins.setFilterChangeHandler(this.filterChangeHandler.bind(this));
+    window.history.pushState({}, "", "/");
   }
   doLogin(username:string, password: string):Promise<void> {
     this.clearMessages();
