@@ -95,7 +95,6 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
   render (): JSX.Element {
     return (
       <div className={styles.WebAuthn}>
-        <h3>Login without password</h3>
         {!this.props.webAuthnThisDeviceRegistered && 
           <Button onClick={this.handleDialogShow}><Plus/> Register this device </Button>
         }

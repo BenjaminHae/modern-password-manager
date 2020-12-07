@@ -41,20 +41,15 @@ const UserFieldConfiguration: React.FC<IUserFieldConfigurationProps> = (props: I
   }
   
   return (
-    <div className={styles.UserFieldConfiguration}>
-      <Col>
-        <h3>User Field Options</h3>
-        <Form onSubmit={submit} noValidate>
-          <fieldset disabled={waiting}>
-            <Form.Group controlId="UserOptionsForm.Text">
-              <Form.Label>Example textarea</Form.Label>
-              <Form.Control as="textarea" rows={10} value={ options } onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOptions(e.target.value)} className={styles.Textarea} />
-            </Form.Group>
-            <Button variant="primary" type="submit">Store</Button>
-          </fieldset>
-        </Form>
-      </Col>
-    </div>
+    <Form onSubmit={submit} noValidate className={styles.UserFieldConfiguration} >
+      <fieldset disabled={waiting}>
+        <Form.Group controlId="UserOptionsForm.Text">
+          <Form.Label>Example textarea</Form.Label>
+          <Form.Control as="textarea" rows={10} value={ options } onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOptions(e.target.value)} className={styles.Textarea} />
+        </Form.Group>
+        <Button variant="primary" type="submit">Store</Button>
+      </fieldset>
+    </Form>
     );
 }
 

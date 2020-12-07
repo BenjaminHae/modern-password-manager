@@ -23,7 +23,7 @@ class Unauthenticated extends React.Component<UnauthenticatedProps> {
   render (): JSX.Element {
     return (
       <div className={styles.Unauthenticated}>
-        <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
+        <Col xl={{ span: 2, offset: 5 }} lg={{ span: 4, offset: 4 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
           <Accordion defaultActiveKey="0">
             <Card>
               <Card.Header>
