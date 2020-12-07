@@ -134,17 +134,18 @@ export default class PersistDecryptionKey {
       transaction.oncomplete = () => {};
       transaction.onerror = () => reject();
       const objectStore = transaction.objectStore(this.storageKeysName);
-      const request = objectStore.get(keyId);
-      request.onerror = (e) => reject(e);
-      request.onsuccess = () => {
-        let keys = request.result;
-        keys.credentialId = credentialId;
-        keys.credentialIdString = credentialIdString;
-        keys.displayName = displayName;
-        const updateRequest = objectStore.put(keys);
-        updateRequest.onsuccess = () => resolve();
-        updateRequest.onerror = (e) => reject(e);
-      }
+      objectStore.openCursor(keyId).onsuccess = (event: any) => {
+        const cursor: IDBCursorWithValue = event.target.result;
+        if (cursor) {
+          const data = cursor.value;
+          data.credentialId = credentialId;
+          data.credentialIdString = credentialIdString;
+          data.displayName = displayName;
+          const updateRequest = cursor.update(data);
+          updateRequest.onsuccess = () => resolve();
+          updateRequest.onerror = (e) => reject(e);
+        }
+      };
     });
   }
 
