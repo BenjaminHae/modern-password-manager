@@ -21,7 +21,7 @@ const UserSettings: React.FC<IUserSettingsProps> = (props: IUserSettingsProps) =
             <Card>
               <Card.Header>
                 <Accordion.Toggle as={Button} variant="light" eventKey="0">
-                  <h3>User Field Options</h3>
+                  <h4>User Field Options</h4>
                 </Accordion.Toggle>
               </Card.Header>
               <Accordion.Collapse eventKey="0">
@@ -35,7 +35,7 @@ const UserSettings: React.FC<IUserSettingsProps> = (props: IUserSettingsProps) =
             <Card>
               <Card.Header>
                 <Accordion.Toggle as={Button} variant="light" eventKey="1">
-                  <h3>Change Password</h3>
+                  <h4>Change Password</h4>
                 </Accordion.Toggle>
               </Card.Header>
               <Accordion.Collapse eventKey="1">
@@ -51,7 +51,7 @@ const UserSettings: React.FC<IUserSettingsProps> = (props: IUserSettingsProps) =
             <Card>
               <Card.Header>
                 <Accordion.Toggle as={Button} variant="light" eventKey="2">
-                  <h3>Logon without password</h3>
+                  <h4>Logon without password</h4>
                 </Accordion.Toggle>
               </Card.Header>
               <Accordion.Collapse eventKey="2">

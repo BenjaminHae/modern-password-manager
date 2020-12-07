@@ -23,7 +23,7 @@ class Unauthenticated extends React.Component<UnauthenticatedProps> {
   render (): JSX.Element {
     return (
       <div className={styles.Unauthenticated}>
-        <Col xl={{ span: 2, offset: 5 }} lg={{ span: 4, offset: 4 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
+        <Col xl={{ span: 4, offset: 4 }} lg={{ span: 6, offset: 3 }} md={{ span: 6, offset: 3 }} sm={{ span: 10, offset: 1 }}>
           <Accordion defaultActiveKey="0">
             <Card>
               <Card.Header>
@@ -33,7 +33,9 @@ class Unauthenticated extends React.Component<UnauthenticatedProps> {
               </Card.Header>
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
-                  <Login doLogin={this.props.doLogin} ready={this.props.ready}/>
+                  <Col xl={{ span: 10, offset: 1 }} lg={{ span: 12, offset: 0 }}>
+                    <Login doLogin={this.props.doLogin} ready={this.props.ready}/>
+                  </Col>
                 </Card.Body>
               </Accordion.Collapse>
             </Card>
@@ -46,10 +48,12 @@ class Unauthenticated extends React.Component<UnauthenticatedProps> {
               </Card.Header>
               <Accordion.Collapse eventKey="1"> 
                 <Card.Body>
-                  <Register 
-                    doRegister={this.props.doRegister} 
-                    showMessage={this.props.showMessage}
-                  />
+                  <Col xl={{ span: 10, offset: 1 }} lg={{ span: 12, offset: 0 }}>
+                    <Register 
+                      doRegister={this.props.doRegister} 
+                      showMessage={this.props.showMessage}
+                    />
+                  </Col>
                 </Card.Body>
               </Accordion.Collapse>
             </Card>
