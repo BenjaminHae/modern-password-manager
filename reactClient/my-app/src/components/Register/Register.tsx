@@ -77,44 +77,39 @@ class Register extends React.Component<RegisterProps, RegisterState> {
   }
   render (): JSX.Element {
     return (
-    <div className={styles.Register}>
-      <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
-      <h2>Register</h2>
-      <Form onSubmit={this.submitForm.bind(this)} noValidate validated={this.state.validated} >
-        <fieldset disabled={this.state.waiting}>
-          <Form.Group controlId="registerFormUsername">
-            <Form.Label>Username</Form.Label>
-            <Form.Control type="text" placeholder="Enter Username" name="username" onChange={this.handleGenericChange} value={this.state.username} required/>
-            <Form.Control.Feedback type="invalid">
-              Username is required
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group controlId="registerFormEmail">
-            <Form.Label>E-Mail</Form.Label>
-            <Form.Control type="email" placeholder="Enter E-Mail-Address" name="email" onChange={this.handleGenericChange} value={this.state.email} required/>
-            <Form.Control.Feedback type="invalid">
-              Email is required
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group controlId="registerFormPassword">
-            <Form.Label>Password</Form.Label>
-            <PasswordInputWithToggle onChange={this.handleGenericChange} value={this.state.password} required/>
-            <Form.Control.Feedback type="invalid">
-              Password is required
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group controlId="registerFormPassword2">
-            <Form.Label>Password</Form.Label>
-            <PasswordInputWithToggle placeholder="New Password (repeated)" name="password2" onChange={this.handleGenericChange} value={this.state.password2} required/>
-            <Form.Control.Feedback type="invalid">
-              Password repeat is required
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Button variant="primary" type="submit">{ this.state.waiting ? "Wait" : "Register" }</Button>
-        </fieldset>
-      </Form>
-      </Col>
-    </div>
+    <Form onSubmit={this.submitForm.bind(this)} noValidate validated={this.state.validated} className={styles.Register} >
+      <fieldset disabled={this.state.waiting}>
+        <Form.Group controlId="registerFormUsername">
+          <Form.Label>Username</Form.Label>
+          <Form.Control type="text" placeholder="Enter Username" name="username" onChange={this.handleGenericChange} value={this.state.username} required/>
+          <Form.Control.Feedback type="invalid">
+            Username is required
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="registerFormEmail">
+          <Form.Label>E-Mail</Form.Label>
+          <Form.Control type="email" placeholder="Enter E-Mail-Address" name="email" onChange={this.handleGenericChange} value={this.state.email} required/>
+          <Form.Control.Feedback type="invalid">
+            Email is required
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="registerFormPassword">
+          <Form.Label>Password</Form.Label>
+          <PasswordInputWithToggle onChange={this.handleGenericChange} value={this.state.password} required/>
+          <Form.Control.Feedback type="invalid">
+            Password is required
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="registerFormPassword2">
+          <Form.Label>Password</Form.Label>
+          <PasswordInputWithToggle placeholder="New Password (repeated)" name="password2" onChange={this.handleGenericChange} value={this.state.password2} required/>
+          <Form.Control.Feedback type="invalid">
+            Password repeat is required
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Button variant="primary" type="submit">{ this.state.waiting ? "Wait" : "Register" }</Button>
+      </fieldset>
+    </Form>
     )
   }
 }

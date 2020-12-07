@@ -51,30 +51,25 @@ class Login extends React.Component<LoginProps, LoginState> {
   }
   render (): JSX.Element {
     return (
-    <div className={styles.Login}>
-      <Col lg={{ span: 2, offset: 5 }} md={{ span: 4, offset: 4 }} sm={{ span: 10, offset: 1 }}>
-        <h2>Login</h2>
-        <Form onSubmit={this.doLogon} noValidate validated={this.state.validated} >
-          <fieldset disabled={this.state.waiting}>
-            <Form.Group controlId="formUsername">
-              <Form.Label>Username</Form.Label>
-              <Form.Control type="text" autoFocus placeholder="Enter Username" name="username" onChange={this.handleGenericChange} required />
-              <Form.Control.Feedback type="invalid">
-                Username is required
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group controlId="formPassword">
-              <Form.Label>Password</Form.Label>
-              <PasswordInputWithToggle onChange={this.handleGenericChange} value={this.state.password} required />
-              <Form.Control.Feedback type="invalid">
-                Password is required
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Button disabled={!this.props.ready} variant="primary" type="submit">{ this.state.waiting || !this.props.ready ? "Wait" : "Login" }</Button>
-          </fieldset>
-        </Form>
-      </Col>
-    </div>
+    <Form onSubmit={this.doLogon} noValidate validated={this.state.validated} className={styles.Login} >
+      <fieldset disabled={this.state.waiting}>
+        <Form.Group controlId="formUsername">
+          <Form.Label>Username</Form.Label>
+          <Form.Control type="text" autoFocus placeholder="Enter Username" name="username" onChange={this.handleGenericChange} required />
+          <Form.Control.Feedback type="invalid">
+            Username is required
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="formPassword">
+          <Form.Label>Password</Form.Label>
+          <PasswordInputWithToggle onChange={this.handleGenericChange} value={this.state.password} required />
+          <Form.Control.Feedback type="invalid">
+            Password is required
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Button disabled={!this.props.ready} variant="primary" type="submit">{ this.state.waiting || !this.props.ready ? "Wait" : "Login" }</Button>
+      </fieldset>
+    </Form>
     );
   }
 }
