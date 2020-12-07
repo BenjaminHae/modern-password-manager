@@ -443,6 +443,7 @@ export default class App extends React.Component<{}, AppState> {
                 doRegister={this.doRegister.bind(this)} 
                 showRegistration={this.state.registrationAllowed} 
                 showMessage={this.showMessage.bind(this)} 
+                showPersistedLogons={this.state.webAuthnPresent}
                 ready={this.state.ready}
               /> }
         {!this.state.authenticated && !this.state.ready 
