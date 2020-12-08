@@ -2,7 +2,6 @@ import React from 'react';
 import styles from './Login.module.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Col from 'react-bootstrap/Col';
 import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWithToggle';
 
 interface LoginProps {

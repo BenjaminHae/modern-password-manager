@@ -22,7 +22,7 @@ import { UserApi as OpenAPIUserService } from '@pm-server/pm-server-react-client
 import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-react-client';
 import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
 import WebAuthn from './libs/WebAuthn';
-import ShortcutManager, { ShortcutEntry } from './libs/ShortcutManager';
+import ShortcutManager from './libs/ShortcutManager';
 import PersistDecryptionKey from './libs/PersistDecryptionKey';
 import { HistoryItem, UserWebAuthnCred } from '@pm-server/pm-server-react-client';
 import Button from 'react-bootstrap/Button';

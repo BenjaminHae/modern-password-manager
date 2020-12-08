@@ -4,7 +4,6 @@ import { UserOptions, UserOptionsFromJSON } from '../../backend/models/UserOptio
 import { IMessageOptions } from '../Message/Message';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Col from 'react-bootstrap/Col';
 
 export interface IUserFieldConfigurationProps {
   userOptions: UserOptions;

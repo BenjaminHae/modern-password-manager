@@ -4,8 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { Search } from 'react-bootstrap-icons';
-import ShortcutManager, { ShortcutEntry } from '../../libs/ShortcutManager';
-import { ExtendedKeyboardEvent }from 'mousetrap';
+import ShortcutManager from '../../libs/ShortcutManager';
 
 interface SearchInputProps {
   filterCallback: (expression: string) => void;
@@ -21,10 +20,10 @@ class SearchInputComponent extends React.Component<SearchInputProps, SearchInput
     this.state = {expression: ""};
   }
   componentDidMount(): void {
-    const focus = (e: ExtendedKeyboardEvent) => { 
+    const focus = () => { 
       if (this.inputRef.current) {
-        e.preventDefault();
         this.inputRef.current.focus();
+        return false
       }
     }
     this.props.shortcuts.addShortcut({ shortcut: "/", action: focus, description: "Focus find input", component: this} );

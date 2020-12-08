@@ -19,7 +19,6 @@ import PluginMainView from '../../plugin/PluginMainView/PluginMainView';
 import { IUserSettingsProps } from '../UserSettings/UserSettings';
 import { IHistoryProps } from '../History/History';
 import ShortcutManager from '../../libs/ShortcutManager';
-import { ExtendedKeyboardEvent }from 'mousetrap';
 
 enum AuthenticatedView {
   List,
@@ -61,9 +60,9 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
     this.props.pluginSystem.registerAuthenticatedUIHandler(this);
   }
   componentDidMount(): void {
-    const selectAdd = (e: ExtendedKeyboardEvent) => { 
-      e.preventDefault();
+    const selectAdd = () => { 
       this.selectView(AuthenticatedView.Add);
+      return false;
     }
     this.props.shortcuts.addShortcut({ shortcut: "a", action: selectAdd, description: "Show Add Account dialog", component: this} );
   }
