@@ -7,7 +7,7 @@ export class SearchPlugin extends BasePlugin implements IPluginWithFilter, IPlug
   searchInput = React.createRef<SearchInputComponent>();
 
   MainViewJSX(): JSX.Element {
-    return ( <SearchInputComponent key="SearchPlugin" filterCallback={this.filterCallback.bind(this)} ref={this.searchInput} /> );
+    return ( <SearchInputComponent key="SearchPlugin" filterCallback={this.filterCallback.bind(this)} ref={this.searchInput} shortcuts={this.pluginSystem.shortcuts} /> );
   }
   
   resetFilter(): void {

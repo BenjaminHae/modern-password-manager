@@ -5,6 +5,7 @@ import { AccountTransformerService } from '../backend/controller/account-transfo
 import activatedPlugins from './ActivatedPlugins';
 import * as BasePlugin from './BasePlugin';
 import { IMessageOptions } from '../components/Message/Message';
+import ShortcutManager, { ShortcutEntry } from '../libs/ShortcutManager';
 
 export type AccountsFilter = (accounts: Array<Account>) => Array<Account>;
 type AccountFilter = (account: Account) => boolean;
@@ -37,7 +38,7 @@ export class PluginSystem {
   authenticatedUIHandler?: IAuthenticatedUIHandler;
   appHandler?: IAppHandler;
 
-  constructor (private backend: BackendService, private transformer: AccountTransformerService) {
+  constructor (private backend: BackendService, private transformer: AccountTransformerService, public shortcuts: ShortcutManager) {
     this.clearPlugins();
     this.backend.accountsObservable
       .subscribe((accounts: Array<Account>) => {
@@ -156,7 +157,7 @@ export class PluginSystem {
       this.appHandler.showMessage(text, options);
     }
   }
-  
+
   // calling backend functions through plugins
 
   backendLogin(credentialProvider: ICredentialProvider, username?: string): void {

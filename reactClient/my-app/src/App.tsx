@@ -22,6 +22,7 @@ import { UserApi as OpenAPIUserService } from '@pm-server/pm-server-react-client
 import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-react-client';
 import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
 import WebAuthn from './libs/WebAuthn';
+import ShortcutManager, { ShortcutEntry } from './libs/ShortcutManager';
 import PersistDecryptionKey from './libs/PersistDecryptionKey';
 import { HistoryItem, UserWebAuthnCred } from '@pm-server/pm-server-react-client';
 import Button from 'react-bootstrap/Button';
@@ -46,12 +47,14 @@ interface AppState {
   debug: Array<string>;
   debugCount: number;
 }
+
 export default class App extends React.Component<{}, AppState> {
   private backend: BackendService;
   private accountTransformerService: AccountTransformerService;
   private crypto: CryptoService;
   private credential: CredentialService;
   private plugins: PluginSystem;
+  private shortcuts: ShortcutManager;
 
   constructor (props: {}) {
     super(props);
@@ -88,7 +91,8 @@ export default class App extends React.Component<{}, AppState> {
         this.credential, 
         this.accountTransformerService, 
         this.crypto);
-    this.plugins = new PluginSystem(this.backend, this.accountTransformerService);
+    this.shortcuts = new ShortcutManager();
+    this.plugins = new PluginSystem(this.backend, this.accountTransformerService, this.shortcuts);
     this.plugins.registerAppHandler(this);
     this.backend.loginObservable
       .subscribe(()=>{
