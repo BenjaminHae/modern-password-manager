@@ -18,6 +18,8 @@ import { PluginSystem } from '../../plugin/PluginSystem';
 import PluginMainView from '../../plugin/PluginMainView/PluginMainView';
 import { IUserSettingsProps } from '../UserSettings/UserSettings';
 import { IHistoryProps } from '../History/History';
+import ShortcutManager from '../../libs/ShortcutManager';
+import { ExtendedKeyboardEvent }from 'mousetrap';
 
 enum AuthenticatedView {
   List,
@@ -36,6 +38,7 @@ interface IAuthenticatedProps extends IUserSettingsProps, IHistoryProps {
   getAccountPasswordHandler: (account: Account) => Promise<string>,
   pluginSystem: PluginSystem,
   showMessage: (message: string, options?: IMessageOptions) => void,
+  shortcuts: ShortcutManager
 }
 interface AuthenticatedState {
   view: AuthenticatedView;
@@ -56,6 +59,16 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
     super(props);
     this.state = this.defaultViewState();
     this.props.pluginSystem.registerAuthenticatedUIHandler(this);
+  }
+  componentDidMount(): void {
+    const selectAdd = (e: ExtendedKeyboardEvent) => { 
+      e.preventDefault();
+      this.selectView(AuthenticatedView.Add);
+    }
+    this.props.shortcuts.addShortcut({ shortcut: "a", action: selectAdd, description: "Show Add Account dialog", component: this} );
+  }
+  componentWillUnmount(): void {
+    this.props.shortcuts.removeByComponent(this);
   }
   defaultViewState(): AuthenticatedState {
     return {

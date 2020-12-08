@@ -423,7 +423,10 @@ export default class App extends React.Component<{}, AppState> {
             accounts={this.filterAccounts(this.state.accounts)} 
             historyItems={this.state.historyItems} 
             userOptions={this.state.userOptions}
+
             pluginSystem={this.plugins} 
+            shortcuts={this.shortcuts}
+
             editAccountHandler={this.editHandler.bind(this)} 
             getAccountPasswordHandler={this.getAccountPassword.bind(this)}
             bulkAddHandler={this.bulkAddAccounts.bind(this)} 
