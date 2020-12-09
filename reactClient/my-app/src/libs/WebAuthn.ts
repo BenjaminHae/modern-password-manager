@@ -17,6 +17,7 @@ export default class WebAuthn {
           authenticatorAttachment: "platform",
           userVerification: "required"
         },
+        attestation: "direct",
         challenge: challenge,
         rp: { id: document.domain, name: rpName },
         user: user,
