@@ -35,8 +35,10 @@ interface IAuthenticatedProps extends IUserSettingsProps, IHistoryProps {
   bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>,
   deleteAccountHandler: (account: Account) => Promise<void>,
   getAccountPasswordHandler: (account: Account) => Promise<string>,
-  pluginSystem: PluginSystem,
+
   showMessage: (message: string, options?: IMessageOptions) => void,
+
+  pluginSystem: PluginSystem,
   shortcuts: ShortcutManager
 }
 interface AuthenticatedState {
@@ -58,16 +60,6 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
     super(props);
     this.state = this.defaultViewState();
     this.props.pluginSystem.registerAuthenticatedUIHandler(this);
-  }
-  componentDidMount(): void {
-    const selectAdd = () => { 
-      this.selectView(AuthenticatedView.Add);
-      return false;
-    }
-    this.props.shortcuts.addShortcut({ shortcut: "a", action: selectAdd, description: "Show Add Account dialog", component: this} );
-  }
-  componentWillUnmount(): void {
-    this.props.shortcuts.removeByComponent(this);
   }
   defaultViewState(): AuthenticatedState {
     return {
@@ -127,6 +119,7 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
               editAccountHandler={this.editAccountSelect.bind(this)} 
               addAccountHandler={this.addAccountSelect.bind(this)} 
               pluginSystem={this.props.pluginSystem} 
+              shortcuts={this.props.shortcuts} 
               getAccountPasswordHandler={this.props.getAccountPasswordHandler}
             />
           </>

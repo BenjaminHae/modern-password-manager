@@ -9,6 +9,7 @@ import { PluginSystem } from '../../plugin/PluginSystem';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { Plus, Pencil } from 'react-bootstrap-icons';
+import ShortcutManager from '../../libs/ShortcutManager';
 
 
 interface AccountListProps {
@@ -17,7 +18,9 @@ interface AccountListProps {
   getAccountPasswordHandler: (account: Account) => Promise<string>;
   editAccountHandler: (account: Account) => void;
   addAccountHandler: () => void;
+
   pluginSystem: PluginSystem
+  shortcuts: ShortcutManager
 }
 interface AccountListState {
   columns: Array<IDataTableColumn>;
@@ -28,6 +31,21 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
     this.state = {
       columns: this.getColumns()
     }
+  }
+  componentDidMount(): void {
+    const selectAdd = () => { 
+      this.props.addAccountHandler();
+      return false;
+    }
+    this.props.shortcuts.addShortcut({ shortcut: "a", action: selectAdd, description: "Show Add Account dialog", component: this} );
+    const unselect = () => { 
+      if (document.activeElement && (document.activeElement instanceof HTMLElement))
+        document.activeElement.blur();
+    }
+    this.props.shortcuts.addShortcut({ shortcut: "esc", action: unselect, description: "Exit any input", component: this} );
+  }
+  componentWillUnmount(): void {
+    this.props.shortcuts.removeByComponent(this);
   }
   componentDidUpdate(prevProps: AccountListProps): void {
     if (this.props.fields !== prevProps.fields) {
@@ -57,7 +75,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
       </ButtonGroup>
     )
   }
-  
+    
   getColumns(): Array<IDataTableColumn> {
     const columns: Array<IDataTableColumn> = [
       { 

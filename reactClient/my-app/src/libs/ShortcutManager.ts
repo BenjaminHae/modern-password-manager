@@ -18,7 +18,7 @@ export default class ShortcutManager {
     this.shortcuts = [];
     const originalStopCallback = this.mousetrap.stopCallback;
     this.mousetrap.stopCallback = function(e, element, combo) {
-      if (combo == "esc")
+      if (combo === "esc")
         return false;
       return originalStopCallback(e, element, combo);
     }
