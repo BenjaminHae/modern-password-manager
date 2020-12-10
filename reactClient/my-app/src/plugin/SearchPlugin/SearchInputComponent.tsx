@@ -26,7 +26,7 @@ class SearchInputComponent extends React.Component<SearchInputProps, SearchInput
         return false
       }
     }
-    this.props.shortcuts.addShortcut({ shortcut: "/", action: focus, description: "Focus find input", component: this} );
+    this.props.shortcuts.addShortcut({ shortcut: ["/", "f"], action: focus, description: "Focus find input", component: this} );
   }
   componentWillUnmount(): void {
     this.props.shortcuts.removeByComponent(this);

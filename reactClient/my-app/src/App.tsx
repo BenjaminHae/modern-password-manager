@@ -2,6 +2,7 @@ import React from 'react';
 import DebugViewer from './components/DebugViewer/DebugViewer';
 import Authenticated from './components/Authenticated/Authenticated';
 import Unauthenticated from './components/Unauthenticated/Unauthenticated';
+import ShortcutOverview from './components/ShortcutOverview/ShortcutOverview';
 import Message, { IMessageOptions, IMessage } from './components/Message/Message';
 import './App.css';
 import styles from './App.module.css';
@@ -46,6 +47,7 @@ interface AppState {
   webAuthnPresent: boolean;
   debug: Array<string>;
   debugCount: number;
+  showShortcutOverview: boolean;
 }
 
 export default class App extends React.Component<{}, AppState> {
@@ -70,7 +72,9 @@ export default class App extends React.Component<{}, AppState> {
       webAuthnCreds: [],
       webAuthnPresent: false,
       debug: [],
-      debugCount: -5
+      debugCount: -5,
+      showShortcutOverview: false
+
     }
 
     window.addEventListener('error', (event) => {this.debug(event.message);});
@@ -124,6 +128,11 @@ export default class App extends React.Component<{}, AppState> {
           });
     this.plugins.setFilterChangeHandler(this.filterChangeHandler.bind(this));
     window.history.pushState({}, "", "/");
+    const showShortcuts = () => { 
+      this.setState({showShortcutOverview: !this.state.showShortcutOverview});
+      return false;
+    }
+    this.shortcuts.addShortcut({ shortcut: "?", action: showShortcuts, description: "Show Shortcuts", component: this} );
   }
   doLogin(username:string, password: string):Promise<void> {
     this.clearMessages();
@@ -456,7 +465,8 @@ export default class App extends React.Component<{}, AppState> {
         {!this.state.authenticated && !this.state.ready 
           && <span>Waiting for server</span> }
         {this.state.debugCount >= 1 &&
-          <DebugViewer messages={this.state.debug} counter={this.state.debugCount*10}/> }
+          <DebugViewer messages={this.state.debug} counter={this.state.debugCount*10} /> }
+          <ShortcutOverview shortcuts={this.shortcuts} show={this.state.showShortcutOverview} hide={() => this.setState({showShortcutOverview: false})}/>
         <footer className="App-footer"><span onClick={()=>{this.setState({ debugCount: this.state.debugCount + 1 })}}>Version: {process.env.REACT_APP_GIT_SHA}</span></footer>
       </div>
     );

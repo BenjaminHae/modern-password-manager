@@ -3,7 +3,7 @@ import Mousetrap, { ExtendedKeyboardEvent, MousetrapInstance } from 'mousetrap';
 
 
 export interface ShortcutEntry {
-  shortcut: string,
+  shortcut: string | string[],
   action: (e: ExtendedKeyboardEvent) => void,
   description: string,
   component: React.Component 
@@ -49,5 +49,8 @@ export default class ShortcutManager {
       this.mousetrap.unbind(item.shortcut);
     }
     this.shortcuts = this.shortcuts.filter((element) => element.component !== component);
+  }
+  getAllShortcuts(): Array<ShortcutEntry> {
+    return this.shortcuts;
   }
 }
