@@ -62,7 +62,8 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
         name: "",  
         ignoreRowClick: true, 
         cell: (row: UserWebAuthnCred) => <Button onClick={()=>{this.props.webAuthnDeleteCredHandler(row)}}><Trash/></Button>,
-        right: true
+        right: true,
+        width: "1em"
       }
     ];
   }
