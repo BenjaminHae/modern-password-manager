@@ -110,7 +110,7 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
           <Form onSubmit={this.handleDialogStore}>
             <Modal.Body>
               <Form.Group controlId="webAuthnFormUsername">
-                <Form.Label>Username (to be shown in authentication dialog)</Form.Label>
+                <Form.Label>Username (not necessarily your current username - only shown locally in authentication dialog)</Form.Label>
                 <Form.Control type="text" autoFocus placeholder="Enter Username" name="username" onChange={this.handleGenericChange} required />
               </Form.Group>
               <Form.Group controlId="webAuthnFormDeviceName">
