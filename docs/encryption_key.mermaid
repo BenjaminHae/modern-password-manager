@@ -1,0 +1,17 @@
+graph TD
+    subgraph Server
+        C[Challenge]
+        R --> A{Authentication & Authorization}
+        A --> EncAcc[Encrypted Accounts]
+    end
+    subgraph Client
+        subgraph Key generation
+            P[Password] -->G{PBKDF2} --> K[Encryption Key]
+        end
+        C --- E
+        K --> E
+        E{Encrypt} --> R[Response]
+        EncAcc --- D
+        K --> D{Decrypt}
+        D --> Acc[Accounts]
+    end  
