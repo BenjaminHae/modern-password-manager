@@ -17,9 +17,6 @@ interface UnauthenticatedProps {
   ready: boolean;
 }
 class Unauthenticated extends React.Component<UnauthenticatedProps> {
-  constructor(props: UnauthenticatedProps) {
-    super(props);
-  }
   render (): JSX.Element {
     return (
       <div className={styles.Unauthenticated}>

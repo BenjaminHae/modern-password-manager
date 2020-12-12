@@ -7,6 +7,12 @@ export abstract class BasePlugin {
   }
 }
 
+export interface IPluginShortcut {
+  action: (account: Account) => void;
+  shortcut: string | string[];
+  description: string;
+}
+
 /* Possible callbacks:
   editInputPrepend(inputKey: string, value: string, account?: Account): JSX.Element | void
   editInputAppend(inputKey: string, value: string, account?: Account): JSX.Element | void
@@ -53,6 +59,10 @@ export interface IPluginWithEditInputButton {
   editInputButton: (inputKey: string, currentValue: string, setValue: (val: string) => void, account?: Account) => JSX.Element | void;
 }
 
+export interface IPluginWithAccountListShortcuts {
+  accountListShortcuts: () => Array<IPluginShortcut>;
+}
+
 export interface IPluginRequiresTransformer {
   setTransformer: (transformer: AccountTransformerService) => void;
 }
@@ -95,6 +105,10 @@ export function instanceOfIPluginWithLoginViewReady(object: unknown): object is 
 
 export function instanceOfIPluginWithEditInputButton(object: unknown): object is IPluginWithEditInputButton {
   return checkForObjectAndMethod(object, 'editInputButton');
+}
+
+export function instanceOfIPluginWithAccountListShortcuts(object: unknown): object is IPluginWithAccountListShortcuts {
+  return checkForObjectAndMethod(object, 'accountListShortcuts');
 }
 
 export function instanceOfIPluginWithEditPreShow(object: unknown): object is IPluginWithEditPreShow {

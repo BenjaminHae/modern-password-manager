@@ -18,6 +18,7 @@ import { PluginSystem } from '../../plugin/PluginSystem';
 import PluginMainView from '../../plugin/PluginMainView/PluginMainView';
 import { IUserSettingsProps } from '../UserSettings/UserSettings';
 import { IHistoryProps } from '../History/History';
+import ShortcutManager from '../../libs/ShortcutManager';
 
 enum AuthenticatedView {
   List,
@@ -34,12 +35,16 @@ interface IAuthenticatedProps extends IUserSettingsProps, IHistoryProps {
   bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>,
   deleteAccountHandler: (account: Account) => Promise<void>,
   getAccountPasswordHandler: (account: Account) => Promise<string>,
-  pluginSystem: PluginSystem,
+
   showMessage: (message: string, options?: IMessageOptions) => void,
+
+  pluginSystem: PluginSystem,
+  shortcuts: ShortcutManager
 }
 interface AuthenticatedState {
   view: AuthenticatedView;
   selectedAccount?: Account;
+  selectedIndex: number;
   addAccountProposals?: {[index: string]:string};
 }
 class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedState> {
@@ -60,8 +65,12 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
   defaultViewState(): AuthenticatedState {
     return {
       view: AuthenticatedView.List,
-      selectedAccount: undefined
+      selectedAccount: undefined,
+      selectedIndex: 0
     }
+  }
+  selectIndex(index: number): void {
+    this.setState({selectedIndex: index});
   }
   selectView(view: AuthenticatedView): void {
     this.setState({view: view});
@@ -108,14 +117,19 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
       case AuthenticatedView.List:
         return (
           <>
-            <PluginMainView pluginSystem={this.props.pluginSystem} />
+            <PluginMainView 
+              pluginSystem={this.props.pluginSystem} 
+            />
             <AccountList 
               accounts={this.props.accounts} 
               fields={this.props.userOptions.fields} 
               editAccountHandler={this.editAccountSelect.bind(this)} 
               addAccountHandler={this.addAccountSelect.bind(this)} 
               pluginSystem={this.props.pluginSystem} 
+              shortcuts={this.props.shortcuts} 
               getAccountPasswordHandler={this.props.getAccountPasswordHandler}
+              selectedIndex={this.state.selectedIndex}
+              selectIndexHandler={this.selectIndex.bind(this)}
             />
           </>
         );
