@@ -272,7 +272,7 @@ export default class App extends React.Component<{}, AppState> {
     await creds.generateFromPassword(password);
     if (!await this.backend.verifyCredentials(creds)) {
       this.debug('Password did not match');
-      return Promise.reject("password does not match");
+      return Promise.reject("Password does not match");
     }
     this.debug('persist decryption key locally');
     let storedKey = await creds.persistKey();
