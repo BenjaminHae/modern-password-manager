@@ -81,6 +81,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
         if (account) {
           shortcut.action(account);
         }
+        return false;
       }
       this.props.shortcuts.addShortcut({ shortcut: shortcut.shortcut, action: handleShortcut, description: shortcut.description, component: this} );
     }
