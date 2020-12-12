@@ -1,5 +1,12 @@
-.Authenticated {
-  padding: 10px;
+@media (min-width : 920px) {
+        .Authenticated {
+          padding: 10px;
+        }
+}
+@media (max-width : 920px) {
+        .ListFluid {
+          padding: 0px !important;
+        }
 }
 .Selectors {
   float: right;

@@ -62,7 +62,8 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
         name: "",  
         ignoreRowClick: true, 
         cell: (row: UserWebAuthnCred) => <Button onClick={()=>{this.props.webAuthnDeleteCredHandler(row)}}><Trash/></Button>,
-        right: true
+        right: true,
+        width: "1em"
       }
     ];
   }
@@ -78,12 +79,15 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
     event.preventDefault();
     //props.webAuthnCreateCredHandler()
     try {
-      await this.props.webAuthnCreateCredHandler(this.state.devicename, this.state.username, this.state.password);
+      let password = this.state.password;
+      this.setState({password:""});
+      await this.props.webAuthnCreateCredHandler(this.state.devicename, this.state.username, password);
       this.props.showMessage(`Successfully stored key for ${this.state.devicename}`, {variant : "info"});
       this.handleDialogClose();
     }
     catch(e) {
-      this.props.showMessage(`Error when storing key: ${e.message}`, {autoClose: false, variant: "danger"});
+      const message = e instanceof Error ? e.message : e;
+      this.props.showMessage(`Error when storing key: ${message}`, {autoClose: false, variant: "danger"});
       throw(e);
     }
   }
@@ -106,7 +110,7 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
           <Form onSubmit={this.handleDialogStore}>
             <Modal.Body>
               <Form.Group controlId="webAuthnFormUsername">
-                <Form.Label>Username (to be shown in authentication dialog)</Form.Label>
+                <Form.Label>Username (not necessarily your current username - only shown locally in authentication dialog)</Form.Label>
                 <Form.Control type="text" autoFocus placeholder="Enter Username" name="username" onChange={this.handleGenericChange} required />
               </Form.Group>
               <Form.Group controlId="webAuthnFormDeviceName">

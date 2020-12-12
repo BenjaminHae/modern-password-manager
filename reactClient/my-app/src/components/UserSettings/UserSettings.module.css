@@ -1,1 +1,5 @@
-.UserSettings {}
+@media (max-width : 920px) {
+        .UserSettings {
+          padding: 0px !important;
+        }
+}

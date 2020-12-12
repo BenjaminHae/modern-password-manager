@@ -89,7 +89,7 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
     return (
       <div className={styles.Authenticated}>
         <Container fluid >{this.renderSelectors()}</Container>
-        <Container fluid>{this.renderSwitchAuthenticatedView()}</Container>
+        <Container fluid className={styles.ListFluid}>{this.renderSwitchAuthenticatedView()}</Container>
       </div>
     );
   }

@@ -24,7 +24,9 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-  min-height: 3em;
+  /*min-height: 3em;*/
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 .App-footer {

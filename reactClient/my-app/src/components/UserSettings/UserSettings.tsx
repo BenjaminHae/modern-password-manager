@@ -14,8 +14,7 @@ export interface IUserSettingsProps extends IWebAuthnProps, IChangePasswordProps
 }
 const UserSettings: React.FC<IUserSettingsProps> = (props: IUserSettingsProps) => {
   return (
-    <div className={styles.UserSettings}>
-      <Col lg={{ span: 6, offset: 3 }} md={{ span: 8, offset: 2 }} sm={{ span: 12 }}>
+      <Col lg={{ span: 6, offset: 3 }} md={{ span: 8, offset: 2 }} sm={{ span: 12 }} className={styles.UserSettings}>
         <h2>Settings</h2>
           <Accordion>
             <Card>
@@ -64,7 +63,6 @@ const UserSettings: React.FC<IUserSettingsProps> = (props: IUserSettingsProps) =
             </Card>
         </Accordion>
       </Col>
-    </div>
     );
 }
 
