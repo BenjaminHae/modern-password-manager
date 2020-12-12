@@ -10,11 +10,11 @@ export interface ShortcutOverviewProps {
   shortcuts: ShortcutManager;
 }
 const ShortcutOverview: React.FC<ShortcutOverviewProps> = (props: ShortcutOverviewProps) => {
-  const items = props.shortcuts.getAllShortcuts().map((entry) => (
-    <tr>
+  const items = props.shortcuts.getAllShortcuts().map((entry, index) => (
+    <tr key={index}>
       <td className={styles.ShortcutCell}>
         { entry.shortcut instanceof Array ?
-        <>{entry.shortcut.map<React.ReactNode>((sc) => ( <Badge pill variant="secondary"> {sc} </Badge>)).reduce((prev, curr) => [prev, ', ', curr])}</> :
+        <>{entry.shortcut.map<React.ReactNode>((sc, index) => ( <Badge pill variant="secondary" key={index}> {sc} </Badge>)).reduce((prev, curr) => [prev, ', ', curr])}</> :
         <><Badge pill variant="secondary">{ entry.shortcut }</Badge></>}
       </td>
       <td>{entry.description}</td>
