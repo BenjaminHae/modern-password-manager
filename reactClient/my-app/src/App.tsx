@@ -2,6 +2,7 @@ import React from 'react';
 import DebugViewer from './components/DebugViewer/DebugViewer';
 import Authenticated from './components/Authenticated/Authenticated';
 import Unauthenticated from './components/Unauthenticated/Unauthenticated';
+import ShortcutOverview from './components/ShortcutOverview/ShortcutOverview';
 import Message, { IMessageOptions, IMessage } from './components/Message/Message';
 import './App.css';
 import styles from './App.module.css';
@@ -22,6 +23,7 @@ import { UserApi as OpenAPIUserService } from '@pm-server/pm-server-react-client
 import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-react-client';
 import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
 import WebAuthn from './libs/WebAuthn';
+import ShortcutManager from './libs/ShortcutManager';
 import PersistDecryptionKey from './libs/PersistDecryptionKey';
 import { HistoryItem, UserWebAuthnCred } from '@pm-server/pm-server-react-client';
 import Button from 'react-bootstrap/Button';
@@ -45,13 +47,16 @@ interface AppState {
   webAuthnPresent: boolean;
   debug: Array<string>;
   debugCount: number;
+  showShortcutOverview: boolean;
 }
+
 export default class App extends React.Component<{}, AppState> {
   private backend: BackendService;
   private accountTransformerService: AccountTransformerService;
   private crypto: CryptoService;
   private credential: CredentialService;
   private plugins: PluginSystem;
+  private shortcuts: ShortcutManager;
 
   constructor (props: {}) {
     super(props);
@@ -67,7 +72,9 @@ export default class App extends React.Component<{}, AppState> {
       webAuthnCreds: [],
       webAuthnPresent: false,
       debug: [],
-      debugCount: -5
+      debugCount: -5,
+      showShortcutOverview: false
+
     }
 
     window.addEventListener('error', (event) => {this.debug(event.message);});
@@ -88,7 +95,8 @@ export default class App extends React.Component<{}, AppState> {
         this.credential, 
         this.accountTransformerService, 
         this.crypto);
-    this.plugins = new PluginSystem(this.backend, this.accountTransformerService);
+    this.shortcuts = new ShortcutManager();
+    this.plugins = new PluginSystem(this.backend, this.accountTransformerService, this.shortcuts);
     this.plugins.registerAppHandler(this);
     this.backend.loginObservable
       .subscribe(()=>{
@@ -120,6 +128,11 @@ export default class App extends React.Component<{}, AppState> {
           });
     this.plugins.setFilterChangeHandler(this.filterChangeHandler.bind(this));
     window.history.pushState({}, "", "/");
+    const showShortcuts = () => { 
+      this.setState({showShortcutOverview: !this.state.showShortcutOverview});
+      return false;
+    }
+    this.shortcuts.addShortcut({ shortcut: "?", action: showShortcuts, description: "Show Shortcuts", component: this} );
   }
   doLogin(username:string, password: string):Promise<void> {
     this.clearMessages();
@@ -419,7 +432,10 @@ export default class App extends React.Component<{}, AppState> {
             accounts={this.filterAccounts(this.state.accounts)} 
             historyItems={this.state.historyItems} 
             userOptions={this.state.userOptions}
+
             pluginSystem={this.plugins} 
+            shortcuts={this.shortcuts}
+
             editAccountHandler={this.editHandler.bind(this)} 
             getAccountPasswordHandler={this.getAccountPassword.bind(this)}
             bulkAddHandler={this.bulkAddAccounts.bind(this)} 
@@ -449,7 +465,8 @@ export default class App extends React.Component<{}, AppState> {
         {!this.state.authenticated && !this.state.ready 
           && <span>Waiting for server</span> }
         {this.state.debugCount >= 1 &&
-          <DebugViewer messages={this.state.debug} counter={this.state.debugCount*10}/> }
+          <DebugViewer messages={this.state.debug} counter={this.state.debugCount*10} /> }
+          <ShortcutOverview shortcuts={this.shortcuts} show={this.state.showShortcutOverview} hide={() => this.setState({showShortcutOverview: false})}/>
         <footer className="App-footer"><span onClick={()=>{this.setState({ debugCount: this.state.debugCount + 1 })}}>Version: {process.env.REACT_APP_GIT_SHA}</span></footer>
       </div>
     );

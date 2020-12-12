@@ -9,6 +9,8 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { Eye, X, Check2, Trash } from 'react-bootstrap-icons';
+import ShortcutManager from '../../libs/ShortcutManager';
+import { ExtendedKeyboardEvent }from 'mousetrap';
 
 interface AccountEditProps {
   account?: Account;
@@ -20,6 +22,8 @@ interface AccountEditProps {
   getAccountPasswordHandler: (account: Account) => Promise<string>;
   showMessage: (message: string, options: IMessageOptions) => void;
   pluginSystem: PluginSystem;
+
+  shortcuts: ShortcutManager
 }
 interface AccountEditState {
   fields: {[index: string]:string};
@@ -30,6 +34,16 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
   constructor(props: AccountEditProps) {
     super(props);
     this.state = { fields: this.generateFieldContents(), waiting: false};
+  }
+  componentDidMount(): void {
+    const quit = (e: ExtendedKeyboardEvent) => { 
+      e.preventDefault();
+      this.props.closeHandler()
+    }
+    this.props.shortcuts.addShortcut({ shortcut: "esc", action: quit, description: "Close Dialog", component: this} );
+  }
+  componentWillUnmount(): void {
+    this.props.shortcuts.removeByComponent(this);
   }
 
   componentDidUpdate(prevProps: AccountEditProps): void {
