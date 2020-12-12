@@ -8,9 +8,13 @@ import { IDataTableColumn } from 'react-data-table-component';
 import { PluginSystem } from '../../plugin/PluginSystem';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import { Plus, Pencil } from 'react-bootstrap-icons';
+import { Plus, Pencil, CaretRightFill } from 'react-bootstrap-icons';
 import ShortcutManager from '../../libs/ShortcutManager';
 
+class AccountWithSelected {
+  constructor(public account: Account, public selected: boolean) {
+  }
+}
 
 interface AccountListProps {
   accounts: Array<Account>;
@@ -18,6 +22,8 @@ interface AccountListProps {
   getAccountPasswordHandler: (account: Account) => Promise<string>;
   editAccountHandler: (account: Account) => void;
   addAccountHandler: () => void;
+  selectIndexHandler: (index: number) => void;
+  selectedIndex: number;
 
   pluginSystem: PluginSystem
   shortcuts: ShortcutManager
@@ -43,6 +49,41 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
         document.activeElement.blur();
     }
     this.props.shortcuts.addShortcut({ shortcut: "esc", action: unselect, description: "Exit any input", component: this} );
+    const selectOffset = (offset:number) => {
+      const currentIndex = this.props.selectedIndex;
+      let newIndex = currentIndex;
+      let arrIndex = this.props.accounts.findIndex((account) => account.index === currentIndex);
+      if (arrIndex < 0) {
+        arrIndex = 0
+        if (this.props.accounts[arrIndex]) {
+          newIndex = this.props.accounts[arrIndex].index;
+        }
+      }
+      else if ((arrIndex + offset >= 0) && (arrIndex + offset < this.props.accounts.length)) {
+        if (this.props.accounts[arrIndex + offset]) {
+          newIndex = this.props.accounts[arrIndex + offset].index;
+        }
+      }
+      this.props.selectIndexHandler(newIndex);
+    }
+    this.props.shortcuts.addShortcut({ shortcut: ["j", "down"], action: () => selectOffset(1), description: "Select next row", component: this} );
+    this.props.shortcuts.addShortcut({ shortcut: ["k", "up"], action: () => selectOffset(-1), description: "Select previous row", component: this} );
+    const editCurrentRow = () => {
+      const account = this.getAccountByIndex(this.props.selectedIndex);
+      if (account)
+        this.props.editAccountHandler(account);
+    }
+    this.props.shortcuts.addShortcut({ shortcut: "e", action: editCurrentRow, description: "Edit current row", component: this} );
+    const pluginRowShortcuts = this.props.pluginSystem.accountListShortcuts();
+    for (let shortcut of pluginRowShortcuts) {
+      const handleShortcut = () => {
+        const account = this.getAccountByIndex(this.props.selectedIndex);
+        if (account) {
+          shortcut.action(account);
+        }
+      }
+      this.props.shortcuts.addShortcut({ shortcut: shortcut.shortcut, action: handleShortcut, description: shortcut.description, component: this} );
+    }
   }
   componentWillUnmount(): void {
     this.props.shortcuts.removeByComponent(this);
@@ -52,6 +93,9 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
       this.getColumns();
       this.setState({columns: this.getColumns()});
     }
+  }
+  getAccountByIndex(index: number): Account|undefined{
+    return this.props.accounts.find((account) => account.index === index);
   }
   getTableActions(): JSX.Element {
     return <Button onClick={() => this.props.addAccountHandler()} variant="success" size="sm" ><Plus/> Add Account</Button>
@@ -78,16 +122,29 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
     
   getColumns(): Array<IDataTableColumn> {
     const columns: Array<IDataTableColumn> = [
+      { name: "",
+        ignoreRowClick: true,
+        cell: (row: AccountWithSelected) => { if (row.selected) { return ( <CaretRightFill/> ) } },
+        hide: 'md',
+        width: '5em',
+        right: true
+      },
       { 
         name: "Name", 
         selector: "name", 
         sortable:true,
-        cell: (row: Account) => [<>{row.name}</>, this.getAccountButtons(row)]
+        cell: (row: AccountWithSelected) => [<>{row.account.name}</>, this.getAccountButtons(row.account)]
       },
       { 
         name: "Password",  
         ignoreRowClick: true, 
-        cell: (row: Account) => [ <AccountPasswordWithToggle account={row} getAccountPasswordHandler={this.props.getAccountPasswordHandler}/>, this.getPasswordButtons(row)]
+        cell: (row: AccountWithSelected) => [ 
+          <AccountPasswordWithToggle 
+            account={row.account} 
+            getAccountPasswordHandler={this.props.getAccountPasswordHandler}
+          />, 
+          this.getPasswordButtons(row.account)
+        ]
       }
     ];
     const sortFunc = (a: FieldOptions, b: FieldOptions) => {
@@ -108,7 +165,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
       }
       const column: IDataTableColumn = {
           name: field.name, 
-          selector: (row: Account) => row.other[field.selector],
+          selector: (row: AccountWithSelected) => row.account.other[field.selector],
           sortable: field.sortable,
           hide: field.hideInTable || 'md'
         };
@@ -127,8 +184,20 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
 	<li key={item.index}>{item.name}</li>
 	);*/
     return (
-      <div className={styles.AccountList}>
-        <DataTable title="Passwords" columns={this.state.columns} data={this.props.accounts} striped pagination actions={this.getTableActions()} />
+      <div className={ styles.AccountList }>{ this.props.selectedIndex }
+        <DataTable 
+          title="Passwords" 
+          columns={ this.state.columns } 
+          data={ this.props.accounts.map<AccountWithSelected>(
+            (account) => { 
+              return new AccountWithSelected(account, this.props.selectedIndex === account.index); 
+            })
+          } 
+          striped 
+          pagination 
+          actions={ this.getTableActions() } 
+          keyField="index" 
+        />
       </div>
     );
   }

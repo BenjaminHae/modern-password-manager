@@ -35,6 +35,7 @@ export class PluginSystem {
   loginSuccessfulCallback: Array<(username: string, key: CryptoKey) => void> = [];
   loginViewReadyCallback: Array<() => void> = [];
   preLogoutCallback: Array<() => void> = [];
+  accountListShortcutsCallback: Array<() => Array<BasePlugin.IPluginShortcut>> = [];
   authenticatedUIHandler?: IAuthenticatedUIHandler;
   appHandler?: IAppHandler;
 
@@ -102,6 +103,9 @@ export class PluginSystem {
     }
     if (BasePlugin.instanceOfIPluginWithEditPreShow(plugin)) {
       this.editPreShowCallback.push(plugin.editPreShow.bind(plugin));
+    }
+    if (BasePlugin.instanceOfIPluginWithAccountListShortcuts(plugin)) {
+      this.accountListShortcutsCallback.push(plugin.accountListShortcuts.bind(plugin));
     }
   }
 
@@ -232,6 +236,14 @@ export class PluginSystem {
 
   editPreShow(fields: {[index: string]:string}, account?: Account): void {
     this.editPreShowCallback.forEach(pluginCallback => pluginCallback(fields, account));
+  }
+
+  accountListShortcuts(): Array<BasePlugin.IPluginShortcut> {
+    const reductor = (returnArray: Array<BasePlugin.IPluginShortcut>, callback: () => Array<BasePlugin.IPluginShortcut>): Array<BasePlugin.IPluginShortcut> => {
+      returnArray.push(...callback());
+      return returnArray;
+    };
+    return this.accountListShortcutsCallback.reduce<Array<BasePlugin.IPluginShortcut>>(reductor, []);
   }
 
 }
