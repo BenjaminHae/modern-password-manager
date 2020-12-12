@@ -1,0 +1,17 @@
+graph TD
+  P[Password] --> G{PBKDF2} --> K[Encryption Key, exportable]
+  K --- E1{Wrapping} --> WEK[Wrapped Encryption Key]
+  WK1[Wrap Key 1, exportable] --> E1
+  WK1 --- E2{Wrapping} --> EWK1[Encrypted Wrap Key 1]
+  WK2[Wrap Key 2, not exportable] --> E2
+
+  subgraph Client
+    I(IndexedDB)
+  end
+  subgraph Server
+    U(User-Data)
+  end
+  WEK --> I
+  WK2 --> I
+  EWK1 --> U
+

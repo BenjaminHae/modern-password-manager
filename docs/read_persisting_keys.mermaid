@@ -1,0 +1,16 @@
+graph TD
+  subgraph Client
+    I(IndexedDB)
+  end
+  subgraph Server
+    U(User-Data)
+  end
+  I-->WK2[Wrap Key 2, not exportable]
+  I-->WEK[Wrapped Encryption Key]
+  U-->EWK1[Encrypted Wrap Key 1]
+  
+  
+  WK2 --> U1
+  EWK1 --- U1{Unwrap} --> WK1[Wrap Key 1, not exportable]
+  WK1 --> U2
+  WEK --- U2{Unwrap} --> K[Encryption Key, not exportable]
