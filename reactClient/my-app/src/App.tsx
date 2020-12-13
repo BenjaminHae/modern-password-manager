@@ -61,9 +61,10 @@ export default class App extends React.Component<Record<string, never>, AppState
 
   constructor (props: Record<string, never>) {
     super(props);
+    const URLParams = new URLSearchParams(window.location.search);
     this.state = {
       ready: false,
-      autoLogin: new URLSearchParams(window.location.search).get('noAutoLogin') === null,
+      autoLogin: URLParams.get('noAutoLogin') === null,
       messages: [],
       authenticated: false,
       registrationAllowed: false,
@@ -113,6 +114,10 @@ export default class App extends React.Component<Record<string, never>, AppState
           console.log("(react) received options: " + userOptions);
           this.setState({userOptions : userOptions});
           });
+    const message = URLParams.get("message")
+    if (message) {
+      this.showMessage(message, { autoClose: false, variant: 'info' });
+    }
   }
   debug(line: string): void {
     this.state.debug.unshift(line);
@@ -134,6 +139,7 @@ export default class App extends React.Component<Record<string, never>, AppState
       return false;
     }
     this.shortcuts.addShortcut({ shortcut: "?", action: showShortcuts, description: "Show Shortcuts", component: this} );
+    this.shortcuts.addShortcut({ shortcut: "q", action: () => { this.doLogout() }, description: "Logout", component: this} );
   }
   doLogin(username:string, password: string):Promise<void> {
     this.clearMessages();
@@ -180,14 +186,16 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.clearMessages();
     return this.backend.register(username, password, email);
   }
-  async doLogout(): Promise<void> {
+  async doLogout(message?: string): Promise<void> {
     this.plugins.preLogout();
     await this.backend.logout();
     this.setState({authenticated: false});
-    window.location.replace(window.location.origin + window.location.pathname + '?noAutoLogin');
+    let parameters = '?noAutoLogin'
+    parameters += message ? `&message=${encodeURIComponent(message)}` : "";
+    window.location.replace(window.location.origin + window.location.pathname + parameters);
   }
   onIdle(): void {
-    this.doLogout();
+    this.doLogout("You were logged out because you have been inactive.");
   }
   async doStoreOptions(options: UserOptions): Promise<void> {
     await this.backend.storeUserOptions(options);
@@ -417,7 +425,7 @@ export default class App extends React.Component<Record<string, never>, AppState
                 {this.state.authenticated &&
                   <Button 
                     className={styles.Logout} 
-                    onClick={this.doLogout.bind(this)} 
+                    onClick={() => {this.doLogout()}} 
                     variant="secondary" 
                   >
                     <BoxArrowLeft/> Logout
