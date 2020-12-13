@@ -75,7 +75,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
     }
     this.props.shortcuts.addShortcut({ shortcut: "e", action: editCurrentRow, description: "Edit current row", component: this} );
     const pluginRowShortcuts = this.props.pluginSystem.accountListShortcuts();
-    for (let shortcut of pluginRowShortcuts) {
+    for (const shortcut of pluginRowShortcuts) {
       const handleShortcut = () => {
         const account = this.getAccountByIndex(this.props.selectedIndex);
         if (account) {
@@ -115,7 +115,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
   getPasswordButtons(account: Account) {
     const buttons = this.props.pluginSystem.passwordButtons(account);
     return (
-      <ButtonGroup size="sm" className={styles.TableButtonGroup}>
+      <ButtonGroup size="sm" className={styles.TableButtonGroup} key="buttons">
         {buttons}
       </ButtonGroup>
     )
@@ -140,7 +140,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
         name: "Password",  
         ignoreRowClick: true, 
         cell: (row: AccountWithSelected) => [ 
-          <AccountPasswordWithToggle 
+          <AccountPasswordWithToggle key="password"
             account={row.account} 
             getAccountPasswordHandler={this.props.getAccountPasswordHandler}
           />, 

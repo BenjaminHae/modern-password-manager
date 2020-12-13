@@ -45,7 +45,7 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
   fileUploadHandler(event: React.ChangeEvent<HTMLInputElement>): void {
     if (event.target.files) {
       if (event.target.files.length > 0) {
-        let newFile = event.target.files[0]
+        const newFile = event.target.files[0]
         this.setState({file: newFile});
         this.parser = new CsvParser();
         this.importer.availableFields = this.props.availableFields.map((field) => { return field.selector });

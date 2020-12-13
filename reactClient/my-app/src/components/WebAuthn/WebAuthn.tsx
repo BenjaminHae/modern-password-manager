@@ -79,7 +79,7 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
     event.preventDefault();
     //props.webAuthnCreateCredHandler()
     try {
-      let password = this.state.password;
+      const password = this.state.password;
       this.setState({password:""});
       await this.props.webAuthnCreateCredHandler(this.state.devicename, this.state.username, password);
       this.props.showMessage(`Successfully stored key for ${this.state.devicename}`, {variant : "info"});

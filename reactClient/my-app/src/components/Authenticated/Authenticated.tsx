@@ -19,6 +19,7 @@ import PluginMainView from '../../plugin/PluginMainView/PluginMainView';
 import { IUserSettingsProps } from '../UserSettings/UserSettings';
 import { IHistoryProps } from '../History/History';
 import ShortcutManager from '../../libs/ShortcutManager';
+import IdleTimer from 'react-idle-timer';
 
 enum AuthenticatedView {
   List,
@@ -35,6 +36,8 @@ interface IAuthenticatedProps extends IUserSettingsProps, IHistoryProps {
   bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>,
   deleteAccountHandler: (account: Account) => Promise<void>,
   getAccountPasswordHandler: (account: Account) => Promise<string>,
+  idleTimeout: number,
+  onIdle: () => void;
 
   showMessage: (message: string, options?: IMessageOptions) => void,
 
@@ -57,6 +60,7 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
     { view: AuthenticatedView.Edit, name: "Edit Account", icon: (<PencilFill/>), selectable: false },
     { view: AuthenticatedView.Add, name: "Add Account", icon: (<Plus/>), selectable: false },
   ];
+  private idleTimer = React.createRef<IdleTimer>();
   constructor(props: IAuthenticatedProps) {
     super(props);
     this.state = this.defaultViewState();
@@ -88,6 +92,12 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
   render (): JSX.Element {
     return (
       <div className={styles.Authenticated}>
+        <IdleTimer
+          ref={ this.idleTimer }
+          timeout={ this.props.idleTimeout }
+          onIdle={ this.props.onIdle }
+          events={ [ 'keydown', 'wheel', 'DOMMouseScroll', 'mousewheel', 'mousedown', 'touchstart', 'touchmove', 'MSPointerDown', 'MSPointerMove', 'visibilitychange' ] }
+        />
         <Container fluid >{this.renderSelectors()}</Container>
         <Container fluid className={styles.ListFluid}>{this.renderSwitchAuthenticatedView()}</Container>
       </div>

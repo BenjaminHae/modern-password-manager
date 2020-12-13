@@ -38,14 +38,14 @@ export default class ShortcutManager {
   }
 
   removeAllShortcuts(): void {
-    for (let item of this.shortcuts) {
+    for (const item of this.shortcuts) {
       this.mousetrap.unbind(item.shortcut);
     }
     this.shortcuts.length = 0;
   }
 
   removeByComponent(component: React.Component): void {
-    for (let item of this.shortcuts.filter((element) => element.component === component)) {
+    for (const item of this.shortcuts.filter((element) => element.component === component)) {
       this.mousetrap.unbind(item.shortcut);
     }
     this.shortcuts = this.shortcuts.filter((element) => element.component !== component);

@@ -110,11 +110,10 @@ export default class PersistDecryptionKey {
         reject();
         return;
       }
-      let transaction = this.db.transaction([this.storageKeysName], "readonly");
-      transaction.oncomplete = () => {};
+      const transaction = this.db.transaction([this.storageKeysName], "readonly");
       transaction.onerror = () => reject();
-      let objectStore = transaction.objectStore(this.storageKeysName);
-      let request = objectStore.get(id);
+      const objectStore = transaction.objectStore(this.storageKeysName);
+      const request = objectStore.get(id);
       request.onerror = (e) => reject(e);
       request.onsuccess = () => resolve(request.result as IDecryptionKeys);
     });
@@ -130,8 +129,7 @@ export default class PersistDecryptionKey {
         reject();
         return;
       }
-      let transaction = this.db.transaction([this.storageKeysName], "readwrite");
-      transaction.oncomplete = () => {};
+      const transaction = this.db.transaction([this.storageKeysName], "readwrite");
       transaction.onerror = () => reject();
       const objectStore = transaction.objectStore(this.storageKeysName);
       objectStore.openCursor(keyId).onsuccess = (event: any) => {
@@ -158,14 +156,13 @@ export default class PersistDecryptionKey {
         reject();
         return;
       }
-      let transaction = this.db.transaction([this.storageKeysName], "readonly");
-      transaction.oncomplete = () => {};
+      const transaction = this.db.transaction([this.storageKeysName], "readonly");
       transaction.onerror = () => reject();
-      let objectStore = transaction.objectStore(this.storageKeysName);
-      let request = objectStore.getAll();
+      const objectStore = transaction.objectStore(this.storageKeysName);
+      const request = objectStore.getAll();
       request.onerror = (e) => reject(e);
       request.onsuccess = () => {
-        const keysWithId = request.result.filter(o => o.hasOwnProperty('credentialId'));
+        const keysWithId = request.result.filter(o => Object.prototype.hasOwnProperty.call(o, 'credentialId'));
         resolve(keysWithId.map(k => k.credentialId));
       }
     });

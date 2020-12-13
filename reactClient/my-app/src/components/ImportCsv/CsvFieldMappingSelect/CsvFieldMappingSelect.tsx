@@ -9,13 +9,11 @@ interface CsvFieldMappingSelectProps {
   header: string;
   changeHandler: (header: string, newMapping: string) => void;
 }
-interface CsvFieldMappingSelectState {
-}
 interface OptionInfo {
   name: string;
   selector: string;
 }
-class CsvFieldMappingSelect extends React.Component<CsvFieldMappingSelectProps, CsvFieldMappingSelectState> {
+class CsvFieldMappingSelect extends React.Component<CsvFieldMappingSelectProps> {
 
   getOptions(): Array<JSX.Element> {
     const options: Array<OptionInfo> = [

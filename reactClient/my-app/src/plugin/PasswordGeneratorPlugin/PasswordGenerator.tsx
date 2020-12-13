@@ -9,8 +9,8 @@ const DefaultPasswordLength = 20;
 export default class PasswordGeneratorPlugin extends BasePlugin implements IPluginWithEditInputButton, IPluginWithEditPreShow {
 
   generatePassphrase(plength = DefaultPasswordLength, alphabet = String.fromCharCode(...Array(123).keys()).slice(33).replace(/`/g, '')): string {
-    let maxPos = alphabet.length;
-    let array = new Uint8Array(plength);
+    const maxPos = alphabet.length;
+    const array = new Uint8Array(plength);
     window.crypto.getRandomValues(array);
     //return String.fromCharCode.apply(null,array.map((item) => { return alphabet.charAt(item % maxPos).charCodeAt(0);} ));
     return array.reduce((password, x) => password += alphabet.charAt(x % maxPos), "");

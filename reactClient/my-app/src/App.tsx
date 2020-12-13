@@ -50,15 +50,16 @@ interface AppState {
   showShortcutOverview: boolean;
 }
 
-export default class App extends React.Component<{}, AppState> {
+export default class App extends React.Component<Record<string, never>, AppState> {
   private backend: BackendService;
   private accountTransformerService: AccountTransformerService;
   private crypto: CryptoService;
   private credential: CredentialService;
   private plugins: PluginSystem;
   private shortcuts: ShortcutManager;
+  private readonly idleTimeout = 3 * 60 * 1000;
 
-  constructor (props: {}) {
+  constructor (props: Record<string, never>) {
     super(props);
     this.state = {
       ready: false,
@@ -185,6 +186,9 @@ export default class App extends React.Component<{}, AppState> {
     this.setState({authenticated: false});
     window.location.replace(window.location.origin + window.location.pathname + '?noAutoLogin');
   }
+  onIdle(): void {
+    this.doLogout();
+  }
   async doStoreOptions(options: UserOptions): Promise<void> {
     await this.backend.storeUserOptions(options);
   }
@@ -261,13 +265,13 @@ export default class App extends React.Component<{}, AppState> {
     this.setState({ historyItems: history });
   }
   async loadWebAuthnCreds(): Promise<void> {
-    let creds = await this.backend.getWebAuthnCreds()
+    const creds = await this.backend.getWebAuthnCreds()
     this.setState({ webAuthnCreds: creds });
   }
 
   async webAuthnCreate(deviceName: string, userName: string, password: string): Promise<void> {
-    let persistor = new PersistDecryptionKey()
-    let creds = new CredentialProviderPersist(persistor);
+    const persistor = new PersistDecryptionKey()
+    const creds = new CredentialProviderPersist(persistor);
     this.debug('starting registration of WebAuthN keys');
     await creds.generateFromPassword(password);
     if (!await this.backend.verifyCredentials(creds)) {
@@ -275,20 +279,20 @@ export default class App extends React.Component<{}, AppState> {
       return Promise.reject("Password does not match");
     }
     this.debug('persist decryption key locally');
-    let storedKey = await creds.persistKey();
+    const storedKey = await creds.persistKey();
     try {
       this.debug('Retrieving challenge');
-      let challenge = await this.backend.getWebAuthnChallenge();
+      const challenge = await this.backend.getWebAuthnChallenge();
       this.debug('Received Challenge');
-      let webAuthn = new WebAuthn();
+      const webAuthn = new WebAuthn();
       const userIdBuffer = new ArrayBuffer(16);
       const idView = new DataView(userIdBuffer);
       idView.setInt16(1, storedKey.keyIndex);
       this.debug('Requesting credential from device');
-      let webAuthCredential = await webAuthn.createCredential(challenge, 'Password-Manager', {id: userIdBuffer, displayName:userName, name:userName});
+      const webAuthCredential = await webAuthn.createCredential(challenge, 'Password-Manager', {id: userIdBuffer, displayName:userName, name:userName});
       this.debug(`Device handled registration successfully`);
       persistor.appendCredentialId(storedKey.keyIndex, webAuthCredential.rawId, webAuthCredential.id, userName);
-      let attestationResponse = webAuthCredential.response as AuthenticatorAttestationResponse;
+      const attestationResponse = webAuthCredential.response as AuthenticatorAttestationResponse;
       this.debug(`Sending registration to backend`);
       await this.backend.createWebAuthn(webAuthCredential.id, deviceName, attestationResponse.attestationObject, attestationResponse.clientDataJSON, webAuthCredential.type, storedKey.wrappedServerKey);
       this.debug(`Success`);
@@ -300,16 +304,16 @@ export default class App extends React.Component<{}, AppState> {
     }
   }
   async webAuthnDelete(webAuthnCreds: UserWebAuthnCred): Promise<void> {
-    let creds = await this.backend.deleteWebAuthn(webAuthnCreds.id);
+    const creds = await this.backend.deleteWebAuthn(webAuthnCreds.id);
     this.setState({ webAuthnCreds: creds });
   }
 
   async webAuthnTryLogin(): Promise<void> {
     this.debug("trying webauthn login");
-    let webAuthn = new WebAuthn();
-    let persistor = new PersistDecryptionKey();
-    let credIds = await persistor.getCredentialIds();
-    let credsAvailable = credIds.length > 0;
+    const webAuthn = new WebAuthn();
+    const persistor = new PersistDecryptionKey();
+    const credIds = await persistor.getCredentialIds();
+    const credsAvailable = credIds.length > 0;
     this.debug(`Are credsAvailable: ${credsAvailable}`);
     this.debug(`KeyIds: ${credIds}`);
     this.setState({webAuthnPresent: credsAvailable});
@@ -323,7 +327,7 @@ export default class App extends React.Component<{}, AppState> {
         this.debug(`WebAuthn get failed: ${e.message}`);
         throw e;
       }
-      let response = credentials.response as AuthenticatorAssertionResponse;
+      const response = credentials.response as AuthenticatorAssertionResponse;
       let keyIndex: number | undefined;
       if (!response.userHandle) {
         this.debug(`no user Handle was specified`);
@@ -444,6 +448,9 @@ export default class App extends React.Component<{}, AppState> {
             loadHistoryHandler={this.loadHistory.bind(this)} 
             showMessage={this.showMessage.bind(this)} 
             doStoreOptions={this.doStoreOptions.bind(this)}
+
+            idleTimeout={ this.idleTimeout }
+            onIdle={ this.onIdle.bind(this) }
 
             //webAuthn
             webAuthnDevices={this.state.webAuthnCreds}
