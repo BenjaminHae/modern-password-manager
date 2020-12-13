@@ -57,6 +57,7 @@ export default class App extends React.Component<{}, AppState> {
   private credential: CredentialService;
   private plugins: PluginSystem;
   private shortcuts: ShortcutManager;
+  private readonly idleTimeout = 3 * 60 * 1000;
 
   constructor (props: {}) {
     super(props);
@@ -184,6 +185,9 @@ export default class App extends React.Component<{}, AppState> {
     await this.backend.logout();
     this.setState({authenticated: false});
     window.location.replace(window.location.origin + window.location.pathname + '?noAutoLogin');
+  }
+  onIdle(): void {
+    this.doLogout();
   }
   async doStoreOptions(options: UserOptions): Promise<void> {
     await this.backend.storeUserOptions(options);
@@ -444,6 +448,9 @@ export default class App extends React.Component<{}, AppState> {
             loadHistoryHandler={this.loadHistory.bind(this)} 
             showMessage={this.showMessage.bind(this)} 
             doStoreOptions={this.doStoreOptions.bind(this)}
+
+            idleTimeout={ this.idleTimeout }
+            onIdle={ this.onIdle.bind(this) }
 
             //webAuthn
             webAuthnDevices={this.state.webAuthnCreds}
