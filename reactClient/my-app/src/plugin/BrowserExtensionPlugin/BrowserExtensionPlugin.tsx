@@ -21,7 +21,7 @@ class BrowserExtensionPlugin extends BasePlugin {
     window.browserExtensionPlugin = this;
   }
 
-  private sendEvent(request: string, data?: object) {
+  private sendEvent(request: string, data?: Record<string, any>) {
     if (!this.isActive)
       return
     const evt = new CustomEvent('MPMExtensionEventToContentScript', {detail:{request: request, data: data}});
