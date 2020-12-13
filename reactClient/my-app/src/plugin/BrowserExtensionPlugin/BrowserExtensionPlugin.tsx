@@ -11,9 +11,9 @@ declare global {
 }
 
 class BrowserExtensionPlugin extends BasePlugin {
-  private isActive: boolean = false;
-  private actionsReceived: boolean = false;
-  private accountsLoaded: boolean = false;
+  private isActive = false;
+  private actionsReceived = false;
+  private accountsLoaded = false;
   private action?: Action;
 
   constructor(protected pluginSystem: PluginSystem) {
@@ -24,7 +24,7 @@ class BrowserExtensionPlugin extends BasePlugin {
   private sendEvent(request: string, data?: object) {
     if (!this.isActive)
       return
-    let evt = new CustomEvent('MPMExtensionEventToContentScript', {detail:{request: request, data: data}});
+    const evt = new CustomEvent('MPMExtensionEventToContentScript', {detail:{request: request, data: data}});
     document.dispatchEvent(evt);
   }
   loginSuccessful(username: string, key: any): void {
@@ -44,7 +44,7 @@ class BrowserExtensionPlugin extends BasePlugin {
   // this callback reacts to accounts in backend being ready
   // it is possibly necessary to react to the "account view" being ready
   accountsReady() {
-    let firstLoad = !this.accountsLoaded;
+    const firstLoad = !this.accountsLoaded;
     this.accountsLoaded = true;
     if (!this.isActive)
       return
@@ -71,7 +71,7 @@ class BrowserExtensionPlugin extends BasePlugin {
       case "logout": 
         this.pluginSystem.logout();
         break;
-      case "edit": 
+      case "edit": {
         let account: Account | undefined;
         if ((account = this.pluginSystem.getAccountByIndex(this.action.data.index))) {
           console.log(`found account by id ${account.index}`);
@@ -82,6 +82,7 @@ class BrowserExtensionPlugin extends BasePlugin {
           console.log(this.action);
         }
         break;
+        }
       case "add":
         this.pluginSystem.UIaddAccountSelect(this.action.data);
         break;
@@ -97,7 +98,7 @@ class BrowserExtensionPlugin extends BasePlugin {
   }
 
   doLogin(username: string, key: CryptoKey) {
-    let credentials = {
+    const credentials = {
         getKey: () => key,
         cleanUp: () => Promise.resolve()
     };

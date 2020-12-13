@@ -11,7 +11,7 @@ export class CredentialProviderPassword implements ICredentialProvider {
     return this.generateFromPasswordWithExtractable(password, false);
   }
 
-  protected async generateFromPasswordWithExtractable(password: string, extractable: boolean = false): Promise<CryptoKey>{
+  protected async generateFromPasswordWithExtractable(password: string, extractable = false): Promise<CryptoKey>{
     const enc = new TextEncoder();
     const keyMaterial = await window.crypto.subtle.importKey(
         "raw",

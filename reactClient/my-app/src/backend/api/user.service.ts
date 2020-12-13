@@ -22,20 +22,20 @@ export class UserService {
     }
   }
   private base64ToArrayBuffer(base64: string): ArrayBuffer {
-    var binary_string = window.atob(base64);
-    var len = binary_string.length;
-    var bytes = new Uint8Array(len);
-    for (var i = 0; i < len; i++) {
+    const binary_string = window.atob(base64);
+    const len = binary_string.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
         bytes[i] = binary_string.charCodeAt(i);
     }
     return bytes.buffer;
   }
 
   private arrayBufferToBase64( buffer:ArrayBuffer ): string {
-    var binary = '';
-    var bytes = new Uint8Array( buffer );
-    var len = bytes.byteLength;
-    for (var i = 0; i < len; i++) {
+    let binary = '';
+    const bytes = new Uint8Array( buffer );
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
         binary += String.fromCharCode( bytes[ i ] );
     }
     return window.btoa( binary );
@@ -82,7 +82,7 @@ export class UserService {
   }
 
   async registerWebAuthn( id: string, name: string, attestationObject: ArrayBuffer, clientDataJSON: ArrayBuffer, keyType: string, wrappedServerKey: ArrayBuffer ): Promise<void> {
-    let response = await this.userService.createUserWebAuthn({ userWebAuthnCreateWithKey: 
+    const response = await this.userService.createUserWebAuthn({ userWebAuthnCreateWithKey: 
       { 
         id: id, 
         name: name, 
@@ -97,11 +97,11 @@ export class UserService {
   }
 
   async loginWebAuthn( id: string, authenticatorData: ArrayBuffer, clientDataJSON: ArrayBuffer, signature: ArrayBuffer, keyType: string, userHandle?: ArrayBuffer): Promise<IWebAuthnLogonInformation> {
-    let user: string = "";
+    let user = "";
     if (userHandle) {
       user = this.arrayBufferToBase64(userHandle);
     }
-    let response = await this.userService.loginUserWebAuthnGet({userWebAuthnGet: 
+    const response = await this.userService.loginUserWebAuthnGet({userWebAuthnGet: 
       {
         id: id, 
         response: {
@@ -125,7 +125,7 @@ export class UserService {
   }
 
   async getWebAuthnChallenge(): Promise<ArrayBuffer> {
-    let response = await this.userService.loginUserWebAuthnChallenge();
+    const response = await this.userService.loginUserWebAuthnChallenge();
     return this.base64ToArrayBuffer(response.challenge);
   }
 

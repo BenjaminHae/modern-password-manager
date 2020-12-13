@@ -12,7 +12,7 @@ interface ExportCsvProps {
 
 const generateCSV = async (accounts: Array<Account>, getPassword: (account:Account) => Promise<string>): Promise<string> => {
   const csvObjectsPromise = accounts.map(async (account: Account) => {
-      let data: {[index: string]:string} = {};
+      const data: {[index: string]:string} = {};
       data["name"] = account.name;
       data["password"] = await getPassword(account);
       for (const item in account.other) {
@@ -25,7 +25,7 @@ const generateCSV = async (accounts: Array<Account>, getPassword: (account:Accou
   return csv;
 }
 
-const downloadTextFile = (content: string, name: string, mime: string = "text/plain") => {
+const downloadTextFile = (content: string, name: string, mime = "text/plain") => {
   const element = document.createElement("a");
   const file = new Blob([content], {type: mime});
   element.href = URL.createObjectURL(file);

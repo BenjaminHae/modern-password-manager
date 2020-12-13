@@ -31,17 +31,17 @@ export default class CredentialProviderPersist extends CredentialProviderPasswor
   }
 
   async generateFromPassword(password: string): Promise<CryptoKey> {
-    let key = await this.generateFromPasswordWithExtractable(password, true);
+    const key = await this.generateFromPasswordWithExtractable(password, true);
     await this.preparePersistingKeys();
     return key;
   }
 
   async generateFromStoredKeys(encryptedServerKey: ArrayBuffer, keyId: number): Promise<CryptoKey> {
-    let keys = await this.persistor.loadKeys(keyId);
-    let serverKeyParams = { ...this.wrapKeyAlgorithm, iv: keys.ivWrappedServerKey};
-    let keyParams = { ...this.wrapKeyAlgorithm, iv: keys.ivWrappedKey};
+    const keys = await this.persistor.loadKeys(keyId);
+    const serverKeyParams = { ...this.wrapKeyAlgorithm, iv: keys.ivWrappedServerKey};
+    const keyParams = { ...this.wrapKeyAlgorithm, iv: keys.ivWrappedKey};
     keyParams["iv"] = keys.ivWrappedKey;
-    let serverKey = await window.crypto.subtle.unwrapKey(
+    const serverKey = await window.crypto.subtle.unwrapKey(
       "raw",
       encryptedServerKey,
       keys.localKey,
@@ -80,21 +80,21 @@ export default class CredentialProviderPersist extends CredentialProviderPasswor
     if (!this.key || !this.localKey || !this.serverKey) {
       throw new Error("no key present");
     }
-    let ivWrappedKey = window.crypto.getRandomValues(new Uint8Array(12));
-    let encryptedKeyToStore = await window.crypto.subtle.wrapKey(
+    const ivWrappedKey = window.crypto.getRandomValues(new Uint8Array(12));
+    const encryptedKeyToStore = await window.crypto.subtle.wrapKey(
       "raw",
       this.key,
       this.serverKey,
       { name: "AES-GCM", iv: ivWrappedKey}
       );
-    let ivWrappedServerKey = window.crypto.getRandomValues(new Uint8Array(12));
-    let encryptedServerWrapKey = await window.crypto.subtle.wrapKey(
+    const ivWrappedServerKey = window.crypto.getRandomValues(new Uint8Array(12));
+    const encryptedServerWrapKey = await window.crypto.subtle.wrapKey(
       "raw",
       this.serverKey,
       this.localKey,
       { name: "AES-GCM", iv: ivWrappedServerKey}
       );
-    let keyId = await this.persistor.storeKeys({ localKey: this.localKey, wrappedKey: encryptedKeyToStore, ivWrappedKey: ivWrappedKey, ivWrappedServerKey: ivWrappedServerKey });
+    const keyId = await this.persistor.storeKeys({ localKey: this.localKey, wrappedKey: encryptedKeyToStore, ivWrappedKey: ivWrappedKey, ivWrappedServerKey: ivWrappedServerKey });
     await this.cleanUp();
     return { wrappedServerKey: encryptedServerWrapKey, keyIndex: keyId} ;
   }
