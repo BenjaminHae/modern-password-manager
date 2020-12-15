@@ -78,15 +78,6 @@ class UserWebAuthnGetResponse
     protected $signature;
 
     /**
-     * @var string
-     * @SerializedName("userHandle")
-     * @Assert\NotNull()
-     * @Assert\Type("string")
-     * @Type("string")
-     */
-    protected $userHandle;
-
-    /**
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
@@ -96,7 +87,6 @@ class UserWebAuthnGetResponse
         $this->clientDataJSON = isset($data['clientDataJSON']) ? $data['clientDataJSON'] : null;
         $this->type = isset($data['type']) ? $data['type'] : null;
         $this->signature = isset($data['signature']) ? $data['signature'] : null;
-        $this->userHandle = isset($data['userHandle']) ? $data['userHandle'] : null;
     }
 
     /**
@@ -191,30 +181,6 @@ class UserWebAuthnGetResponse
     public function setSignature($signature)
     {
         $this->signature = $signature;
-
-        return $this;
-    }
-
-    /**
-     * Gets userHandle.
-     *
-     * @return string
-     */
-    public function getUserHandle()
-    {
-        return $this->userHandle;
-    }
-
-    /**
-     * Sets userHandle.
-     *
-     * @param string $userHandle
-     *
-     * @return $this
-     */
-    public function setUserHandle($userHandle)
-    {
-        $this->userHandle = $userHandle;
 
         return $this;
     }

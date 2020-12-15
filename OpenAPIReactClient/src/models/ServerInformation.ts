@@ -31,6 +31,18 @@ export interface ServerInformation {
      * @memberof ServerInformation
      */
     allowRegistration?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ServerInformation
+     */
+    idleTimeout?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServerInformation
+     */
+    defaultUserConfiguration?: string;
 }
 
 export function ServerInformationFromJSON(json: any): ServerInformation {
@@ -45,6 +57,8 @@ export function ServerInformationFromJSONTyped(json: any, ignoreDiscriminator: b
         
         'csrfToken': json['csrfToken'],
         'allowRegistration': !exists(json, 'allowRegistration') ? undefined : json['allowRegistration'],
+        'idleTimeout': !exists(json, 'idleTimeout') ? undefined : json['idleTimeout'],
+        'defaultUserConfiguration': !exists(json, 'defaultUserConfiguration') ? undefined : json['defaultUserConfiguration'],
     };
 }
 
@@ -59,6 +73,8 @@ export function ServerInformationToJSON(value?: ServerInformation | null): any {
         
         'csrfToken': value.csrfToken,
         'allowRegistration': value.allowRegistration,
+        'idleTimeout': value.idleTimeout,
+        'defaultUserConfiguration': value.defaultUserConfiguration,
     };
 }
 

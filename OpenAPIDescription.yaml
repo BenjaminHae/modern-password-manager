@@ -547,7 +547,6 @@ components:
         - clientDataJSON
         - type
         - signature
-        - userHandle
       properties:
         authenticatorData:
           type: string
@@ -556,8 +555,6 @@ components:
         type:
           type: string
         signature:
-          type: string
-        userHandle:
           type: string
     UserWebAuthnLogonResult:
       type: object
@@ -635,6 +632,10 @@ components:
           type: string
         allowRegistration:
           type: boolean
+        idleTimeout:
+          type: integer
+        defaultUserConfiguration:
+          type: string
     GenericSuccessMessage:
       type: object
       required:

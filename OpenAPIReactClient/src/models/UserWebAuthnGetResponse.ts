@@ -43,12 +43,6 @@ export interface UserWebAuthnGetResponse {
      * @memberof UserWebAuthnGetResponse
      */
     signature: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserWebAuthnGetResponse
-     */
-    userHandle: string;
 }
 
 export function UserWebAuthnGetResponseFromJSON(json: any): UserWebAuthnGetResponse {
@@ -65,7 +59,6 @@ export function UserWebAuthnGetResponseFromJSONTyped(json: any, ignoreDiscrimina
         'clientDataJSON': json['clientDataJSON'],
         'type': json['type'],
         'signature': json['signature'],
-        'userHandle': json['userHandle'],
     };
 }
 
@@ -82,7 +75,6 @@ export function UserWebAuthnGetResponseToJSON(value?: UserWebAuthnGetResponse | 
         'clientDataJSON': value.clientDataJSON,
         'type': value.type,
         'signature': value.signature,
-        'userHandle': value.userHandle,
     };
 }
 
