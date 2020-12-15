@@ -12,7 +12,7 @@ import { Plus, Pencil, CaretRightFill } from 'react-bootstrap-icons';
 import ShortcutManager from '../../libs/ShortcutManager';
 
 class AccountWithSelected {
-  constructor(public account: Account, public selected: boolean) {
+  constructor(public account: Account, public id: number, public selected: boolean) {
   }
 }
 
@@ -171,7 +171,8 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
           hide: field.hideInTable || 'md'
         };
       if (field.colNumber) {
-        columns.splice(field.colNumber, 0, column);
+        //colNumber + 1 to ignore "selectedRow"-column in numbering
+        columns.splice(field.colNumber + 1, 0, column);
       }
       else {
         columns.push(column);
@@ -180,10 +181,6 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
     return columns;
   }
   render(): JSX.Element {
-/*
-    let accounts = this.props.accounts.map((item, key) =>
-	<li key={item.index}>{item.name}</li>
-	);*/
     return (
       <div className={ styles.AccountList }>
         <DataTable 
@@ -191,13 +188,13 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
           columns={ this.state.columns } 
           data={ this.props.accounts.map<AccountWithSelected>(
             (account) => { 
-              return new AccountWithSelected(account, this.props.selectedIndex === account.index); 
+              return new AccountWithSelected(account, account.index, this.props.selectedIndex === account.index); 
             })
           } 
           striped 
           pagination 
           actions={ this.getTableActions() } 
-          keyField="index" 
+          keyField="id" 
         />
       </div>
     );
