@@ -34,6 +34,7 @@ export class BackendService {
   public serverSettings: ServerSettings = {allowRegistration: true, passwordGenerator: "aaaaab"};
   public accounts: Array<Account> = [];
   public userOptions: UserOptions = { fields: [] };
+  public defaultUserOptions: UserOptions = { fields: [] };
   accountsObservable = new Observable<Array<Account>>(subscriptionCreator(this.accountsObservers));
   loginObservable = new Observable<void>(subscriptionCreator(this.loginObservers));
   optionsObservable = new Observable<UserOptions>(subscriptionCreator(this.optionsObservers));
@@ -41,7 +42,10 @@ export class BackendService {
   constructor(private maintenanceService: MaintenanceService, private userService: UserService, private accountsService: AccountsService, private credentials: CredentialService, private accountTransformer: AccountTransformerService, private crypto: CryptoService ) {}
 
   async waitForBackend(): Promise<BackendOptions> {
-    return await this.maintenanceService.retrieveInfo();
+    const options = await this.maintenanceService.retrieveInfo();
+    const userOptionsJSON = JSON.parse(options.defaultUserConfiguration);
+    this.defaultUserOptions = UserOptionsFromJSON(userOptionsJSON, this.defaultUserOptions);
+    return options;
   }
 
   async logon(username: string, password: string): Promise<ILogonInformation> {
@@ -115,21 +119,17 @@ export class BackendService {
 
   async getUserOptions(): Promise<void> {
     const encryptedUserConfiguration = await this.userService.getUserSettings();
-    const defaultUserOptions = {
-        fields: [
-        { name: "username", colNumber: 1, selector: "user", visible: true, sortable: true },
-        { name: "url", selector: "url", visible: false },
-        { name: "tags", selector: "tags", visible: true }
-      ]
-    };
     if (encryptedUserConfiguration) {
       try {
         const data = JSON.parse(await this.crypto.decryptChar(encryptedUserConfiguration));
-        this.userOptions = UserOptionsFromJSON(data, this.userOptions);
+        this.userOptions = UserOptionsFromJSON(data, this.defaultUserOptions);
       }
       catch {
-        this.userOptions = defaultUserOptions;
+        this.userOptions = this.defaultUserOptions;
       }
+    }
+    else {
+      this.userOptions = this.defaultUserOptions;
     }
     subscriptionExecutor<UserOptions>(this.optionsObservers, this.userOptions);
   }
