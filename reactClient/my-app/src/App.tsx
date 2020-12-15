@@ -48,6 +48,7 @@ interface AppState {
   debug: Array<string>;
   debugCount: number;
   showShortcutOverview: boolean;
+  idleTimeout: number;
 }
 
 export default class App extends React.Component<Record<string, never>, AppState> {
@@ -57,7 +58,6 @@ export default class App extends React.Component<Record<string, never>, AppState
   private credential: CredentialService;
   private plugins: PluginSystem;
   private shortcuts: ShortcutManager;
-  private readonly idleTimeout = 3 * 60 * 1000;
 
   constructor (props: Record<string, never>) {
     super(props);
@@ -75,8 +75,8 @@ export default class App extends React.Component<Record<string, never>, AppState
       webAuthnPresent: false,
       debug: [],
       debugCount: -5,
-      showShortcutOverview: false
-
+      showShortcutOverview: false,
+      idleTimeout: 3 * 60 * 1000
     }
 
     window.addEventListener('error', (event) => {this.debug(event.message);});
@@ -126,7 +126,7 @@ export default class App extends React.Component<Record<string, never>, AppState
   componentDidMount(): void {
     this.backend.waitForBackend()
       .then((backendOptions: BackendOptions) => {
-          this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed});
+          this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed, idleTimeout: backendOptions.idleTimeout});
           if (this.state.autoLogin) {
             this.webAuthnTryLogin();
           }
@@ -457,7 +457,7 @@ export default class App extends React.Component<Record<string, never>, AppState
             showMessage={this.showMessage.bind(this)} 
             doStoreOptions={this.doStoreOptions.bind(this)}
 
-            idleTimeout={ this.idleTimeout }
+            idleTimeout={ this.state.idleTimeout }
             onIdle={ this.onIdle.bind(this) }
 
             //webAuthn
