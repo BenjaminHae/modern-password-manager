@@ -48,6 +48,8 @@ services:
             - { name: 'open_api_server.api', api: 'maintenance' }
         arguments:
             $allowRegistration: '%env(REGISTRATION_ALLOWED)%'
+            $idleTimeout: '%env(IDLE_TIMEOUT)%'
+            $defaultUserConfig: '%env(DEFAULT_USER_CONFIG)%'
 
     # EventListeners
 
