@@ -7,6 +7,7 @@ import { ClipboardData } from 'react-bootstrap-icons';
 
 export class CopyPlugin extends BasePlugin implements IPluginWithPasswordButton, IPluginWithAccountListShortcuts, IPluginRequiresTransformer {
   transformer?: AccountTransformerService;
+  timeout?: ReturnType<typeof setTimeout>;
  
   setTransformer(transformer: AccountTransformerService): void {
     this.transformer = transformer;
@@ -20,6 +21,14 @@ export class CopyPlugin extends BasePlugin implements IPluginWithPasswordButton,
   async copyPassword(account: Account): Promise<void> {
     if (!this.transformer)
       return;
+    // at first set the timeout to make sure the clipboard is cleared afterwards, this will fail if the password manager is not focues
+    if(this.timeout) {
+      clearTimeout(this.timeout);
+    }
+    this.timeout = setTimeout(function() {
+      navigator.clipboard.writeText("");
+    }, 15000);
+    // copy the password to the clipboard
     navigator.clipboard.writeText(await this.transformer.getPassword(account))
     this.pluginSystem.UIshowMessage(`Password for Account "${account.name}"copied to clipboard`, {variant: "success"});
   }

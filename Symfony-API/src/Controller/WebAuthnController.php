@@ -49,7 +49,7 @@ class WebAuthnController
 
     public function registerWebAuthnDevice(User $user, UserWebAuthnCreateWithKey $request) {
         $pk = $this->entityManager->getRepository(WebAuthnPublicKey::class)
-            ->findOneByPublicKey($request->getId());
+            ->findOneByPublicKeyId($request->getId());
         if(null !== $pk) {
             return null;
         }

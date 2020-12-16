@@ -41,7 +41,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
   async doRegister(): Promise<void> {
     try {
       const password = this.state.password;
-      this.setState({ waiting: true, password: "" });
+      this.setState({ waiting: true, password: "", password2: "" });
       await this.props.doRegister(this.state.username, password, this.state.email);
       this.setState({ 
         ...this.emptyInput,

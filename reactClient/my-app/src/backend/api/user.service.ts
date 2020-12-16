@@ -108,8 +108,7 @@ export class UserService {
           authenticatorData: this.arrayBufferToBase64(authenticatorData),
           clientDataJSON: this.arrayBufferToBase64(clientDataJSON),
           signature: this.arrayBufferToBase64(signature),
-          type: keyType,
-          userHandle: user
+          type: keyType
         }
       }})
     this.checkForSuccess(response);

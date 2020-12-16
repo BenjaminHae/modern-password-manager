@@ -59,6 +59,22 @@ class ServerInformation
     protected $allowRegistration;
 
     /**
+     * @var int|null
+     * @SerializedName("idleTimeout")
+     * @Assert\Type("int")
+     * @Type("int")
+     */
+    protected $idleTimeout;
+
+    /**
+     * @var string|null
+     * @SerializedName("defaultUserConfiguration")
+     * @Assert\Type("string")
+     * @Type("string")
+     */
+    protected $defaultUserConfiguration;
+
+    /**
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
@@ -66,6 +82,8 @@ class ServerInformation
     {
         $this->csrfToken = isset($data['csrfToken']) ? $data['csrfToken'] : null;
         $this->allowRegistration = isset($data['allowRegistration']) ? $data['allowRegistration'] : null;
+        $this->idleTimeout = isset($data['idleTimeout']) ? $data['idleTimeout'] : null;
+        $this->defaultUserConfiguration = isset($data['defaultUserConfiguration']) ? $data['defaultUserConfiguration'] : null;
     }
 
     /**
@@ -112,6 +130,54 @@ class ServerInformation
     public function setAllowRegistration($allowRegistration = null)
     {
         $this->allowRegistration = $allowRegistration;
+
+        return $this;
+    }
+
+    /**
+     * Gets idleTimeout.
+     *
+     * @return int|null
+     */
+    public function getIdleTimeout()
+    {
+        return $this->idleTimeout;
+    }
+
+    /**
+     * Sets idleTimeout.
+     *
+     * @param int|null $idleTimeout
+     *
+     * @return $this
+     */
+    public function setIdleTimeout($idleTimeout = null)
+    {
+        $this->idleTimeout = $idleTimeout;
+
+        return $this;
+    }
+
+    /**
+     * Gets defaultUserConfiguration.
+     *
+     * @return string|null
+     */
+    public function getDefaultUserConfiguration()
+    {
+        return $this->defaultUserConfiguration;
+    }
+
+    /**
+     * Sets defaultUserConfiguration.
+     *
+     * @param string|null $defaultUserConfiguration
+     *
+     * @return $this
+     */
+    public function setDefaultUserConfiguration($defaultUserConfiguration = null)
+    {
+        $this->defaultUserConfiguration = $defaultUserConfiguration;
 
         return $this;
     }
