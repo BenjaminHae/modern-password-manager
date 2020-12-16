@@ -55,7 +55,7 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
             if (! array_key_exists($key, $data))
                 return false;
         }
-        $responseKeys = [ "authenticatorData", "clientDataJSON", "type", "signature", "userHandle" ];
+        $responseKeys = [ "authenticatorData", "clientDataJSON", "type", "signature" ];
         foreach ($responseKeys as $key) {
             if (! array_key_exists($key, $data["response"]))
                 return false;
@@ -71,7 +71,7 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
     {
         $data = json_decode($request->getContent(), true);
         //check for valid data
-        $responseKeys = [ "authenticatorData", "clientDataJSON", "type", "signature", "userHandle" ];
+        $responseKeys = [ "authenticatorData", "clientDataJSON", "type", "signature" ];
         $credentials = [];
         $credentials["id"] = $data["id"];
         //extract credentials
