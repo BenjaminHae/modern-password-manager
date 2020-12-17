@@ -100,8 +100,12 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
   render (): JSX.Element {
     return (
       <div className={styles.WebAuthn}>
-        {!this.props.webAuthnThisDeviceRegistered && 
-          <Button onClick={this.handleDialogShow}><Plus/> Register this device </Button>
+        <p>You can store decryption keys on devices so that you don&apos;t have to enter your password on login.<br/>
+          However access to this decryption key is protected by your device, for example through biometric authentication (fingerprint or face recognition).<br/>
+          This explanation is quite simplified. For more information look at the documentation of this password manager.</p>
+          <Button onClick={this.handleDialogShow}><Plus/> Register current user on this device </Button>
+        {this.props.webAuthnThisDeviceRegistered && 
+          <p>This device is already registered, but it is unknown whether for this user.</p>
         }
         <Modal show={this.state.showDialog} onHide={this.handleDialogClose} >
           <Modal.Header closeButton>
