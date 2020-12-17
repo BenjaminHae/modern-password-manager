@@ -5,7 +5,7 @@ import { IMessageOptions } from '../Message/Message';
 import AccountList from '../AccountList/AccountList';
 import AccountEdit from '../AccountEdit/AccountEdit';
 import ImportCsv from '../ImportCsv/ImportCsv';
-import ExportCsv from '../ExportCsv/ExportCsv';
+import ExportCsv, { IExportCsvProps } from '../ExportCsv/ExportCsv';
 import History from '../History/History';
 import UserSettings from '../UserSettings/UserSettings';
 import Button from 'react-bootstrap/Button';
@@ -30,7 +30,7 @@ enum AuthenticatedView {
   Options,
   History
 }
-interface IAuthenticatedProps extends IUserSettingsProps, IHistoryProps {
+interface IAuthenticatedProps extends IUserSettingsProps, IHistoryProps, IExportCsvProps {
   accounts: Array<Account>,
   editAccountHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>,
   bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>,
@@ -177,8 +177,7 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
       case AuthenticatedView.Export:
         return (
           <ExportCsv 
-            accounts={this.props.accounts}
-            getAccountPasswordHandler={this.props.getAccountPasswordHandler}
+            {...this.props}
           />
         );
       case AuthenticatedView.Options:

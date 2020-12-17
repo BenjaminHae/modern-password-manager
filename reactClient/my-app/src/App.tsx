@@ -259,6 +259,9 @@ export default class App extends React.Component<Record<string, never>, AppState
   async changePasswordHandler(oldPassword: string, newPassword: string): Promise<void> {
     return await this.backend.changeUserPassword(oldPassword, newPassword);
   }
+  async verifyPassword(password: string): Promise<boolean> {
+    return await this.backend.verifyPassword(password);
+  }
   async loadHistory(): Promise<void> {
     let history = await this.backend.getHistory()
     history = history.sort( (a, b) => {
@@ -457,12 +460,14 @@ export default class App extends React.Component<Record<string, never>, AppState
             showMessage={this.showMessage.bind(this)} 
             doStoreOptions={this.doStoreOptions.bind(this)}
 
+            verifyPassword={this.verifyPassword.bind(this)}
+
             idleTimeout={ this.state.idleTimeout }
             onIdle={ this.onIdle.bind(this) }
 
             //webAuthn
             webAuthnDevices={this.state.webAuthnCreds}
-            webAuthnThisDeviceRegistered={false}
+            webAuthnThisDeviceRegistered={this.state.webAuthnPresent}
             webAuthnLoadHandler={this.loadWebAuthnCreds.bind(this)}
             webAuthnCreateCredHandler={this.webAuthnCreate.bind(this)}
             webAuthnDeleteCredHandler={this.webAuthnDelete.bind(this)}
