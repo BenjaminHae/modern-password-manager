@@ -1,0 +1,31 @@
+version: "3"
+services:
+  mpm:
+     build: .
+     environment:
+       - DATABASE_URL=mysql://mpm:CHANGEME@db:3306/database?serverVersion=mariadb-10.5.8
+       - APP_SECRET=d12a351edc8549cb019d10ca37b65ea4
+     ports:
+       - "443:443"
+     links:
+       - db
+     networks:
+       - backend
+  db:
+    image: mariadb:10.5.8
+    restart: always
+    volumes:
+      - database:/var/lib/mysql
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_USER: mpm
+      MYSQL_PASSWORD: CHANGEME
+      MYSQL_DATABASE: database
+    ports:
+      - "8889:3306"
+    networks:
+     - backend
+networks:
+  backend:
+volumes:
+  database:
