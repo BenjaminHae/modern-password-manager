@@ -141,7 +141,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
         <Form.Group controlId={"form" + field.selector} key={field.selector} >
           <Form.Label>{field.name}</Form.Label>
           <InputGroup>
-            <Form.Control type="text" placeholder={field.name} name={field.selector} onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.handleGenericChangeByChangeEvent(event)} value={this.state.fields[field.selector]} /> 
+            <Form.Control type="text" placeholder={field.hint || field.name} name={field.selector} onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.handleGenericChangeByChangeEvent(event)} value={this.state.fields[field.selector]} /> 
             <InputGroup.Append>
               {this.getButtons(field.selector, this.state.fields[field.selector], this.props.account)}
             </InputGroup.Append>
