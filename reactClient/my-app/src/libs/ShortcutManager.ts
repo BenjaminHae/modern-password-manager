@@ -24,7 +24,7 @@ export default class ShortcutManager {
     }
   }
 
-  addShortcut(entry: ShortcutEntry) {
+  addShortcut(entry: ShortcutEntry): void {
     this.mousetrap.bind(entry.shortcut, entry.action);
     this.shortcuts.push(entry);
   }

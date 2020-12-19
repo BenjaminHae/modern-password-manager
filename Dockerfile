@@ -16,6 +16,7 @@ WORKDIR /app/Symfony-API/vendor/openapi
 RUN rm server-bundle && cp -r ../../../OpenAPIServerBundle/ server-bundle
 
 FROM php:7.4-apache
+RUN docker-php-ext-install pdo_mysql
 
 ENV APACHE_DOCUMENT_ROOT /app/public
 
@@ -29,7 +30,8 @@ RUN a2enmod rewrite && \
     a2ensite default-ssl
 
 COPY --from=build-backend /app/Symfony-API /app
-RUN echo "DATABASE_URL=\"sqlite:////app/var/pwman.sqlite\"" > /app/.env.local
+RUN mkdir /data && \
+    echo "DATABASE_URL=\"sqlite:////data/pwman.sqlite\"" > /app/.env.local
 RUN cd /app/ && php bin/console doctrine:schema:update --force
 RUN chown -R www-data:www-data /app/var
 
