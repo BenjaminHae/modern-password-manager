@@ -27,14 +27,14 @@ class BrowserExtensionPlugin extends BasePlugin {
     const evt = new CustomEvent('MPMExtensionEventToContentScript', {detail:{request: request, data: data}});
     document.dispatchEvent(evt);
   }
-  loginSuccessful(username: string, key: any): void {
+  loginSuccessful(username: string, key: CryptoKey): void {
     if (!this.isActive)
       return
     console.log("login Successful");
     this.sendEvent('loginSuccessful', {username: username, key: key});
   }
 
-  loginViewReady() {
+  loginViewReady(): void {
     if (!this.isActive)
       return
     console.log("login view ready");
@@ -43,7 +43,7 @@ class BrowserExtensionPlugin extends BasePlugin {
 
   // this callback reacts to accounts in backend being ready
   // it is possibly necessary to react to the "account view" being ready
-  accountsReady() {
+  accountsReady(): void {
     const firstLoad = !this.accountsLoaded;
     this.accountsLoaded = true;
     if (!this.isActive)
@@ -59,12 +59,12 @@ class BrowserExtensionPlugin extends BasePlugin {
     }
   }
 
-  preLogout() {
+  preLogout(): void {
     if (this.isActive)
       this.sendEvent("logout");
   }
 
-  performAction() {
+  performAction(): void {
     if (!this.action)
       return;
     switch (this.action.action) {
@@ -89,7 +89,7 @@ class BrowserExtensionPlugin extends BasePlugin {
     }
   }
 
-  setAction(action: Action) {
+  setAction(action: Action): void {
     this.action = action;
     this.actionsReceived = true;
     if (this.accountsLoaded) {
@@ -97,14 +97,14 @@ class BrowserExtensionPlugin extends BasePlugin {
     }
   }
 
-  doLogin(username: string, key: CryptoKey) {
+  doLogin(username: string, key: CryptoKey): void {
     const credentials = {
         getKey: () => key,
         cleanUp: () => Promise.resolve()
     };
     this.pluginSystem.backendLogin(credentials);
   }
-  selectAccount(account: Account) {
+  selectAccount(account: Account): void {
     this.sendEvent("selectAccount", {index: account.index});
   }
   passwordButton(account: Account): JSX.Element | void {
@@ -112,7 +112,7 @@ class BrowserExtensionPlugin extends BasePlugin {
       return (<Button key="BrowserExtensionPlugin" variant="info" onClick={() => this.selectAccount(account)}><CloudCheck/></Button>)
   }
 
-  setActive() {
+  setActive(): void {
     this.isActive = true;
   }
 }

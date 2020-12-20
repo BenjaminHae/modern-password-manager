@@ -11,21 +11,23 @@ interface AllowCredential {
 export default class WebAuthn {
   readonly localStoreKey = "webAuthnPresent";
   async createCredential(challenge: ArrayBuffer, rpName: string, user: User): Promise<PublicKeyCredential> {
-    const credentials = await navigator.credentials.create({
+    const creationOptions = {
       publicKey: {
         authenticatorSelection: {
-          authenticatorAttachment: "platform",
-          userVerification: "required"
+          authenticatorAttachment: "platform" as const,
+          userVerification: "required" as const
         },
         challenge: challenge,
         rp: { id: document.domain, name: rpName },
         user: user,
         pubKeyCredParams: [
-          { type: "public-key", alg: -7 },
-          { type: "public-key", alg: -257 }
+          { type: "public-key" as const, alg: -7 },
+          { type: "public-key" as const, alg: -257 }
         ]
       }
-    });
+    }
+    console.log(creationOptions);
+    const credentials = await navigator.credentials.create(creationOptions);
     if(!credentials)
       throw new Error("no credentials created");
     if(credentials.type !== "public-key")

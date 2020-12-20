@@ -102,7 +102,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
     return <Button onClick={() => this.props.addAccountHandler()} variant="success" size="sm" ><Plus/> Add Account</Button>
   }
   
-  getAccountButtons(account: Account) {
+  getAccountButtons(account: Account): JSX.Element {
     let buttons : Array <void | JSX.Element> = [<Button key="EditAccountNative" onClick={()=>{this.props.editAccountHandler(account)}}><Pencil/></Button>];
     buttons = this.props.pluginSystem.accountButtons(account).concat(buttons);
     return (
@@ -112,7 +112,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
     )
   }
   
-  getPasswordButtons(account: Account) {
+  getPasswordButtons(account: Account): JSX.Element {
     const buttons = this.props.pluginSystem.passwordButtons(account);
     return (
       <ButtonGroup size="sm" className={styles.TableButtonGroup} key="buttons">

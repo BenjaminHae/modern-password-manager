@@ -166,7 +166,7 @@ export default class App extends React.Component<Record<string, never>, AppState
       });
   }
 
-  handleLoginSuccess(info: ILogonInformation, username:string) {
+  handleLoginSuccess(info: ILogonInformation, username:string): void {
     this.plugins.loginSuccessful(username, this.credential.getKey());
     const options: IMessageOptions = {};
     let message = "";
