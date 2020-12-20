@@ -27,7 +27,7 @@ export class CsvParser {
   }
 
   getHeaders(): Array<string> {
-    if (!this.result)
+    if (!this.result || !this.result.meta || !this.result.meta.fields)
       return [];
     return this.result.meta.fields;
   }

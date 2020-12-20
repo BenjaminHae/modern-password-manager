@@ -72,10 +72,10 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
       this.setState({[event.target.name]: event.target.value} as Pick<WebAuthnFormValues, keyof WebAuthnFormValues>);
     }
   }
-  setShowDialog = (state: boolean) => {
+  setShowDialog = (state: boolean): void => {
     this.setState({showDialog: state});
   }
-  handleDialogStore = async (event: React.FormEvent<HTMLFormElement>) => {
+  handleDialogStore = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     //props.webAuthnCreateCredHandler()
     try {
@@ -91,11 +91,11 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
       throw(e);
     }
   }
-  handleDialogClose = () => {
+  handleDialogClose = (): void => {
     this.setShowDialog(false);
     this.setState(this.emptyInput);
   }
-  handleDialogShow = () => this.setShowDialog(true);
+  handleDialogShow = (): void => this.setShowDialog(true);
   
   render (): JSX.Element {
     return (

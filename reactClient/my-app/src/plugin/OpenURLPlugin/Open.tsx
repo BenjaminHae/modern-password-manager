@@ -22,7 +22,7 @@ export default class OpenURLPlugin extends BasePlugin implements IPluginWithAcco
       return
     return (<Button key="OpenURLPlugin" variant="secondary" as="a" href={account.other.url} target="_blank" rel="noopener noreferrer"><Globe/></Button>)
   }
-  openWindow(account: Account) {
+  openWindow(account: Account): void {
     if (!account.other.url)
       return
     if (!this.isSafe(account.other.url))

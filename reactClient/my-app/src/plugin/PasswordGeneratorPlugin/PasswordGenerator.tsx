@@ -26,7 +26,7 @@ export default class PasswordGeneratorPlugin extends BasePlugin implements IPlug
     }
   }
 
-  editInputButton(inputKey: string, currentValue: string, setValue: (val: string) => void, account?: Account): JSX.Element | void {
+  editInputButton(inputKey: string, currentValue: string, setValue: (val: string) => void): JSX.Element | void {
     if (inputKey !== "password")
       return
     return (<Button key="PasswordGeneratorPlugin" onClick={() => this.fillInputWithPassword(setValue)}><ArrowLeftRight/></Button>)

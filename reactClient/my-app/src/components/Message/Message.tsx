@@ -25,12 +25,19 @@ export interface IMessage extends IMessageOptions {
 const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
   function getMessages(props: IMessageProps) {
     return props.messages.map( (message: IMessage) => 
-        <Alert key={message.id} dismissible variant={ message.variant === undefined ? "info" : message.variant } onClose={()=>props.closeHandler(message.id)} transition={Collapse as any} show={message.show} >
+        <Alert 
+          key={message.id} 
+          dismissible 
+          variant={ message.variant === undefined ? "info" : message.variant } 
+          onClose={()=>props.closeHandler(message.id)} 
+          transition={Collapse as any} 
+          show={message.show} 
+        >
         { message.message }
         </Alert>
         );
   }
-  return <> {getMessages(props)} </>
+  return <div className={ styles.Message }> { getMessages(props) } </div>
 }
 
 export default Message;

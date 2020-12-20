@@ -96,11 +96,7 @@ export class UserService {
     this.checkForSuccess(response);
   }
 
-  async loginWebAuthn( id: string, authenticatorData: ArrayBuffer, clientDataJSON: ArrayBuffer, signature: ArrayBuffer, keyType: string, userHandle?: ArrayBuffer): Promise<IWebAuthnLogonInformation> {
-    let user = "";
-    if (userHandle) {
-      user = this.arrayBufferToBase64(userHandle);
-    }
+  async loginWebAuthn( id: string, authenticatorData: ArrayBuffer, clientDataJSON: ArrayBuffer, signature: ArrayBuffer, keyType: string): Promise<IWebAuthnLogonInformation> {
     const response = await this.userService.loginUserWebAuthnGet({userWebAuthnGet: 
       {
         id: id, 
