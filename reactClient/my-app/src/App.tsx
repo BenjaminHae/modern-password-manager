@@ -49,6 +49,7 @@ interface AppState {
   debugCount: number;
   showShortcutOverview: boolean;
   idleTimeout: number;
+  logonInformation?: ILogonInformation;
 }
 
 export default class App extends React.Component<Record<string, never>, AppState> {
@@ -166,20 +167,9 @@ export default class App extends React.Component<Record<string, never>, AppState
       });
   }
 
-  handleLoginSuccess(info: ILogonInformation, username:string): void {
+  handleLoginSuccess(info: ILogonInformation, username: string): void {
     this.plugins.loginSuccessful(username, this.credential.getKey());
-    const options: IMessageOptions = {};
-    let message = "";
-    if (info.lastLogin) {
-      message += `Your last login was on ${info.lastLogin.toLocaleString(navigator.language)}. `;
-      options.variant = "info";
-    }
-    if (info.failedLogins && info.failedLogins > 0) {
-      message += `There were ${info.failedLogins} failed logins.`
-        options.autoClose = false;
-      options.variant = "danger";
-    }
-    this.showMessage(message, options);
+    this.setState({ logonInformation: info });
   } 
 
   async doRegister(username: string, password: string, email: string): Promise<void> {
@@ -444,33 +434,34 @@ export default class App extends React.Component<Record<string, never>, AppState
         />
         {this.state.authenticated &&
          <Authenticated 
-            accounts={this.filterAccounts(this.state.accounts)} 
-            historyItems={this.state.historyItems} 
-            userOptions={this.state.userOptions}
+            accounts = { this.filterAccounts(this.state.accounts) } 
+            logonInformation = { this.state.logonInformation }
+            historyItems = { this.state.historyItems } 
+            userOptions = { this.state.userOptions }
 
-            pluginSystem={this.plugins} 
-            shortcuts={this.shortcuts}
+            pluginSystem = { this.plugins } 
+            shortcuts = { this.shortcuts }
 
-            editAccountHandler={this.editHandler.bind(this)} 
-            getAccountPasswordHandler={this.getAccountPassword.bind(this)}
-            bulkAddHandler={this.bulkAddAccounts.bind(this)} 
-            deleteAccountHandler={this.deleteHandler.bind(this)} 
-            changePasswordHandler={this.changePasswordHandler.bind(this)} 
-            loadHistoryHandler={this.loadHistory.bind(this)} 
-            showMessage={this.showMessage.bind(this)} 
-            doStoreOptions={this.doStoreOptions.bind(this)}
+            editAccountHandler = { this.editHandler.bind(this) } 
+            getAccountPasswordHandler = { this.getAccountPassword.bind(this) }
+            bulkAddHandler = { this.bulkAddAccounts.bind(this) } 
+            deleteAccountHandler = { this.deleteHandler.bind(this) } 
+            changePasswordHandler = { this.changePasswordHandler.bind(this) } 
+            loadHistoryHandler = { this.loadHistory.bind(this) } 
+            showMessage = { this.showMessage.bind(this) } 
+            doStoreOptions = { this.doStoreOptions.bind(this) }
 
-            verifyPassword={this.verifyPassword.bind(this)}
+            verifyPassword = { this.verifyPassword.bind(this) }
 
-            idleTimeout={ this.state.idleTimeout }
-            onIdle={ this.onIdle.bind(this) }
+            idleTimeout = { this.state.idleTimeout }
+            onIdle = { this.onIdle.bind(this) }
 
             //webAuthn
-            webAuthnDevices={this.state.webAuthnCreds}
-            webAuthnThisDeviceRegistered={this.state.webAuthnPresent}
-            webAuthnLoadHandler={this.loadWebAuthnCreds.bind(this)}
-            webAuthnCreateCredHandler={this.webAuthnCreate.bind(this)}
-            webAuthnDeleteCredHandler={this.webAuthnDelete.bind(this)}
+            webAuthnDevices = { this.state.webAuthnCreds }
+            webAuthnThisDeviceRegistered = { this.state.webAuthnPresent }
+            webAuthnLoadHandler = { this.loadWebAuthnCreds.bind(this) }
+            webAuthnCreateCredHandler = { this.webAuthnCreate.bind(this) }
+            webAuthnDeleteCredHandler = { this.webAuthnDelete.bind(this) }
         />
               }
         {!this.state.authenticated
