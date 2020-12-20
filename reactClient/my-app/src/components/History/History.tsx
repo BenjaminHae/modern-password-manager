@@ -30,10 +30,8 @@ const History: React.FC<IHistoryProps> = (props: IHistoryProps) => {
     style: {backgroundColor: 'red'} }];
  
   useEffect(() => {
-    if (props.historyItems.length === 0) {
-      props.loadHistoryHandler();
-    }
-  });
+    props.loadHistoryHandler();
+  }, []);
 
   return (
       <div className={styles.History}>

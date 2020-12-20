@@ -41,9 +41,7 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
       showDialog: false,
       columns: this.getColumns()
     };
-    if (props.webAuthnDevices.length === 0) {
-      props.webAuthnLoadHandler();
-    }
+    props.webAuthnLoadHandler();
     this.handleGenericChange = this.handleGenericChange.bind(this);
   }
   getColumns(): Array<IDataTableColumn> {
@@ -83,6 +81,7 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
       this.setState({password:""});
       await this.props.webAuthnCreateCredHandler(this.state.devicename, this.state.username, password);
       this.props.showMessage(`Successfully stored key for ${this.state.devicename}`, {variant : "info"});
+      this.props.webAuthnLoadHandler();
       this.handleDialogClose();
     }
     catch(e) {
