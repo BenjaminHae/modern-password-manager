@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './Authenticated.module.css';
 import { Account } from '../../backend/models/account';
+import { ILogonInformation } from '../../backend/api/user.service';
 import { IMessageOptions } from '../Message/Message';
 import AccountList from '../AccountList/AccountList';
 import AccountEdit from '../AccountEdit/AccountEdit';
@@ -32,6 +33,8 @@ enum AuthenticatedView {
 }
 interface IAuthenticatedProps extends IUserSettingsProps, IHistoryProps, IExportCsvProps {
   accounts: Array<Account>,
+  logonInformation?: ILogonInformation,
+
   editAccountHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>,
   bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>,
   deleteAccountHandler: (account: Account) => Promise<void>,
@@ -65,6 +68,26 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
     super(props);
     this.state = this.defaultViewState();
     this.props.pluginSystem.registerAuthenticatedUIHandler(this);
+  }
+  componentDidUpdate(prevProps: IAuthenticatedProps) {
+    if (this.props.logonInformation && prevProps.logonInformation !== this.props.logonInformation) {
+      this.showLogonInformation(this.props.logonInformation);
+    }
+  }
+  showLogonInformation(info: ILogonInformation): void {
+    const options: IMessageOptions = {};
+    let message = "";
+    if (info.lastLogin) {
+      message += `Your last login was on ${info.lastLogin.toLocaleString(navigator.language)}. `;
+      options.variant = "info";
+    }
+    if (info.failedLogins && info.failedLogins > 0) {
+      message += `There were ${info.failedLogins} failed logins.`
+        options.autoClose = false;
+      options.variant = "danger";
+      options.button = { variant: "info",  text: "More Information", handler: () => { this.selectView(AuthenticatedView.History) } };
+    }
+    this.props.showMessage(message, options);
   }
   defaultViewState(): AuthenticatedState {
     return {
