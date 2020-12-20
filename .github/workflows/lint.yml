@@ -18,5 +18,3 @@ jobs:
       - name: "lint react"
         run: npx eslint src/**/*.ts src/**/*.tsx
         working-directory: ./reactClient/my-app
-      - name: "lint editorconfig"
-        uses: greut/eclint-action@v0
