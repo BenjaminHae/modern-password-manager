@@ -17,12 +17,13 @@ const History: React.FC<IHistoryProps> = (props: IHistoryProps) => {
           return ( <span>{row.time.toLocaleString(navigator.language)}</span> ); 
         else 
           return ( <span/> )
-      }
+      },
+      grow: 0
     },
-    {name: 'Event', selector: 'event'},
-    {name: 'Result', selector: 'eventResult'},
-    {name: 'IP', selector: 'iP'},
-    {name: 'User-Agent', selector: 'userAgent'},
+    {name: 'Event', selector: 'event', grow: 1},
+    {name: 'Result', selector: 'eventResult', grow: 4},
+    {name: 'IP', selector: 'iP', grow: 0},
+    {name: 'User-Agent', selector: 'userAgent', grow: 4},
   ];
 
   const conditionalRowStyles = [{
