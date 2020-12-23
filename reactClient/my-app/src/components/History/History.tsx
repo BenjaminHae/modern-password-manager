@@ -36,7 +36,7 @@ const History: React.FC<IHistoryProps> = (props: IHistoryProps) => {
 
   return (
       <div className={styles.History}>
-        <h3>History</h3>
+        <h2>History</h2>
         <DataTable noHeader columns={columns} data={props.historyItems} dense pagination striped conditionalRowStyles={conditionalRowStyles}/>
       </div>
       )
