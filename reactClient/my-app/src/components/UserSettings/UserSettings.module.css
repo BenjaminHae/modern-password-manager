@@ -1,5 +1,8 @@
 @media (max-width : 920px) {
-        .UserSettings {
-          padding: 0px !important;
-        }
+  .UserSettings {
+    padding: 0px !important;
+  }
+  h2 {
+    padding-left: 0.5em;
+  }
 }

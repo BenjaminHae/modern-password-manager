@@ -1,7 +1,7 @@
 #!/bin/sh
 cd ..
 # symfony
-GENERATOR=openapitools/openapi-generator-cli:v5.0.0-beta
+GENERATOR=openapitools/openapi-generator-cli:v5.0.0
 
 docker run --userns=host --user ${UID}:${GID} --rm -v ${PWD}:/local "${GENERATOR}" generate -i /local/OpenAPIDescription.yaml     -g php-symfony -o /local/OpenAPIServerBundle
 # react

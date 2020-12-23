@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
+import Modal from 'react-bootstrap/Modal';
 import { Eye, X, Check2, Trash } from 'react-bootstrap-icons';
 import ShortcutManager from '../../libs/ShortcutManager';
 import { ExtendedKeyboardEvent }from 'mousetrap';
@@ -28,12 +29,13 @@ interface AccountEditProps {
 interface AccountEditState {
   fields: {[index: string]:string};
   waiting: boolean;
+  showDelete: boolean;
 }
 class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
 
   constructor(props: AccountEditProps) {
     super(props);
-    this.state = { fields: this.generateFieldContents(), waiting: false};
+    this.state = { fields: this.generateFieldContents(), waiting: false, showDelete: false};
   }
   componentDidMount(): void {
     const quit = (e: ExtendedKeyboardEvent) => { 
@@ -201,9 +203,19 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
               {this.renderFormFields()}
               <span> <Button variant="secondary" onClick={() => this.props.closeHandler() }><X/> Abort</Button></span>
               <span> <Button variant="primary" type="submit"><Check2/> Store</Button></span>
-              { this.props.account && <span> <Button variant="warning" onClick={() => this.deleteHandler()}><Trash/> Delete</Button></span> }
+              { this.props.account && <span> <Button variant="warning" onClick={() => this.setState({showDelete:true})}><Trash/> Delete</Button></span> }
             </fieldset>
           </Form>
+          <Modal show={ this.state.showDelete } onHide={() => this.setState({showDelete: false})}>
+            <Modal.Header>
+              <Modal.Title>Delete?</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Do you really want to delete this account?</Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => this.setState({showDelete: false})}>Abort</Button>
+              <Button variant="danger" onClick={() => this.deleteHandler()}><Trash/> Delete</Button>
+            </Modal.Footer>
+          </Modal>
         </Col>
       </div>
     );

@@ -1,1 +1,6 @@
 .History {}
+@media (max-width : 920px) {
+  h2 {
+    padding-left: 0.5em;
+  }
+}
