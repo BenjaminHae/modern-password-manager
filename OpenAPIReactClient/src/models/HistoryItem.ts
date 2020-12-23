@@ -51,6 +51,16 @@ export interface HistoryItem {
     eventResult: string;
 }
 
+/**
+* @export
+* @enum {string}
+*/
+export enum HistoryItemEventEnum {
+    Login = 'Login',
+    ChangePassword = 'ChangePassword',
+    Registration = 'Registration'
+}
+
 export function HistoryItemFromJSON(json: any): HistoryItem {
     return HistoryItemFromJSONTyped(json, false);
 }
@@ -84,16 +94,6 @@ export function HistoryItemToJSON(value?: HistoryItem | null): any {
         'Event': value.event,
         'EventResult': value.eventResult,
     };
-}
-
-/**
-* @export
-* @enum {string}
-*/
-export enum HistoryItemEventEnum {
-    Login = 'Login',
-    ChangePassword = 'ChangePassword',
-    Registration = 'Registration'
 }
 
 
