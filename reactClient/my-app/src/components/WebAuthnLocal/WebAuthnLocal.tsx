@@ -15,6 +15,8 @@ class WebAuthnLocal extends React.Component<Record<string, never>, WebAuthnLocal
   constructor(props: Record<string, never>) {
     super(props);
     this.state = { keys: [], columns: this.getColumns() };
+  }
+  componentDidMount() {
     this.loadKeys();
   }
   getColumns(): Array<IDataTableColumn> {
