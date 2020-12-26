@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './Unauthenticated.module.css';
 import Login from '../Login/Login';
+import WebAuthnLocal from '../WebAuthnLocal/WebAuthnLocal';
 import Register from '../Register/Register';
 import { IMessageOptions } from '../Message/Message';
 import Accordion from 'react-bootstrap/Accordion';
@@ -36,6 +37,20 @@ class Unauthenticated extends React.Component<UnauthenticatedProps> {
                 </Card.Body>
               </Accordion.Collapse>
             </Card>
+            {this.props.showPersistedLogons &&
+            <Card>
+              <Card.Header>
+                <Accordion.Toggle as={Button} variant="light" eventKey="2">
+                  <h2>Logon without password</h2>
+                </Accordion.Toggle>
+              </Card.Header>
+              <Accordion.Collapse eventKey="2"> 
+                <Card.Body>
+                  <WebAuthnLocal />
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+            }
             {this.props.showRegistration && 
             <Card>
               <Card.Header>
