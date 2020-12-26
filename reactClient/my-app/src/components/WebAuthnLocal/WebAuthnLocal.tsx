@@ -10,9 +10,13 @@ interface WebAuthnLocalState {
   keys: Array<IKeyInfo>;
   columns: Array<IDataTableColumn>;
 }
-class WebAuthnLocal extends React.Component<Record<string, never>, WebAuthnLocalState> {
+interface WebAuthnLocalProps {
+  ready: boolean;
+  autoLogin: () => Promise<void>;
+}
+class WebAuthnLocal extends React.Component<WebAuthnLocalProps, WebAuthnLocalState> {
   private persistor = new PersistDecryptionKey();
-  constructor(props: Record<string, never>) {
+  constructor(props: WebAuthnLocalProps) {
     super(props);
     this.state = { keys: [], columns: this.getColumns() };
   }
@@ -49,6 +53,7 @@ class WebAuthnLocal extends React.Component<Record<string, never>, WebAuthnLocal
   render (): JSX.Element {
     return (
       <div className={styles.WebAuthnLocal}>
+      <Button disabled={!this.props.ready} onClick={()=>this.props.autoLogin()}>Try Auto-Login</Button>
       <p>The following keys are stored in the browser for logon without password.</p>
         <DataTable noHeader columns={this.state.columns} data={this.state.keys} striped/>
       </div>

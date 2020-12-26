@@ -133,6 +133,7 @@ export default class App extends React.Component<Record<string, never>, AppState
           }
           this.plugins.loginViewReady();
           });
+    this.getWebAuthnCredsAvailable();
     this.plugins.setFilterChangeHandler(this.filterChangeHandler.bind(this));
     window.history.pushState({}, "", "/");
     const showShortcuts = () => { 
@@ -309,6 +310,13 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.setState({ webAuthnCreds: creds });
   }
 
+  async getWebAuthnCredsAvailable(): Promise<void> {
+    const persistor = new PersistDecryptionKey();
+    const credIds = await persistor.getCredentialIds();
+    const credsAvailable = credIds.length > 0;
+    this.setState({webAuthnPresent: credsAvailable});
+  }
+
   async webAuthnTryLogin(): Promise<void> {
     this.debug("trying webauthn login");
     const webAuthn = new WebAuthn();
@@ -317,7 +325,6 @@ export default class App extends React.Component<Record<string, never>, AppState
     const credsAvailable = credIds.length > 0;
     this.debug(`Are credsAvailable: ${credsAvailable}`);
     this.debug(`KeyIds: ${credIds}`);
-    this.setState({webAuthnPresent: credsAvailable});
     if (credsAvailable) {
       this.debug(`Trying to do webAuthn get`);
       let credentials: PublicKeyCredential;
@@ -472,6 +479,7 @@ export default class App extends React.Component<Record<string, never>, AppState
                 showRegistration={this.state.registrationAllowed} 
                 showMessage={this.showMessage.bind(this)} 
                 showPersistedLogons={this.state.webAuthnPresent}
+                autoLogin={this.webAuthnTryLogin.bind(this)}
                 ready={this.state.ready}
               /> }
         {!this.state.authenticated && !this.state.ready 

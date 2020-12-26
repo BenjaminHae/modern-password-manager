@@ -16,6 +16,7 @@ interface UnauthenticatedProps {
   showRegistration: boolean;
   showPersistedLogons?: boolean;
   ready: boolean;
+  autoLogin: () => Promise<void>;
 }
 class Unauthenticated extends React.Component<UnauthenticatedProps> {
   render (): JSX.Element {
@@ -46,7 +47,7 @@ class Unauthenticated extends React.Component<UnauthenticatedProps> {
               </Card.Header>
               <Accordion.Collapse eventKey="2"> 
                 <Card.Body>
-                  <WebAuthnLocal />
+                  <WebAuthnLocal ready={this.props.ready} autoLogin={this.props.autoLogin}/>
                 </Card.Body>
               </Accordion.Collapse>
             </Card>
