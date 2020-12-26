@@ -93,11 +93,11 @@ class WebAuthnController
                 base64_decode($credentials["signature"]), 
                 $pk->getPublicKey(), 
                 $challenge, 
-                null, 
+                $pk->getCounter(), 
                 true, 
                 true);
-            //Todo: Update Counter
             $pk->setLastUsed(new \DateTime());
+            $pk->setCounter($this->webAuthn->getSignatureCounter());
             $this->rememberLogonKeyId($pk->getId());
             $this->entityManager->flush();
         }

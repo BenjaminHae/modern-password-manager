@@ -349,6 +349,7 @@ export default class App extends React.Component<Record<string, never>, AppState
         const userIdView = new DataView(response.userHandle);
         keyIndex = userIdView.getInt16(1)
       }
+      await persistor.setLastUsed(keyIndex, new Date());
       try {
         this.debug(`sending webauthn to server`);
         const info = await this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, keyIndex, persistor);

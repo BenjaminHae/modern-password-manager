@@ -106,7 +106,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
     let buttons : Array <void | JSX.Element> = [<Button key="EditAccountNative" onClick={()=>{this.props.editAccountHandler(account)}}><Pencil/></Button>];
     buttons = this.props.pluginSystem.accountButtons(account).concat(buttons);
     return (
-      <ButtonGroup size="sm" className={styles.TableButtonGroup}>
+      <ButtonGroup size="sm" className={styles.TableButtonGroup} key="buttons">
         {buttons}
       </ButtonGroup>
     )
@@ -134,7 +134,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
         name: "Name", 
         selector: "name", 
         sortable:true,
-        cell: (row: AccountWithSelected) => [<>{row.account.name}</>, this.getAccountButtons(row.account)]
+        cell: (row: AccountWithSelected) => [<React.Fragment key="name" >{row.account.name}</React.Fragment>, this.getAccountButtons(row.account)]
       },
       { 
         name: "Password",  
