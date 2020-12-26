@@ -1,5 +1,11 @@
 import { IDecryptionKeys } from '../backend/controller/credentialProviderPersist';
 
+export interface IKeyInfo {
+  id: number;
+  displayName: string;
+  lastUsed?: Date;
+}
+
 export default class PersistDecryptionKey {
   readonly storageDbName = "localDecryptionKey";
   readonly storageDbVersion = 3;
@@ -168,4 +174,74 @@ export default class PersistDecryptionKey {
     });
   }
 
+  async clearAll(): Promise<void> {
+    if (!this.db) {
+      await this.initStorage();
+    }
+    return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject();
+        return;
+      }
+      const transaction = this.db.transaction([this.storageKeysName], "readwrite");
+      transaction.onerror = () => reject();
+      const objectStore = transaction.objectStore(this.storageKeysName);
+      const request = objectStore.clear();
+      request.onsuccess = () => resolve();
+    });
+  }
+
+  async getKeyList(): Promise<Array<IKeyInfo>> {
+    if (!this.db) {
+      await this.initStorage();
+    }
+    return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject();
+        return;
+      }
+      const transaction = this.db.transaction([this.storageKeysName], "readonly");
+      transaction.onerror = () => reject("indexdb transaction failed");
+      const objectStore = transaction.objectStore(this.storageKeysName);
+      const index = objectStore.index(this.storageKeysCredentialIndex);
+
+      const result: Array<IKeyInfo> = [];
+      index.openCursor().onsuccess = (event: any) => {
+        const cursor: IDBCursorWithValue = event.target.result;
+        if (cursor) {
+          const data = cursor.value;
+          result.push({ id: cursor.primaryKey as number, displayName: data.displayName, lastUsed: data.lastUsed});
+          cursor.continue();
+        } else {
+          resolve(result);
+        }
+      };
+      index.openCursor().onerror = () => resolve([]);
+    });
+  }
+
+  async setLastUsed(keyId: number, lastUsed: Date): Promise<void> {
+    if (!this.db) {
+      await this.initStorage();
+    }
+    return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject();
+        return;
+      }
+      const transaction = this.db.transaction([this.storageKeysName], "readwrite");
+      transaction.onerror = () => reject();
+      const objectStore = transaction.objectStore(this.storageKeysName);
+      objectStore.openCursor(keyId).onsuccess = (event: any) => {
+        const cursor: IDBCursorWithValue = event.target.result;
+        if (cursor) {
+          const data = cursor.value;
+          data.lastUsed = lastUsed;
+          const updateRequest = cursor.update(data);
+          updateRequest.onsuccess = () => resolve();
+          updateRequest.onerror = (e) => reject(e);
+        }
+      };
+    });
+  }
 }
