@@ -30,6 +30,7 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import Spinner from 'react-bootstrap/Spinner';
 import { BoxArrowLeft } from 'react-bootstrap-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -483,7 +484,7 @@ export default class App extends React.Component<Record<string, never>, AppState
                 ready={this.state.ready}
               /> }
         {!this.state.authenticated && !this.state.ready 
-          && <span>Waiting for server</span> }
+          && <div className={ styles.Waiting }><Spinner animation="border" role="status"/><p>Waiting for server</p></div> }
         {this.state.debugCount >= 1 &&
           <DebugViewer messages={this.state.debug} counter={this.state.debugCount*10} /> }
           <ShortcutOverview shortcuts={this.shortcuts} show={this.state.showShortcutOverview} hide={() => this.setState({showShortcutOverview: false})}/>

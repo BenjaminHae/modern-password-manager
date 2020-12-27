@@ -1,5 +1,15 @@
 # Modern password manager
 
+This is a web-based password manager that can be self-hosted.
+All stored accounts are encrypted on the client-side. Neither the key for encryption nor the plain passwords (or other account data) are ever transmitted to the server.
+
+The backend is based on php using the symfony framework.  
+The frontend is based on react-typescript.
+
+For login you can use [WebAuthN](https://en.wikipedia.org/wiki/WebAuthn) using platform authenticators. That means logging in using your fingerprint sensor or something similar is possible. Setup is located in the Settings in the web interface.
+
+There is also a [Browser Extension](https://github.com/BenjaminHae/MPMChromeExtension/).
+
 ## Installation
 
 ### Productive use
@@ -17,6 +27,10 @@ You need a webspace with PHP 7.4.
     ```
     bin/console doctrine:schema:update --force
     ```
+ 4. Clean up. You may remove the following files/folders:
+    - `Dockerfile`
+    - `docker-compose.yml`
+    - `bin` (if you still need the symfony console, leave this folder)
     
 The password manager only works when you access it through https or on localhost, otherwise current browsers do not accept it as secure origin and do not offer the cryptography APIs.
 
@@ -82,3 +96,4 @@ The following files/directories are not needed at runtime:
  - dockerBuild/
  - reactClient/
  - Symfony-API/bin/
+
