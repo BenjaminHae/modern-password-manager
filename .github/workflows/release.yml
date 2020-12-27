@@ -1,6 +1,8 @@
-name: build application
-on: [push]
-
+name: build application or create release
+on: 
+  push:
+    tags:
+      - 'v*'
 jobs:
   build_react:
     name: build react app 
@@ -78,10 +80,28 @@ jobs:
       - name: remove .gitignore
         run: "rm .gitignore"
         working-directory: ./Symfony-API/
-      #- name: zip
-      #  run: "zip --symlinks -r modern-password-manager.zip ./Symfony-API"
-      #  working-directory: ./
       - uses: actions/upload-artifact@v2
         with:
           name: symfony-project
           path: Symfony-API/
+  release:
+    name: Create Release
+    needs: build_symfony
+    runs-on: ubuntu-latest
+    steps:
+      - name: Insert files
+        uses: actions/download-artifact@v2
+        with:
+          name: symfony-project
+          path: .
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: ${{ github.event.head_commit.message }}
+          draft: true
+          prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}
