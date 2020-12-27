@@ -1,4 +1,4 @@
-name: build application or create release
+name: build application and create release
 on: 
   push:
     tags:
@@ -33,7 +33,7 @@ jobs:
         with:
           name: react-build
           path: reactClient/my-app/build/
-  build_symfony:
+  build_symfony_and_release:
     name: build symfony
     needs: build_react
     runs-on: ubuntu-latest
@@ -84,18 +84,15 @@ jobs:
         with:
           name: symfony-project
           path: Symfony-API/
-  release:
-    name: Create Release
-    needs: build_symfony
-    runs-on: ubuntu-latest
-    steps:
+  #RELEASE
+      - name: rename Symfony
+        run: mv Symfony-API password-manager
+        working-directory: ./
+      - name: zip
+        run: "zip --symlinks -r password-manager.zip ./password-manager"
+        working-directory: ./
       - name: generate release name
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      - name: Insert files
-        uses: actions/download-artifact@v2
-        with:
-          name: symfony-project
-          path: .
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -114,5 +111,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .
+          asset_path: ./password-manager.zip
           asset_name: password-manager.zip
+          asset_content_type: application/zip
