@@ -1,5 +1,13 @@
 # Modern password manager
 
+This is a web-based password manager that can be self-hosted.
+All stored accounts are encrypted on the client-side. Neither the key for encryption nor the plain passwords (or other account data) are ever transmitted to the server.
+
+The backend is based on php using the symfony framework.  
+The frontend is based on react-typescript.
+
+There is also a [Browser Extension](https://github.com/BenjaminHae/MPMChromeExtension/).
+
 ## Installation
 
 ### Productive use
@@ -82,3 +90,4 @@ The following files/directories are not needed at runtime:
  - dockerBuild/
  - reactClient/
  - Symfony-API/bin/
+
