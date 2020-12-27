@@ -75,6 +75,9 @@ jobs:
       - name: copy docker-compose
         run: "cp ../docker-compose.yml docker-compose.yml"
         working-directory: ./Symfony-API/
+      - name: remove .gitignore
+        run: "rm .gitignore"
+        working-directory: ./Symfony-API/
       #- name: zip
       #  run: "zip --symlinks -r modern-password-manager.zip ./Symfony-API"
       #  working-directory: ./
