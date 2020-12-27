@@ -80,10 +80,6 @@ jobs:
       - name: remove .gitignore
         run: "rm .gitignore"
         working-directory: ./Symfony-API/
-      - uses: actions/upload-artifact@v2
-        with:
-          name: symfony-project
-          path: Symfony-API/
   #RELEASE
       - name: rename Symfony
         run: mv Symfony-API password-manager
