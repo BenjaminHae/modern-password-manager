@@ -8,7 +8,16 @@ The frontend is based on react-typescript.
 
 For login you can use [WebAuthN](https://en.wikipedia.org/wiki/WebAuthn) using platform authenticators. That means logging in using your fingerprint sensor or something similar is possible. Setup is located in the Settings in the web interface.
 
-There is also a [Browser Extension](https://github.com/BenjaminHae/MPMChromeExtension/).
+There is also a Browser Extension](https://github.com/BenjaminHae/MPMChromeExtension/).
+
+## Features
+
+ - All data is encrypted before it is sent to the server
+ - Custom fields for accounts
+ - [Browser Extension](https://github.com/BenjaminHae/MPMChromeExtension/)
+ - Extensions can be implemented in a simple way
+ - Login using biometrics
+ - Stable API, so other clients (such as cli) can be implemented
 
 ## Installation
 
