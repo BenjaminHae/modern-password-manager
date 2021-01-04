@@ -420,10 +420,10 @@ export default class App extends React.Component<Record<string, never>, AppState
         <header className="App-header">
           <Container fluid>
             <Row>
-              <Col xl={{ span: 4, offset: 4 }} lg={{ span: 6, offset: 3 }} md={{ span: 6, offset: 3 }} xs={{ span: 6, offset: 1 }} className="text-center">
+              <Col xl={{ span: 4, offset: 4 }} lg={{ span: 6, offset: 3 }} md={{ span: 6, offset: 3 }} xs={{ span: 6, offset: 0 }} className="text-center">
                 Password Manager
               </Col>
-              <Col xl={{ span: 2, offset: 2 }} lg={{ span: 2, offset: 1 }} md={{ span: 3, offset: 0 }} xs={{ span: 3, offset: 2 }} className="text-right">
+              <Col xl={{ span: 2, offset: 2 }} lg={{ span: 2, offset: 1 }} md={{ span: 3, offset: 0 }} xs={{ span: 6, offset: 0 }} className="text-right logoutButtonCell">
                 {this.state.authenticated &&
                   <Button 
                     className={styles.Logout} 
