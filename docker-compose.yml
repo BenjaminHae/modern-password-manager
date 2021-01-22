@@ -21,8 +21,6 @@ services:
       MYSQL_USER: mpm
       MYSQL_PASSWORD: CHANGEME
       MYSQL_DATABASE: database
-    ports:
-      - "8889:3306"
     networks:
      - backend
 networks:
