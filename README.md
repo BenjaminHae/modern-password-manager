@@ -49,7 +49,7 @@ With this variant a docker container is started that uses a sqlite database.
 
  1. run `docker build -t mpm` in the extracted release (or in the repository itself).
  2. start the container: `docker run --name mpm -p 443:443 mpm`
- 3. Visit `https://localhost´
+ 3. Visit [https://localhost](https://localhost)
  4. If you have used the database in a previous version, you need to upgrade the database (while the container is running).  
     - This can be done automatically which is a bit dangerous:  
       `docker exec mpm /bin/sh -c "/app/bin/console doctrine:schema:update --force"`
