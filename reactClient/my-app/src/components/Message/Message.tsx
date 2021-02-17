@@ -34,7 +34,7 @@ const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
           dismissible 
           variant={ message.variant === undefined ? "info" : message.variant } 
           onClose={()=>props.closeHandler(message.id)} 
-          transition={Collapse as any} 
+          transition={Collapse} 
           show={message.show} 
         >
         { message.message }
