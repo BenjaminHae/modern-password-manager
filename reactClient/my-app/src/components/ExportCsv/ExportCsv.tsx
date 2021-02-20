@@ -7,13 +7,7 @@ import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWit
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-
-export interface IExportCsvProps {
-  accounts: Array<Account>;
-  getAccountPasswordHandler: (account: Account) => Promise<string>;
-  verifyPassword: (password: string) => Promise<boolean>;
-  showMessage: (message: string, options?: IMessageOptions) => void;
-}
+import { IExportCsvProps } from '../commonProps';
 
 const generateCSV = async (accounts: Array<Account>, getPassword: (account:Account) => Promise<string>): Promise<string> => {
   const csvObjectsPromise = accounts.map(async (account: Account) => {
