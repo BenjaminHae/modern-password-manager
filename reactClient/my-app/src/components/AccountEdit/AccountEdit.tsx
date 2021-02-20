@@ -3,7 +3,7 @@ import styles from './AccountEdit.module.css';
 import { Account } from '../../backend/models/account';
 import { FieldOptions } from '../../backend/models/fieldOptions';
 import { PluginSystem } from '../../plugin/PluginSystem';
-import { IMessageOptions } from '../Message/Message';
+import { IMessageOptions } from '../../libs/MessageManager';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';

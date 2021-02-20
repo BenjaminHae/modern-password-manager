@@ -3,27 +3,11 @@ import styles from './Message.module.css';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
+import { IMessageOptions, IMessageButton, IMessage } from '../../libs/MessageManager';
 
 export interface IMessageProps {
   messages: Array<IMessage>;
-  closeHandler: ((id: number) => void);
-}
-
-export interface IMessageOptions {
-  autoClose?: boolean;
-  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'dark' | 'light';
-  button?: IMessageButton;
-}
-export interface IMessageButton {
-  variant: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'dark' | 'light';
-  handler: (()=>void);
-  text: string;
-}
-
-export interface IMessage extends IMessageOptions {
-  id: number;
-  message: string;
-  show: boolean;
+  closeHandler: ((message: IMessage) => void);
 }
 
 const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
@@ -33,7 +17,7 @@ const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
           key={message.id} 
           dismissible 
           variant={ message.variant === undefined ? "info" : message.variant } 
-          onClose={()=>props.closeHandler(message.id)} 
+          onClose={()=>props.closeHandler(message)} 
           transition={Collapse} 
           show={message.show} 
         >
@@ -44,7 +28,7 @@ const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
             onClick={ () => { 
                 if (message.button)
                   message.button.handler(); 
-                props.closeHandler(message.id); 
+                props.closeHandler(message); 
               } 
             } 
             size="sm"

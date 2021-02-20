@@ -1,5 +1,5 @@
 import React from 'react';
-import { IMessageOptions } from '../Message/Message';
+import { IMessageOptions } from '../../libs/MessageManager';
 import styles from './UserSettings.module.css';
 import UserFieldConfiguration, {IUserFieldConfigurationProps} from '../UserFieldConfiguration/UserFieldConfiguration';
 import ChangePassword, {IChangePasswordProps} from '../ChangePassword/ChangePassword';

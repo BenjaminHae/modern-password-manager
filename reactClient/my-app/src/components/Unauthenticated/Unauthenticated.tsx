@@ -3,7 +3,7 @@ import styles from './Unauthenticated.module.css';
 import Login from '../Login/Login';
 import WebAuthnLocal from '../WebAuthnLocal/WebAuthnLocal';
 import Register from '../Register/Register';
-import { IMessageOptions } from '../Message/Message';
+import { IMessageOptions } from '../../libs/MessageManager';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
