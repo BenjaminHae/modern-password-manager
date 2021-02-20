@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './UserFieldConfiguration.module.css';
 import { UserOptions, UserOptionsFromJSON } from '../../backend/models/UserOptions';
-import { IMessageOptions } from '../Message/Message';
+import { IMessageOptions } from '../../libs/MessageManager';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 

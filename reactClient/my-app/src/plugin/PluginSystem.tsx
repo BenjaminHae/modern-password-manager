@@ -4,7 +4,7 @@ import { ICredentialProvider } from '../backend/controller/credentialProvider';
 import { AccountTransformerService } from '../backend/controller/account-transformer.service';
 import activatedPlugins from './ActivatedPlugins';
 import * as BasePlugin from './BasePlugin';
-import { IMessageOptions } from '../components/Message/Message';
+import { IMessageOptions } from '../libs/MessageManager';
 import ShortcutManager from '../libs/ShortcutManager';
 
 export type AccountsFilter = (accounts: Array<Account>) => Array<Account>;

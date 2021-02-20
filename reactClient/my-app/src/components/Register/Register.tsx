@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Register.module.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { IMessageOptions } from '../Message/Message';
+import { IMessageOptions } from '../../libs/MessageManager';
 import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWithToggle';
 
 interface RegisterProps {

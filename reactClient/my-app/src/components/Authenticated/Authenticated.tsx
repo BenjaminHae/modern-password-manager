@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Authenticated.module.css';
 import { Account } from '../../backend/models/account';
 import { ILogonInformation } from '../../backend/api/user.service';
-import { IMessageOptions } from '../Message/Message';
+import { IMessageOptions } from '../../libs/MessageManager';
 import AccountList from '../AccountList/AccountList';
 import AccountEdit from '../AccountEdit/AccountEdit';
 import ImportCsv from '../ImportCsv/ImportCsv';

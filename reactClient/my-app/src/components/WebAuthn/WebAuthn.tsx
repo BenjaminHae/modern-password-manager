@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWithToggle';
-import { IMessageOptions } from '../Message/Message';
+import { IMessageOptions } from '../../libs/MessageManager';
 
 export interface IWebAuthnProps {
   webAuthnDevices: Array<UserWebAuthnCred>;

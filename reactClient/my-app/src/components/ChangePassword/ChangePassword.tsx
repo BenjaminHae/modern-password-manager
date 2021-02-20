@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './ChangePassword.module.css';
-import { IMessageOptions } from '../Message/Message';
+import { IMessageOptions } from '../../libs/MessageManager';
 import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWithToggle';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';

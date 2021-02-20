@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './ExportCsv.module.css';
 import { Account } from '../../backend/models/account';
 import { unparse } from 'papaparse';
-import { IMessageOptions } from '../Message/Message';
+import { IMessageOptions } from '../../libs/MessageManager';
 import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWithToggle';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';

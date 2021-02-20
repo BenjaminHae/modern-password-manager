@@ -3,7 +3,7 @@ import DebugViewer from './components/DebugViewer/DebugViewer';
 import Authenticated from './components/Authenticated/Authenticated';
 import Unauthenticated from './components/Unauthenticated/Unauthenticated';
 import ShortcutOverview from './components/ShortcutOverview/ShortcutOverview';
-import Message, { IMessageOptions, IMessage } from './components/Message/Message';
+import Message from './components/Message/Message';
 import './App.css';
 import styles from './App.module.css';
 import { BackendService } from './backend/backend.service';
@@ -24,6 +24,7 @@ import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-reac
 import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
 import WebAuthn from './libs/WebAuthn';
 import ShortcutManager from './libs/ShortcutManager';
+import MessageManager, { IMessageOptions, IMessage } from './libs/MessageManager';
 import PersistDecryptionKey from './libs/PersistDecryptionKey';
 import { HistoryItem, UserWebAuthnCred } from '@pm-server/pm-server-react-client';
 import Button from 'react-bootstrap/Button';
@@ -60,6 +61,7 @@ export default class App extends React.Component<Record<string, never>, AppState
   private credential: CredentialService;
   private plugins: PluginSystem;
   private shortcuts: ShortcutManager;
+  private messages: MessageManager;
 
   constructor (props: Record<string, never>) {
     super(props);
@@ -100,6 +102,7 @@ export default class App extends React.Component<Record<string, never>, AppState
         this.accountTransformerService, 
         this.crypto);
     this.shortcuts = new ShortcutManager();
+    this.messages = new MessageManager((m: Array<IMessage>)=> { this.setState({messages: m}) });
     this.plugins = new PluginSystem(this.backend, this.accountTransformerService, this.shortcuts);
     this.plugins.registerAppHandler(this);
     this.backend.loginObservable
@@ -118,7 +121,7 @@ export default class App extends React.Component<Record<string, never>, AppState
           });
     const message = URLParams.get("message")
     if (message) {
-      this.showMessage(message, { autoClose: false, variant: 'info' });
+      this.messages.showMessage(message, { autoClose: false, variant: 'info' });
     }
   }
   debug(line: string): void {
@@ -145,9 +148,9 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.shortcuts.addShortcut({ shortcut: "q", action: () => { this.doLogout() }, description: "Logout", component: this} );
   }
   doLogin(username:string, password: string):Promise<void> {
-    this.clearMessages();
+    this.messages.clearMessages();
     if (!this.state.ready) {
-      this.showMessage("backend is not ready yet. Please try again in a second.");
+      this.messages.showMessage("backend is not ready yet. Please try again in a second.");
       return Promise.resolve();
     }
     return this.backend.logon(username, password)
@@ -164,7 +167,7 @@ export default class App extends React.Component<Record<string, never>, AppState
             msg = "invalid credentials";
           }
         }
-        this.showMessage("Login failed, " + msg, { autoClose: false });
+        this.messages.showMessage("Login failed, " + msg, { autoClose: false });
         this.setState({ authenticated: false });
       });
   }
@@ -175,7 +178,7 @@ export default class App extends React.Component<Record<string, never>, AppState
   } 
 
   async doRegister(username: string, password: string, email: string): Promise<void> {
-    this.clearMessages();
+    this.messages.clearMessages();
     return this.backend.register(username, password, email);
   }
   async doLogout(message?: string): Promise<void> {
@@ -366,7 +369,7 @@ export default class App extends React.Component<Record<string, never>, AppState
       }
       catch(e) {
         this.debug(`WebAuthn Login failed: ${e.message}`);
-        this.showMessage(`WebAuthn Login failed: ${e.message}`, {autoClose: false, variant: "danger" });
+        this.messages.showMessage(`WebAuthn Login failed: ${e.message}`, {autoClose: false, variant: "danger" });
         throw e;
       }
     }
@@ -387,31 +390,8 @@ export default class App extends React.Component<Record<string, never>, AppState
     return accounts;
   }
 
-  clearMessages(): void {
-    this.setState({messages: []});
-  }
-
   showMessage(text: string, options: IMessageOptions = {}): void {
-    const newMessages = this.state.messages;
-    const message = {message: text, id: Date.now(), show: true, ...options}
-    newMessages.push(message);
-    this.setState({messages: newMessages});
-    if ( options.autoClose === undefined || options.autoClose) {
-      window.setTimeout(() => {
-        message.show = false;
-      }
-      , 5000);
-      window.setTimeout(() => {
-        const newMessages = this.state.messages.filter((m)=> m.id !== message.id);
-        this.setState({messages: newMessages});
-      }
-      , 7000);
-    }
-  }
-
-  closeMessage(id: number): void {
-    const newMessages = this.state.messages.filter((m)=> m.id !== id);
-    this.setState({messages: newMessages});
+    this.messages.showMessage(text, options);
   }
 
   render(): JSX.Element {
@@ -439,7 +419,7 @@ export default class App extends React.Component<Record<string, never>, AppState
         </header>
         <Message 
             messages={this.state.messages} 
-            closeHandler={this.closeMessage.bind(this)}
+            closeHandler={(message: IMessage) => this.messages.hideMessage(message)}
         />
         {this.state.authenticated &&
          <Authenticated 
