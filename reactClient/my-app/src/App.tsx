@@ -62,6 +62,7 @@ export default class App extends React.Component<Record<string, never>, AppState
   private plugins: PluginSystem;
   private shortcuts: ShortcutManager;
   private messages: MessageManager;
+  private backendWaiter: Promise<BackendOptions>; // promise for the first call to the backend
 
   constructor (props: Record<string, never>) {
     super(props);
@@ -123,13 +124,14 @@ export default class App extends React.Component<Record<string, never>, AppState
     if (message) {
       this.messages.showMessage(message, { autoClose: false, variant: 'info' });
     }
+    this.backendWaiter = this.backend.waitForBackend();
   }
   debug(line: string): void {
     this.state.debug.unshift(line);
     this.setState({debug: this.state.debug});
   }
   componentDidMount(): void {
-    this.backend.waitForBackend()
+    this.backendWaiter
       .then((backendOptions: BackendOptions) => {
           this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed, idleTimeout: backendOptions.idleTimeout});
           if (this.state.autoLogin) {
