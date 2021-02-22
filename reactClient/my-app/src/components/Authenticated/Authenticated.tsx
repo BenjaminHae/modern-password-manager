@@ -5,9 +5,8 @@ import { ILogonInformation } from '../../backend/api/user.service';
 import { IMessageOptions } from '../../libs/MessageManager';
 import AccountList from '../AccountList/AccountList';
 import AccountEdit from '../AccountEdit/AccountEdit';
-import ImportCsv from '../ImportCsv/ImportCsv';
+import ImportCsv from '../ImportCsv/ImportCsv.lazy';
 import ExportCsv from '../ExportCsv/ExportCsv.lazy';
-import { IExportCsvProps } from '../commonProps';
 import History from '../History/History';
 import UserSettings from '../UserSettings/UserSettings';
 import Button from 'react-bootstrap/Button';
@@ -18,10 +17,9 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { BoxArrowUpLeft, CloudArrowUp, CloudArrowDown, List, Plus, PencilFill, ClockHistory, Sliders } from 'react-bootstrap-icons';
 import { PluginSystem } from '../../plugin/PluginSystem';
 import PluginMainView from '../../plugin/PluginMainView/PluginMainView';
-import { IUserSettingsProps } from '../UserSettings/UserSettings';
-import { IHistoryProps } from '../History/History';
 import ShortcutManager from '../../libs/ShortcutManager';
 import IdleTimer from 'react-idle-timer';
+import { IAuthenticatedProps, IUserSettingsProps, IHistoryProps, IExportCsvProps } from '../commonProps';
 
 enum AuthenticatedView {
   List,
@@ -31,22 +29,6 @@ enum AuthenticatedView {
   Export,
   Options,
   History
-}
-interface IAuthenticatedProps extends IUserSettingsProps, IHistoryProps, IExportCsvProps {
-  accounts: Array<Account>,
-  logonInformation?: ILogonInformation,
-
-  editAccountHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>,
-  bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>,
-  deleteAccountHandler: (account: Account) => Promise<void>,
-  getAccountPasswordHandler: (account: Account) => Promise<string>,
-  idleTimeout: number,
-  onIdle: () => void;
-
-  showMessage: (message: string, options?: IMessageOptions) => void,
-
-  pluginSystem: PluginSystem,
-  shortcuts: ShortcutManager
 }
 interface AuthenticatedState {
   view: AuthenticatedView;

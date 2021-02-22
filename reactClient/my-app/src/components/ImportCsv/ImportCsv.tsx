@@ -4,19 +4,14 @@ import DataTable from 'react-data-table-component';
 import { IDataTableColumn } from 'react-data-table-component';
 import { CsvParser } from './csv/csvParser';
 import { CsvConverter } from './csv/csvConverter';
-import { FieldOptions } from '../../backend/models/fieldOptions';
 import { IMessageOptions } from '../../libs/MessageManager';
+import { ImportCsvProps } from '../commonProps';
 import CsvFieldMappingSelect from './CsvFieldMappingSelect/CsvFieldMappingSelect';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
 
-interface ImportCsvProps {
-  availableFields: Array<FieldOptions>;
-  bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>;
-  showMessage: (message: string, options?: IMessageOptions) => void;
-}
 interface ImportCsvState {
   data: Array<{[index: string]:string}>;
   columns: Array<IDataTableColumn>;

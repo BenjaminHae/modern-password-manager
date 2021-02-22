@@ -1,6 +1,6 @@
 import React from 'react';
 import DebugViewer from './components/DebugViewer/DebugViewer';
-import Authenticated from './components/Authenticated/Authenticated';
+import Authenticated from './components/Authenticated/Authenticated.lazy';
 import Unauthenticated from './components/Unauthenticated/Unauthenticated';
 import ShortcutOverview from './components/ShortcutOverview/ShortcutOverview';
 import Message from './components/Message/Message';
