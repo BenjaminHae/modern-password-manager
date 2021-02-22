@@ -4,12 +4,8 @@ import { UserOptions, UserOptionsFromJSON } from '../../backend/models/UserOptio
 import { IMessageOptions } from '../../libs/MessageManager';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { IUserFieldConfigurationProps } from '../commonProps';
 
-export interface IUserFieldConfigurationProps {
-  userOptions: UserOptions;
-  showMessage: (message: string, options: IMessageOptions) => void;
-  doStoreOptions: (options: UserOptions) => Promise<void>;
-}
 const UserFieldConfiguration: React.FC<IUserFieldConfigurationProps> = (props: IUserFieldConfigurationProps) => {
   const [options, setOptions] = useState(JSON.stringify(props.userOptions, null, 2));
   const [waiting, setWaiting] = useState(false);

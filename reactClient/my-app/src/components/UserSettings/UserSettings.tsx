@@ -1,17 +1,15 @@
 import React from 'react';
 import { IMessageOptions } from '../../libs/MessageManager';
 import styles from './UserSettings.module.css';
-import UserFieldConfiguration, {IUserFieldConfigurationProps} from '../UserFieldConfiguration/UserFieldConfiguration';
-import ChangePassword, {IChangePasswordProps} from '../ChangePassword/ChangePassword';
-import WebAuthn, {IWebAuthnProps} from '../WebAuthn/WebAuthn';
+import UserFieldConfiguration from '../UserFieldConfiguration/UserFieldConfiguration';
+import ChangePassword from '../ChangePassword/ChangePassword';
+import WebAuthn from '../WebAuthn/WebAuthn';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
+import { IUserSettingsProps, IUserFieldConfigurationProps, IChangePasswordProps , IWebAuthnProps } from '../commonProps';
 
-export interface IUserSettingsProps extends IWebAuthnProps, IChangePasswordProps, IUserFieldConfigurationProps{
-  showMessage: (message: string, options?: IMessageOptions) => void;
-}
 const UserSettings: React.FC<IUserSettingsProps> = (props: IUserSettingsProps) => {
   return (
       <Col lg={{ span: 6, offset: 3 }} md={{ span: 8, offset: 2 }} sm={{ span: 12 }} className={styles.UserSettings}>

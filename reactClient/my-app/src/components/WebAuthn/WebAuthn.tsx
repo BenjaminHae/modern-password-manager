@@ -9,15 +9,8 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWithToggle';
 import { IMessageOptions } from '../../libs/MessageManager';
+import { IWebAuthnProps } from '../commonProps';
 
-export interface IWebAuthnProps {
-  webAuthnDevices: Array<UserWebAuthnCred>;
-  webAuthnThisDeviceRegistered: boolean;
-  webAuthnLoadHandler: () => Promise<void>;
-  webAuthnCreateCredHandler: (devicename: string, username: string, password: string) => Promise<void>;
-  webAuthnDeleteCredHandler: (creds: UserWebAuthnCred) => Promise<void>;
-  showMessage: (message: string, options?: IMessageOptions) => void;
-}
 interface WebAuthnFormValues {
   username: string;
   devicename: string;

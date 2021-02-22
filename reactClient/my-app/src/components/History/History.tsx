@@ -3,11 +3,8 @@ import styles from './History.module.css';
 import { HistoryItem } from '@pm-server/pm-server-react-client';
 import DataTable from 'react-data-table-component';
 import { IDataTableColumn } from 'react-data-table-component';
+import { IHistoryProps } from '../commonProps';
 
-export interface IHistoryProps {
-  historyItems: Array<HistoryItem>;
-  loadHistoryHandler: () => Promise<void>;
-}
 const History: React.FC<IHistoryProps> = (props: IHistoryProps) => {
   const columns: Array<IDataTableColumn> = [
     {

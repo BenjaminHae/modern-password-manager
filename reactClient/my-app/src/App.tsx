@@ -1,6 +1,6 @@
 import React from 'react';
 import DebugViewer from './components/DebugViewer/DebugViewer';
-import Authenticated from './components/Authenticated/Authenticated';
+import Authenticated from './components/Authenticated/Authenticated.lazy';
 import Unauthenticated from './components/Unauthenticated/Unauthenticated';
 import ShortcutOverview from './components/ShortcutOverview/ShortcutOverview';
 import Message from './components/Message/Message';
@@ -62,6 +62,7 @@ export default class App extends React.Component<Record<string, never>, AppState
   private plugins: PluginSystem;
   private shortcuts: ShortcutManager;
   private messages: MessageManager;
+  private backendWaiter: Promise<BackendOptions>; // promise for the first call to the backend
 
   constructor (props: Record<string, never>) {
     super(props);
@@ -123,13 +124,14 @@ export default class App extends React.Component<Record<string, never>, AppState
     if (message) {
       this.messages.showMessage(message, { autoClose: false, variant: 'info' });
     }
+    this.backendWaiter = this.backend.waitForBackend();
   }
   debug(line: string): void {
     this.state.debug.unshift(line);
     this.setState({debug: this.state.debug});
   }
   componentDidMount(): void {
-    this.backend.waitForBackend()
+    this.backendWaiter
       .then((backendOptions: BackendOptions) => {
           this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed, idleTimeout: backendOptions.idleTimeout});
           if (this.state.autoLogin) {
