@@ -5,14 +5,11 @@ import { IDataTableColumn } from 'react-data-table-component';
 import PersistDecryptionKey, { IKeyInfo } from '../../libs/PersistDecryptionKey';
 import { Trash } from 'react-bootstrap-icons';
 import Button from 'react-bootstrap/Button';
+import { WebAuthnLocalProps } from '../commonProps';
 
 interface WebAuthnLocalState {
   keys: Array<IKeyInfo>;
   columns: Array<IDataTableColumn>;
-}
-interface WebAuthnLocalProps {
-  ready: boolean;
-  autoLogin: () => Promise<void>;
 }
 class WebAuthnLocal extends React.Component<WebAuthnLocalProps, WebAuthnLocalState> {
   private persistor = new PersistDecryptionKey();

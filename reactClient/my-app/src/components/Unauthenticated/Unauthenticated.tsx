@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Unauthenticated.module.css';
 import Login from '../Login/Login';
-import WebAuthnLocal from '../WebAuthnLocal/WebAuthnLocal';
+import WebAuthnLocal from '../WebAuthnLocal/WebAuthnLocal.lazy';
 import Register from '../Register/Register';
 import { IMessageOptions } from '../../libs/MessageManager';
 import Accordion from 'react-bootstrap/Accordion';

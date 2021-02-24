@@ -9,6 +9,11 @@ import { PluginSystem } from '../plugin/PluginSystem';
 import ShortcutManager from '../libs/ShortcutManager';
 import IdleTimer from 'react-idle-timer';
 
+export interface WebAuthnLocalProps {
+  ready: boolean;
+  autoLogin: () => Promise<void>;
+}
+
 export interface IExportCsvProps {
   accounts: Array<Account>;
   getAccountPasswordHandler: (account: Account) => Promise<string>;
