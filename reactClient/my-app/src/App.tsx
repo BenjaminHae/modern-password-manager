@@ -120,11 +120,16 @@ export default class App extends React.Component<Record<string, never>, AppState
           console.log("(react) received options: " + userOptions);
           this.setState({userOptions : userOptions});
           });
+    this.backendWaiter = this.backend.waitForBackend();
+
+    // try auto login
+    if (this.state.autoLogin) {
+      this.webAuthnTryLogin();
+    }
     const message = URLParams.get("message")
     if (message) {
       this.messages.showMessage(message, { autoClose: false, variant: 'info' });
     }
-    this.backendWaiter = this.backend.waitForBackend();
   }
   debug(line: string): void {
     this.state.debug.unshift(line);
@@ -134,9 +139,6 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.backendWaiter
       .then((backendOptions: BackendOptions) => {
           this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed, idleTimeout: backendOptions.idleTimeout});
-          if (this.state.autoLogin) {
-            this.webAuthnTryLogin();
-          }
           this.plugins.loginViewReady();
           });
     this.getWebAuthnCredsAvailable();
@@ -365,6 +367,7 @@ export default class App extends React.Component<Record<string, never>, AppState
       await persistor.setLastUsed(keyIndex, new Date());
       try {
         this.debug(`sending webauthn to server`);
+        await this.backendWaiter;
         const info = await this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, keyIndex, persistor);
         this.debug(`successful`);
         this.handleLoginSuccess(info, "");
