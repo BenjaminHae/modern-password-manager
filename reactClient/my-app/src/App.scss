@@ -1,0 +1,85 @@
+// Required
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+// Include custom variable default overrides here
+
+// Optional
+//@import "~bootstrap/scss/root";
+@import "~bootstrap/scss/reboot";
+@import "~bootstrap/scss/type";
+//@import "~bootstrap/scss/images";
+//@import "~bootstrap/scss/code";
+@import "~bootstrap/scss/grid";
+@import "~bootstrap/scss/tables";
+@import "~bootstrap/scss/forms";
+@import "~bootstrap/scss/buttons";
+@import "~bootstrap/scss/transitions";
+@import "~bootstrap/scss/dropdown";
+@import "~bootstrap/scss/button-group";
+@import "~bootstrap/scss/input-group";
+//@import "~bootstrap/scss/custom-forms";
+@import "~bootstrap/scss/nav";
+@import "~bootstrap/scss/navbar";
+@import "~bootstrap/scss/card";
+//@import "~bootstrap/scss/breadcrumb";
+//@import "~bootstrap/scss/pagination";
+//@import "~bootstrap/scss/badge";
+//@import "~bootstrap/scss/jumbotron";
+@import "~bootstrap/scss/alert";
+@import "~bootstrap/scss/progress";
+@import "~bootstrap/scss/media";
+//@import "~bootstrap/scss/list-group";
+@import "~bootstrap/scss/close";
+//@import "~bootstrap/scss/toasts";
+@import "~bootstrap/scss/modal";
+//@import "~bootstrap/scss/tooltip";
+//@import "~bootstrap/scss/popover";
+//@import "~bootstrap/scss/carousel";
+@import "~bootstrap/scss/spinners";
+@import "~bootstrap/scss/utilities";
+//@import "~bootstrap/scss/print";
+
+.App {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  /*text-align: center;*/
+}
+
+.App-header {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  /*min-height: 3em;*/
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
+.App-footer {
+  text-align: center;
+  margin-top: auto;
+  width: 100%;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.btn-group-xs > .btn, .btn-xs {
+  padding: .25rem .4rem !important;
+  font-size: .8rem !important;
+  line-height: .8rem !important;
+  border-radius: .2rem !important;
+}
+
+@media (max-width : 920px) {
+  .logoutButtonCell {
+    padding-right: 0 !important;
+  }
+}

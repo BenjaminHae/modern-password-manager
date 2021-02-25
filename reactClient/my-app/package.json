@@ -50,6 +50,8 @@
     "@typescript-eslint/eslint-plugin": "^4.1.0",
     "@typescript-eslint/parser": "^4.1.0",
     "eslint": "^7.16.0",
-    "react-scripts": "^4.0.1"
+    "react-scripts": "^4.0.1",
+    "sass": "^1.32.8",
+    "sass-loader": "^11.0.1"
   }
 }
