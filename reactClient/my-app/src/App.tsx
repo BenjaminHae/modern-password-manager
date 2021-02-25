@@ -4,7 +4,7 @@ import Authenticated from './components/Authenticated/Authenticated.lazy';
 import Unauthenticated from './components/Unauthenticated/Unauthenticated';
 import ShortcutOverview from './components/ShortcutOverview/ShortcutOverview';
 import Message from './components/Message/Message';
-import './App.css';
+import './App.scss';
 import styles from './App.module.css';
 import { BackendService } from './backend/backend.service';
 import { CSRFMiddleware } from './backend/api/CSRFMiddleware';
@@ -33,7 +33,6 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
 import { BoxArrowLeft } from 'react-bootstrap-icons';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 interface AppState {
   ready: boolean;
