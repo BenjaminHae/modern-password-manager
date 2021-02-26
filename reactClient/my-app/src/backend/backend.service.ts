@@ -142,11 +142,11 @@ export class BackendService {
     subscriptionExecutor<UserOptions>(this.optionsObservers, this.userOptions);
   }
 
-  async afterLogin(): Promise<void> {
+  afterLogin(): Promise<void> {
     //todo: handle response of login request
     subscriptionExecutor(this.loginObservers);
-    await this.getUserOptions();
-    return await this.loadAccounts();
+    return Promise.all([this.getUserOptions(), this.loadAccounts()])
+      .then(()=>{return });
   }
 
   async loadAccounts(): Promise<void> {
