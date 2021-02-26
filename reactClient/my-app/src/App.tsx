@@ -336,6 +336,7 @@ export default class App extends React.Component<Record<string, never>, AppState
       this.debug(`Trying to do webAuthn get`);
       let credentials: PublicKeyCredential;
       try {
+        await this.backendWaiter;
         credentials = await webAuthn.getCredential(await this.backend.getWebAuthnChallenge(), credIds);
       }
       catch(e) {
@@ -366,7 +367,6 @@ export default class App extends React.Component<Record<string, never>, AppState
       await persistor.setLastUsed(keyIndex, new Date());
       try {
         this.debug(`sending webauthn to server`);
-        await this.backendWaiter;
         const info = await this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, keyIndex, persistor);
         this.debug(`successful`);
         this.handleLoginSuccess(info, "");
