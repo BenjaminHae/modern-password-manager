@@ -26,7 +26,12 @@ class WebAuthnController
         $this->entityManager = $entityManager;
         $this->session = $session;
         $this->eventController = $eventController;
-        $configuration = $this->getRp($requestStack->getCurrentRequest()->server->get("SERVER_NAME"));
+        if ($requestStack && $requestStack->getCurrentRequest()) {
+            $server_name = $requestStack->getCurrentRequest()->server->get("SERVER_NAME");
+        } else {
+            $server_name = "";
+        }
+        $configuration = $this->getRp($server_name);
         $this->webAuthn = new WebAuthn($configuration["name"], $configuration["id"], $configuration["allowedFormats"]);
     }
 
