@@ -2,11 +2,13 @@ import React from 'react';
 import styles from './Login.module.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Spinner from 'react-bootstrap/Spinner';
 import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWithToggle';
 
 interface LoginProps {
   doLogin: (username: string, password: string) => void;
   ready: boolean;
+  doingAutoLogin: boolean;
 }
 interface LoginFormValues {
   username: string;
@@ -52,6 +54,9 @@ class Login extends React.Component<LoginProps, LoginState> {
     return (
     <Form onSubmit={this.doLogon} noValidate validated={this.state.validated} className={styles.Login} >
       <fieldset disabled={this.state.waiting}>
+        { this.props.doingAutoLogin  &&
+          <div className={ styles.Waiting }><Spinner animation="border" role="status"/><p>Auto Login is in progress</p></div>
+        }
         <Form.Group controlId="formUsername">
           <Form.Label>Username</Form.Label>
           <Form.Control type="text" autoFocus placeholder="Enter Username" name="username" onChange={this.handleGenericChange} required />

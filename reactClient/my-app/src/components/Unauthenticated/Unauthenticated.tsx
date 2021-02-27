@@ -17,6 +17,7 @@ interface UnauthenticatedProps {
   showPersistedLogons?: boolean;
   ready: boolean;
   autoLogin: () => Promise<void>;
+  doingAutoLogin: boolean;
 }
 class Unauthenticated extends React.Component<UnauthenticatedProps> {
   render (): JSX.Element {
@@ -33,7 +34,7 @@ class Unauthenticated extends React.Component<UnauthenticatedProps> {
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
                   <Col xl={{ span: 10, offset: 1 }} lg={{ span: 12, offset: 0 }}>
-                    <Login doLogin={this.props.doLogin} ready={this.props.ready}/>
+                    <Login doLogin={this.props.doLogin} ready={this.props.ready} doingAutoLogin={this.props.doingAutoLogin} />
                   </Col>
                 </Card.Body>
               </Accordion.Collapse>
