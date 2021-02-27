@@ -51,6 +51,7 @@ interface AppState {
   showShortcutOverview: boolean;
   idleTimeout: number;
   logonInformation?: ILogonInformation;
+  doingAutoLogin: boolean;
 }
 
 export default class App extends React.Component<Record<string, never>, AppState> {
@@ -80,7 +81,8 @@ export default class App extends React.Component<Record<string, never>, AppState
       debug: [],
       debugCount: -5,
       showShortcutOverview: false,
-      idleTimeout: 3 * 60 * 1000
+      idleTimeout: 3 * 60 * 1000,
+      doingAutoLogin: false
     }
 
     window.addEventListener('error', (event) => {this.debug(event.message);});
@@ -372,6 +374,7 @@ export default class App extends React.Component<Record<string, never>, AppState
       await persistor.setLastUsed(keyIndex, new Date());
       try {
         this.debug(`sending webauthn to server`);
+        this.setState({ doingAutoLogin: true });
         await this.backendWaiter;
         const info = await this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, keyIndex, persistor);
         this.debug(`successful`);
@@ -381,6 +384,9 @@ export default class App extends React.Component<Record<string, never>, AppState
         this.debug(`WebAuthn Login failed: ${e.message}`);
         this.messages.showMessage(`WebAuthn Login failed: ${e.message}`, {autoClose: false, variant: "danger" });
         throw e;
+      }
+      finally {
+        this.setState({ doingAutoLogin: false });
       }
     }
   }
@@ -472,6 +478,7 @@ export default class App extends React.Component<Record<string, never>, AppState
                 showPersistedLogons={this.state.webAuthnPresent}
                 autoLogin={this.webAuthnTryLogin.bind(this)}
                 ready={this.state.ready}
+                doingAutoLogin={this.state.doingAutoLogin}
               /> }
         {!this.state.authenticated && !this.state.ready 
           && <div className={ styles.Waiting }><Spinner animation="border" role="status"/><p>Waiting for server</p></div> }
