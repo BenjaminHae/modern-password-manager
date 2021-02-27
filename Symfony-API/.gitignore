@@ -1,3 +1,13 @@
+###> react data
+
+/public/static/
+/public/index.html
+/public/*.json
+/public/*.png
+/public/*.ico
+/public/*.svg
+/public/*.xml
+/public/*.txt
 
 ###> symfony/framework-bundle ###
 /.env.local
