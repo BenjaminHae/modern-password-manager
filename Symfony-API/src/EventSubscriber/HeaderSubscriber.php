@@ -11,14 +11,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\TemplateController;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 
 
-class TemplateSubscriber implements EventSubscriberInterface
+class HeaderSubscriber implements EventSubscriberInterface
 {
     public function __construct()
     {
     }
 
-    public function onKernelController(ControllerEvent $event)
-    {
+    //public function onKernelController(ControllerEvent $event)
+    //{
         //$controller = $event->getController();
 
         //// when a controller class defines multiple action methods, the controller
@@ -30,7 +30,7 @@ class TemplateSubscriber implements EventSubscriberInterface
         //if ($controller instanceof Symfony\Bundle\FrameworkBundle\Controller\TemplateController) {
         //    // do session!
         //}
-    }
+    //}
 
     public function onKernelResponse(ResponseEvent $event)
     {
@@ -50,7 +50,7 @@ class TemplateSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::CONTROLLER => 'onKernelController',
+            //KernelEvents::CONTROLLER => 'onKernelController',
             KernelEvents::RESPONSE => 'onKernelResponse',
         ];
     }
