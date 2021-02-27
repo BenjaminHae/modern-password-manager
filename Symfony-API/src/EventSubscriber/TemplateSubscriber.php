@@ -43,6 +43,7 @@ class TemplateSubscriber implements EventSubscriberInterface
         else {
             $disposition = $response->headers->makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, "data.json");
             $response->headers->set('Content-Disposition', $disposition);
+            $response->headers->set('X-Content-Type-Options', "nosniff");
         }
     }
 
