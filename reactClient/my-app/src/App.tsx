@@ -336,7 +336,13 @@ export default class App extends React.Component<Record<string, never>, AppState
       this.debug(`Trying to do webAuthn get`);
       let credentials: PublicKeyCredential;
       try {
-        credentials = await webAuthn.getCredential(await this.backend.getWebAuthnChallenge(), credIds);
+        let challenge = await this.backend.getWebAuthnChallenge();
+        this.debug(`retrieved challenge ${challenge}`);
+        if (this.state.authenticated) {
+          this.debug(`already authenticated aborting WebAuthN`);
+          return;
+        }
+        credentials = await webAuthn.getCredential(challenge, credIds);
       }
       catch(e) {
         this.debug(`WebAuthn get failed: ${e.message}`);
