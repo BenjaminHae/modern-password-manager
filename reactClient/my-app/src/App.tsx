@@ -338,6 +338,7 @@ export default class App extends React.Component<Record<string, never>, AppState
       this.debug(`Trying to do webAuthn get`);
       let credentials: PublicKeyCredential;
       try {
+        this.setState({ doingAutoLogin: true });
         const challenge = await this.backend.getWebAuthnChallenge();
         this.debug(`retrieved challenge ${challenge}`);
         if (this.state.authenticated) {
@@ -348,6 +349,7 @@ export default class App extends React.Component<Record<string, never>, AppState
       }
       catch(e) {
         this.debug(`WebAuthn get failed: ${e.message}`);
+        this.setState({ doingAutoLogin: false });
         throw e;
       }
       const response = credentials.response as AuthenticatorAssertionResponse;
@@ -374,7 +376,6 @@ export default class App extends React.Component<Record<string, never>, AppState
       await persistor.setLastUsed(keyIndex, new Date());
       try {
         this.debug(`sending webauthn to server`);
-        this.setState({ doingAutoLogin: true });
         await this.backendWaiter;
         const info = await this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, keyIndex, persistor);
         this.debug(`successful`);
