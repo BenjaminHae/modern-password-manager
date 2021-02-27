@@ -336,7 +336,7 @@ export default class App extends React.Component<Record<string, never>, AppState
       this.debug(`Trying to do webAuthn get`);
       let credentials: PublicKeyCredential;
       try {
-        let challenge = await this.backend.getWebAuthnChallenge();
+        const challenge = await this.backend.getWebAuthnChallenge();
         this.debug(`retrieved challenge ${challenge}`);
         if (this.state.authenticated) {
           this.debug(`already authenticated aborting WebAuthN`);
