@@ -37,7 +37,7 @@ class HeaderSubscriber implements EventSubscriberInterface
         $response = $event->getResponse();
         $ct = $response->headers->get('content-type', "text/html");
         if ($ct === "text/html") {
-            $response->headers->set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; object-src 'none'; frame-ancestors 'none';");
+            $response->headers->set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; frame-ancestors 'none';");
             $response->headers->set("Referrer-Policy", "no-referrer");
         }
         else {
