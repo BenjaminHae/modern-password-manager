@@ -378,15 +378,21 @@ export default class App extends React.Component<Record<string, never>, AppState
       }
       await persistor.setLastUsed(keyIndex, new Date());
       try {
-        this.debug(`sending webauthn to server`);
+        this.debug(`waiting for backend`);
         await this.backendWaiter;
+        this.debug(`sending webauthn to server`);
         const info = await this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, keyIndex, persistor);
         this.debug(`successful`);
         this.handleLoginSuccess(info, "");
       }
       catch(e) {
-        this.debug(`WebAuthn Login failed: ${e.message}`);
-        this.messages.showMessage(`WebAuthn Login failed: ${e.message}`, {autoClose: false, variant: "danger" });
+        const message = "";
+        if (e.message)
+          message = e.message;
+        else
+          message = e.toString();
+        this.debug(`WebAuthn Login failed: ${message}`);
+        this.messages.showMessage(`WebAuthn Login failed: ${message}`, {autoClose: false, variant: "danger" });
         throw e;
       }
       finally {
