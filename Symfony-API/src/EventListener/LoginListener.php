@@ -31,10 +31,10 @@ class LoginListener
         $user = $event->getAuthenticationToken()->getUser();
 
         $methodInfo = " using username and password";
-        $pk = $this->webAuthn->getLogonKey();
+        $pk = $this->webAuthn->getLogonKeyId();
         if ($pk) {
             $methodInfo = " using WebAuthnKey for device " . $pk->getDeviceName();
-            $pk = $this->webAuthn->removeLogonKey();
+            $pk = $this->webAuthn->removeLogonKeyId();
         }
 
         $this->eventController->StoreEvent($user, "Login", "success" . $methodInfo);
