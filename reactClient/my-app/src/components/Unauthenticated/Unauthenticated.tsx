@@ -27,7 +27,7 @@ class Unauthenticated extends React.Component<UnauthenticatedProps> {
           <Accordion defaultActiveKey="0">
             <Card>
               <Card.Header>
-                <Accordion.Toggle as={Button} variant="light" eventKey="0">
+                <Accordion.Toggle as={Button} variant="light" eventKey="0" className="text-left">
                   <h2>Login</h2>
                 </Accordion.Toggle>
               </Card.Header>
@@ -42,7 +42,7 @@ class Unauthenticated extends React.Component<UnauthenticatedProps> {
             {this.props.showPersistedLogons &&
             <Card>
               <Card.Header>
-                <Accordion.Toggle as={Button} variant="light" eventKey="2">
+                <Accordion.Toggle as={Button} variant="light" eventKey="2" className="text-left">
                   <h2>Logon without password</h2>
                 </Accordion.Toggle>
               </Card.Header>
@@ -56,7 +56,7 @@ class Unauthenticated extends React.Component<UnauthenticatedProps> {
             {this.props.showRegistration && 
             <Card>
               <Card.Header>
-                <Accordion.Toggle as={Button} variant="light" eventKey="1">
+                <Accordion.Toggle as={Button} variant="light" eventKey="1" className="text-left">
                   <h2>Registration</h2>
                 </Accordion.Toggle>
               </Card.Header>
