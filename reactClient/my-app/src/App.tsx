@@ -86,6 +86,9 @@ export default class App extends React.Component<Record<string, never>, AppState
     }
 
     window.addEventListener('error', (event) => {this.debug(event.message);});
+    window.onerror = (error, url, line) => {
+      this.debug(`line ${line}: ${error}`);
+    };
 
     let basePath = "";
     if (process.env.REACT_APP_API_BASE_URL) {
