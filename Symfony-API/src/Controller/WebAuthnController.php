@@ -145,6 +145,10 @@ class WebAuthnController
         $this->session->set("webAuthnLogonKeyId", $keyId); 
     }
 
+    public function removeLogonKeyId($keyId) {
+        $this->session->remove("webAuthnLogonKeyId"); 
+    }
+
     public function getLogonKey(): ?WebAuthnPublicKey {
         $keyId = $this->session->get("webAuthnLogonKeyId", null); 
         if ($keyId === null)

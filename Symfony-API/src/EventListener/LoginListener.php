@@ -34,6 +34,7 @@ class LoginListener
         $pk = $this->webAuthn->getLogonKey();
         if ($pk) {
             $methodInfo = " using WebAuthnKey for device " . $pk->getDeviceName();
+            $pk = $this->webAuthn->removeLogonKey();
         }
 
         $this->eventController->StoreEvent($user, "Login", "success" . $methodInfo);
