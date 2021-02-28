@@ -386,7 +386,7 @@ export default class App extends React.Component<Record<string, never>, AppState
         this.handleLoginSuccess(info, "");
       }
       catch(e) {
-        const message = "";
+        let message = "";
         if (e.message)
           message = e.message;
         else
