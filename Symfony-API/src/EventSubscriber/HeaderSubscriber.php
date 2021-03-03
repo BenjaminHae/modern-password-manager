@@ -13,8 +13,11 @@ use Symfony\Component\HttpFoundation\HeaderUtils;
 
 class HeaderSubscriber implements EventSubscriberInterface
 {
-    public function __construct()
+    private $setHSTS;
+
+    public function __construct($setHSTS)
     {
+        $this->setHSTS = $setHSTS;
     }
 
     //public function onKernelController(ControllerEvent $event)
@@ -35,6 +38,9 @@ class HeaderSubscriber implements EventSubscriberInterface
     public function onKernelResponse(ResponseEvent $event)
     {
         $response = $event->getResponse();
+        if ($this->setHSTS > 0) {
+            $response->headers->set("Strict-Transport-Security", "max-age: ".$this->setHSTS);
+        }
         $ct = $response->headers->get('content-type', "text/html");
         if ($ct === "text/html") {
             $response->headers->set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; frame-ancestors 'none';");
