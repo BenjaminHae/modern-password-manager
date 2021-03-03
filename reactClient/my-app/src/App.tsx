@@ -390,7 +390,7 @@ export default class App extends React.Component<Record<string, never>, AppState
         if (e.message)
           message = e.message;
         else
-          message = e.toString();
+          message = JSON.stringify(e, Object.getOwnPropertyNames(e));
         this.debug(`WebAuthn Login failed: ${message}`);
         this.messages.showMessage(`WebAuthn Login failed: ${message}`, {autoClose: false, variant: "danger" });
         throw e;
