@@ -380,7 +380,7 @@ export default class App extends React.Component<Record<string, never>, AppState
       try {
         this.debug(`waiting for backend`);
         await this.backendWaiter;
-        this.debug(`sending webauthn to server`);
+        this.debug(`sending webauthn to server, csrf token: ${csrfMiddleware.csrfToken}`);
         const info = await this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, keyIndex, persistor);
         this.debug(`successful`);
         this.handleLoginSuccess(info, "");
