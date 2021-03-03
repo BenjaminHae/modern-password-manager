@@ -63,6 +63,7 @@ export default class App extends React.Component<Record<string, never>, AppState
   private shortcuts: ShortcutManager;
   private messages: MessageManager;
   private backendWaiter: Promise<BackendOptions>; // promise for the first call to the backend
+  private csrfMiddleware: CSRFMiddleware;
 
   constructor (props: Record<string, never>) {
     super(props);
@@ -95,6 +96,7 @@ export default class App extends React.Component<Record<string, never>, AppState
       basePath = process.env.REACT_APP_API_BASE_URL;
     }
     const csrfMiddleware = new CSRFMiddleware();
+    this.csrfMiddleware = csrfMiddleware;
     const APIconfiguration = new OpenAPIConfiguration({ basePath: basePath, middleware: [csrfMiddleware]});
     this.credential = new CredentialService();
     this.crypto = new CryptoService(this.credential);
@@ -380,7 +382,7 @@ export default class App extends React.Component<Record<string, never>, AppState
       try {
         this.debug(`waiting for backend`);
         await this.backendWaiter;
-        this.debug(`sending webauthn to server, csrf token: ${csrfMiddleware.csrfToken}`);
+        this.debug(`sending webauthn to server, csrf token: ${this.csrfMiddleware.csrfToken}`);
         const info = await this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, keyIndex, persistor);
         this.debug(`successful`);
         this.handleLoginSuccess(info, "");
