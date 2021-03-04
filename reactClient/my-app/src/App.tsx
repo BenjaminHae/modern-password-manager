@@ -299,7 +299,7 @@ export default class App extends React.Component<Record<string, never>, AppState
     try {
       this.debug('Retrieving challenge');
       const challenge = await this.backend.getWebAuthnChallenge();
-      this.debug('Received Challenge');
+      this.debug(`Received Challenge`);
       const webAuthn = new WebAuthn();
       const userIdBuffer = new ArrayBuffer(16);
       const idView = new DataView(userIdBuffer);
@@ -332,20 +332,29 @@ export default class App extends React.Component<Record<string, never>, AppState
   }
 
   async webAuthnTryLogin(): Promise<void> {
+    const arrayBufferToBase64 = ( buffer:ArrayBuffer ): string => {
+        let binary = '';
+        const bytes = new Uint8Array( buffer );
+        const len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode( bytes[ i ] );
+        }
+        return window.btoa( binary );
+      }
     this.debug("trying webauthn login");
     const webAuthn = new WebAuthn();
     const persistor = new PersistDecryptionKey();
     const credIds = await persistor.getCredentialIds();
     const credsAvailable = credIds.length > 0;
     this.debug(`Are credsAvailable: ${credsAvailable}`);
-    this.debug(`KeyIds: ${credIds}`);
+    this.debug(`KeyIds: ${credIds.map((id)=>arrayBufferToBase64(id))}`);
     if (credsAvailable) {
       this.debug(`Trying to do webAuthn get`);
       let credentials: PublicKeyCredential;
       try {
         this.setState({ doingAutoLogin: true });
         const challenge = await this.backend.getWebAuthnChallenge();
-        this.debug(`retrieved challenge ${challenge}`);
+        this.debug(`retrieved challenge ${arrayBufferToBase64(challenge)}`);
         if (this.state.authenticated) {
           this.debug(`already authenticated aborting WebAuthN`);
           return;

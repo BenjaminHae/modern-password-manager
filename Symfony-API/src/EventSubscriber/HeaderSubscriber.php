@@ -39,7 +39,7 @@ class HeaderSubscriber implements EventSubscriberInterface
     {
         $response = $event->getResponse();
         if ($this->setHSTS > 0) {
-            $response->headers->set("Strict-Transport-Security", "max-age: ".$this->setHSTS);
+            $response->headers->set("Strict-Transport-Security", "max-age=".$this->setHSTS);
         }
         $ct = $response->headers->get('content-type', "text/html");
         if ($ct === "text/html") {
