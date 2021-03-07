@@ -39,7 +39,7 @@ class MaintenanceApi implements MaintenanceApiInterface
             "allowRegistration" => $this->allowRegistration, 
             "idleTimeout" => $this->idleTimeout, 
             "defaultUserConfiguration" => $this->defaultUserConfig, 
-            "challenge" => $challenge 
+            "webAuthNChallenge" => $challenge 
         ]);
     }
 
