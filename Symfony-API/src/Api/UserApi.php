@@ -27,6 +27,7 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Psr\Log\LoggerInterface;
 
 class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessHandlerInterface
 {
@@ -38,9 +39,9 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
     private $eventController;
     private $requestStack;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, Security $security, SessionInterface $session, EventController $eventController, CsrfTokenManagerInterface $csrfManager, RequestStack $requestStack, $allowRegistration)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, Security $security, SessionInterface $session, EventController $eventController, CsrfTokenManagerInterface $csrfManager, RequestStack $requestStack, LoggerInterface $logger, $allowRegistration)
     {
-        parent::__construct($csrfManager);
+        parent::__construct($csrfManager, $logger);
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
         $this->eventController = $eventController;
@@ -77,6 +78,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
         {
             return $this->loginResultGenerator($currentUser);
         }
+        $this->logger->error('standard login failed');
         return $this->generateApiError("failed to log in");
     }
 
@@ -90,6 +92,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
             $result["decryptionKey"] = $pk->getDecryptionKey()->getDecryptionKey();
             return $result;
         }
+        $this->logger->error('webAuthN login failed');
         return $this->generateApiError("failed to log in");
     }
 
@@ -110,6 +113,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
         if ($currentUser)
         {
             $username = $currentUser->getUsername();
+            $this->logger->error('logout failed');
             return $this->generateApiError("still logged in as " . $username);
         }
         return $this->generateApiSuccess("logged out");
@@ -117,6 +121,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
 
     public function registerUser(RegistrationInformation $registration, &$responseCode, array &$responseHeaders) {
         if (!$this->allowRegistration) {
+          $this->logger->info('registration is disabled but was accessed');
           return $this->generateApiError("registration is not allowed");
         }
         $user = new User();
@@ -148,6 +153,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
         }
         catch (\Exception $e) {
             $this->eventController->StoreEvent($currentUser, "WebAuthn Store", "failed: " . $e->getMessage());
+            $this->logger->error('WebAuthN creation failed: ' . $e->getMessage());
             throw $e;
         }
         return $this->generateApiSuccess("successfully registered webauthn credential");
@@ -192,6 +198,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
     {
         $currentUser = $this->security->getUser();
         if (!$this->passwordEncoder->isPasswordValid($currentUser, $changes->getOldPassword())) {
+            $this->eventController->StoreEvent($currentUser, "ChangePassword", "failed: old password wrong");
             return $this->generateApiError("Old Password is wrong");
         }
         $newHash = $this->passwordEncoder->encodePassword($currentUser, $changes->getNewPassword());

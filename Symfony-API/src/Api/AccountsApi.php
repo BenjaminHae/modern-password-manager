@@ -10,6 +10,7 @@ use OpenAPI\Server\Model\AccountId;
 use OpenAPI\Server\Model\Index;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class AccountsApi extends CsrfProtection implements AccountsApiInterface
 {
@@ -18,9 +19,9 @@ class AccountsApi extends CsrfProtection implements AccountsApiInterface
     private $security;
     private $accountsController;
 
-    public function __construct(EntityManagerInterface $entityManager, Security $security, CsrfTokenManagerInterface $csrfManager)
+    public function __construct(EntityManagerInterface $entityManager, Security $security, CsrfTokenManagerInterface $csrfManager, LoggerInterface $logger)
     {
-        parent::__construct($csrfManager);
+        parent::__construct($csrfManager, $logger);
         $this->entityManager = $entityManager;
         $this->security = $security;
     }
