@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use OpenAPI\Server\Model\UserWebAuthnCreateWithKey;
 use lbuchs\WebAuthn\WebAuthn;
 use lbuchs\WebAuthn\Binary\ByteBuffer;
+use Psr\Log\LoggerInterface;
 
 class WebAuthnController
 {
@@ -20,12 +21,14 @@ class WebAuthnController
     private $session;
     private $webAuthn;
     private $eventController;
+    private $logger;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, EventController $eventController, RequestStack $requestStack)
+    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, EventController $eventController, RequestStack $requestStack, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
         $this->session = $session;
         $this->eventController = $eventController;
+        $this->logger = $logger;
         if ($requestStack && $requestStack->getCurrentRequest()) {
             $server_name = $requestStack->getCurrentRequest()->server->get("SERVER_NAME");
         } else {
@@ -108,6 +111,7 @@ class WebAuthnController
         }
         catch (\Exception $e) {
             $this->eventController->StoreEvent($user, "Login", "WebAuthn failed: " . $e->getMessage());
+            $this->logger->error('WebAuthn->checkCredentials failed: ' . $e->getMessage());
             throw $e;
         }
         return $result;
