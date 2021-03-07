@@ -136,7 +136,7 @@ Class | Method | HTTP request | Description
 *UserApiInterface* | [**getUserSettings**](Resources/docs/Api/UserApiInterface.md#getusersettings) | **GET** /user/settings | Returns the client settings of the current user
 *UserApiInterface* | [**getUserWebAuthnCreds**](Resources/docs/Api/UserApiInterface.md#getuserwebauthncreds) | **GET** /user/webauthn | get all registered WebAuthn credentials for the user
 *UserApiInterface* | [**loginUser**](Resources/docs/Api/UserApiInterface.md#loginuser) | **POST** /user/login | login
-*UserApiInterface* | [**loginUserWebAuthnChallenge**](Resources/docs/Api/UserApiInterface.md#loginuserwebauthnchallenge) | **GET** /user/login/webauthn | get WebAuthn challenge
+*UserApiInterface* | [**loginUserWebAuthnChallenge**](Resources/docs/Api/UserApiInterface.md#loginuserwebauthnchallenge) | **GET** /user/login/webauthn | get a WebAuthN challenge
 *UserApiInterface* | [**loginUserWebAuthnGet**](Resources/docs/Api/UserApiInterface.md#loginuserwebauthnget) | **POST** /user/login/webauthn | login user with WebAuthn
 *UserApiInterface* | [**logoutUser**](Resources/docs/Api/UserApiInterface.md#logoutuser) | **GET** /user/logout | Logs out current logged in user session
 *UserApiInterface* | [**registerUser**](Resources/docs/Api/UserApiInterface.md#registeruser) | **PUT** /user | registration

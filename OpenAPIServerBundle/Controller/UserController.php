@@ -629,7 +629,7 @@ class UserController extends Controller
     /**
      * Operation loginUserWebAuthnChallenge
      *
-     * get WebAuthn challenge
+     * get a WebAuthN challenge
      *
      * @param Request $request The Symfony request to handle.
      * @return Response The Symfony response.
@@ -669,7 +669,7 @@ class UserController extends Controller
             // Find a more specific message, if available
             switch ($responseCode) {
                 case 200:
-                    $message = 'returns challenge';
+                    $message = 'returns a challenge that can be used exactly once and is only valid until a new challenge is generated';
                     break;
             }
 
