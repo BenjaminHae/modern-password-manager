@@ -17,6 +17,8 @@ use Psr\Log\LoggerInterface;
 
 class WebAuthnController
 {
+    const SESSION_CHALLENGE_KEY = "webAuthnChallenge";
+    const SESSION_LOGON_KEY_ID = "webAuthnLogonKeyId";
     private $entityManager;
     private $session;
     private $webAuthn;
@@ -138,23 +140,25 @@ class WebAuthnController
     }
 
     public function persistChallenge($challenge) {
-        $this->session->set("webAuthnChallenge", $challenge); 
+        $this->session->set(SELF::SESSION_CHALLENGE_KEY, $challenge); 
     }
 
     public function getChallenge() {
-        return $this->session->get("webAuthnChallenge", null); 
+        $challenge = $this->session->get(SELF::SESSION_CHALLENGE_KEY, null); 
+        $this->session->remove(SELF::SESSION_CHALLENGE_KEY); 
+        return $challenge; 
     }
 
     public function rememberLogonKeyId($keyId) {
-        $this->session->set("webAuthnLogonKeyId", $keyId); 
+        $this->session->set(SELF::SESSION_LOGON_KEY_ID, $keyId); 
     }
 
     public function removeLogonKeyId() {
-        $this->session->remove("webAuthnLogonKeyId"); 
+        $this->session->remove(SELF::SESSION_LOGON_KEY_ID); 
     }
 
     public function getLogonKeyId(): ?WebAuthnPublicKey {
-        $keyId = $this->session->get("webAuthnLogonKeyId", null); 
+        $keyId = $this->session->get(SELF::SESSION_LOGON_KEY_ID, null); 
         if ($keyId === null)
             return null;
         $pk = $this->entityManager->getRepository(WebAuthnPublicKey::class)
