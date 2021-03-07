@@ -2,6 +2,7 @@ import { UserApi as OpenAPIUserService, ChangePassword as OpenAPIChangePassword,
 import { CryptedObject } from '../models/cryptedObject';
 import { encryptedAccount } from '../models/encryptedAccount';
 import { AccountTransformerService } from '../controller/account-transformer.service';
+import { base64ToArrayBuffer, arrayBufferToBase64 } from './helpers';
 
 export interface ILogonInformation {
   lastLogin?: Date | null;
@@ -20,25 +21,6 @@ export class UserService {
     if (!response.success) {
       throw new Error(response.message);
     }
-  }
-  private base64ToArrayBuffer(base64: string): ArrayBuffer {
-    const binary_string = window.atob(base64);
-    const len = binary_string.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-        bytes[i] = binary_string.charCodeAt(i);
-    }
-    return bytes.buffer;
-  }
-
-  private arrayBufferToBase64( buffer:ArrayBuffer ): string {
-    let binary = '';
-    const bytes = new Uint8Array( buffer );
-    const len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-        binary += String.fromCharCode( bytes[ i ] );
-    }
-    return window.btoa( binary );
   }
 
   async logon(username: string, password: CryptedObject): Promise<ILogonInformation> {
@@ -87,11 +69,11 @@ export class UserService {
         id: id, 
         name: name, 
         response: { 
-          attestationObject: this.arrayBufferToBase64(attestationObject), 
-          clientDataJSON: this.arrayBufferToBase64(clientDataJSON), 
+          attestationObject: arrayBufferToBase64(attestationObject), 
+          clientDataJSON: arrayBufferToBase64(clientDataJSON), 
           "type": keyType 
         }, 
-        decryptionKey: this.arrayBufferToBase64(wrappedServerKey)
+        decryptionKey: arrayBufferToBase64(wrappedServerKey)
       } });
     this.checkForSuccess(response);
   }
@@ -101,9 +83,9 @@ export class UserService {
       {
         id: id, 
         response: {
-          authenticatorData: this.arrayBufferToBase64(authenticatorData),
-          clientDataJSON: this.arrayBufferToBase64(clientDataJSON),
-          signature: this.arrayBufferToBase64(signature),
+          authenticatorData: arrayBufferToBase64(authenticatorData),
+          clientDataJSON: arrayBufferToBase64(clientDataJSON),
+          signature: arrayBufferToBase64(signature),
           type: keyType
         }
       }})
@@ -112,7 +94,7 @@ export class UserService {
       throw new Error("failedLogin undefined");
     if (response.decryptionKey === undefined)
       throw new Error("no decryption key specified");
-    return { failedLogins: response.failedLogins, lastLogin: response.lastLogin, wrappedServerKey: this.base64ToArrayBuffer(response.decryptionKey)};
+    return { failedLogins: response.failedLogins, lastLogin: response.lastLogin, wrappedServerKey: base64ToArrayBuffer(response.decryptionKey)};
   }
 
   async deleteWebAuthn(id: number): Promise<Array<UserWebAuthnCred>> {
@@ -121,7 +103,7 @@ export class UserService {
 
   async getWebAuthnChallenge(): Promise<ArrayBuffer> {
     const response = await this.userService.loginUserWebAuthnChallenge();
-    return this.base64ToArrayBuffer(response.challenge);
+    return base64ToArrayBuffer(response.challenge);
   }
 
   async getUserSettings(): Promise<CryptedObject | null> {

@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Psr\Log\LoggerInterface;
 
 class WebAuthnAuthenticator extends AbstractGuardAuthenticator
 {
@@ -25,14 +26,16 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
     private $session;
     private $security;
     private $requestStack;
+    private $logger;
 
-    public function __construct(EntityManagerInterface $em, SessionInterface $session, Security $security, EventController $eventController, RequestStack $requestStack)
+    public function __construct(EntityManagerInterface $em, SessionInterface $session, Security $security, EventController $eventController, RequestStack $requestStack, LoggerInterface $logger)
     {
         $this->em = $em;
         $this->session = $session;
         $this->security = $security;
         $this->eventController = $eventController;
         $this->requestStack = $requestStack;
+        $this->logger = $logger;
     }
 
     /**
@@ -105,7 +108,7 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        $webAuthn = new WebAuthnController($this->em, $this->session, $this->eventController, $this->requestStack);
+        $webAuthn = new WebAuthnController($this->em, $this->session, $this->eventController, $this->requestStack, $this->logger);
         return $webAuthn->checkCredentials($credentials, $user);
     }
 

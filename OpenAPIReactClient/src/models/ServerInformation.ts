@@ -43,6 +43,12 @@ export interface ServerInformation {
      * @memberof ServerInformation
      */
     defaultUserConfiguration?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServerInformation
+     */
+    webAuthNChallenge?: string;
 }
 
 export function ServerInformationFromJSON(json: any): ServerInformation {
@@ -59,6 +65,7 @@ export function ServerInformationFromJSONTyped(json: any, ignoreDiscriminator: b
         'allowRegistration': !exists(json, 'allowRegistration') ? undefined : json['allowRegistration'],
         'idleTimeout': !exists(json, 'idleTimeout') ? undefined : json['idleTimeout'],
         'defaultUserConfiguration': !exists(json, 'defaultUserConfiguration') ? undefined : json['defaultUserConfiguration'],
+        'webAuthNChallenge': !exists(json, 'webAuthNChallenge') ? undefined : json['webAuthNChallenge'],
     };
 }
 
@@ -75,6 +82,7 @@ export function ServerInformationToJSON(value?: ServerInformation | null): any {
         'allowRegistration': value.allowRegistration,
         'idleTimeout': value.idleTimeout,
         'defaultUserConfiguration': value.defaultUserConfiguration,
+        'webAuthNChallenge': value.webAuthNChallenge,
     };
 }
 

@@ -160,7 +160,7 @@ interface UserApiInterface
     /**
      * Operation loginUserWebAuthnChallenge
      *
-     * get WebAuthn challenge
+     * get a WebAuthN challenge
      *
      * @param  integer $responseCode     The HTTP response code to return
      * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()

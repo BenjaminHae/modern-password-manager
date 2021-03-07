@@ -13,19 +13,24 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use OpenAPI\Server\Model\UserWebAuthnCreateWithKey;
 use lbuchs\WebAuthn\WebAuthn;
 use lbuchs\WebAuthn\Binary\ByteBuffer;
+use Psr\Log\LoggerInterface;
 
 class WebAuthnController
 {
+    const SESSION_CHALLENGE_KEY = "webAuthnChallenge";
+    const SESSION_LOGON_KEY_ID = "webAuthnLogonKeyId";
     private $entityManager;
     private $session;
     private $webAuthn;
     private $eventController;
+    private $logger;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, EventController $eventController, RequestStack $requestStack)
+    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, EventController $eventController, RequestStack $requestStack, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
         $this->session = $session;
         $this->eventController = $eventController;
+        $this->logger = $logger;
         if ($requestStack && $requestStack->getCurrentRequest()) {
             $server_name = $requestStack->getCurrentRequest()->server->get("SERVER_NAME");
         } else {
@@ -58,8 +63,13 @@ class WebAuthnController
         if(null !== $pk) {
             return null;
         }
+        $challenge = $this->getChallenge(); 
+        if ($challenge === null) {
+            $this->logger->error('WebAuthn->register failed: no challenge present');
+            return null;
+        } 
         $webAuthnResponse = $request->getResponse();
-        $webAuthnResult = $this->webAuthn->processCreate(base64_decode($webAuthnResponse->getClientDataJSON()), base64_decode($webAuthnResponse->getAttestationObject()), $this->getChallenge(), true, true);
+        $webAuthnResult = $this->webAuthn->processCreate(base64_decode($webAuthnResponse->getClientDataJSON()), base64_decode($webAuthnResponse->getAttestationObject()), $challenge, true, true);
 
         $decryptionKey = new DecryptionKey();
         $decryptionKey->setDecryptionKey($request->getDecryptionKey());
@@ -86,6 +96,7 @@ class WebAuthnController
     public function checkCredentials($credentials, UserInterface $user) {
         $challenge = $this->getChallenge(); 
         if ($challenge === null) {
+            $this->logger->error('WebAuthn->checkCredentials failed: no challenge present');
             return false;
         } 
         $pk = $this->entityManager->getRepository(WebAuthnPublicKey::class)
@@ -108,6 +119,7 @@ class WebAuthnController
         }
         catch (\Exception $e) {
             $this->eventController->StoreEvent($user, "Login", "WebAuthn failed: " . $e->getMessage());
+            $this->logger->error('WebAuthn->checkCredentials failed: ' . $e->getMessage());
             throw $e;
         }
         return $result;
@@ -134,23 +146,25 @@ class WebAuthnController
     }
 
     public function persistChallenge($challenge) {
-        $this->session->set("webAuthnChallenge", $challenge); 
+        $this->session->set(SELF::SESSION_CHALLENGE_KEY, $challenge); 
     }
 
     public function getChallenge() {
-        return $this->session->get("webAuthnChallenge", null); 
+        $challenge = $this->session->get(SELF::SESSION_CHALLENGE_KEY, null); 
+        $this->session->remove(SELF::SESSION_CHALLENGE_KEY); 
+        return $challenge; 
     }
 
     public function rememberLogonKeyId($keyId) {
-        $this->session->set("webAuthnLogonKeyId", $keyId); 
+        $this->session->set(SELF::SESSION_LOGON_KEY_ID, $keyId); 
     }
 
     public function removeLogonKeyId() {
-        $this->session->remove("webAuthnLogonKeyId"); 
+        $this->session->remove(SELF::SESSION_LOGON_KEY_ID); 
     }
 
     public function getLogonKeyId(): ?WebAuthnPublicKey {
-        $keyId = $this->session->get("webAuthnLogonKeyId", null); 
+        $keyId = $this->session->get(SELF::SESSION_LOGON_KEY_ID, null); 
         if ($keyId === null)
             return null;
         $pk = $this->entityManager->getRepository(WebAuthnPublicKey::class)

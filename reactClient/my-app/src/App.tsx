@@ -353,6 +353,7 @@ export default class App extends React.Component<Record<string, never>, AppState
       let credentials: PublicKeyCredential;
       try {
         this.setState({ doingAutoLogin: true });
+        await this.backendWaiter;
         const challenge = await this.backend.getWebAuthnChallenge();
         this.debug(`retrieved challenge ${arrayBufferToBase64(challenge)}`);
         if (this.state.authenticated) {
@@ -390,7 +391,6 @@ export default class App extends React.Component<Record<string, never>, AppState
       await persistor.setLastUsed(keyIndex, new Date());
       try {
         this.debug(`waiting for backend`);
-        await this.backendWaiter;
         this.debug(`sending webauthn to server, csrf token: ${this.csrfMiddleware.csrfToken}`);
         const info = await this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, keyIndex, persistor);
         this.debug(`successful`);

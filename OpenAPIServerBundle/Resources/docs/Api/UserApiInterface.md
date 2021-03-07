@@ -11,7 +11,7 @@ Method | HTTP request | Description
 [**getUserSettings**](UserApiInterface.md#getUserSettings) | **GET** /user/settings | Returns the client settings of the current user
 [**getUserWebAuthnCreds**](UserApiInterface.md#getUserWebAuthnCreds) | **GET** /user/webauthn | get all registered WebAuthn credentials for the user
 [**loginUser**](UserApiInterface.md#loginUser) | **POST** /user/login | login
-[**loginUserWebAuthnChallenge**](UserApiInterface.md#loginUserWebAuthnChallenge) | **GET** /user/login/webauthn | get WebAuthn challenge
+[**loginUserWebAuthnChallenge**](UserApiInterface.md#loginUserWebAuthnChallenge) | **GET** /user/login/webauthn | get a WebAuthN challenge
 [**loginUserWebAuthnGet**](UserApiInterface.md#loginUserWebAuthnGet) | **POST** /user/login/webauthn | login user with WebAuthn
 [**logoutUser**](UserApiInterface.md#logoutUser) | **GET** /user/logout | Logs out current logged in user session
 [**registerUser**](UserApiInterface.md#registerUser) | **PUT** /user | registration
@@ -416,7 +416,7 @@ Name | Type | Description  | Notes
 ## **loginUserWebAuthnChallenge**
 > OpenAPI\Server\Model\UserWebAuthnChallenge loginUserWebAuthnChallenge()
 
-get WebAuthn challenge
+get a WebAuthN challenge
 
 ### Example Implementation
 ```php

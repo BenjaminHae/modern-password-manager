@@ -310,7 +310,7 @@ export class UserApi extends runtime.BaseAPI {
     }
 
     /**
-     * get WebAuthn challenge
+     * get a WebAuthN challenge
      */
     async loginUserWebAuthnChallengeRaw(): Promise<runtime.ApiResponse<UserWebAuthnChallenge>> {
         const queryParameters: any = {};
@@ -328,7 +328,7 @@ export class UserApi extends runtime.BaseAPI {
     }
 
     /**
-     * get WebAuthn challenge
+     * get a WebAuthN challenge
      */
     async loginUserWebAuthnChallenge(): Promise<UserWebAuthnChallenge> {
         const response = await this.loginUserWebAuthnChallengeRaw();

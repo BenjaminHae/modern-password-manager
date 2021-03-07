@@ -75,6 +75,14 @@ class ServerInformation
     protected $defaultUserConfiguration;
 
     /**
+     * @var string|null
+     * @SerializedName("webAuthNChallenge")
+     * @Assert\Type("string")
+     * @Type("string")
+     */
+    protected $webAuthNChallenge;
+
+    /**
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
@@ -84,6 +92,7 @@ class ServerInformation
         $this->allowRegistration = isset($data['allowRegistration']) ? $data['allowRegistration'] : null;
         $this->idleTimeout = isset($data['idleTimeout']) ? $data['idleTimeout'] : null;
         $this->defaultUserConfiguration = isset($data['defaultUserConfiguration']) ? $data['defaultUserConfiguration'] : null;
+        $this->webAuthNChallenge = isset($data['webAuthNChallenge']) ? $data['webAuthNChallenge'] : null;
     }
 
     /**
@@ -178,6 +187,30 @@ class ServerInformation
     public function setDefaultUserConfiguration($defaultUserConfiguration = null)
     {
         $this->defaultUserConfiguration = $defaultUserConfiguration;
+
+        return $this;
+    }
+
+    /**
+     * Gets webAuthNChallenge.
+     *
+     * @return string|null
+     */
+    public function getWebAuthNChallenge()
+    {
+        return $this->webAuthNChallenge;
+    }
+
+    /**
+     * Sets webAuthNChallenge.
+     *
+     * @param string|null $webAuthNChallenge
+     *
+     * @return $this
+     */
+    public function setWebAuthNChallenge($webAuthNChallenge = null)
+    {
+        $this->webAuthNChallenge = $webAuthNChallenge;
 
         return $this;
     }
