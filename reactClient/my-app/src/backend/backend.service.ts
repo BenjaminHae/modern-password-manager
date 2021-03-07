@@ -35,6 +35,8 @@ export class BackendService {
   public accounts: Array<Account> = [];
   public userOptions: UserOptions = { fields: [] };
   public defaultUserOptions: UserOptions = { fields: [] };
+  private webAuthNChallenge?: ArrayBuffer;
+
   accountsObservable = new Observable<Array<Account>>(subscriptionCreator(this.accountsObservers));
   loginObservable = new Observable<void>(subscriptionCreator(this.loginObservers));
   optionsObservable = new Observable<UserOptions>(subscriptionCreator(this.optionsObservers));
@@ -43,6 +45,9 @@ export class BackendService {
 
   async waitForBackend(): Promise<BackendOptions> {
     const options = await this.maintenanceService.retrieveInfo();
+    if (options.webAuthNChallenge) {
+      this.webAuthNChallenge = options.webAuthNChallenge;
+    }
     const userOptionsJSON = JSON.parse(options.defaultUserConfiguration);
     this.defaultUserOptions = UserOptionsFromJSON(userOptionsJSON, this.defaultUserOptions);
     return options;
@@ -143,7 +148,7 @@ export class BackendService {
   }
 
   afterLogin(): Promise<void> {
-    //todo: handle response of login request
+    delete this.webAuthNChallenge;.//require new challenge for later operations
     subscriptionExecutor(this.loginObservers);
     return Promise.all([this.getUserOptions(), this.loadAccounts()])
       .then(()=>{return });
@@ -207,6 +212,11 @@ export class BackendService {
   }
 
   async getWebAuthnChallenge(): Promise<ArrayBuffer> {
+    if (this.webAuthNChallenge) {
+      let challenge = this.webAuthNChallenge;
+      delete this.webAuthNChallenge;.
+      return challenge;
+    }
     return await this.userService.getWebAuthnChallenge();
   }
 
