@@ -63,8 +63,13 @@ class WebAuthnController
         if(null !== $pk) {
             return null;
         }
+        $challenge = $this->getChallenge(); 
+        if ($challenge === null) {
+            $this->logger->error('WebAuthn->register failed: no challenge present');
+            return null;
+        } 
         $webAuthnResponse = $request->getResponse();
-        $webAuthnResult = $this->webAuthn->processCreate(base64_decode($webAuthnResponse->getClientDataJSON()), base64_decode($webAuthnResponse->getAttestationObject()), $this->getChallenge(), true, true);
+        $webAuthnResult = $this->webAuthn->processCreate(base64_decode($webAuthnResponse->getClientDataJSON()), base64_decode($webAuthnResponse->getAttestationObject()), $challenge, true, true);
 
         $decryptionKey = new DecryptionKey();
         $decryptionKey->setDecryptionKey($request->getDecryptionKey());
@@ -91,6 +96,7 @@ class WebAuthnController
     public function checkCredentials($credentials, UserInterface $user) {
         $challenge = $this->getChallenge(); 
         if ($challenge === null) {
+            $this->logger->error('WebAuthn->checkCredentials failed: no challenge present');
             return false;
         } 
         $pk = $this->entityManager->getRepository(WebAuthnPublicKey::class)
