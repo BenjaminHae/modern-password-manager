@@ -21,8 +21,8 @@ export class MaintenanceService {
     const idleTimeout = serverInformation.idleTimeout ? serverInformation.idleTimeout: 3*60*1000;
     const defaultUserConfiguration = serverInformation.defaultUserConfiguration ? serverInformation.defaultUserConfiguration: "{}";
     let challenge: undefined | ArrayBuffer;
-    if (serverInformation.challenge) {
-      challenge = this.base64ToArrayBuffer(serverInformation.challenge);
+    if (serverInformation.webAuthNChallenge) {
+      challenge = base64ToArrayBuffer(serverInformation.webAuthNChallenge);
     }
     return { 
       registrationAllowed: registrationAllowed, idleTimeout: idleTimeout, defaultUserConfiguration: defaultUserConfiguration, webAuthNChallenge: challenge}
