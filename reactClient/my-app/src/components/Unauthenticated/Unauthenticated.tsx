@@ -8,6 +8,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
+import Spinner from 'react-bootstrap/Spinner';
 
 interface UnauthenticatedProps {
   doLogin: (username: string, password: string) => void;
@@ -24,6 +25,9 @@ class Unauthenticated extends React.Component<UnauthenticatedProps> {
     return (
       <div className={styles.Unauthenticated}>
         <Col xl={{ span: 4, offset: 4 }} lg={{ span: 6, offset: 3 }} md={{ span: 6, offset: 3 }} sm={{ span: 10, offset: 1 }}>
+          { this.props.doingAutoLogin  &&
+            <div className={ styles.Waiting }><Spinner animation="border" role="status"/><p>Auto Login is in progress</p></div>
+          }
           <Accordion defaultActiveKey="0">
             <Card>
               <Card.Header>
@@ -34,7 +38,7 @@ class Unauthenticated extends React.Component<UnauthenticatedProps> {
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
                   <Col xl={{ span: 10, offset: 1 }} lg={{ span: 12, offset: 0 }}>
-                    <Login doLogin={this.props.doLogin} ready={this.props.ready} doingAutoLogin={this.props.doingAutoLogin} />
+                    <Login doLogin={this.props.doLogin} ready={this.props.ready} />
                   </Col>
                 </Card.Body>
               </Accordion.Collapse>
