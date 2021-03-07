@@ -39,7 +39,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
     private $eventController;
     private $requestStack;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, Security $security, SessionInterface $session, EventController $eventController, CsrfTokenManagerInterface $csrfManager, RequestStack $requestStack, $allowRegistration)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, Security $security, SessionInterface $session, EventController $eventController, CsrfTokenManagerInterface $csrfManager, RequestStack $requestStack, LoggerInterface $logger, $allowRegistration)
     {
         parent::__construct($csrfManager, $logger);
         $this->entityManager = $entityManager;
