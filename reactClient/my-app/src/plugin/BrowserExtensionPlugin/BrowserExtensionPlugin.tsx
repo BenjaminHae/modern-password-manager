@@ -5,20 +5,42 @@ import Button from 'react-bootstrap/Button';
 import { BasePlugin } from '../BasePlugin';
 import { PluginSystem } from '../PluginSystem';
 import { Account } from '../../backend/models/account';
+import { ICredentialProvider } from '../../backend/controller/credentialProvider';
+import { ICredentialSource, CredentialReadiness } from '../../libs/CredentialSource';
+import { ILogonInformation } from '../../backend/api/user.service';
 
 declare global {
   interface Window { browserExtensionPlugin: BrowserExtensionPlugin; }
 }
 
-class BrowserExtensionPlugin extends BasePlugin {
+class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   private isActive = false;
   private actionsReceived = false;
   private accountsLoaded = false;
   private action?: Action;
+  private credentialProvider?: ICredentialProvider;
 
   constructor(protected pluginSystem: PluginSystem) {
     super(pluginSystem);
     window.browserExtensionPlugin = this;
+  }
+
+  credentialsReady(): Promise<boolean> {
+    if (this.credentialProvider) {
+      return Promise.resolve(true);
+    }
+    return Promise.resolve(false);
+  }
+  
+  credentialReadinessSupported(): CredentialReadiness {
+    return CredentialReadiness.automated;
+  }
+
+  retrieveCredentials(): Promise<ILogonInformation|null> {
+    if (this.credentialProvider) {
+      return this.pluginSystem.backendLogin(this.credentialProvider);
+    }
+    return Promise.resolve(null);
   }
 
   private sendEvent(request: string, data?: Record<string, any>) {
@@ -98,11 +120,10 @@ class BrowserExtensionPlugin extends BasePlugin {
   }
 
   doLogin(username: string, key: CryptoKey): void {
-    const credentials = {
+    this.credentialProvider = {
         getKey: () => key,
         cleanUp: () => Promise.resolve()
     };
-    this.pluginSystem.backendLogin(credentials);
   }
   selectAccount(account: Account): void {
     this.sendEvent("selectAccount", {index: account.index});

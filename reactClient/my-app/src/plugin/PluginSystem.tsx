@@ -2,6 +2,7 @@ import { Account } from '../backend/models/account';
 import { BackendService } from '../backend/backend.service';
 import { ICredentialProvider } from '../backend/controller/credentialProvider';
 import { AccountTransformerService } from '../backend/controller/account-transformer.service';
+import { ILogonInformation } from '../backend/api/user.service';
 import activatedPlugins from './ActivatedPlugins';
 import * as BasePlugin from './BasePlugin';
 import { IMessageOptions } from '../libs/MessageManager';
@@ -164,8 +165,8 @@ export class PluginSystem {
 
   // calling backend functions through plugins
 
-  backendLogin(credentialProvider: ICredentialProvider, username?: string): void {
-    this.backend.logonWithCredentials(credentialProvider, username);
+  backendLogin(credentialProvider: ICredentialProvider, username?: string): Promise<ILogonInformation> {
+    return this.backend.logonWithCredentials(credentialProvider, username);
   }
   
   logout(): void {
