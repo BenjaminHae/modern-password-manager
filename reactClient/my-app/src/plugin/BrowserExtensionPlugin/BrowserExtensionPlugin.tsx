@@ -19,6 +19,9 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   private accountsLoaded = false;
   private action?: Action;
   private credentialProvider?: ICredentialProvider;
+  private credentialsPresent = false;
+  private credentialsPresentReceived = false;
+  private credentialsHook?: (value: boolean) => void;
 
   constructor(protected pluginSystem: PluginSystem) {
     super(pluginSystem);
@@ -26,10 +29,13 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   }
 
   credentialsReady(): Promise<boolean> {
-    if (this.credentialProvider) {
-      return Promise.resolve(true);
+    if (this.credentialsPresentReceived) {
+      return Promise.resolve(this.credentialsPresent);
     }
-    return Promise.resolve(false);
+    return new Promise<boolean>((resolve, reject) => {
+      this.credentialsHook = (value: boolean) => 
+        { resolve(value); };
+    });
   }
   
   credentialReadinessSupported(): CredentialReadiness {
@@ -37,10 +43,19 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   }
 
   retrieveCredentials(): Promise<ILogonInformation|null> {
+    // todo: make sure credentialProvider is here
     if (this.credentialProvider) {
       return this.pluginSystem.backendLogin(this.credentialProvider);
     }
     return Promise.resolve(null);
+  }
+
+  setCredentialsPresent(credentialsPresent: boolean): void {
+    this.credentialsPresent = credentialsPresent;
+    this.credentialsPresentReceived = true;
+    if (this.credentialsHook) {
+      this.credentialsHook(credentialsPresent);
+    }
   }
 
   private sendEvent(request: string, data?: Record<string, any>) {
