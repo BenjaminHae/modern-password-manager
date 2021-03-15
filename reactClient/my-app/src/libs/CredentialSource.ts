@@ -13,6 +13,16 @@ export interface ICredentialSource {
   retrieveCredentials: () => Promise<ILogonInformation|null>;
 }
 
+function checkForObjectAndMethod(thing: unknown, item: string): boolean {
+  return (typeof thing === "object") && (thing !== null) && (item in thing);
+}
+
+export function instanceOfCredentialSource(object: unknown): object is ICredentialSource {
+  return checkForObjectAndMethod(object, 'credentialsReady')
+    && checkForObjectAndMethod(object, 'credentialReadinessSupported')
+    && checkForObjectAndMethod(object, 'retrieveCredentials');
+}
+
 export default class CredentialSourceManager {
   private sources: Record<CredentialReadiness, Array<ICredentialSource>> = {
       [CredentialReadiness.automated]: [],
@@ -33,7 +43,7 @@ export default class CredentialSourceManager {
       if (await source.credentialsReady())
         return source;
     }
-    return null
+    return null;
   }
 
   async getCredentials(): Promise<ILogonInformation|null> {
