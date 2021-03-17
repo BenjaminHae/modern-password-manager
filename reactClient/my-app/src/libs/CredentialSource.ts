@@ -31,10 +31,11 @@ export default class CredentialSourceManager {
       [CredentialReadiness.notAvailable]: []
   };
 
-  constructor (private autoLoginStateSetter:(state:boolean) => void) {
+  constructor (private autoLoginStateSetter:(state:boolean) => void, private debug: (msg: string)=>void) {
   }
 
   registerCredentialSource(source: ICredentialSource) {
+    this.debug(`registering credential source ${source.constructor.name}`);
     this.sources[source.credentialReadinessSupported()].push(source);
   }
 
@@ -53,10 +54,12 @@ export default class CredentialSourceManager {
       CredentialReadiness.manual 
     ];
     for (const readiness of priorityList) {
+      this.debug(`Getting ready credentials of group ${CredentialReadiness[readiness]}`);
       if (readiness in this.sources && this.sources[readiness].length > 0) {
         // todo: this is not very clever as it skips the "second" ready credential of a group
         const firstReadySource = await this.firstReadyCredentialOfGroup(this.sources[readiness]);
         if (firstReadySource) {
+          this.debug(`${firstReadySource.constructor.name} is ready`);
           if (readiness !== CredentialReadiness.manual) {
             this.autoLoginStateSetter(true);
           }
