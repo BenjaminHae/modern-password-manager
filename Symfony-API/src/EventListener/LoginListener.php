@@ -36,11 +36,14 @@ class LoginListener
             $methodInfo = " using WebAuthnKey for device " . $pk->getDeviceName();
             $pk = $this->webAuthn->removeLogonKeyId();
         }
-
         $this->eventController->StoreEvent($user, "Login", "success" . $methodInfo);
+        // invalidate challenge that was presented for login
+        $this->webAuthn->removeChallenge();
     }
 
     public function onSecurityAuthenticationFailure(AuthenticationFailureEvent $event) {
+        // invalidate challenge that was presented for this
+        $this->webAuthn->removeChallenge();
         // Get the User entity.
         $UNAUTHENTICATEDuser = $this->userRepository->findOneByUsernameUNAUTHENTICATED($event->getAuthenticationToken()->getUser());
         if ($UNAUTHENTICATEDuser) {

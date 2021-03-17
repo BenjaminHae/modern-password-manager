@@ -33,6 +33,8 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
 import { BoxArrowLeft } from 'react-bootstrap-icons';
+import CredentialSourceManager, { ICredentialSource } from './libs/CredentialSource';
+import WebAuthNCredentialSource from './libs/WebAuthnCredentialSource';
 
 interface AppState {
   ready: boolean;
@@ -64,6 +66,7 @@ export default class App extends React.Component<Record<string, never>, AppState
   private messages: MessageManager;
   private backendWaiter: Promise<BackendOptions>; // promise for the first call to the backend
   private csrfMiddleware: CSRFMiddleware;
+  private credentialSourceManager: CredentialSourceManager;
 
   constructor (props: Record<string, never>) {
     super(props);
@@ -128,9 +131,25 @@ export default class App extends React.Component<Record<string, never>, AppState
           });
     this.backendWaiter = this.backend.waitForBackend();
 
+    this.credentialSourceManager = 
+      new CredentialSourceManager(
+        (value: boolean) => this.setState({doingAutoLogin: value}),
+        (msg: string) => this.debug("CredentialSourceManager: " + msg)
+      );
+    this.credentialSourceManager.registerCredentialSource(
+      new WebAuthNCredentialSource(this.backend, this.backendWaiter, (value:string) => this.debug(value)));
+    this.plugins.getCredentialSources().forEach((cred: ICredentialSource) => {
+      this.credentialSourceManager.registerCredentialSource(cred)
+    });
     // try auto login
     if (this.state.autoLogin) {
-      this.webAuthnTryLogin();
+      this.credentialSourceManager.getCredentials().then(
+        (info: ILogonInformation|null) => {
+          if (info) {
+            // todo: possibly username is needed
+            this.handleLoginSuccess(info, "");
+          }
+        });
     }
     const message = URLParams.get("message")
     if (message) {

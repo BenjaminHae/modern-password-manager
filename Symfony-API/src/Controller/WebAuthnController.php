@@ -145,14 +145,18 @@ class WebAuthnController
         return true;
     }
 
-    public function persistChallenge($challenge) {
+    private function persistChallenge(ByteBuffer $challenge) {
         $this->session->set(SELF::SESSION_CHALLENGE_KEY, $challenge); 
     }
 
-    public function getChallenge() {
+    public function getChallenge(): ?ByteBuffer {
         $challenge = $this->session->get(SELF::SESSION_CHALLENGE_KEY, null); 
-        $this->session->remove(SELF::SESSION_CHALLENGE_KEY); 
+        $this->removeChallenge();
         return $challenge; 
+    }
+
+    public function removeChallenge() {
+        $this->session->remove(SELF::SESSION_CHALLENGE_KEY); 
     }
 
     public function rememberLogonKeyId($keyId) {

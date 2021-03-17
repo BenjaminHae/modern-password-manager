@@ -2,10 +2,12 @@ import { Account } from '../backend/models/account';
 import { BackendService } from '../backend/backend.service';
 import { ICredentialProvider } from '../backend/controller/credentialProvider';
 import { AccountTransformerService } from '../backend/controller/account-transformer.service';
+import { ILogonInformation } from '../backend/api/user.service';
 import activatedPlugins from './ActivatedPlugins';
 import * as BasePlugin from './BasePlugin';
 import { IMessageOptions } from '../libs/MessageManager';
 import ShortcutManager from '../libs/ShortcutManager';
+import { ICredentialSource, instanceOfCredentialSource } from '../libs/CredentialSource';
 
 export type AccountsFilter = (accounts: Array<Account>) => Array<Account>;
 type AccountFilter = (account: Account) => boolean;
@@ -25,6 +27,7 @@ export class PluginSystem {
   filters: { [index: string]: AccountFilter } = {};
   filterPresent = false;
   
+  credentialSources: Array<ICredentialSource> = [];
   mainViewCallback: Array<() => JSX.Element | void> = [];
   resetFilterCallback: Array<() => void> = [];
   accountsReadyCallback: Array<(accounts: Array<Account>) => void> = [];
@@ -107,6 +110,13 @@ export class PluginSystem {
     if (BasePlugin.instanceOfIPluginWithAccountListShortcuts(plugin)) {
       this.accountListShortcutsCallback.push(plugin.accountListShortcuts.bind(plugin));
     }
+    if (instanceOfCredentialSource(plugin)) {
+      this.credentialSources.push(plugin);
+    }
+  }
+
+  getCredentialSources(): Array<ICredentialSource> {
+    return this.credentialSources;
   }
 
   registerAuthenticatedUIHandler(handler: IAuthenticatedUIHandler): void {
@@ -164,8 +174,8 @@ export class PluginSystem {
 
   // calling backend functions through plugins
 
-  backendLogin(credentialProvider: ICredentialProvider, username?: string): void {
-    this.backend.logonWithCredentials(credentialProvider, username);
+  backendLogin(credentialProvider: ICredentialProvider, username?: string): Promise<ILogonInformation> {
+    return this.backend.logonWithCredentials(credentialProvider, username);
   }
   
   logout(): void {
