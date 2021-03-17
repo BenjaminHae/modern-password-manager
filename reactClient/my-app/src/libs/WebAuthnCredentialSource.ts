@@ -47,7 +47,7 @@ export default class WebAuthNCredentialSource implements ICredentialSource {
     }
     catch(e) {
       this.debug(`WebAuthn get failed: ${e.message}`);
-      throw e;
+      return null;
     }
 
     const response = credentials.response as AuthenticatorAssertionResponse;
@@ -61,11 +61,11 @@ export default class WebAuthNCredentialSource implements ICredentialSource {
       }
       catch(e) {
         this.debug(`Finding credential in indexdb failed: ${e.message}`);
-        throw e;
+        return null;
       }
       if (!keyIndex) {
-        this.debug(`could not get key by id`);
-        throw new Error("no user Handle or keyId was specified");
+        this.debug(`could not get key by id: no user Handle or keyId was specified`);
+        return null;
       }
     }
     else {
@@ -89,7 +89,7 @@ export default class WebAuthNCredentialSource implements ICredentialSource {
       this.debug(`WebAuthn Login failed: ${message}`);
       // todo
       //this.messages.showMessage(`WebAuthn Login failed: ${message}`, {autoClose: false, variant: "danger" });
-      throw e;
+      return null;
     }
   }
 }
