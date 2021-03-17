@@ -20,7 +20,7 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   private action?: Action;
   private credentialProvider?: ICredentialProvider;
   private credentialsPresent?: boolean;
-  private credentialsHook?: (value: boolean) => void;
+  private credentialsHook: Array<(value: boolean) => void> = [];
 
   constructor(protected pluginSystem: PluginSystem) {
     super(pluginSystem);
@@ -28,12 +28,15 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   }
 
   credentialsReady(): Promise<boolean> {
+    if (!this.isActive) {
+      return Promise.resolve(false);
+    }
     if (this.credentialsPresent !== undefined) {
       return Promise.resolve(this.credentialsPresent);
     }
     return new Promise<boolean>((resolve) => {
-      this.credentialsHook = (value: boolean) => 
-        { resolve(value); };
+      this.credentialsHook.push((value: boolean) => 
+        { resolve(value); });
     });
   }
   
@@ -43,6 +46,9 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
 
   retrieveCredentials(): Promise<ILogonInformation|null> {
     // todo: make sure credentialProvider is here
+    if (!this.isActive) {
+      return Promise.resolve(null);
+    }
     if (this.credentialProvider) {
       return this.pluginSystem.backendLogin(this.credentialProvider);
     }
@@ -51,9 +57,8 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
 
   setCredentialsPresent(credentialsPresent: boolean): void {
     this.credentialsPresent = credentialsPresent;
-    if (this.credentialsHook) {
-      this.credentialsHook(credentialsPresent);
-    }
+    this.credentialsHook.forEach((hook) => hook(credentialsPresent));
+    this.credentialsHook.length = 0;
   }
 
   private sendEvent(request: string, data?: Record<string, any>): void {
