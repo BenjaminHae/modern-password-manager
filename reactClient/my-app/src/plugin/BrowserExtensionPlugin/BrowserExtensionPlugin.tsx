@@ -31,7 +31,7 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
     if (this.credentialsPresent !== undefined) {
       return Promise.resolve(this.credentialsPresent);
     }
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<boolean>((resolve) => {
       this.credentialsHook = (value: boolean) => 
         { resolve(value); };
     });
@@ -56,7 +56,7 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
     }
   }
 
-  private sendEvent(request: string, data?: Record<string, any>) {
+  private sendEvent(request: string, data?: Record<string, any>): void {
     if (!this.isActive)
       return
     const evt = new CustomEvent('MPMExtensionEventToContentScript', {detail:{request: request, data: data}});
