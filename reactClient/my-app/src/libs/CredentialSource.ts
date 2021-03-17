@@ -68,6 +68,7 @@ export default class CredentialSourceManager {
           if (info) {
             return info;
           }
+          this.debug(`${firstReadySource.constructor.name} failed`);
         }
       }
     }
