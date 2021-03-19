@@ -71,6 +71,7 @@ export default class CredentialSourceManager {
           this.debug(`${firstReadySource.constructor.name} is ready`);
           const info = this.doLoginWithSource(firstReadySource, readiness !== CredentialReadiness.manual);
           if (info) {
+            this.debug(`successful got credential from ${firstReadySource.constructor.name}`);
             return info;
           }
           this.debug(`${firstReadySource.constructor.name} failed`);
