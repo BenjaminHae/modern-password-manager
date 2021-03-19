@@ -10,7 +10,7 @@ use Psr\Log\LoggerInterface;
 abstract class CsrfProtection
 {
     private $csrfManager;
-    private $logger;
+    protected $logger;
 
     public function __construct(CsrfTokenManagerInterface $csrfManager, LoggerInterface $logger)
     {
