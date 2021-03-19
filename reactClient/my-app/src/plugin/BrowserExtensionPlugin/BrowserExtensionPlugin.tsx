@@ -19,7 +19,7 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   private accountsLoaded = false;
   private action?: Action;
   private credentialProvider?: ICredentialProvider;
-  private credentialProviderHook: Array<() => void> = [];
+  private credentialProviderHook: Array<(provider: ICredentialProvider) => void> = [];
   private credentialsPresent?: boolean;
   private credentialsPresentHook: Array<(value: boolean) => void> = [];
 
@@ -57,8 +57,8 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
       return this.pluginSystem.backendLogin(this.credentialProvider);
     }
     return new Promise<ILogonInformation|null>((resolve) => {
-      this.credentialProviderHook.push(() => 
-        this.pluginSystem.backendLogin(this.credentialProvider)
+      this.credentialProviderHook.push((provider: ICredentialProvider) => 
+        this.pluginSystem.backendLogin(provider)
           .then((info: ILogonInformation) => resolve(info))
       );
     });
@@ -147,11 +147,12 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   }
 
   doLogin(username: string, key: CryptoKey): void {
-    this.credentialProvider = {
+    const provider = {
         getKey: () => key,
         cleanUp: () => Promise.resolve()
     };
-    this.credentialProviderHook.forEach((hook) => hook());
+    this.credentialProvider = provider;
+    this.credentialProviderHook.forEach((hook) => hook(provider));
     this.credentialProviderHook.length = 0;
   }
   selectAccount(account: Account): void {
