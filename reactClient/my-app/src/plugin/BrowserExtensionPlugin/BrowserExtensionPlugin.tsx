@@ -28,7 +28,7 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   }
 
   credentialsReady(): Promise<boolean> {
-    if (!this.isActive) {
+    if (this.isActive === false) {
       return Promise.resolve(false);
     }
     if (this.credentialsPresent !== undefined) {
@@ -46,7 +46,7 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
 
   retrieveCredentials(): Promise<ILogonInformation|null> {
     // todo: make sure credentialProvider is here
-    if (!this.isActive) {
+    if (this.isActive === false) {
       return Promise.resolve(null);
     }
     if (this.credentialProvider) {
@@ -62,20 +62,20 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   }
 
   private sendEvent(request: string, data?: Record<string, any>): void {
-    if (!this.isActive)
+    if (this.isActive === false)
       return
     const evt = new CustomEvent('MPMExtensionEventToContentScript', {detail:{request: request, data: data}});
     document.dispatchEvent(evt);
   }
   loginSuccessful(username: string, key: CryptoKey): void {
-    if (!this.isActive)
+    if (this.isActive === false)
       return
     console.log("login Successful");
     this.sendEvent('loginSuccessful', {username: username, key: key});
   }
 
   loginViewReady(): void {
-    if (!this.isActive)
+    if (this.isActive === false)
       return
     console.log("login view ready");
     this.sendEvent('loginViewReady');
@@ -86,7 +86,7 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   accountsReady(): void {
     const firstLoad = !this.accountsLoaded;
     this.accountsLoaded = true;
-    if (!this.isActive)
+    if (this.isActive === false)
       return
     if (this.actionsReceived) {
       this.performAction();
@@ -105,7 +105,7 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   }
 
   performAction(): void {
-    if (!this.action)
+    if (this.action === false)
       return;
     switch (this.action.action) {
       case "logout": 
