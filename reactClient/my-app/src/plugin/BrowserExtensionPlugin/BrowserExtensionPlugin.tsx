@@ -105,7 +105,7 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   }
 
   performAction(): void {
-    if (this.action === false)
+    if (!this.action)
       return;
     switch (this.action.action) {
       case "logout": 
