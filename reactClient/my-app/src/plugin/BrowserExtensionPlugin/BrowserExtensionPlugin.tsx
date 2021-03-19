@@ -19,8 +19,9 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   private accountsLoaded = false;
   private action?: Action;
   private credentialProvider?: ICredentialProvider;
+  private credentialProviderHook: Array<() => void> = [];
   private credentialsPresent?: boolean;
-  private credentialsHook: Array<(value: boolean) => void> = [];
+  private credentialsPresentHook: Array<(value: boolean) => void> = [];
 
   constructor(protected pluginSystem: PluginSystem) {
     super(pluginSystem);
@@ -35,7 +36,7 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
       return Promise.resolve(this.credentialsPresent);
     }
     return new Promise<boolean>((resolve) => {
-      this.credentialsHook.push((value: boolean) => 
+      this.credentialsPresentHook.push((value: boolean) => 
         { resolve(value); });
     });
   }
@@ -49,16 +50,24 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
     if (this.isActive === false) {
       return Promise.resolve(null);
     }
+    if (!this.credentialsPresent) {
+      return Promise.resolve(null);
+    }
     if (this.credentialProvider) {
       return this.pluginSystem.backendLogin(this.credentialProvider);
     }
-    return Promise.resolve(null);
+    return new Promise<ILogonInformation|null>((resolve) => {
+      this.credentialProviderHook.push(() => 
+        this.pluginSystem.backendLogin(this.credentialProvider)
+          .then((info: ILogonInformation) => resolve(info))
+      );
+    });
   }
 
   setCredentialsPresent(credentialsPresent: boolean): void {
     this.credentialsPresent = credentialsPresent;
-    this.credentialsHook.forEach((hook) => hook(credentialsPresent));
-    this.credentialsHook.length = 0;
+    this.credentialsPresentHook.forEach((hook) => hook(credentialsPresent));
+    this.credentialsPresentHook.length = 0;
   }
 
   private sendEvent(request: string, data?: Record<string, any>): void {
@@ -142,6 +151,8 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
         getKey: () => key,
         cleanUp: () => Promise.resolve()
     };
+    this.credentialProviderHook.forEach((hook) => hook());
+    this.credentialProviderHook.length = 0;
   }
   selectAccount(account: Account): void {
     this.sendEvent("selectAccount", {index: account.index});
