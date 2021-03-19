@@ -57,10 +57,11 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
       return this.pluginSystem.backendLogin(this.credentialProvider);
     }
     return new Promise<ILogonInformation|null>((resolve, reject) => {
-      this.credentialProviderHook.push((provider: ICredentialProvider) => 
-        this.pluginSystem.backendLogin(provider)
-          .then((info: ILogonInformation) => resolve(info))
-          .catch(reject);
+      this.credentialProviderHook.push((provider: ICredentialProvider) => {
+          this.pluginSystem.backendLogin(provider)
+            .then((info: ILogonInformation) => resolve(info))
+            .catch(reject)
+        }
       );
     });
   }
