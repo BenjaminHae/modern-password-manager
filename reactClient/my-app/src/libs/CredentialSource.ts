@@ -47,6 +47,15 @@ export default class CredentialSourceManager {
     return null;
   }
 
+  private async doLoginWithSource(source: ICredentialSource, setAutoLoginState = false): Promise<ILogonInformation|null> {
+    if (setAutoLoginState) {
+      this.autoLoginStateSetter(true);
+    }
+    const info = await source.retrieveCredentials();
+    this.autoLoginStateSetter(false);
+    return info;
+  }
+
   async getCredentials(): Promise<ILogonInformation|null> {
     const priorityList = [ 
       CredentialReadiness.automated, 
@@ -60,11 +69,7 @@ export default class CredentialSourceManager {
         const firstReadySource = await this.firstReadyCredentialOfGroup(this.sources[readiness]);
         if (firstReadySource) {
           this.debug(`${firstReadySource.constructor.name} is ready`);
-          if (readiness !== CredentialReadiness.manual) {
-            this.autoLoginStateSetter(true);
-          }
-          const info = await firstReadySource.retrieveCredentials();
-          this.autoLoginStateSetter(false);
+          const info = this.doLoginWithSource(firstReadySource, readiness !== CredentialReadiness.manual);
           if (info) {
             return info;
           }
@@ -74,5 +79,6 @@ export default class CredentialSourceManager {
     }
     return null;
   }
+
 }
 
