@@ -155,17 +155,17 @@ export default class App extends React.Component<Record<string, never>, AppState
       .then((backendOptions: BackendOptions) => {
           this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed, idleTimeout: backendOptions.idleTimeout});
           this.plugins.loginViewReady();
-          });
-    // try auto login
-    if (this.state.autoLogin) {
-      this.credentialSourceManager.getCredentials().then(
-        (info: ILogonInformation|null) => {
-          if (info) {
-            // todo: possibly username is needed
-            this.handleLoginSuccess(info, "");
+          // try auto login
+          if (this.state.autoLogin) {
+            this.credentialSourceManager.getCredentials().then(
+              (info: ILogonInformation|null) => {
+                if (info) {
+                  // todo: possibly username is needed
+                  this.handleLoginSuccess(info, "");
+                }
+              });
           }
-        });
-    }
+          });
     this.getWebAuthnCredsAvailable();
     this.plugins.setFilterChangeHandler(this.filterChangeHandler.bind(this));
     window.history.pushState({}, "", "/");
