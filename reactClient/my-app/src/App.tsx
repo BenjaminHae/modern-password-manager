@@ -119,6 +119,10 @@ export default class App extends React.Component<Record<string, never>, AppState
       .subscribe(()=>{
           this.setState({authenticated : true});
           });
+    this.backend.logonInformationObservable
+      .subscribe((info: ILogonInformation)=>{
+          this.setState({ logonInformation: info });
+          });
     this.backend.accountsObservable
       .subscribe((accounts: Array<Account>)=>{
           console.log("(react) received " + accounts.length + " accounts");
@@ -157,15 +161,9 @@ export default class App extends React.Component<Record<string, never>, AppState
           this.plugins.loginViewReady();
           // try auto login
           if (this.state.autoLogin) {
-            this.credentialSourceManager.getCredentials().then(
-              (info: ILogonInformation|null) => {
-                if (info) {
-                  // todo: possibly username is needed
-                  this.handleLoginSuccess(info, "");
-                }
-              });
+            this.credentialSourceManager.getCredentials() 
           }
-          });
+        });
     this.getWebAuthnCredsAvailable();
     this.plugins.setFilterChangeHandler(this.filterChangeHandler.bind(this));
     window.history.pushState({}, "", "/");
@@ -183,8 +181,8 @@ export default class App extends React.Component<Record<string, never>, AppState
       return Promise.resolve();
     }
     return this.backend.logon(username, password)
-      .then((info: ILogonInformation) => {
-        this.handleLoginSuccess(info, username);
+      .then(() => {
+        this.handleLoginSuccess(username);
       })
       .catch((e) => {
         let msg = e.toString();
@@ -201,9 +199,8 @@ export default class App extends React.Component<Record<string, never>, AppState
       });
   }
 
-  handleLoginSuccess(info: ILogonInformation, username: string): void {
+  handleLoginSuccess(username: string): void {
     this.plugins.loginSuccessful(username, this.credential.getKey());
-    this.setState({ logonInformation: info });
   } 
 
   async doRegister(username: string, password: string, email: string): Promise<void> {
@@ -413,7 +410,7 @@ export default class App extends React.Component<Record<string, never>, AppState
         this.debug(`sending webauthn to server, csrf token: ${this.csrfMiddleware.csrfToken}`);
         const info = await this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, keyIndex, persistor);
         this.debug(`successful`);
-        this.handleLoginSuccess(info, "");
+        this.handleLoginSuccess("");
       }
       catch(e) {
         let message = "";

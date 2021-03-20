@@ -31,6 +31,7 @@ export class BackendService {
   private accountsObservers: Array<Subscriber<Array<Account>>> = [];
   private loginObservers: Array<Subscriber<void>> = [];
   private optionsObservers: Array<Subscriber<UserOptions>> = [];
+  private logonInformationObservers: Array<Subscriber<ILogonInformation>> = [];
   public serverSettings: ServerSettings = {allowRegistration: true, passwordGenerator: "aaaaab"};
   public accounts: Array<Account> = [];
   public userOptions: UserOptions = { fields: [] };
@@ -39,6 +40,7 @@ export class BackendService {
 
   accountsObservable = new Observable<Array<Account>>(subscriptionCreator(this.accountsObservers));
   loginObservable = new Observable<void>(subscriptionCreator(this.loginObservers));
+  logonInformationObservable = new Observable<ILogonInformation>(subscriptionCreator(this.logonInformationObservers));
   optionsObservable = new Observable<UserOptions>(subscriptionCreator(this.optionsObservers));
 
   constructor(private maintenanceService: MaintenanceService, private userService: UserService, private accountsService: AccountsService, private credentials: CredentialService, private accountTransformer: AccountTransformerService, private crypto: CryptoService ) {}
@@ -67,6 +69,7 @@ export class BackendService {
     if (username) {
       const passwordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
       response = await this.userService.logon(username, passwordHash)
+      subscriptionExecutor<ILogonInformation>(this.logonInformationObservers, response);
     }
     await this.afterLogin();
     return response;
@@ -74,6 +77,7 @@ export class BackendService {
 
   async logonWithWebAuthn( id: string, authenticatorData: ArrayBuffer, clientDataJSON: ArrayBuffer, signature: ArrayBuffer, keyType: string, keyIndex: number, persistor: IPersistingMechanism): Promise<ILogonInformation> {
     const response = await this.userService.loginWebAuthn(id, authenticatorData, clientDataJSON, signature, keyType)
+    subscriptionExecutor<ILogonInformation>(this.logonInformationObservers, response);
     const creds = new CredentialProviderPersist(persistor);
     await creds.generateFromStoredKeys(response.wrappedServerKey, keyIndex);
     await this.logonWithCredentials(creds);
