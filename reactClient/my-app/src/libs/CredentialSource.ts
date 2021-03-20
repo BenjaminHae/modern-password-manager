@@ -51,8 +51,16 @@ export default class CredentialSourceManager {
     if (setAutoLoginState) {
       this.autoLoginStateSetter(true);
     }
-    const info = await source.retrieveCredentials();
-    this.autoLoginStateSetter(false);
+    let info: ILogonInformation|null = null;
+    try {
+      info = await source.retrieveCredentials();
+    }
+    catch(e) {
+      this.debug(`${source.constructor.name} failed: ${e.message}`)
+    }
+    finally {
+      this.autoLoginStateSetter(false);
+    }
     return info;
   }
 
