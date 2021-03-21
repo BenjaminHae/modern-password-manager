@@ -1,5 +1,4 @@
 import React from 'react';
-import { IMessageOptions } from '../../libs/MessageManager';
 import styles from './UserSettings.module.css';
 import UserFieldConfiguration from '../UserFieldConfiguration/UserFieldConfiguration';
 import ChangePassword from '../ChangePassword/ChangePassword';
@@ -8,7 +7,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
-import { IUserSettingsProps, IUserFieldConfigurationProps, IChangePasswordProps , IWebAuthnProps } from '../commonProps';
+import { IUserSettingsProps } from '../commonProps';
 
 const UserSettings: React.FC<IUserSettingsProps> = (props: IUserSettingsProps) => {
   return (
