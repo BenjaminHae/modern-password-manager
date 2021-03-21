@@ -15,11 +15,9 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { BoxArrowUpLeft, CloudArrowUp, CloudArrowDown, List, Plus, PencilFill, ClockHistory, Sliders } from 'react-bootstrap-icons';
-import { PluginSystem } from '../../plugin/PluginSystem';
 import PluginMainView from '../../plugin/PluginMainView/PluginMainView';
-import ShortcutManager from '../../libs/ShortcutManager';
 import IdleTimer from 'react-idle-timer';
-import { IAuthenticatedProps, IUserSettingsProps, IHistoryProps, IExportCsvProps } from '../commonProps';
+import { IAuthenticatedProps } from '../commonProps';
 
 enum AuthenticatedView {
   List,
@@ -52,7 +50,7 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
     this.state = this.defaultViewState();
     this.props.pluginSystem.registerAuthenticatedUIHandler(this);
   }
-  componentDidUpdate(prevProps: IAuthenticatedProps) {
+  componentDidUpdate(prevProps: IAuthenticatedProps): void {
     if (this.props.logonInformation && prevProps.logonInformation !== this.props.logonInformation) {
       this.showLogonInformation(this.props.logonInformation);
     }

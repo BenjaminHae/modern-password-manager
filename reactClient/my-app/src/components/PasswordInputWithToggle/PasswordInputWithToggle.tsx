@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import styles from './PasswordInputWithToggle.module.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';

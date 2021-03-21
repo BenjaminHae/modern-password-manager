@@ -7,7 +7,6 @@ import { Plus, Trash } from 'react-bootstrap-icons';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWithToggle';
-import { IMessageOptions } from '../../libs/MessageManager';
 import { IWebAuthnProps } from '../commonProps';
 import Collapse from 'react-bootstrap/Collapse';
 import CloseButton from 'react-bootstrap/CloseButton';
