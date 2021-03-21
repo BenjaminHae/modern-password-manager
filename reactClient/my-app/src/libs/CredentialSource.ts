@@ -35,7 +35,7 @@ export default class CredentialSourceManager {
   constructor (private autoLoginStateSetter:(state:boolean) => void, private debug: (msg: string)=>void) {
   }
 
-  registerCredentialSource(source: ICredentialSource) {
+  registerCredentialSource(source: ICredentialSource): void {
     this.debug(`registering credential source ${source.constructor.name}`);
     this.sourcesList.push(source);
     this.sources[source.credentialReadinessSupported()].push(source);
