@@ -29,7 +29,7 @@ function subscriptionExecutor<T>(list: Array<Subscriber<T>>, params?:T) {
 }
 export class BackendService {
   private accountsObservers: Array<Subscriber<Array<Account>>> = [];
-  private loginObservers: Array<Subscriber<void>> = [];
+  private loginObservers: Array<Subscriber<CredentialService>> = [];
   private optionsObservers: Array<Subscriber<UserOptions>> = [];
   private logonInformationObservers: Array<Subscriber<ILogonInformation>> = [];
   public serverSettings: ServerSettings = {allowRegistration: true, passwordGenerator: "aaaaab"};
@@ -39,7 +39,7 @@ export class BackendService {
   private webAuthNChallenge?: ArrayBuffer;
 
   accountsObservable = new Observable<Array<Account>>(subscriptionCreator(this.accountsObservers));
-  loginObservable = new Observable<void>(subscriptionCreator(this.loginObservers));
+  loginObservable = new Observable<CredentialService>(subscriptionCreator(this.loginObservers));
   logonInformationObservable = new Observable<ILogonInformation>(subscriptionCreator(this.logonInformationObservers));
   optionsObservable = new Observable<UserOptions>(subscriptionCreator(this.optionsObservers));
 
@@ -153,7 +153,7 @@ export class BackendService {
 
   afterLogin(): Promise<void> {
     delete this.webAuthNChallenge;//require new challenge for later operations
-    subscriptionExecutor(this.loginObservers);
+    subscriptionExecutor<CredentialService>(this.loginObservers, this.credentials);
     return Promise.all([this.getUserOptions(), this.loadAccounts()])
       .then(()=>{return });
   }
