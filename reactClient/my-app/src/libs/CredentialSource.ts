@@ -30,12 +30,14 @@ export default class CredentialSourceManager {
       [CredentialReadiness.manual]: [],
       [CredentialReadiness.notAvailable]: []
   };
+  private sourcesList: Array<ICredentialSource> = [];
 
   constructor (private autoLoginStateSetter:(state:boolean) => void, private debug: (msg: string)=>void) {
   }
 
   registerCredentialSource(source: ICredentialSource) {
     this.debug(`registering credential source ${source.constructor.name}`);
+    this.sourcesList.push(source);
     this.sources[source.credentialReadinessSupported()].push(source);
   }
 
@@ -47,7 +49,7 @@ export default class CredentialSourceManager {
     return null;
   }
 
-  private async doLoginWithSource(source: ICredentialSource, setAutoLoginState = false): Promise<ILogonInformation|null> {
+  async doLoginWithSource(source: ICredentialSource, setAutoLoginState = false): Promise<ILogonInformation|null> {
     if (setAutoLoginState) {
       this.autoLoginStateSetter(true);
     }
