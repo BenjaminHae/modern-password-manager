@@ -55,6 +55,7 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
       this.showLogonInformation(this.props.logonInformation);
     }
   }
+  //TODO move to App
   showLogonInformation(info: ILogonInformation): void {
     const options: IMessageOptions = {};
     let message = "";
