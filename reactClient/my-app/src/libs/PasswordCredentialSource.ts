@@ -27,6 +27,18 @@ export default class PasswordCredentialSource implements ICredentialSource {
       this.debug(`username(${usernameAndPassword.username}) and password are present`);
       delete this.usernameAndPassword;
       return await this.backend.logon(usernameAndPassword.username, usernameAndPassword.password)
+          .catch((e) => {
+            let msg = e.toString();
+            if ("status" in e) {
+              if (e.status === 500) {
+                msg = "please reload page";
+              }
+              if (e.status === 401) {
+                msg = "invalid credentials";
+              }
+            }
+            throw new Error(msg);
+          });
     }
     this.debug(`username and password not present, waiting`);
     return new Promise<ILogonInformation>((resolve) => 
@@ -34,20 +46,18 @@ export default class PasswordCredentialSource implements ICredentialSource {
         this.debug(`username(${usernameAndPassword.username}) and password provided, doing logon`);
         this.backend.logon(usernameAndPassword.username, usernameAndPassword.password)
           .then((info) => { resolve(info) })
-      // TODO
-      //.catch((e) => {
-      //  let msg = e.toString();
-      //  if ("status" in e) {
-      //    if (e.status === 500) {
-      //      msg = "please reload page";
-      //    }
-      //    if (e.status === 401) {
-      //      msg = "invalid credentials";
-      //    }
-      //  }
-      //  this.messages.showMessage("Login failed, " + msg, { autoClose: false });
-      //  this.setState({ authenticated: false });
-      //});
+          .catch((e) => {
+            let msg = e.toString();
+            if ("status" in e) {
+              if (e.status === 500) {
+                msg = "please reload page";
+              }
+              if (e.status === 401) {
+                msg = "invalid credentials";
+              }
+            }
+            throw new Error(msg);
+          });
       }
     );
   }

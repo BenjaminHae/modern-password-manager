@@ -89,9 +89,8 @@ export default class WebAuthNCredentialSource implements ICredentialSource {
       else
         message = JSON.stringify(e, Object.getOwnPropertyNames(e));
       this.debug(`WebAuthn Login failed: ${message}`);
-      // TODO
       //this.messages.showMessage(`WebAuthn Login failed: ${message}`, {autoClose: false, variant: "danger" });
-      return null;
+      throw new Error(`WebAuthn Login failed: ${message}`);
     }
   }
 
