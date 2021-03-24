@@ -149,8 +149,9 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.plugins.getCredentialSources().forEach((cred: ICredentialSource) => {
       this.credentialSourceManager.registerCredentialSource(cred)
     });
-    // try auto login
-    this.credentialSourceManager.getCredentials(this.state.autoLogin) 
+    this.backendWaiter.then(() => {
+      this.credentialSourceManager.getCredentials(this.state.autoLogin);
+    });
 
     const message = URLParams.get("message")
     if (message) {
