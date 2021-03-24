@@ -66,12 +66,14 @@ export default class CredentialSourceManager {
     return info;
   }
 
-  async getCredentials(): Promise<ILogonInformation|null> {
-    const priorityList = [ 
-      CredentialReadiness.automated, 
-      CredentialReadiness.automatedWithInteraction, 
-      CredentialReadiness.manual 
-    ];
+  async getCredentials(autoLogin = true): Promise<ILogonInformation|null> {
+    let priorityList = [ CredentialReadiness.manual ]
+    if (autoLogin) {
+      priorityList = [ 
+        CredentialReadiness.automated, 
+        CredentialReadiness.automatedWithInteraction, 
+      ].concat(priorityList);
+    }
     for (const readiness of priorityList) {
       this.debug(`Getting ready credentials of group ${CredentialReadiness[readiness]}`);
       if (readiness in this.sources && this.sources[readiness].length > 0) {
@@ -79,7 +81,7 @@ export default class CredentialSourceManager {
         const firstReadySource = await this.firstReadyCredentialOfGroup(this.sources[readiness]);
         if (firstReadySource) {
           this.debug(`${firstReadySource.constructor.name} is ready`);
-          const info = this.doLoginWithSource(firstReadySource, readiness !== CredentialReadiness.manual);
+          const info = await this.doLoginWithSource(firstReadySource, readiness !== CredentialReadiness.manual);
           if (info) {
             this.debug(`successful got credential from ${firstReadySource.constructor.name}`);
             return info;
@@ -88,6 +90,7 @@ export default class CredentialSourceManager {
         }
       }
     }
+    this.debug(`did not find any sources that work`);
     return null;
   }
 

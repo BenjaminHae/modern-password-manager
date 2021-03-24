@@ -12,7 +12,6 @@ import { MaintenanceService, BackendOptions } from './backend/api/maintenance.se
 import { UserService, ILogonInformation } from './backend/api/user.service';
 import { AccountsService } from './backend/api/accounts.service';
 import { AccountTransformerService } from './backend/controller/account-transformer.service';
-import CredentialProviderPersist from './backend/controller/credentialProviderPersist';
 import { CredentialService } from './backend/credential.service';
 import { CryptoService } from './backend/crypto.service';
 import { Account } from './backend/models/account';
@@ -22,10 +21,8 @@ import { MaintenanceApi as OpenAPIMaintenanceService } from '@pm-server/pm-serve
 import { UserApi as OpenAPIUserService } from '@pm-server/pm-server-react-client';
 import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-react-client';
 import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
-import WebAuthn from './libs/WebAuthn';
 import ShortcutManager from './libs/ShortcutManager';
 import MessageManager, { IMessageOptions, IMessage } from './libs/MessageManager';
-import PersistDecryptionKey from './libs/PersistDecryptionKey';
 import { HistoryItem, UserWebAuthnCred } from '@pm-server/pm-server-react-client';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -35,6 +32,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { BoxArrowLeft } from 'react-bootstrap-icons';
 import CredentialSourceManager, { ICredentialSource } from './libs/CredentialSource';
 import WebAuthNCredentialSource from './libs/WebAuthnCredentialSource';
+import PasswordCredentialSource from './libs/PasswordCredentialSource';
 
 interface AppState {
   ready: boolean;
@@ -68,6 +66,7 @@ export default class App extends React.Component<Record<string, never>, AppState
   private csrfMiddleware: CSRFMiddleware;
   private credentialSourceManager: CredentialSourceManager;
   private webAuthnCredentialSource: WebAuthNCredentialSource;
+  private passwordCredentialSource: PasswordCredentialSource;
 
   constructor (props: Record<string, never>) {
     super(props);
@@ -119,10 +118,10 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.backend.loginObservable
       .subscribe((credential: CredentialService)=>{
           this.handleLoginSuccess("", credential);
-          this.setState({authenticated : true});
           });
     this.backend.logonInformationObservable
       .subscribe((info: ILogonInformation)=>{
+          this.messages.clearMessages();
           this.setState({ logonInformation: info });
           });
     this.backend.accountsObservable
@@ -143,7 +142,9 @@ export default class App extends React.Component<Record<string, never>, AppState
         (msg: string) => this.debug("CredentialSourceManager: " + msg)
       );
     this.webAuthnCredentialSource = new WebAuthNCredentialSource(this.backend, this.backendWaiter, (value:string) => this.debug("WebAuthN: " + value));
+    this.passwordCredentialSource = new PasswordCredentialSource(this.backend, (value:string) => this.debug("PasswordCredential: " + value));
     this.credentialSourceManager.registerCredentialSource(this.webAuthnCredentialSource);
+    this.credentialSourceManager.registerCredentialSource(this.passwordCredentialSource);
     this.plugins.getCredentialSources().forEach((cred: ICredentialSource) => {
       this.credentialSourceManager.registerCredentialSource(cred)
     });
@@ -162,9 +163,7 @@ export default class App extends React.Component<Record<string, never>, AppState
           this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed, idleTimeout: backendOptions.idleTimeout});
           this.plugins.loginViewReady();
           // try auto login
-          if (this.state.autoLogin) {
-            this.credentialSourceManager.getCredentials() 
-          }
+          this.credentialSourceManager.getCredentials(this.state.autoLogin) 
         });
     this.getWebAuthnCredsAvailable();
     this.plugins.setFilterChangeHandler(this.filterChangeHandler.bind(this));
@@ -176,32 +175,12 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.shortcuts.addShortcut({ shortcut: "?", action: showShortcuts, description: "Show Shortcuts", component: this} );
     this.shortcuts.addShortcut({ shortcut: "q", action: () => { this.doLogout() }, description: "Logout", component: this} );
   }
-  doLogin(username:string, password: string): Promise<void> {
-    this.messages.clearMessages();
-    if (!this.state.ready) {
-      this.messages.showMessage("backend is not ready yet. Please try again in a second.");
-      return Promise.resolve();
-    }
-    return this.backend.logon(username, password)
-      .then( () => {
-        return;
-      })
-      .catch((e) => {
-        let msg = e.toString();
-        if ("status" in e) {
-          if (e.status === 500) {
-            msg = "please reload page";
-          }
-          if (e.status === 401) {
-            msg = "invalid credentials";
-          }
-        }
-        this.messages.showMessage("Login failed, " + msg, { autoClose: false });
-        this.setState({ authenticated: false });
-      });
+  doLogin(username:string, password: string): void {
+    this.passwordCredentialSource.provideUsernameAndPassword(username, password);
   }
 
   handleLoginSuccess(username: string, credential: CredentialService): void {
+    this.setState({authenticated : true});
     this.plugins.loginSuccessful(username, credential.getKey());
   } 
 
