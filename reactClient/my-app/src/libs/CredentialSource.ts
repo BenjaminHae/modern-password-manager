@@ -32,10 +32,10 @@ export default class CredentialSourceManager {
   };
   private sourcesList: Array<ICredentialSource> = [];
 
-  constructor (private autoLoginStateSetter:(state:boolean) => void, private debug: (msg: string)=>void) {
+  constructor (private autoLoginStateSetter:(state:boolean) => void, private debug: (msg: string)=>void, private showMessage: (msg:string)=>void) {
   }
 
-  registerCredentialSource(source: ICredentialSource) {
+  registerCredentialSource(source: ICredentialSource): void {
     this.debug(`registering credential source ${source.constructor.name}`);
     this.sourcesList.push(source);
     this.sources[source.credentialReadinessSupported()].push(source);
@@ -66,12 +66,14 @@ export default class CredentialSourceManager {
     return info;
   }
 
-  async getCredentials(): Promise<ILogonInformation|null> {
-    const priorityList = [ 
-      CredentialReadiness.automated, 
-      CredentialReadiness.automatedWithInteraction, 
-      CredentialReadiness.manual 
-    ];
+  async getCredentials(autoLogin = true): Promise<ILogonInformation|null> {
+    let priorityList = [ CredentialReadiness.manual ]
+    if (autoLogin) {
+      priorityList = [ 
+        CredentialReadiness.automated, 
+        CredentialReadiness.automatedWithInteraction, 
+      ].concat(priorityList);
+    }
     for (const readiness of priorityList) {
       this.debug(`Getting ready credentials of group ${CredentialReadiness[readiness]}`);
       if (readiness in this.sources && this.sources[readiness].length > 0) {
@@ -79,15 +81,22 @@ export default class CredentialSourceManager {
         const firstReadySource = await this.firstReadyCredentialOfGroup(this.sources[readiness]);
         if (firstReadySource) {
           this.debug(`${firstReadySource.constructor.name} is ready`);
-          const info = this.doLoginWithSource(firstReadySource, readiness !== CredentialReadiness.manual);
-          if (info) {
-            this.debug(`successful got credential from ${firstReadySource.constructor.name}`);
-            return info;
+          try {
+            const info = await this.doLoginWithSource(firstReadySource, readiness !== CredentialReadiness.manual);
+            if (info) {
+              this.debug(`successful got credential from ${firstReadySource.constructor.name}`);
+              return info;
+            }
+            this.debug(`${firstReadySource.constructor.name} failed`);
           }
-          this.debug(`${firstReadySource.constructor.name} failed`);
+          catch(e) {
+            this.debug(`${firstReadySource.constructor.name} failed with error: ${e.message}`);
+            this.showMessage(`Login failed: ${e.message}`);
+          }
         }
       }
     }
+    this.debug(`did not find any sources that work`);
     return null;
   }
 

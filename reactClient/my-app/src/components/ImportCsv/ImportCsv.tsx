@@ -4,7 +4,6 @@ import DataTable from 'react-data-table-component';
 import { IDataTableColumn } from 'react-data-table-component';
 import { CsvParser } from './csv/csvParser';
 import { CsvConverter } from './csv/csvConverter';
-import { IMessageOptions } from '../../libs/MessageManager';
 import { ImportCsvProps } from '../commonProps';
 import CsvFieldMappingSelect from './CsvFieldMappingSelect/CsvFieldMappingSelect';
 import Button from 'react-bootstrap/Button';

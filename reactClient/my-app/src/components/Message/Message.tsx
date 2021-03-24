@@ -3,7 +3,7 @@ import styles from './Message.module.css';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
-import { IMessageOptions, IMessageButton, IMessage } from '../../libs/MessageManager';
+import { IMessage } from '../../libs/MessageManager';
 
 export interface IMessageProps {
   messages: Array<IMessage>;
