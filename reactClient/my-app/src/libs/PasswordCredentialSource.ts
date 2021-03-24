@@ -37,11 +37,11 @@ export default class PasswordCredentialSource implements ICredentialSource {
                 msg = "invalid credentials";
               }
             }
-            throw new Error(msg);
+            return Promise.reject(new Error(msg));
           });
     }
     this.debug(`username and password not present, waiting`);
-    return new Promise<ILogonInformation>((resolve) => 
+    return new Promise<ILogonInformation>((resolve, reject) => 
       this.usernameAndPasswordWaiter = (usernameAndPassword: IUsernameAndPassword) => {
         this.debug(`username(${usernameAndPassword.username}) and password provided, doing logon`);
         this.backend.logon(usernameAndPassword.username, usernameAndPassword.password)
@@ -56,7 +56,7 @@ export default class PasswordCredentialSource implements ICredentialSource {
                 msg = "invalid credentials";
               }
             }
-            throw new Error(msg);
+            reject(new Error(msg));
           });
       }
     );
