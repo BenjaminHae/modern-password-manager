@@ -59,6 +59,7 @@ export default class CredentialSourceManager {
     }
     catch(e) {
       this.debug(`${source.constructor.name} failed: ${e.message}`)
+      this.showMessage(`Login failed: ${e.message}`);
     }
     finally {
       this.autoLoginStateSetter(false);
@@ -81,18 +82,12 @@ export default class CredentialSourceManager {
         const firstReadySource = await this.firstReadyCredentialOfGroup(this.sources[readiness]);
         if (firstReadySource) {
           this.debug(`${firstReadySource.constructor.name} is ready`);
-          try {
-            const info = await this.doLoginWithSource(firstReadySource, readiness !== CredentialReadiness.manual);
-            if (info) {
-              this.debug(`successful got credential from ${firstReadySource.constructor.name}`);
-              return info;
-            }
-            this.debug(`${firstReadySource.constructor.name} failed`);
+          const info = await this.doLoginWithSource(firstReadySource, readiness !== CredentialReadiness.manual);
+          if (info) {
+            this.debug(`successful got credential from ${firstReadySource.constructor.name}`);
+            return info;
           }
-          catch(e) {
-            this.debug(`${firstReadySource.constructor.name} failed with error: ${e.message}`);
-            this.showMessage(`Login failed: ${e.message}`);
-          }
+          this.debug(`${firstReadySource.constructor.name} failed`);
         }
       }
     }
