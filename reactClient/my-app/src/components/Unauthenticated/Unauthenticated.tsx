@@ -11,7 +11,7 @@ import Col from 'react-bootstrap/Col';
 import Spinner from 'react-bootstrap/Spinner';
 
 interface UnauthenticatedProps {
-  doLogin: (username: string, password: string) => void;
+  doLogin: (username: string, password: string) => Promise<void>;
   doRegister: (username: string, password: string, email: string) => Promise<void>;
   showMessage: (message: string, options?: IMessageOptions) => void;
   showRegistration: boolean;
