@@ -40,6 +40,9 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
         { resolve(value); });
     });
   }
+  autoRetryAllowed(): boolean {
+    return false;
+  }
   
   credentialReadinessSupported(): CredentialReadiness {
     return CredentialReadiness.automated;

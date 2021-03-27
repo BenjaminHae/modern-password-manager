@@ -8,8 +8,9 @@ export enum CredentialReadiness {
 }
 
 export interface ICredentialSource {
-  credentialsReady: () => Promise<boolean>;
   credentialReadinessSupported: () => CredentialReadiness;
+  autoRetryAllowed: () => boolean;
+  credentialsReady: () => Promise<boolean>;
   retrieveCredentials: () => Promise<ILogonInformation|null>;
 }
 
@@ -41,13 +42,6 @@ export default class CredentialSourceManager {
     this.sources[source.credentialReadinessSupported()].push(source);
   }
 
-  private async firstReadyCredentialOfGroup(group: Array<ICredentialSource>): Promise<ICredentialSource|null> {
-    for (const source of group) {
-      if (await source.credentialsReady())
-        return source;
-    }
-    return null;
-  }
 
   async doLoginWithSource(source: ICredentialSource, setAutoLoginState = false): Promise<ILogonInformation|null> {
     if (setAutoLoginState) {
@@ -67,29 +61,64 @@ export default class CredentialSourceManager {
     return info;
   }
 
+  async performCredentialsSimultaneously(sources: Array<ICredentialSource>): Promise<ILogonInformation|null> {
+    // chain for retrieving credentials and retrying
+    const retrieveCredentialsMultipleTimes = async (source: ICredentialSource): Promise<ILogonInformation|null> => {
+      const result = await this.doLoginWithSource(source, false);
+      if (result !== null) {
+        this.debug(`${source.constructor.name} has credentials`);
+        return result;
+      }
+      this.debug(`${source.constructor.name} has no credentials`);
+      if (source.autoRetryAllowed()) {
+        this.debug(`retrying for ${source.constructor.name}`);
+        return await retrieveCredentialsMultipleTimes(source);
+      }
+      this.debug(`${source.constructor.name} failed`);
+      return Promise.reject();
+    };
+    // check which credentialssources are ready and execute chain
+    const promises = sources.map((source: ICredentialSource): Promise<ILogonInformation|null> => { 
+      this.debug(`checking readiness of ${source.constructor.name}`);
+      return source.credentialsReady()
+      .then((ready: boolean): Promise<ILogonInformation|null> => {
+        if (!ready) {
+          this.debug(`${source.constructor.name} is not ready`);
+          return Promise.reject();
+        }
+          this.debug(`${source.constructor.name} is ready`);
+        return retrieveCredentialsMultipleTimes(source);
+      })
+    });
+    return Promise.any<ILogonInformation|null>(promises);
+  }
+
   async getCredentials(autoLogin = true): Promise<ILogonInformation|null> {
-    let priorityList = [ CredentialReadiness.manual ]
     if (autoLogin) {
-      priorityList = [ 
+      const priorityList = [ 
         CredentialReadiness.automated, 
         CredentialReadiness.automatedWithInteraction, 
-      ].concat(priorityList);
-    }
-    for (const readiness of priorityList) {
-      this.debug(`Getting ready credentials of group ${CredentialReadiness[readiness]}`);
-      if (readiness in this.sources && this.sources[readiness].length > 0) {
-        // todo: this is not very clever as it skips the "second" ready credential of a group
-        const firstReadySource = await this.firstReadyCredentialOfGroup(this.sources[readiness]);
-        if (firstReadySource) {
-          this.debug(`${firstReadySource.constructor.name} is ready`);
-          const info = await this.doLoginWithSource(firstReadySource, readiness !== CredentialReadiness.manual);
-          if (info) {
-            this.debug(`successful got credential from ${firstReadySource.constructor.name}`);
-            return info;
+      ]
+      for (const readiness of priorityList) {
+        this.debug(`Getting ready credentials of group ${CredentialReadiness[readiness]}`);
+        if (readiness in this.sources && this.sources[readiness].length > 0) {
+          for (const source of this.sources[readiness]) {
+            if (await source.credentialsReady()) {
+              this.debug(`${source.constructor.name} is ready`);
+              const info = await this.doLoginWithSource(source, readiness !== CredentialReadiness.manual);
+              if (info) {
+                this.debug(`successful got credential from ${source.constructor.name}`);
+                return info;
+              }
+              this.debug(`${source.constructor.name} failed`);
+            }
           }
-          this.debug(`${firstReadySource.constructor.name} failed`);
         }
       }
+    }
+    if (CredentialReadiness.manual in this.sources && this.sources[CredentialReadiness.manual].length > 0) {
+      this.debug(`trying all manual sources at the same time`);
+      return this.performCredentialsSimultaneously(this.sources[CredentialReadiness.manual]);
     }
     this.debug(`did not find any sources that work`);
     return null;

@@ -18,6 +18,9 @@ export default class PasswordCredentialSource implements ICredentialSource {
   credentialReadinessSupported(): CredentialReadiness {
     return CredentialReadiness.manual;
   }
+  autoRetryAllowed(): boolean {
+    return true;
+  }
   callWaitForLoginFinished(): void {
     if (this.waitForLoginFinished) {
       this.waitForLoginFinished();
