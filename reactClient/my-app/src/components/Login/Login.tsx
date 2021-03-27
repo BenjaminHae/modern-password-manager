@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import PasswordInputWithToggle from '../PasswordInputWithToggle/PasswordInputWithToggle';
 
 interface LoginProps {
-  doLogin: (username: string, password: string) => void;
+  doLogin: (username: string, password: string) => Promise<void>;
   ready: boolean;
 }
 interface LoginFormValues {

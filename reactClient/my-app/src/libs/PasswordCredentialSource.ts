@@ -10,11 +10,22 @@ interface IUsernameAndPassword {
 export default class PasswordCredentialSource implements ICredentialSource {
   private usernameAndPassword?: IUsernameAndPassword;
   private usernameAndPasswordWaiter?: (creds: IUsernameAndPassword) => void;
+  private waitForLoginFinished?: () => void;
+
   constructor (private backend: BackendService, private debug: (value: string) => void) {
   }
 
   credentialReadinessSupported(): CredentialReadiness {
     return CredentialReadiness.manual;
+  }
+  autoRetryAllowed(): boolean {
+    return true;
+  }
+  callWaitForLoginFinished(): void {
+    if (this.waitForLoginFinished) {
+      this.waitForLoginFinished();
+      delete this.waitForLoginFinished;
+    }
   }
   async credentialsReady(): Promise<boolean> {
     this.debug(`return credentialsReady: true`);
@@ -27,7 +38,12 @@ export default class PasswordCredentialSource implements ICredentialSource {
       this.debug(`username(${usernameAndPassword.username}) and password are present`);
       delete this.usernameAndPassword;
       return await this.backend.logon(usernameAndPassword.username, usernameAndPassword.password)
+          .then((info: ILogonInformation) => {
+            this.callWaitForLoginFinished();
+            return info;
+          })
           .catch((e) => {
+            this.callWaitForLoginFinished();
             let msg = e.toString();
             if ("status" in e) {
               if (e.status === 500) {
@@ -45,8 +61,13 @@ export default class PasswordCredentialSource implements ICredentialSource {
       this.usernameAndPasswordWaiter = (usernameAndPassword: IUsernameAndPassword) => {
         this.debug(`username(${usernameAndPassword.username}) and password provided, doing logon`);
         this.backend.logon(usernameAndPassword.username, usernameAndPassword.password)
-          .then((info) => { resolve(info) })
+          .then((info) => { 
+            resolve(info); 
+            this.callWaitForLoginFinished();
+            return info;
+          })
           .catch((e) => {
+            this.callWaitForLoginFinished();
             let msg = e.toString();
             if ("status" in e) {
               if (e.status === 500) {
@@ -62,11 +83,14 @@ export default class PasswordCredentialSource implements ICredentialSource {
     );
   }
 
-  provideUsernameAndPassword(username: string, password: string): void {
-    if (this.usernameAndPasswordWaiter) {
-      this.usernameAndPasswordWaiter( { username: username, password: password });
-      delete this.usernameAndPasswordWaiter;
-    }
-    this.usernameAndPassword = { username: username, password: password };
+  async provideUsernameAndPassword(username: string, password: string): Promise<void> {
+    return new Promise((resolve) => {
+      this.waitForLoginFinished = () => resolve();
+      if (this.usernameAndPasswordWaiter) {
+        this.usernameAndPasswordWaiter( { username: username, password: password });
+        delete this.usernameAndPasswordWaiter;
+      }
+      this.usernameAndPassword = { username: username, password: password };
+    });
   }
 }

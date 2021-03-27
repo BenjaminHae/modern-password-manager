@@ -24,6 +24,9 @@ export default class WebAuthNCredentialSource implements ICredentialSource {
   credentialReadinessSupported(): CredentialReadiness {
     return CredentialReadiness.automatedWithInteraction;
   }
+  autoRetryAllowed(): boolean {
+    return false;
+  }
   async credentialsReady(): Promise<boolean> {
     this.debug("checking if WebAuthN credentials are present");
     const persistor = this.getPersistor();

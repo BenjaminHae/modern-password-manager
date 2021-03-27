@@ -178,8 +178,8 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.shortcuts.addShortcut({ shortcut: "?", action: showShortcuts, description: "Show Shortcuts", component: this} );
     this.shortcuts.addShortcut({ shortcut: "q", action: () => { this.doLogout() }, description: "Logout", component: this} );
   }
-  doLogin(username:string, password: string): void {
-    this.passwordCredentialSource.provideUsernameAndPassword(username, password);
+  async doLogin(username:string, password: string): Promise<void> {
+    await this.passwordCredentialSource.provideUsernameAndPassword(username, password);
   }
 
   handleLoginSuccess(username: string, credential: CredentialService): void {
