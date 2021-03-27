@@ -69,7 +69,6 @@ export enum AuthenticatedView {
 export interface IAuthenticatedProps extends IUserSettingsProps, IHistoryProps, IExportCsvProps {
   view: AuthenticatedView,
   accounts: Array<Account>,
-  logonInformation?: ILogonInformation,
 
   changeView: (view: AuthenticatedView) => void,
   editAccountHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>,

@@ -39,31 +39,8 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
     super(props);
     this.state = this.defaultViewState();
     this.props.pluginSystem.registerAuthenticatedUIHandler(this);
-    if (this.props.logonInformation) {
-      this.showLogonInformation(this.props.logonInformation);
-    }
-  }
-  componentDidUpdate(prevProps: IAuthenticatedProps): void {
-    if (this.props.logonInformation && prevProps.logonInformation !== this.props.logonInformation) {
-      this.showLogonInformation(this.props.logonInformation);
-    }
   }
   // this has to stay here because of the button for changing the view :(
-  showLogonInformation(info: ILogonInformation): void {
-    const options: IMessageOptions = {};
-    let message = "";
-    if (info.lastLogin) {
-      message += `Your last login was on ${info.lastLogin.toLocaleString(navigator.language)}. `;
-      options.variant = "info";
-    }
-    if (info.failedLogins && info.failedLogins > 0) {
-      message += `There were ${info.failedLogins} failed logins.`
-        options.autoClose = false;
-      options.variant = "danger";
-      options.button = { variant: "info",  text: "More Information", handler: () => { this.selectView(AuthenticatedView.History) } };
-    }
-    this.props.showMessage(message, options);
-  }
   defaultViewState(): AuthenticatedState {
     return {
       selectedAccount: undefined,
