@@ -56,10 +56,22 @@ export interface IHistoryProps {
   loadHistoryHandler: () => Promise<void>;
 }
 
+export enum AuthenticatedView {
+  List,
+  Edit,
+  Add,
+  Import,
+  Export,
+  Options,
+  History
+}
+
 export interface IAuthenticatedProps extends IUserSettingsProps, IHistoryProps, IExportCsvProps {
+  view: AuthenticatedView,
   accounts: Array<Account>,
   logonInformation?: ILogonInformation,
 
+  changeView: (view: AuthenticatedView) => void,
   editAccountHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>,
   bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>,
   deleteAccountHandler: (account: Account) => Promise<void>,

@@ -17,19 +17,9 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { BoxArrowUpLeft, CloudArrowUp, CloudArrowDown, List, Plus, PencilFill, ClockHistory, Sliders } from 'react-bootstrap-icons';
 import PluginMainView from '../../plugin/PluginMainView/PluginMainView';
 import IdleTimer from 'react-idle-timer';
-import { IAuthenticatedProps } from '../commonProps';
+import { IAuthenticatedProps, AuthenticatedView } from '../commonProps';
 
-enum AuthenticatedView {
-  List,
-  Edit,
-  Add,
-  Import,
-  Export,
-  Options,
-  History
-}
 interface AuthenticatedState {
-  view: AuthenticatedView;
   selectedAccount?: Account;
   selectedIndex: number;
   addAccountProposals?: {[index: string]:string};
@@ -49,6 +39,9 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
     super(props);
     this.state = this.defaultViewState();
     this.props.pluginSystem.registerAuthenticatedUIHandler(this);
+    if (this.props.logonInformation) {
+      this.showLogonInformation(this.props.logonInformation);
+    }
   }
   componentDidUpdate(prevProps: IAuthenticatedProps): void {
     if (this.props.logonInformation && prevProps.logonInformation !== this.props.logonInformation) {
@@ -73,7 +66,6 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
   }
   defaultViewState(): AuthenticatedState {
     return {
-      view: AuthenticatedView.List,
       selectedAccount: undefined,
       selectedIndex: 0
     }
@@ -82,14 +74,15 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
     this.setState({selectedIndex: index});
   }
   selectView(view: AuthenticatedView): void {
-    this.setState({view: view});
+    this.props.changeView(view);
   }
   editAccountSelect(account: Account): void {
-    this.setState({view: AuthenticatedView.Edit, selectedAccount: account});
+    this.props.changeView(AuthenticatedView.Edit);
+    this.setState({selectedAccount: account});
   }
   addAccountSelect(proposals?: {[index: string]:string}): void {
+    this.props.changeView(AuthenticatedView.Add);
     this.setState({
-        view: AuthenticatedView.Add, 
         addAccountProposals: proposals,
         selectedAccount: undefined
       });
@@ -111,10 +104,10 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
   renderSelectors(): JSX.Element {
     const buttons = this.viewButtons.filter((viewButton)=>viewButton.selectable).map((viewButton)=>{
       return (
-        <Dropdown.Item key={viewButton.view} onSelect={()=>{this.selectView(viewButton.view)}} active={this.state.view === viewButton.view }>{viewButton.icon && viewButton.icon } {viewButton.name}</Dropdown.Item>
+        <Dropdown.Item key={viewButton.view} onSelect={()=>{this.selectView(viewButton.view)}} active={this.props.view === viewButton.view }>{viewButton.icon && viewButton.icon } {viewButton.name}</Dropdown.Item>
       )
     });
-    const currentButton = this.viewButtons.filter((viewButton)=>viewButton.view === this.state.view)[0];
+    const currentButton = this.viewButtons.filter((viewButton)=>viewButton.view === this.props.view)[0];
     const currentTitle = (
       <>{currentButton.icon && currentButton.icon } {currentButton.name}</>
     )
@@ -123,12 +116,12 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
         <DropdownButton title={currentTitle} id="dropdownView" variant="secondary">
           {buttons}
         </DropdownButton>
-        {this.state.view !== AuthenticatedView.List && <Button variant="info" onClick={()=>this.selectView(AuthenticatedView.List)} ><BoxArrowUpLeft/></Button> }
+        {this.props.view !== AuthenticatedView.List && <Button variant="info" onClick={()=>this.selectView(AuthenticatedView.List)} ><BoxArrowUpLeft/></Button> }
       </Dropdown>
     )
   }
   renderSwitchAuthenticatedView(): JSX.Element {
-    switch(this.state.view) {
+    switch(this.props.view) {
       case AuthenticatedView.List:
         return (
           <>

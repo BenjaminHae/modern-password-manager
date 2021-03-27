@@ -33,6 +33,7 @@ import { BoxArrowLeft } from 'react-bootstrap-icons';
 import CredentialSourceManager, { ICredentialSource } from './libs/CredentialSource';
 import WebAuthNCredentialSource from './libs/WebAuthnCredentialSource';
 import PasswordCredentialSource from './libs/PasswordCredentialSource';
+import { AuthenticatedView } from './components/commonProps';
 
 interface AppState {
   ready: boolean;
@@ -52,6 +53,7 @@ interface AppState {
   idleTimeout: number;
   logonInformation?: ILogonInformation;
   doingAutoLogin: boolean;
+  view: AuthenticatedView;
 }
 
 export default class App extends React.Component<Record<string, never>, AppState> {
@@ -86,7 +88,8 @@ export default class App extends React.Component<Record<string, never>, AppState
       debugCount: -5,
       showShortcutOverview: false,
       idleTimeout: 3 * 60 * 1000,
-      doingAutoLogin: false
+      doingAutoLogin: false,
+      view: AuthenticatedView.List
     }
 
     window.addEventListener('error', (event) => {this.debug(event.message);});
@@ -343,6 +346,8 @@ export default class App extends React.Component<Record<string, never>, AppState
         />
         {this.state.authenticated &&
          <Authenticated 
+            view = { this.state.view }
+            changeView = { (view) => { this.setState({ view: view }) }}
             accounts = { this.filterAccounts(this.state.accounts) } 
             logonInformation = { this.state.logonInformation }
             historyItems = { this.state.historyItems } 
