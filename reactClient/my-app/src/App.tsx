@@ -33,6 +33,7 @@ import { BoxArrowLeft } from 'react-bootstrap-icons';
 import CredentialSourceManager, { ICredentialSource } from './libs/CredentialSource';
 import WebAuthNCredentialSource from './libs/WebAuthnCredentialSource';
 import PasswordCredentialSource from './libs/PasswordCredentialSource';
+import { AuthenticatedView } from './components/commonProps';
 
 interface AppState {
   ready: boolean;
@@ -50,8 +51,8 @@ interface AppState {
   debugCount: number;
   showShortcutOverview: boolean;
   idleTimeout: number;
-  logonInformation?: ILogonInformation;
   doingAutoLogin: boolean;
+  view: AuthenticatedView;
 }
 
 export default class App extends React.Component<Record<string, never>, AppState> {
@@ -86,7 +87,8 @@ export default class App extends React.Component<Record<string, never>, AppState
       debugCount: -5,
       showShortcutOverview: false,
       idleTimeout: 3 * 60 * 1000,
-      doingAutoLogin: false
+      doingAutoLogin: false,
+      view: AuthenticatedView.List
     }
 
     window.addEventListener('error', (event) => {this.debug(event.message);});
@@ -122,7 +124,7 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.backend.logonInformationObservable
       .subscribe((info: ILogonInformation)=>{
           this.messages.clearMessages();
-          this.setState({ logonInformation: info });
+          this.showLogonInformation(info);
           });
     this.backend.accountsObservable
       .subscribe((accounts: Array<Account>)=>{
@@ -186,6 +188,26 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.setState({authenticated : true});
     this.plugins.loginSuccessful(username, credential.getKey());
   } 
+
+  showLogonInformation(info: ILogonInformation): void {
+    const options: IMessageOptions = {};
+    let message = "";
+    if (info.lastLogin) {
+      message += `Your last login was on ${info.lastLogin.toLocaleString(navigator.language)}. `;
+      options.variant = "info";
+    }
+    if (info.failedLogins && info.failedLogins > 0) {
+      message += `There were ${info.failedLogins} failed logins.`
+        options.autoClose = false;
+      options.variant = "danger";
+      options.button = { variant: "info",  text: "More Information", handler: () => { this.selectView(AuthenticatedView.History) } };
+    }
+    this.showMessage(message, options);
+  }
+
+  selectView(view: AuthenticatedView) {
+    this.setState({ view: view });
+  }
 
   async doRegister(username: string, password: string, email: string): Promise<void> {
     this.messages.clearMessages();
@@ -343,8 +365,9 @@ export default class App extends React.Component<Record<string, never>, AppState
         />
         {this.state.authenticated &&
          <Authenticated 
+            view = { this.state.view }
+            changeView = { (view) => this.selectView(view) }
             accounts = { this.filterAccounts(this.state.accounts) } 
-            logonInformation = { this.state.logonInformation }
             historyItems = { this.state.historyItems } 
             userOptions = { this.state.userOptions }
 
