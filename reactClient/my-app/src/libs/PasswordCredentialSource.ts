@@ -23,8 +23,16 @@ export default class PasswordCredentialSource implements ICredentialSource {
   }
   callWaitForLoginFinished(): void {
     if (this.waitForLoginFinished) {
-      this.waitForLoginFinished();
+      const wFLF = this.waitForLoginFinished;
       delete this.waitForLoginFinished;
+      wFLF();
+    }
+  }
+  callUsernameAndPasswordWaiter(creds: IUsernameAndPassword): void {
+    if (this.usernameAndPasswordWaiter) {
+      const uAPW = this.usernameAndPasswordWaiter;
+      delete this.usernameAndPasswordWaiter;
+      uAPW(creds);
     }
   }
   async credentialsReady(): Promise<boolean> {
@@ -60,6 +68,7 @@ export default class PasswordCredentialSource implements ICredentialSource {
     return new Promise<ILogonInformation>((resolve, reject) => 
       this.usernameAndPasswordWaiter = (usernameAndPassword: IUsernameAndPassword) => {
         this.debug(`username(${usernameAndPassword.username}) and password provided, doing logon`);
+        delete this.usernameAndPassword;
         this.backend.logon(usernameAndPassword.username, usernameAndPassword.password)
           .then((info) => { 
             resolve(info); 
@@ -86,11 +95,8 @@ export default class PasswordCredentialSource implements ICredentialSource {
   async provideUsernameAndPassword(username: string, password: string): Promise<void> {
     return new Promise((resolve) => {
       this.waitForLoginFinished = () => resolve();
-      if (this.usernameAndPasswordWaiter) {
-        this.usernameAndPasswordWaiter( { username: username, password: password });
-        delete this.usernameAndPasswordWaiter;
-      }
       this.usernameAndPassword = { username: username, password: password };
+      this.callUsernameAndPasswordWaiter({ username: username, password: password });
     });
   }
 }
