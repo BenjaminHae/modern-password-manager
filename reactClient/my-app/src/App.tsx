@@ -151,9 +151,6 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.plugins.getCredentialSources().forEach((cred: ICredentialSource) => {
       this.credentialSourceManager.registerCredentialSource(cred)
     });
-    this.backendWaiter.then(() => {
-      this.credentialSourceManager.getCredentials(this.state.autoLogin);
-    });
 
     const message = URLParams.get("message")
     if (message) {
@@ -168,6 +165,7 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.backendWaiter
       .then((backendOptions: BackendOptions) => {
           this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed, idleTimeout: backendOptions.idleTimeout});
+          this.credentialSourceManager.getCredentials(this.state.autoLogin);
           this.plugins.loginViewReady();
         });
     this.getWebAuthnCredsAvailable();
