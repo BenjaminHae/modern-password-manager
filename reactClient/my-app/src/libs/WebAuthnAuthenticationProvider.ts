@@ -1,4 +1,4 @@
-import { ICredentialSource, CredentialReadiness } from './CredentialSource';
+import { IAuthenticationProvider, AuthenticatorReadiness } from './AuthenticationProvider';
 import PersistDecryptionKey from './PersistDecryptionKey';
 import CredentialProviderPersist from '../backend/controller/credentialProviderPersist';
 import { BackendService } from '../backend/backend.service';
@@ -7,7 +7,7 @@ import { ILogonInformation } from '../backend/api/user.service';
 import { UserWebAuthnCred } from '@pm-server/pm-server-react-client';
 import WebAuthn from './WebAuthn';
 
-export default class WebAuthNCredentialSource implements ICredentialSource {
+export default class WebAuthNAuthenticationProvider implements IAuthenticationProvider {
   private credIds?: Array<ArrayBuffer>; 
   private persistor?: PersistDecryptionKey;
   
@@ -21,13 +21,13 @@ export default class WebAuthNCredentialSource implements ICredentialSource {
     return this.persistor;
   }
 
-  credentialReadinessSupported(): CredentialReadiness {
-    return CredentialReadiness.automatedWithInteraction;
+  authenticatorReadinessSupported(): AuthenticatorReadiness {
+    return AuthenticatorReadiness.automatedWithInteraction;
   }
   autoRetryAllowed(): boolean {
     return false;
   }
-  async credentialsReady(): Promise<boolean> {
+  async authenticatorReady(): Promise<boolean> {
     this.debug("checking if WebAuthN credentials are present");
     const persistor = this.getPersistor();
     this.credIds = await persistor.getCredentialIds();
@@ -36,7 +36,7 @@ export default class WebAuthNCredentialSource implements ICredentialSource {
     return credsAvailable;
   }
 
-  async retrieveCredentials(): Promise<ILogonInformation|null> {
+  async performAuthentication(): Promise<ILogonInformation|null> {
     this.debug(`Trying to do webAuthn get`);
     let credentials: PublicKeyCredential;
     try {

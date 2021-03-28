@@ -6,14 +6,14 @@ import { BasePlugin, IPluginRequiresDebugging } from '../BasePlugin';
 import { PluginSystem } from '../PluginSystem';
 import { Account } from '../../backend/models/account';
 import { ICredentialProvider } from '../../backend/controller/credentialProvider';
-import { ICredentialSource, CredentialReadiness } from '../../libs/CredentialSource';
+import { IAuthenticationProvider, AuthenticatorReadiness } from '../../libs/AuthenticationProvider';
 import { ILogonInformation } from '../../backend/api/user.service';
 
 declare global {
   interface Window { browserExtensionPlugin: BrowserExtensionPlugin; }
 }
 
-class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource, IPluginRequiresDebugging {
+class BrowserExtensionPlugin extends BasePlugin implements IAuthenticationProvider, IPluginRequiresDebugging {
   private isActive = false;
   private actionsReceived = false;
   private accountsLoaded = false;
@@ -29,7 +29,7 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource, IP
     window.browserExtensionPlugin = this;
   }
 
-  credentialsReady(): Promise<boolean> {
+  authenticatorReady(): Promise<boolean> {
     if (this.isActive === false) {
       return Promise.resolve(false);
     }
@@ -45,11 +45,11 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource, IP
     return false;
   }
   
-  credentialReadinessSupported(): CredentialReadiness {
-    return CredentialReadiness.automated;
+  authenticatorReadinessSupported(): AuthenticatorReadiness {
+    return AuthenticatorReadiness.automated;
   }
 
-  retrieveCredentials(): Promise<ILogonInformation|null> {
+  performAuthentication(): Promise<ILogonInformation|null> {
     // todo: make sure credentialProvider is here
     if (this.isActive === false) {
       return Promise.resolve(null);

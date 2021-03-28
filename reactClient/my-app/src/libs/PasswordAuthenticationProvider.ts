@@ -1,4 +1,4 @@
-import { ICredentialSource, CredentialReadiness } from './CredentialSource';
+import { IAuthenticationProvider, AuthenticatorReadiness } from './AuthenticationProvider';
 import { BackendService } from '../backend/backend.service';
 import { ILogonInformation } from '../backend/api/user.service';
 
@@ -7,7 +7,7 @@ interface IUsernameAndPassword {
   password: string 
 }
 
-export default class PasswordCredentialSource implements ICredentialSource {
+export default class PasswordAuthenticationProvider implements IAuthenticationProvider {
   private usernameAndPassword?: IUsernameAndPassword;
   private usernameAndPasswordWaiter?: (creds: IUsernameAndPassword) => void;
   private waitForLoginFinished?: () => void;
@@ -15,8 +15,8 @@ export default class PasswordCredentialSource implements ICredentialSource {
   constructor (private backend: BackendService, private debug: (value: string) => void) {
   }
 
-  credentialReadinessSupported(): CredentialReadiness {
-    return CredentialReadiness.manual;
+  authenticatorReadinessSupported(): AuthenticatorReadiness {
+    return AuthenticatorReadiness.manual;
   }
   autoRetryAllowed(): boolean {
     return true;
@@ -35,12 +35,12 @@ export default class PasswordCredentialSource implements ICredentialSource {
       uAPW(creds);
     }
   }
-  async credentialsReady(): Promise<boolean> {
+  async authenticatorReady(): Promise<boolean> {
     this.debug(`return credentialsReady: true`);
     return Promise.resolve(true);
   }
 
-  async retrieveCredentials(): Promise<ILogonInformation|null> {
+  async performAuthentication(): Promise<ILogonInformation|null> {
     if (this.usernameAndPassword) {
       const usernameAndPassword = this.usernameAndPassword;
       this.debug(`username(${usernameAndPassword.username}) and password are present`);
