@@ -7,7 +7,7 @@ import activatedPlugins from './ActivatedPlugins';
 import * as BasePlugin from './BasePlugin';
 import { IMessageOptions } from '../libs/MessageManager';
 import ShortcutManager from '../libs/ShortcutManager';
-import { ICredentialSource, instanceOfCredentialSource } from '../libs/CredentialSource';
+import { IAuthenticationProvider, instanceOfAuthenticationProvider } from '../libs/AuthenticationProvider';
 
 export type AccountsFilter = (accounts: Array<Account>) => Array<Account>;
 type AccountFilter = (account: Account) => boolean;
@@ -27,7 +27,7 @@ export class PluginSystem {
   filters: { [index: string]: AccountFilter } = {};
   filterPresent = false;
   
-  credentialSources: Array<ICredentialSource> = [];
+  authenticationProvider: Array<IAuthenticationProvider> = [];
   mainViewCallback: Array<() => JSX.Element | void> = [];
   resetFilterCallback: Array<() => void> = [];
   accountsReadyCallback: Array<(accounts: Array<Account>) => void> = [];
@@ -42,7 +42,7 @@ export class PluginSystem {
   authenticatedUIHandler?: IAuthenticatedUIHandler;
   appHandler?: IAppHandler;
 
-  constructor (private backend: BackendService, private transformer: AccountTransformerService, public shortcuts: ShortcutManager) {
+  constructor (private backend: BackendService, private transformer: AccountTransformerService, public shortcuts: ShortcutManager, private debug: (msg: string) => void) {
     this.clearPlugins();
     this.backend.accountsObservable
       .subscribe((accounts: Array<Account>) => {
@@ -75,6 +75,9 @@ export class PluginSystem {
     //requires
     if (BasePlugin.instanceOfIPluginRequiresTransformer(plugin)) {
       plugin.setTransformer(this.transformer);
+    }
+    if (BasePlugin.instanceOfIPluginRequiresDebug(plugin)) {
+      plugin.setDebug(this.debug);
     }
     //callbacks
     if (BasePlugin.instanceOfIPluginWithMainView(plugin)) {
@@ -110,13 +113,13 @@ export class PluginSystem {
     if (BasePlugin.instanceOfIPluginWithAccountListShortcuts(plugin)) {
       this.accountListShortcutsCallback.push(plugin.accountListShortcuts.bind(plugin));
     }
-    if (instanceOfCredentialSource(plugin)) {
-      this.credentialSources.push(plugin);
+    if (instanceOfAuthenticationProvider(plugin)) {
+      this.authenticationProvider.push(plugin);
     }
   }
 
-  getCredentialSources(): Array<ICredentialSource> {
-    return this.credentialSources;
+  getAuthenticationProvider(): Array<IAuthenticationProvider> {
+    return this.authenticationProvider;
   }
 
   registerAuthenticatedUIHandler(handler: IAuthenticatedUIHandler): void {

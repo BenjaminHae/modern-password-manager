@@ -30,9 +30,9 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
 import { BoxArrowLeft } from 'react-bootstrap-icons';
-import CredentialSourceManager, { ICredentialSource } from './libs/CredentialSource';
-import WebAuthNCredentialSource from './libs/WebAuthnCredentialSource';
-import PasswordCredentialSource from './libs/PasswordCredentialSource';
+import AuthenticationProviderManager, { IAuthenticationProvider } from './libs/AuthenticationProvider';
+import WebAuthNAuthenticationProvider from './libs/WebAuthnAuthenticationProvider';
+import PasswordAuthenticationProvider from './libs/PasswordAuthenticationProvider';
 import { AuthenticatedView } from './components/commonProps';
 
 interface AppState {
@@ -65,9 +65,9 @@ export default class App extends React.Component<Record<string, never>, AppState
   private messages: MessageManager;
   private backendWaiter: Promise<BackendOptions>; // promise for the first call to the backend
   private csrfMiddleware: CSRFMiddleware;
-  private credentialSourceManager: CredentialSourceManager;
-  private webAuthnCredentialSource: WebAuthNCredentialSource;
-  private passwordCredentialSource: PasswordCredentialSource;
+  private authenticationProviderManager: AuthenticationProviderManager;
+  private webAuthnAuthenticationProvider: WebAuthNAuthenticationProvider;
+  private passwordAuthenticationProvider: PasswordAuthenticationProvider;
 
   constructor (props: Record<string, never>) {
     super(props);
@@ -89,6 +89,10 @@ export default class App extends React.Component<Record<string, never>, AppState
       idleTimeout: 3 * 60 * 1000,
       doingAutoLogin: false,
       view: AuthenticatedView.List
+    }
+
+    if(!this.state.autoLogin) {
+      this.debug("autoLogin disabled");
     }
 
     window.addEventListener('error', (event) => {this.debug(event.message);});
@@ -115,7 +119,7 @@ export default class App extends React.Component<Record<string, never>, AppState
         this.crypto);
     this.shortcuts = new ShortcutManager();
     this.messages = new MessageManager((m: Array<IMessage>)=> { this.setState({messages: m}) });
-    this.plugins = new PluginSystem(this.backend, this.accountTransformerService, this.shortcuts);
+    this.plugins = new PluginSystem(this.backend, this.accountTransformerService, this.shortcuts, (msg: string) => this.debug("Plugins: "+msg));
     this.plugins.registerAppHandler(this);
     this.backend.loginObservable
       .subscribe((credential: CredentialService)=>{
@@ -138,22 +142,22 @@ export default class App extends React.Component<Record<string, never>, AppState
           });
     this.backendWaiter = this.backend.waitForBackend();
 
-    this.credentialSourceManager = 
-      new CredentialSourceManager(
+    this.authenticationProviderManager = 
+      new AuthenticationProviderManager(
         (value: boolean) => this.setState({doingAutoLogin: value}),
-        (msg: string) => this.debug("CredentialSourceManager: " + msg),
+        (msg: string) => this.debug("AuthenticationProviderManager: " + msg),
         (msg: string) => this.messages.showMessage(msg, {autoClose: false, variant: "danger" })
       );
-    this.webAuthnCredentialSource = new WebAuthNCredentialSource(this.backend, this.backendWaiter, (value:string) => this.debug("WebAuthN: " + value));
-    this.passwordCredentialSource = new PasswordCredentialSource(this.backend, (value:string) => this.debug("PasswordCredential: " + value));
-    this.credentialSourceManager.registerCredentialSource(this.webAuthnCredentialSource);
-    this.credentialSourceManager.registerCredentialSource(this.passwordCredentialSource);
-    this.plugins.getCredentialSources().forEach((cred: ICredentialSource) => {
-      this.credentialSourceManager.registerCredentialSource(cred)
+    this.webAuthnAuthenticationProvider = new WebAuthNAuthenticationProvider(this.backend, this.backendWaiter, (value:string) => this.debug("WebAuthN: " + value));
+    this.passwordAuthenticationProvider = new PasswordAuthenticationProvider(this.backend, (value:string) => this.debug("PasswordCredential: " + value));
+    this.authenticationProviderManager.registerAuthenticationProvider(this.webAuthnAuthenticationProvider);
+    this.authenticationProviderManager.registerAuthenticationProvider(this.passwordAuthenticationProvider);
+    this.plugins.getAuthenticationProvider().forEach((cred: IAuthenticationProvider) => {
+      this.authenticationProviderManager.registerAuthenticationProvider(cred)
     });
     this.backendWaiter
       .then(() => {
-          this.credentialSourceManager.getCredentials(this.state.autoLogin);
+          this.authenticationProviderManager.performAuthentication(this.state.autoLogin);
         });
 
     const message = URLParams.get("message")
@@ -182,7 +186,7 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.shortcuts.addShortcut({ shortcut: "q", action: () => { this.doLogout() }, description: "Logout", component: this} );
   }
   async doLogin(username:string, password: string): Promise<void> {
-    await this.passwordCredentialSource.provideUsernameAndPassword(username, password);
+    await this.passwordAuthenticationProvider.provideUsernameAndPassword(username, password);
   }
 
   handleLoginSuccess(username: string, credential: CredentialService): void {
@@ -304,17 +308,17 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.setState({ historyItems: history });
   }
   async loadWebAuthnCreds(): Promise<void> {
-    const creds = await this.webAuthnCredentialSource.getUserBackendCredential()
+    const creds = await this.webAuthnAuthenticationProvider.getUserBackendCredential()
     this.setState({ webAuthnCreds: creds });
   }
 
   async webAuthnDelete(webAuthnCreds: UserWebAuthnCred): Promise<void> {
-    const creds = await this.webAuthnCredentialSource.deleteCredential(webAuthnCreds.id);
+    const creds = await this.webAuthnAuthenticationProvider.deleteCredential(webAuthnCreds.id);
     this.setState({ webAuthnCreds: creds });
   }
 
   async getWebAuthnCredsAvailable(): Promise<void> {
-    const credsAvailable =  await this.webAuthnCredentialSource.credentialsReady();
+    const credsAvailable =  await this.webAuthnAuthenticationProvider.authenticatorReady();
     this.setState({webAuthnPresent: credsAvailable});
   }
 
@@ -393,7 +397,7 @@ export default class App extends React.Component<Record<string, never>, AppState
             webAuthnDevices = { this.state.webAuthnCreds }
             webAuthnThisDeviceRegistered = { this.state.webAuthnPresent }
             webAuthnLoadHandler = { this.loadWebAuthnCreds.bind(this) }
-            webAuthnCreateCredHandler = { (deviceName, userName, password) => this.webAuthnCredentialSource.createCredential(deviceName, userName, password) }
+            webAuthnCreateCredHandler = { (deviceName, userName, password) => this.webAuthnAuthenticationProvider.createCredential(deviceName, userName, password) }
             webAuthnDeleteCredHandler = { this.webAuthnDelete.bind(this) }
         />
               }
@@ -404,7 +408,7 @@ export default class App extends React.Component<Record<string, never>, AppState
                 showRegistration={this.state.registrationAllowed} 
                 showMessage={this.showMessage.bind(this)} 
                 showPersistedLogons={this.state.webAuthnPresent}
-                autoLogin={() => this.credentialSourceManager.doLoginWithSource(this.webAuthnCredentialSource).then (() => {return }) }
+                autoLogin={() => this.authenticationProviderManager.doLoginWithProvider(this.webAuthnAuthenticationProvider).then (() => {return }) }
                 ready={this.state.ready}
                 doingAutoLogin={this.state.doingAutoLogin}
               /> }
