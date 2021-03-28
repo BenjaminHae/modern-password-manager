@@ -42,7 +42,7 @@ export class PluginSystem {
   authenticatedUIHandler?: IAuthenticatedUIHandler;
   appHandler?: IAppHandler;
 
-  constructor (private backend: BackendService, private transformer: AccountTransformerService, public shortcuts: ShortcutManager) {
+  constructor (private backend: BackendService, private transformer: AccountTransformerService, public shortcuts: ShortcutManager, private debug: (msg: string) => void) {
     this.clearPlugins();
     this.backend.accountsObservable
       .subscribe((accounts: Array<Account>) => {
@@ -75,6 +75,9 @@ export class PluginSystem {
     //requires
     if (BasePlugin.instanceOfIPluginRequiresTransformer(plugin)) {
       plugin.setTransformer(this.transformer);
+    }
+    if (BasePlugin.instanceOfIPluginRequiresDebug(plugin)) {
+      plugin.setDebug(this.debug);
     }
     //callbacks
     if (BasePlugin.instanceOfIPluginWithMainView(plugin)) {

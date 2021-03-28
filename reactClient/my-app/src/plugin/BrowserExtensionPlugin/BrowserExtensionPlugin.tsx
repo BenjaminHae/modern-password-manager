@@ -2,7 +2,7 @@ import React from 'react';
 import Action from './Action';
 import { CloudCheck } from 'react-bootstrap-icons';
 import Button from 'react-bootstrap/Button';
-import { BasePlugin } from '../BasePlugin';
+import { BasePlugin, IPluginRequiresDebugging } from '../BasePlugin';
 import { PluginSystem } from '../PluginSystem';
 import { Account } from '../../backend/models/account';
 import { ICredentialProvider } from '../../backend/controller/credentialProvider';
@@ -13,7 +13,7 @@ declare global {
   interface Window { browserExtensionPlugin: BrowserExtensionPlugin; }
 }
 
-class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
+class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource, IPluginRequiresDebugging {
   private isActive = false;
   private actionsReceived = false;
   private accountsLoaded = false;
@@ -22,6 +22,7 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   private credentialProviderHook: Array<(provider: ICredentialProvider) => void> = [];
   private credentialsPresent?: boolean;
   private credentialsPresentHook: Array<(value: boolean) => void> = [];
+  private doDebug?: (msg: string) => void;
 
   constructor(protected pluginSystem: PluginSystem) {
     super(pluginSystem);
@@ -84,14 +85,14 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
   loginSuccessful(username: string, key: CryptoKey): void {
     if (this.isActive === false)
       return
-    console.log("login Successful");
+    this.debug("login Successful");
     this.sendEvent('loginSuccessful', {username: username, key: key});
   }
 
   loginViewReady(): void {
     if (this.isActive === false)
       return
-    console.log("login view ready");
+    this.debug("login view ready");
     this.sendEvent('loginViewReady');
   }
 
@@ -128,12 +129,12 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
       case "edit": {
         let account: Account | undefined;
         if ((account = this.pluginSystem.getAccountByIndex(this.action.data.index))) {
-          console.log(`found account by id ${account.index}`);
+          this.debug(`found account by id ${account.index}`);
           this.pluginSystem.UIeditAccountSelect(account);
         }
         else {
-          console.log("did not find account by id");
-          console.log(this.action);
+          this.debug("did not find account by id");
+          this.debug(this.action.toString());
         }
         break;
         }
@@ -168,8 +169,19 @@ class BrowserExtensionPlugin extends BasePlugin implements ICredentialSource {
       return (<Button key="BrowserExtensionPlugin" variant="info" onClick={() => this.selectAccount(account)}><CloudCheck/></Button>)
   }
 
+  debug(msg: string): void {
+    if (this.doDebug)
+      this.doDebug(msg);
+    else
+      console.log(msg);
+  }
+
   setActive(): void {
     this.isActive = true;
+  }
+
+  setDebug(debug: (msg: string) => void): void {
+    this.doDebug = debug;
   }
 }
 export default BrowserExtensionPlugin;

@@ -91,6 +91,10 @@ export default class App extends React.Component<Record<string, never>, AppState
       view: AuthenticatedView.List
     }
 
+    if(!this.state.autoLogin) {
+      this.debug("autoLogin disabled");
+    }
+
     window.addEventListener('error', (event) => {this.debug(event.message);});
     window.onerror = (error, url, line) => {
       this.debug(`line ${line}: ${error}`);
@@ -115,7 +119,7 @@ export default class App extends React.Component<Record<string, never>, AppState
         this.crypto);
     this.shortcuts = new ShortcutManager();
     this.messages = new MessageManager((m: Array<IMessage>)=> { this.setState({messages: m}) });
-    this.plugins = new PluginSystem(this.backend, this.accountTransformerService, this.shortcuts);
+    this.plugins = new PluginSystem(this.backend, this.accountTransformerService, this.shortcuts, (msg: string) => this.debug("Plugins: "+msg));
     this.plugins.registerAppHandler(this);
     this.backend.loginObservable
       .subscribe((credential: CredentialService)=>{

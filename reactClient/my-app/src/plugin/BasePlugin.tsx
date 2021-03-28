@@ -67,6 +67,10 @@ export interface IPluginRequiresTransformer {
   setTransformer: (transformer: AccountTransformerService) => void;
 }
 
+export interface IPluginRequiresDebugging {
+  setDebug: (debug: (msg: string) => void) => void;
+}
+
 function checkForObjectAndMethod(thing: unknown, item: string): boolean {
   return (typeof thing === "object") && (thing !== null) && (item in thing);
 }
@@ -119,3 +123,6 @@ export function instanceOfIPluginRequiresTransformer(object: unknown): object is
   return checkForObjectAndMethod(object, 'setTransformer');
 }
 
+export function instanceOfIPluginRequiresDebug(object: unknown): object is IPluginRequiresDebugging {
+  return checkForObjectAndMethod(object, 'setDebug');
+}
