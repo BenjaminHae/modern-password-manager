@@ -3,6 +3,10 @@ type: docker
 name: build
 steps:
  - name: restore caches
+   when:
+     event:
+       exclude:
+       - promote
    image: plugins/s3-cache
    settings:
      pull: true
@@ -13,6 +17,10 @@ steps:
        from_secret: "s3_secret_key"
      restore: true
  - name: react
+   when:
+     event:
+       exclude:
+       - promote
    image: node:12
    commands:
     - cd reactClient/my-app
@@ -20,6 +28,10 @@ steps:
     - npm link --unsafe-perm ../../OpenAPIReactClient
     - CI="" npm run build
  - name: symfony
+   when:
+     event:
+       exclude:
+       - promote
    image: composer:2
    commands:
     - cd ./Symfony-API
@@ -28,7 +40,13 @@ steps:
     - cp -r ../reactClient/my-app/build/. public/
     - rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html
     - cp ../dockerBuild/SymfonyDockerfile Dockerfile
+    # create zip archive
+     - (zip -q --symlinks -r ../mpm.zip .)
  - name: cache stuff
+   when:
+     event:
+       exclude:
+       - promote
    image: plugins/s3-cache
    settings:
      pull: true
@@ -41,7 +59,28 @@ steps:
      mount:
        - .npm
        - Symfony-API/vendor
+ - name: cache build for deployment
+   when:
+     event:
+       exclude:
+       - promote
+   image: plugins/s3-cache
+   settings:
+     pull: true
+     endpoint: http://minio:9000
+     access_key: 
+       from_secret: "s3_access_key"
+     secret_key: 
+       from_secret: "s3_secret_key"
+     filename: "$DRONE_COMMIT.zip"
+     rebuild: true
+     mount:
+       - mpm.zip
  - name: flush cache older than 14 days
+   when:
+     event:
+       exclude:
+       - promote
    image: plugins/s3-cache
    settings:
      pull: true
@@ -52,6 +91,20 @@ steps:
        from_secret: "s3_secret_key"
      flush: true
      flush_age: 14
+ - name: restore caches for deployment
+   when:
+     event:
+     - promote
+   image: plugins/s3-cache
+   settings:
+     pull: true
+     endpoint: http://minio:9000
+     access_key: 
+       from_secret: "s3_access_key"
+     secret_key: 
+       from_secret: "s3_secret_key"
+     restore: true
+     filename: "$DRONE_COMMIT.zip"
  - name: "deploy to environment ${DRONE_DEPLOY_TO}"
    image: alpine:3.12
    environment:
@@ -78,8 +131,6 @@ steps:
      - chmod 0600 ~/.ssh/id_drone
      - echo $${SSH_HOST_KEY} | base64 -d > ~/.ssh/known_hosts
      - chmod 0600 ~/.ssh/known_hosts
-    # create zip archive
-     - (cd ./Symfony-API && zip -q --symlinks -r ../mpm.zip .)
     # transfer to host
      - scp -i ~/.ssh/id_drone mpm.zip "$${SSH_USER}@$${SSH_HOST}:$${COPY_REMOTE_PATH}"
     # extract to destination
