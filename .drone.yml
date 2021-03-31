@@ -41,7 +41,7 @@ steps:
     - rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html
     - cp ../dockerBuild/SymfonyDockerfile Dockerfile
     # create zip archive
-     - (zip -q --symlinks -r ../mpm.zip .)
+    - (zip -q --symlinks -r ../mpm.zip .)
  - name: cache stuff
    when:
      event:
