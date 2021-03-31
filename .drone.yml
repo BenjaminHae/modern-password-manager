@@ -1,14 +1,12 @@
 kind: pipeline
 type: docker
 name: build
-environment:
-  MINIO: http://minio:9000
 steps:
  - name: restore caches
    image: plugins/s3-cache
    settings:
      pull: true
-     endpoint: $MINIO
+     endpoint: http://minio:9000
      access_key: 
        from_secret: "s3_access_key"
      secret_key: 
@@ -34,7 +32,7 @@ steps:
    image: plugins/s3-cache
    settings:
      pull: true
-     endpoint: $MINIO
+     endpoint: http://minio:9000
      access_key: 
        from_secret: "s3_access_key"
      secret_key: 
@@ -47,7 +45,7 @@ steps:
    image: plugins/s3-cache
    settings:
      pull: true
-     endpoint: $MINIO
+     endpoint: http://minio:9000
      access_key: 
        from_secret: "s3_access_key"
      secret_key: 
