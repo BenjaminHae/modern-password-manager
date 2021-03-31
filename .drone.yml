@@ -72,7 +72,7 @@ steps:
        from_secret: "s3_access_key"
      secret_key: 
        from_secret: "s3_secret_key"
-     filename: "$DRONE_COMMIT.zip"
+     filename: "build.zip"
      rebuild: true
      mount:
        - mpm.zip
@@ -104,7 +104,7 @@ steps:
      secret_key: 
        from_secret: "s3_secret_key"
      restore: true
-     filename: "$DRONE_COMMIT.zip"
+     filename: build.zip"
  - name: "deploy to environment ${DRONE_DEPLOY_TO}"
    image: alpine:3.12
    environment:
