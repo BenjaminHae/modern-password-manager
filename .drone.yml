@@ -40,7 +40,7 @@ steps:
        from_secret: "s3_access_key"
      secret_key: 
        from_secret: "s3_secret_key"
-     filename: "$DRONE_COMMIT.zip"
+     filename: "$DRONE_COMMIT"
      rebuild: true
      mount:
        - reactClient/my-app/build
@@ -57,7 +57,7 @@ steps:
      secret_key: 
        from_secret: "s3_secret_key"
      restore: true
-     filename: "$DRONE_COMMIT.zip"
+     filename: "$DRONE_COMMIT"
  - name: symfony
    image: composer:2
    commands:
