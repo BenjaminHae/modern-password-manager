@@ -126,7 +126,7 @@ steps:
      - echo $${SSH_HOST_KEY} | base64 -d > ~/.ssh/known_hosts
      - chmod 0600 ~/.ssh/known_hosts
     # create zip archive
-    - (cd ./Symfony-API && zip -q --symlinks -r ../mpm.zip .)
+     - (cd ./Symfony-API && zip -q --symlinks -r ../mpm.zip .)
     # transfer to host
      - scp -i ~/.ssh/id_drone mpm.zip "$${SSH_USER}@$${SSH_HOST}:$${COPY_REMOTE_PATH}"
     # extract to destination
