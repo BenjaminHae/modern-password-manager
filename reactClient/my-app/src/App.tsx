@@ -12,7 +12,6 @@ import { MaintenanceService, BackendOptions } from './backend/api/maintenance.se
 import { UserService, ILogonInformation } from './backend/api/user.service';
 import { AccountsService } from './backend/api/accounts.service';
 import { AccountTransformerService } from './backend/controller/account-transformer.service';
-import CredentialProviderPersist from './backend/controller/credentialProviderPersist';
 import { CredentialService } from './backend/credential.service';
 import { CryptoService } from './backend/crypto.service';
 import { Account } from './backend/models/account';
@@ -22,10 +21,8 @@ import { MaintenanceApi as OpenAPIMaintenanceService } from '@pm-server/pm-serve
 import { UserApi as OpenAPIUserService } from '@pm-server/pm-server-react-client';
 import { AccountsApi as OpenAPIAccountsService } from '@pm-server/pm-server-react-client';
 import { PluginSystem, AccountsFilter } from './plugin/PluginSystem';
-import WebAuthn from './libs/WebAuthn';
 import ShortcutManager from './libs/ShortcutManager';
 import MessageManager, { IMessageOptions, IMessage } from './libs/MessageManager';
-import PersistDecryptionKey from './libs/PersistDecryptionKey';
 import { HistoryItem, UserWebAuthnCred } from '@pm-server/pm-server-react-client';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -33,6 +30,10 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
 import { BoxArrowLeft } from 'react-bootstrap-icons';
+import AuthenticationProviderManager, { IAuthenticationProvider } from './libs/AuthenticationProvider';
+import WebAuthNAuthenticationProvider from './libs/WebAuthnAuthenticationProvider';
+import PasswordAuthenticationProvider from './libs/PasswordAuthenticationProvider';
+import { AuthenticatedView } from './components/commonProps';
 
 interface AppState {
   ready: boolean;
@@ -50,8 +51,8 @@ interface AppState {
   debugCount: number;
   showShortcutOverview: boolean;
   idleTimeout: number;
-  logonInformation?: ILogonInformation;
   doingAutoLogin: boolean;
+  view: AuthenticatedView;
 }
 
 export default class App extends React.Component<Record<string, never>, AppState> {
@@ -64,6 +65,9 @@ export default class App extends React.Component<Record<string, never>, AppState
   private messages: MessageManager;
   private backendWaiter: Promise<BackendOptions>; // promise for the first call to the backend
   private csrfMiddleware: CSRFMiddleware;
+  private authenticationProviderManager: AuthenticationProviderManager;
+  private webAuthnAuthenticationProvider: WebAuthNAuthenticationProvider;
+  private passwordAuthenticationProvider: PasswordAuthenticationProvider;
 
   constructor (props: Record<string, never>) {
     super(props);
@@ -83,7 +87,12 @@ export default class App extends React.Component<Record<string, never>, AppState
       debugCount: -5,
       showShortcutOverview: false,
       idleTimeout: 3 * 60 * 1000,
-      doingAutoLogin: false
+      doingAutoLogin: false,
+      view: AuthenticatedView.List
+    }
+
+    if(!this.state.autoLogin) {
+      this.debug("autoLogin disabled");
     }
 
     window.addEventListener('error', (event) => {this.debug(event.message);});
@@ -110,11 +119,16 @@ export default class App extends React.Component<Record<string, never>, AppState
         this.crypto);
     this.shortcuts = new ShortcutManager();
     this.messages = new MessageManager((m: Array<IMessage>)=> { this.setState({messages: m}) });
-    this.plugins = new PluginSystem(this.backend, this.accountTransformerService, this.shortcuts);
+    this.plugins = new PluginSystem(this.backend, this.accountTransformerService, this.shortcuts, (msg: string) => this.debug("Plugins: "+msg));
     this.plugins.registerAppHandler(this);
     this.backend.loginObservable
-      .subscribe(()=>{
-          this.setState({authenticated : true});
+      .subscribe((credential: CredentialService)=>{
+          this.handleLoginSuccess("", credential);
+          });
+    this.backend.logonInformationObservable
+      .subscribe((info: ILogonInformation)=>{
+          this.messages.clearMessages();
+          this.showLogonInformation(info);
           });
     this.backend.accountsObservable
       .subscribe((accounts: Array<Account>)=>{
@@ -128,10 +142,24 @@ export default class App extends React.Component<Record<string, never>, AppState
           });
     this.backendWaiter = this.backend.waitForBackend();
 
-    // try auto login
-    if (this.state.autoLogin) {
-      this.webAuthnTryLogin();
-    }
+    this.authenticationProviderManager = 
+      new AuthenticationProviderManager(
+        (value: boolean) => this.setState({doingAutoLogin: value}),
+        (msg: string) => this.debug("AuthenticationProviderManager: " + msg),
+        (msg: string) => this.messages.showMessage(msg, {autoClose: false, variant: "danger" })
+      );
+    this.webAuthnAuthenticationProvider = new WebAuthNAuthenticationProvider(this.backend, this.backendWaiter, (value:string) => this.debug("WebAuthN: " + value));
+    this.passwordAuthenticationProvider = new PasswordAuthenticationProvider(this.backend, (value:string) => this.debug("PasswordCredential: " + value));
+    this.authenticationProviderManager.registerAuthenticationProvider(this.webAuthnAuthenticationProvider);
+    this.authenticationProviderManager.registerAuthenticationProvider(this.passwordAuthenticationProvider);
+    this.plugins.getAuthenticationProvider().forEach((cred: IAuthenticationProvider) => {
+      this.authenticationProviderManager.registerAuthenticationProvider(cred)
+    });
+    this.backendWaiter
+      .then(() => {
+          this.authenticationProviderManager.performAuthentication(this.state.autoLogin);
+        });
+
     const message = URLParams.get("message")
     if (message) {
       this.messages.showMessage(message, { autoClose: false, variant: 'info' });
@@ -146,7 +174,7 @@ export default class App extends React.Component<Record<string, never>, AppState
       .then((backendOptions: BackendOptions) => {
           this.setState({ready : true, registrationAllowed: backendOptions.registrationAllowed, idleTimeout: backendOptions.idleTimeout});
           this.plugins.loginViewReady();
-          });
+        });
     this.getWebAuthnCredsAvailable();
     this.plugins.setFilterChangeHandler(this.filterChangeHandler.bind(this));
     window.history.pushState({}, "", "/");
@@ -157,35 +185,34 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.shortcuts.addShortcut({ shortcut: "?", action: showShortcuts, description: "Show Shortcuts", component: this} );
     this.shortcuts.addShortcut({ shortcut: "q", action: () => { this.doLogout() }, description: "Logout", component: this} );
   }
-  doLogin(username:string, password: string):Promise<void> {
-    this.messages.clearMessages();
-    if (!this.state.ready) {
-      this.messages.showMessage("backend is not ready yet. Please try again in a second.");
-      return Promise.resolve();
-    }
-    return this.backend.logon(username, password)
-      .then((info: ILogonInformation) => {
-        this.handleLoginSuccess(info, username);
-      })
-      .catch((e) => {
-        let msg = e.toString();
-        if ("status" in e) {
-          if (e.status === 500) {
-            msg = "please reload page";
-          }
-          if (e.status === 401) {
-            msg = "invalid credentials";
-          }
-        }
-        this.messages.showMessage("Login failed, " + msg, { autoClose: false });
-        this.setState({ authenticated: false });
-      });
+  async doLogin(username:string, password: string): Promise<void> {
+    await this.passwordAuthenticationProvider.provideUsernameAndPassword(username, password);
   }
 
-  handleLoginSuccess(info: ILogonInformation, username: string): void {
-    this.plugins.loginSuccessful(username, this.credential.getKey());
-    this.setState({ logonInformation: info });
+  handleLoginSuccess(username: string, credential: CredentialService): void {
+    this.setState({authenticated : true});
+    this.plugins.loginSuccessful(username, credential.getKey());
   } 
+
+  showLogonInformation(info: ILogonInformation): void {
+    const options: IMessageOptions = {};
+    let message = "";
+    if (info.lastLogin) {
+      message += `Your last login was on ${info.lastLogin.toLocaleString(navigator.language)}. `;
+      options.variant = "info";
+    }
+    if (info.failedLogins && info.failedLogins > 0) {
+      message += `There were ${info.failedLogins} failed logins.`
+        options.autoClose = false;
+      options.variant = "danger";
+      options.button = { variant: "info",  text: "More Information", handler: () => { this.selectView(AuthenticatedView.History) } };
+    }
+    this.showMessage(message, options);
+  }
+
+  selectView(view: AuthenticatedView) {
+    this.setState({ view: view });
+  }
 
   async doRegister(username: string, password: string, email: string): Promise<void> {
     this.messages.clearMessages();
@@ -281,135 +308,18 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.setState({ historyItems: history });
   }
   async loadWebAuthnCreds(): Promise<void> {
-    const creds = await this.backend.getWebAuthnCreds()
+    const creds = await this.webAuthnAuthenticationProvider.getUserBackendCredential()
     this.setState({ webAuthnCreds: creds });
   }
 
-  async webAuthnCreate(deviceName: string, userName: string, password: string): Promise<void> {
-    const persistor = new PersistDecryptionKey()
-    const creds = new CredentialProviderPersist(persistor);
-    this.debug('starting registration of WebAuthN keys');
-    await creds.generateFromPassword(password);
-    if (!await this.backend.verifyCredentials(creds)) {
-      this.debug('Password did not match');
-      return Promise.reject("Password does not match");
-    }
-    this.debug('persist decryption key locally');
-    const storedKey = await creds.persistKey();
-    try {
-      this.debug('Retrieving challenge');
-      const challenge = await this.backend.getWebAuthnChallenge();
-      this.debug(`Received Challenge`);
-      const webAuthn = new WebAuthn();
-      const userIdBuffer = new ArrayBuffer(16);
-      const idView = new DataView(userIdBuffer);
-      idView.setInt16(1, storedKey.keyIndex);
-      this.debug('Requesting credential from device');
-      const webAuthCredential = await webAuthn.createCredential(challenge, 'Password-Manager', {id: userIdBuffer, displayName:userName, name:userName});
-      this.debug(`Device handled registration successfully`);
-      persistor.appendCredentialId(storedKey.keyIndex, webAuthCredential.rawId, webAuthCredential.id, userName);
-      const attestationResponse = webAuthCredential.response as AuthenticatorAttestationResponse;
-      this.debug(`Sending registration to backend`);
-      await this.backend.createWebAuthn(webAuthCredential.id, deviceName, attestationResponse.attestationObject, attestationResponse.clientDataJSON, webAuthCredential.type, storedKey.wrappedServerKey);
-      this.debug(`Success`);
-    } catch(e) {
-      this.debug(`Registration failed: ${e.message}`);
-      this.debug(`Removing persisted keys`);
-      persistor.removeKeys(storedKey.keyIndex);
-      throw e;
-    }
-  }
   async webAuthnDelete(webAuthnCreds: UserWebAuthnCred): Promise<void> {
-    const creds = await this.backend.deleteWebAuthn(webAuthnCreds.id);
+    const creds = await this.webAuthnAuthenticationProvider.deleteCredential(webAuthnCreds.id);
     this.setState({ webAuthnCreds: creds });
   }
 
   async getWebAuthnCredsAvailable(): Promise<void> {
-    const persistor = new PersistDecryptionKey();
-    const credIds = await persistor.getCredentialIds();
-    const credsAvailable = credIds.length > 0;
+    const credsAvailable =  await this.webAuthnAuthenticationProvider.authenticatorReady();
     this.setState({webAuthnPresent: credsAvailable});
-  }
-
-  async webAuthnTryLogin(): Promise<void> {
-    const arrayBufferToBase64 = ( buffer:ArrayBuffer ): string => {
-        let binary = '';
-        const bytes = new Uint8Array( buffer );
-        const len = bytes.byteLength;
-        for (let i = 0; i < len; i++) {
-            binary += String.fromCharCode( bytes[ i ] );
-        }
-        return window.btoa( binary );
-      }
-    this.debug("trying webauthn login");
-    const webAuthn = new WebAuthn();
-    const persistor = new PersistDecryptionKey();
-    const credIds = await persistor.getCredentialIds();
-    const credsAvailable = credIds.length > 0;
-    this.debug(`Are credsAvailable: ${credsAvailable}`);
-    this.debug(`KeyIds: ${credIds.map((id)=>arrayBufferToBase64(id))}`);
-    if (credsAvailable) {
-      this.debug(`Trying to do webAuthn get`);
-      let credentials: PublicKeyCredential;
-      try {
-        this.setState({ doingAutoLogin: true });
-        await this.backendWaiter;
-        const challenge = await this.backend.getWebAuthnChallenge();
-        this.debug(`retrieved challenge ${arrayBufferToBase64(challenge)}`);
-        if (this.state.authenticated) {
-          this.debug(`already authenticated aborting WebAuthN`);
-          return;
-        }
-        credentials = await webAuthn.getCredential(challenge, credIds);
-      }
-      catch(e) {
-        this.debug(`WebAuthn get failed: ${e.message}`);
-        this.setState({ doingAutoLogin: false });
-        throw e;
-      }
-      const response = credentials.response as AuthenticatorAssertionResponse;
-      let keyIndex: number | undefined;
-      if (!response.userHandle) {
-        this.debug(`no user Handle was specified`);
-        this.debug(`Trying to get by id ${credentials.id}`);
-        try {
-          keyIndex = await persistor.indexByCredentialId(credentials.id);
-        }
-        catch(e) {
-          this.debug(`Finding credential in indexdb failed: ${e.message}`);
-          throw e;
-        }
-        if (!keyIndex) {
-          this.debug(`could not get key by id`);
-          throw new Error("no user Handle or keyId was specified");
-        }
-      }
-      else {
-        const userIdView = new DataView(response.userHandle);
-        keyIndex = userIdView.getInt16(1)
-      }
-      await persistor.setLastUsed(keyIndex, new Date());
-      try {
-        this.debug(`waiting for backend`);
-        this.debug(`sending webauthn to server, csrf token: ${this.csrfMiddleware.csrfToken}`);
-        const info = await this.backend.logonWithWebAuthn(credentials.id, response.authenticatorData, response.clientDataJSON, response.signature, credentials.type, keyIndex, persistor);
-        this.debug(`successful`);
-        this.handleLoginSuccess(info, "");
-      }
-      catch(e) {
-        let message = "";
-        if (e.message)
-          message = e.message;
-        else
-          message = JSON.stringify(e, Object.getOwnPropertyNames(e));
-        this.debug(`WebAuthn Login failed: ${message}`);
-        this.messages.showMessage(`WebAuthn Login failed: ${message}`, {autoClose: false, variant: "danger" });
-        throw e;
-      }
-      finally {
-        this.setState({ doingAutoLogin: false });
-      }
-    }
   }
 
   async getAccountPassword(account: Account): Promise<string> {
@@ -460,8 +370,9 @@ export default class App extends React.Component<Record<string, never>, AppState
         />
         {this.state.authenticated &&
          <Authenticated 
+            view = { this.state.view }
+            changeView = { (view) => this.selectView(view) }
             accounts = { this.filterAccounts(this.state.accounts) } 
-            logonInformation = { this.state.logonInformation }
             historyItems = { this.state.historyItems } 
             userOptions = { this.state.userOptions }
 
@@ -486,7 +397,7 @@ export default class App extends React.Component<Record<string, never>, AppState
             webAuthnDevices = { this.state.webAuthnCreds }
             webAuthnThisDeviceRegistered = { this.state.webAuthnPresent }
             webAuthnLoadHandler = { this.loadWebAuthnCreds.bind(this) }
-            webAuthnCreateCredHandler = { this.webAuthnCreate.bind(this) }
+            webAuthnCreateCredHandler = { (deviceName, userName, password) => this.webAuthnAuthenticationProvider.createCredential(deviceName, userName, password) }
             webAuthnDeleteCredHandler = { this.webAuthnDelete.bind(this) }
         />
               }
@@ -497,7 +408,7 @@ export default class App extends React.Component<Record<string, never>, AppState
                 showRegistration={this.state.registrationAllowed} 
                 showMessage={this.showMessage.bind(this)} 
                 showPersistedLogons={this.state.webAuthnPresent}
-                autoLogin={this.webAuthnTryLogin.bind(this)}
+                autoLogin={() => this.authenticationProviderManager.doLoginWithProvider(this.webAuthnAuthenticationProvider).then (() => {return }) }
                 ready={this.state.ready}
                 doingAutoLogin={this.state.doingAutoLogin}
               /> }

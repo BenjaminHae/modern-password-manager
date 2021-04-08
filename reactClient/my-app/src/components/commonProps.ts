@@ -4,10 +4,8 @@ import { FieldOptions } from '../backend/models/fieldOptions';
 import { UserWebAuthnCred } from '@pm-server/pm-server-react-client';
 import { UserOptions } from '../backend/models/UserOptions';
 import { HistoryItem } from '@pm-server/pm-server-react-client';
-import { ILogonInformation } from '../backend/api/user.service';
 import { PluginSystem } from '../plugin/PluginSystem';
 import ShortcutManager from '../libs/ShortcutManager';
-import IdleTimer from 'react-idle-timer';
 
 export interface WebAuthnLocalProps {
   ready: boolean;
@@ -56,10 +54,21 @@ export interface IHistoryProps {
   loadHistoryHandler: () => Promise<void>;
 }
 
-export interface IAuthenticatedProps extends IUserSettingsProps, IHistoryProps, IExportCsvProps {
-  accounts: Array<Account>,
-  logonInformation?: ILogonInformation,
+export enum AuthenticatedView {
+  List,
+  Edit,
+  Add,
+  Import,
+  Export,
+  Options,
+  History
+}
 
+export interface IAuthenticatedProps extends IUserSettingsProps, IHistoryProps, IExportCsvProps {
+  view: AuthenticatedView,
+  accounts: Array<Account>,
+
+  changeView: (view: AuthenticatedView) => void,
   editAccountHandler: (fields: {[index: string]:string}, account?: Account) => Promise<void>,
   bulkAddHandler: (newFields: Array<{[index: string]:string}>) => Promise<void>,
   deleteAccountHandler: (account: Account) => Promise<void>,

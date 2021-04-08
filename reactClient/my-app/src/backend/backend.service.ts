@@ -29,8 +29,9 @@ function subscriptionExecutor<T>(list: Array<Subscriber<T>>, params?:T) {
 }
 export class BackendService {
   private accountsObservers: Array<Subscriber<Array<Account>>> = [];
-  private loginObservers: Array<Subscriber<void>> = [];
+  private loginObservers: Array<Subscriber<CredentialService>> = [];
   private optionsObservers: Array<Subscriber<UserOptions>> = [];
+  private logonInformationObservers: Array<Subscriber<ILogonInformation>> = [];
   public serverSettings: ServerSettings = {allowRegistration: true, passwordGenerator: "aaaaab"};
   public accounts: Array<Account> = [];
   public userOptions: UserOptions = { fields: [] };
@@ -38,7 +39,8 @@ export class BackendService {
   private webAuthNChallenge?: ArrayBuffer;
 
   accountsObservable = new Observable<Array<Account>>(subscriptionCreator(this.accountsObservers));
-  loginObservable = new Observable<void>(subscriptionCreator(this.loginObservers));
+  loginObservable = new Observable<CredentialService>(subscriptionCreator(this.loginObservers));
+  logonInformationObservable = new Observable<ILogonInformation>(subscriptionCreator(this.logonInformationObservers));
   optionsObservable = new Observable<UserOptions>(subscriptionCreator(this.optionsObservers));
 
   constructor(private maintenanceService: MaintenanceService, private userService: UserService, private accountsService: AccountsService, private credentials: CredentialService, private accountTransformer: AccountTransformerService, private crypto: CryptoService ) {}
@@ -67,6 +69,7 @@ export class BackendService {
     if (username) {
       const passwordHash = await this.crypto.encryptChar(this.serverSettings.passwordGenerator, new Uint8Array(12))
       response = await this.userService.logon(username, passwordHash)
+      subscriptionExecutor<ILogonInformation>(this.logonInformationObservers, response);
     }
     await this.afterLogin();
     return response;
@@ -74,6 +77,7 @@ export class BackendService {
 
   async logonWithWebAuthn( id: string, authenticatorData: ArrayBuffer, clientDataJSON: ArrayBuffer, signature: ArrayBuffer, keyType: string, keyIndex: number, persistor: IPersistingMechanism): Promise<ILogonInformation> {
     const response = await this.userService.loginWebAuthn(id, authenticatorData, clientDataJSON, signature, keyType)
+    subscriptionExecutor<ILogonInformation>(this.logonInformationObservers, response);
     const creds = new CredentialProviderPersist(persistor);
     await creds.generateFromStoredKeys(response.wrappedServerKey, keyIndex);
     await this.logonWithCredentials(creds);
@@ -149,7 +153,7 @@ export class BackendService {
 
   afterLogin(): Promise<void> {
     delete this.webAuthNChallenge;//require new challenge for later operations
-    subscriptionExecutor(this.loginObservers);
+    subscriptionExecutor<CredentialService>(this.loginObservers, this.credentials);
     return Promise.all([this.getUserOptions(), this.loadAccounts()])
       .then(()=>{return });
   }
