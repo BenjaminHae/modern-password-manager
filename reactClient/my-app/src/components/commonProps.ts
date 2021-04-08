@@ -4,10 +4,8 @@ import { FieldOptions } from '../backend/models/fieldOptions';
 import { UserWebAuthnCred } from '@pm-server/pm-server-react-client';
 import { UserOptions } from '../backend/models/UserOptions';
 import { HistoryItem } from '@pm-server/pm-server-react-client';
-import { ILogonInformation } from '../backend/api/user.service';
 import { PluginSystem } from '../plugin/PluginSystem';
 import ShortcutManager from '../libs/ShortcutManager';
-import IdleTimer from 'react-idle-timer';
 
 export interface WebAuthnLocalProps {
   ready: boolean;
