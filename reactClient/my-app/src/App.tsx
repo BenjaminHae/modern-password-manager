@@ -210,7 +210,7 @@ export default class App extends React.Component<Record<string, never>, AppState
     this.showMessage(message, options);
   }
 
-  selectView(view: AuthenticatedView) {
+  selectView(view: AuthenticatedView): void {
     this.setState({ view: view });
   }
 
