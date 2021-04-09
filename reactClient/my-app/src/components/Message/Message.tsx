@@ -32,6 +32,7 @@ const Message: React.FC<IMessageProps> = (props: IMessageProps) => {
               } 
             } 
             size="sm"
+            className="float-right"
           > 
             { message.button.text } 
           </Button>
