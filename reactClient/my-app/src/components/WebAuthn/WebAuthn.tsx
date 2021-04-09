@@ -20,6 +20,7 @@ interface WebAuthnFormValues {
 interface WebAuthnState extends WebAuthnFormValues{
   showDialog: boolean;
   columns: Array<IDataTableColumn>;
+  waiting: boolean;
 }
 class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
   readonly emptyInput = {
@@ -33,7 +34,8 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
     this.state = { 
       ...this.emptyInput, 
       showDialog: false,
-      columns: this.getColumns()
+      columns: this.getColumns(),
+      waiting: false
     };
     props.webAuthnLoadHandler();
     this.handleGenericChange = this.handleGenericChange.bind(this);
@@ -69,6 +71,7 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
   }
   handleDialogStore = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
+    this.setState({waiting: true});
     //props.webAuthnCreateCredHandler()
     try {
       const password = this.state.password;
@@ -82,6 +85,9 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
       const message = e instanceof Error ? e.message : e;
       this.props.showMessage(`Error when storing key: ${message}`, {autoClose: false, variant: "danger"});
       throw(e);
+    }
+    finally {
+      this.setState({waiting: false});
     }
   }
   handleDialogClose = (): void => {
@@ -119,8 +125,8 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
                 <Form.Label>Password (your current password)</Form.Label>
                 <PasswordInputWithToggle onChange={this.handleGenericChange} value={this.state.password} required />
               </Form.Group>
-              <Button variant="primary" type="submit">
-                Save Changes
+              <Button disabled={this.state.waiting} variant="primary" type="submit">
+                { this.state.waiting ? "Registering" : "Add this device" }
               </Button>
             </Form>
           </Col>
