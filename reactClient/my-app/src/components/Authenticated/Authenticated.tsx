@@ -56,11 +56,11 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
     this.setState({selectedAccount: account});
   }
   addAccountSelect(proposals?: {[index: string]:string}): void {
-    this.props.changeView(AuthenticatedView.Add);
     this.setState({
         addAccountProposals: proposals,
         selectedAccount: undefined
       });
+    this.props.changeView(AuthenticatedView.Add);
   }
   render (): JSX.Element {
     return (
