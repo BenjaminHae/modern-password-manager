@@ -4,6 +4,7 @@ import { HistoryItem } from '@pm-server/pm-server-react-client';
 import DataTable from 'react-data-table-component';
 import { IDataTableColumn } from 'react-data-table-component';
 import { IHistoryProps } from '../commonProps';
+import HistoryDetail from '../HistoryDetail/HistoryDetail';
 
 const History: React.FC<IHistoryProps> = (props: IHistoryProps) => {
   const columns: Array<IDataTableColumn> = [
@@ -34,7 +35,17 @@ const History: React.FC<IHistoryProps> = (props: IHistoryProps) => {
   return (
       <div className={styles.History}>
         <h2>History</h2>
-        <DataTable noHeader columns={columns} data={props.historyItems} dense pagination striped conditionalRowStyles={conditionalRowStyles}/>
+        <DataTable 
+          noHeader 
+          columns={columns} 
+          data={props.historyItems} 
+          dense 
+          pagination 
+          striped 
+          conditionalRowStyles={conditionalRowStyles}
+          expandableRows
+          expandableRowsComponent={<HistoryDetail />}
+        />
       </div>
       )
 };
