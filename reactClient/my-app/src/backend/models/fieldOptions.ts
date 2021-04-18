@@ -8,6 +8,7 @@ export interface FieldOptions {
     colNumber?: number;
     sortable?: boolean;
     hideInTable?: 'sm' | 'md' | 'lg' | number;
+    defaultValue?: string;
 }
 
 export function FieldOptionsFromJSON(json: any): FieldOptions {
@@ -30,5 +31,6 @@ export function FieldOptionsFromJSON(json: any): FieldOptions {
     colNumber: !exists(json, 'colNumber') ? undefined : json['colNumber'],
     sortable: !exists(json, 'sortable') ? undefined : json['sortable'],
     hideInTable: !exists(json, 'hideInTable') ? undefined : json['hideInTable'],
+    defaultValue: !exists(json, 'defaultValue') ? undefined : json['defaultValue'],
   };
 }

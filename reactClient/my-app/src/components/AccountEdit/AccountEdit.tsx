@@ -58,6 +58,10 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
     const newFields: {[index: string]:string} = { name: "", password: "" };
     for (const item of this.props.fields) {
       newFields[item.selector] = "";
+      // if a default value is defined
+      if (item.defaultValue) {
+        newFields[item.selector] = item.defaultValue;
+      }
     }
     if (this.props.account) {
       newFields["name"] = this.props.account.name;
