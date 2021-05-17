@@ -65,7 +65,7 @@ steps:
     - composer -q install --no-suggest --no-dev --no-progress --optimize-autoloader --classmap-authoritative
     - (cd vendor/openapi && rm -r server-bundle && cp -r ../../../OpenAPIServerBundle/ server-bundle)
     - cp -r ../reactClient/my-app/build/. public/
-    - rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html
+    #- rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html
     - cp ../dockerBuild/SymfonyDockerfile Dockerfile
  - name: cache stuff
    when:
