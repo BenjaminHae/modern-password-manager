@@ -69,7 +69,7 @@ jobs:
           name: react-build
           path: Symfony-API/public/
       - name: copy index.html of react to template
-        run: "rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html"
+        run: "rm ./templates/base.html.twig && rm ./templates/index.html && ln -s ../public/index.html ./templates/index.html"
         working-directory: ./Symfony-API/
       - name: copy Dockerfile
         run: "cp ../dockerBuild/SymfonyDockerfile Dockerfile"
