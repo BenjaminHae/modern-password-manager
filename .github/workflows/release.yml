@@ -61,7 +61,7 @@ jobs:
         run: composer install --no-suggest --no-dev --no-progress --optimize-autoloader --classmap-authoritative
         working-directory: ./Symfony-API/
       - name: Copy OpenAPIServerBundle
-        run: rm server-bundle && cp -r ../../../OpenAPIServerBundle/ server-bundle
+        run: rm -r server-bundle && cp -r ../../../OpenAPIServerBundle/ server-bundle
         working-directory: ./Symfony-API/vendor/openapi
       - name: Insert ReactJS files
         uses: actions/download-artifact@v2
