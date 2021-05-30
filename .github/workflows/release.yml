@@ -84,7 +84,7 @@ jobs:
       #- name: install apache2 with php
       #  run: sudo apt-get install apache2 php7.4 libapache2-mod-php7.4 curl
       - name: change config to point at symfony
-        run: sudo sed -i "s/DocumentRoot .*$/DocumentRoot $(pwd)/g" /etc/apache2/sites-enabled/000-default.conf
+        run: sudo sed -i "s~DocumentRoot .*$~DocumentRoot $(pwd)~g" /etc/apache2/sites-enabled/000-default.conf
         working-directory: ./Symfony-API/
       - name: restart apache
         run: sudo /etc/init.d/apache2 restart || systemctl status apache2.service
