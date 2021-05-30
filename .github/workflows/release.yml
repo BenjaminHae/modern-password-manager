@@ -84,7 +84,7 @@ jobs:
       #- name: install apache2 with php
       #  run: sudo apt-get install apache2 php7.4 libapache2-mod-php7.4 curl
       - name: copy data to wwwroot
-        run: cp -r ./Symfony-API /var/www/html
+        run: sudo cp -r ./Symfony-API /var/www/html
       - name: change ownership of symfony data
         run: sudo chown -R www-data:www-data /var/www/html/Symfony-API
         working-directory: ./Symfony-API
