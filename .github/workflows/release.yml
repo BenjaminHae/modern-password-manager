@@ -92,7 +92,7 @@ jobs:
         run: sudo sed -i "s~DocumentRoot .*$~DocumentRoot $(pwd)~g" /etc/apache2/sites-enabled/000-default.conf
         working-directory: /var/www/html/Symfony-API/public
       - name: install prereqs
-        run: sudo libapache2-mod-php
+        run: sudo apt-get install libapache2-mod-php
       - name: restart apache
         run: sudo /etc/init.d/apache2 restart || systemctl status apache2.service
       - name: check availability of index
