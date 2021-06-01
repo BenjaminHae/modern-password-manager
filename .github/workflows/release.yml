@@ -33,7 +33,7 @@ jobs:
         with:
           name: react-build
           path: reactClient/my-app/build/
-  build_symfony_and_release:
+  build_symfony:
     name: build symfony
     needs: build_react
     runs-on: ubuntu-latest
@@ -80,9 +80,22 @@ jobs:
       - name: remove .gitignore
         run: "rm .gitignore"
         working-directory: ./Symfony-API/
-  # Integration test
-      #- name: install apache2 with php
-      #  run: sudo apt-get install apache2 php7.4 libapache2-mod-php7.4 curl
+      - uses: actions/upload-artifact@v2
+        with:
+          name: symfony
+          path: Symfony-API/
+  test_integration:
+    name: integration tests
+    needs: build_symfony
+    runs-on: ubuntu-latest
+    steps:
+      - name: Insert Symfony files
+        uses: actions/download-artifact@v2
+        with:
+          name: symfony
+          path: Symfony-API/
+      - name: install apache2 with php
+        run: sudo apt-get install apache2 php7.4 libapache2-mod-php7.4 curl
       - name: copy data to wwwroot
         run: sudo cp -r ./Symfony-API /var/www/html
       - name: change ownership of symfony data
@@ -91,17 +104,22 @@ jobs:
       - name: change config to point at symfony
         run: sudo sed -i "s~DocumentRoot .*$~DocumentRoot $(pwd)~g" /etc/apache2/sites-enabled/000-default.conf
         working-directory: /var/www/html/Symfony-API/public
-      - name: install prereqs
-        run: sudo apt-get install libapache2-mod-php
       - name: restart apache
         run: sudo /etc/init.d/apache2 restart || systemctl status apache2.service
       - name: check availability of index
-        run: curl http://localhost/index
-      - name: check availability of index.php (test)
-        run: curl http://localhost/index.php
+        run: curl http://localhost/
       - name: check availability of info endpoint
         run: curl http://localhost/info
-  #RELEASE
+#  release:
+#    name: create release draft
+#    needs: test_integration
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Insert Symfony files
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: symfony
+#          path: Symfony-API/
 #      - name: rename Symfony
 #        run: mv Symfony-API password-manager
 #        working-directory: ./
