@@ -86,7 +86,7 @@ jobs:
           path: Symfony-API/
   test_integration:
     name: integration tests
-    #needs: build_symfony
+    needs: build_symfony
     runs-on: ubuntu-latest
     steps:
       - name: Insert Symfony files
