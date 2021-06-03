@@ -5,7 +5,6 @@ on: push
 #      - 'v*'
 jobs:
   build_react:
-    if: "'1' == '0'"
     name: build react app 
     runs-on: ubuntu-latest
     steps:
@@ -35,7 +34,6 @@ jobs:
           name: react-build
           path: reactClient/my-app/build/
   build_symfony:
-    if: "'1' == '0'"
     name: build symfony
     needs: build_react
     runs-on: ubuntu-latest
@@ -91,11 +89,11 @@ jobs:
     #needs: build_symfony
     runs-on: ubuntu-latest
     steps:
-      #- name: Insert Symfony files
-      #  uses: actions/download-artifact@v2
-      #  with:
-      #    name: symfony
-      #    path: Symfony-API/
+      - name: Insert Symfony files
+        uses: actions/download-artifact@v2
+        with:
+          name: symfony
+          path: Symfony-API/
       - name: install apache2 with php
         run: sudo apt-get purge php7.4 php7.4-common && sudo apt-get autoremove && sudo apt-get install apache2 php7.4 libapache2-mod-php7.4 curl
       - name: copy data to wwwroot
