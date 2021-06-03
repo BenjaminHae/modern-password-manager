@@ -108,6 +108,8 @@ jobs:
         run: sudo /etc/init.d/apache2 restart || systemctl status apache2.service
       - name: check availability of index
         run: curl http://localhost/
+      - name: check availability of index.php
+        run: curl http://localhost/index.php
       - name: check availability of info endpoint
         run: curl http://localhost/info
 #  release:
