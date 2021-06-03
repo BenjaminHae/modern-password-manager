@@ -97,7 +97,7 @@ jobs:
       #    name: symfony
       #    path: Symfony-API/
       - name: install apache2 with php
-        run: sudo apt-get purge php7.4 && sudo apt-get autoremove && sudo apt-get install apache2 php7.4 libapache2-mod-php7.4 curl
+        run: sudo apt-get purge php7.4 php7.4-common && sudo apt-get autoremove && sudo apt-get install apache2 php7.4 libapache2-mod-php7.4 curl
       - name: copy data to wwwroot
         run: sudo cp -r ./Symfony-API /var/www/html
       - name: change ownership of symfony data
