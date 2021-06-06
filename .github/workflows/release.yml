@@ -104,6 +104,8 @@ jobs:
       - name: change config to point at symfony
         run: sudo sed -i "s~DocumentRoot .*$~DocumentRoot $(pwd)~g" /etc/apache2/sites-enabled/000-default.conf
         working-directory: /var/www/html/Symfony-API/public
+      - name: set required apache configuration        
+        run: sudo sed -i "/DocumentRoot /a <Directory /var/www/project/public>\n        AllowOverride All\n        Order Allow,Deny\n        Allow from All\n    </Directory>" /etc/apache2/sites-enabled/000-default.conf
       - name: enable apache2 modules
         run: sudo a2enmod rewrite
       - name: restart apache
