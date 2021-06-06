@@ -81,11 +81,11 @@ jobs:
         run: "rm .gitignore"
         working-directory: ./Symfony-API/
       - name: create archive
-        run: tar czf symfony-build.tar.gz Symfony-API
+        run: tar czf symfony-build.tar.gz Symfony-API && ls -la
       - uses: actions/upload-artifact@v2
         with:
           name: symfony
-          path: symfony-build.tar.gz
+          path: ./symfony-build.tar.gz
   test_integration:
     name: integration tests
     needs: build_symfony
@@ -95,7 +95,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: symfony
-          path: symfony-build.tar.gz
+          path: .
       - name: unarchive symfony build
         run: tar xf symfony-build.tar.gz && ls -la && cd Symfony-API && ls -la
       - name: install apache2 with php
