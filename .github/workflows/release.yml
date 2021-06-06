@@ -114,11 +114,9 @@ jobs:
       - name: restart apache
         run: sudo /etc/init.d/apache2 restart || systemctl status apache2.service
       - name: check availability of index
-        run: curl http://localhost/
-      - name: check availability of index.php
-        run: curl http://localhost/index.php
+        run: curl http://localhost/ | grep "<title>Password Manager<"
       - name: check availability of info endpoint
-        run: curl http://localhost/info
+        run: curl http://localhost/info | grep "csrfToken"
 #  release:
 #    name: create release draft
 #    needs: test_integration
