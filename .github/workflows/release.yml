@@ -128,7 +128,9 @@ jobs:
 #        uses: actions/download-artifact@v2
 #        with:
 #          name: symfony
-#          path: Symfony-API/
+#          path: .
+#      - name: unarchive symfony build
+#        run: tar xf symfony-build.tar.gz
 #      - name: rename Symfony
 #        run: mv Symfony-API password-manager
 #        working-directory: ./
