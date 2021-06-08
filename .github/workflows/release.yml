@@ -124,9 +124,11 @@ jobs:
       - name: install bats
         run: |
             git clone https://github.com/bats-core/bats-core.git bats
+            mkdir test_helper
             git clone https://github.com/bats-core/bats-support.git test_helper/bats-support
             git clone https://github.com/bats-core/bats-assert.git test_helper/bats-assert
         working-directory: .github/workflows
+
       # actual tests start here
       - name: run bats tests
         run: ./bats/bin/bats test.bats
