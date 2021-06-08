@@ -99,7 +99,7 @@ jobs:
       - name: unarchive symfony build
         run: tar xf symfony-build.tar.gz && ls -la && cd Symfony-API && ls -la
       - name: install apache2 with php
-        run: sudo apt-get purge php7.4 php7.4-common && sudo apt-get autoremove && sudo apt-get install apache2 php7.4 php-sqlite3 libapache2-mod-php7.4 curl
+        run: sudo apt-get purge php7.4 php7.4-common && sudo apt-get autoremove && sudo apt-get install apache2 php7.4 php-sqlite3 libapache2-mod-php7.4 curl httpie
       - name: copy data to wwwroot
         run: sudo cp -r ./Symfony-API /var/www/html
       - name: change ownership of symfony data
@@ -121,17 +121,16 @@ jobs:
       - name: prepare database
         run: sudo php bin/console doctrine:schema:update --force
         working-directory: /var/www/html/Symfony-API/
+      - name: install bats
+        run: |
+            git clone https://github.com/bats-core/bats-core.git bats
+            git clone https://github.com/bats-core/bats-support.git test_helper/bats-support
+            git clone https://github.com/bats-core/bats-assert.git test_helper/bats-assert
+        workdir: .github/workflows
       # actual tests start here
-      - name: check availability of index
-        run: curl http://localhost/ | grep "<title>Password Manager<"
-      - name: check availability of info endpoint
-        run: curl http://localhost/info | grep "csrfToken"
-      - name: test registration
-        run: >
-          curl -i -s -k -X $'PUT' \
-          -H $'X-CSRF-TOKEN: -yIN6G428U3JP-OFigiKOJpjRX88mvHHd23BtDUjlD0' -H $'Content-Type: application/json' -H $'Accept: */*' -H $'Cookie: PHPSESSID=jjnkqp7paod20cv39ivkujd3p1' \
-          --data-binary $'{\"username\":\"tester3\",\"password\":\"{\\\"iv\\\":\\\"AAAAAAAAAAAAAAAA\\\",\\\"ciphertext\\\":\\\"YrwGKXPvoVvDpAgYq2UaevvwipM0E4f9Xct2o+a7jlz5ltb1apGM8WOPxdsz7sGvt6xEmPLiefRINaGRWu7uwSCJ8Ds0U00ETU2YCfcYSo9JE/Ilj2WQdyGrbQYOa4J1S24KQ+Lj+IW90mjwgTN23GCvaAL3tE+ACGngA8O974skcXwPwLhaEfdbZnkTQV7f\\\"}\",\"email\":\"test@te.st\"}' \
-          $'http://localhost/user'
+      - name: run bats tests
+        run: ./bats/bin/bats test.bats
+        workdir: .github/workflows
 #  release:
 #    name: create release draft
 #    needs: test_integration
