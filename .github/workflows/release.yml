@@ -121,6 +121,8 @@ jobs:
       - name: prepare database
         run: sudo php bin/console doctrine:schema:update --force
         working-directory: /var/www/html/Symfony-API/
+      - name: checkout
+        uses: actions/checkout@v2
       - name: install bats
         run: git clone https://github.com/bats-core/bats-core.git bats && mkdir test_helper && git clone https://github.com/bats-core/bats-support.git test_helper/bats-support && git clone https://github.com/bats-core/bats-assert.git test_helper/bats-assert
         working-directory: .github/workflows
