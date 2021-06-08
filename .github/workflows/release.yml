@@ -126,11 +126,11 @@ jobs:
             git clone https://github.com/bats-core/bats-core.git bats
             git clone https://github.com/bats-core/bats-support.git test_helper/bats-support
             git clone https://github.com/bats-core/bats-assert.git test_helper/bats-assert
-        workdir: .github/workflows
+        working-directory: .github/workflows
       # actual tests start here
       - name: run bats tests
         run: ./bats/bin/bats test.bats
-        workdir: .github/workflows
+        working-directory: .github/workflows
 #  release:
 #    name: create release draft
 #    needs: test_integration
