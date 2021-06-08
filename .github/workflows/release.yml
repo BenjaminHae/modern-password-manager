@@ -116,7 +116,7 @@ jobs:
       - name: restart apache
         run: sudo /etc/init.d/apache2 restart || systemctl status apache2.service
       - name: configure app
-        run: sudo echo "DATABASE_URL=\"sqlite:////var/www/pwman.sqlite\"" > .env.local
+        run: sudo sh -c 'echo "DATABASE_URL=\"sqlite:////var/www/pwman.sqlite\"" > .env.local'
         working-directory: /var/www/html/Symfony-API/
       - name: prepare database
         run: sudo php bin/console doctrine:schema:update --force
