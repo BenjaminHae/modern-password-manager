@@ -58,7 +58,7 @@ The password manager only works when you access it through https or on localhost
 
 With this variant a docker container is started that uses a sqlite database.
 
- 1. run `docker build -t mpm` in the extracted release (or in the repository itself).
+ 1. run `docker build -t mpm .` in the extracted release (or in the repository itself).
  2. start the container: `docker run --name mpm -p 443:443 mpm`
  3. Visit [https://localhost](https://localhost)
  4. If you have used the database in a previous version, you need to upgrade the database (while the container is running).  
