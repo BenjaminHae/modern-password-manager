@@ -122,7 +122,7 @@ jobs:
         run: sudo sh -c 'echo "APP_ENV=dev" >> .env.local'
         working-directory: /var/www/html/Symfony-API/
       - name: prepare database
-        run: sudo php bin/console doctrine:schema:update --force && sudo chown www-data:www-data /var/www/pwman.sqlite
+        run: sudo php bin/console doctrine:schema:update --force && sudo chown -R www-data:www-data /var/www/
         working-directory: /var/www/html/Symfony-API/
       - name: checkout
         uses: actions/checkout@v2
