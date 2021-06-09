@@ -131,7 +131,10 @@ jobs:
       - name: run bats tests
         run: ./bats/bin/bats test.bats
         working-directory: .github/workflows
-      - name: show log in case of failure
+      - name: apache errorlog
+        if: ${{ failure() }}
+        run: sudo cat /var/log/apache2/error.log*
+      - name: symfony error log
         if: ${{ failure() }}
         run: sudo cat var/log/prod/*
         working-directory: /var/www/html/Symfony-API/
