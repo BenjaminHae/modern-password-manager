@@ -33,7 +33,7 @@ jobs:
         with:
           name: react-build
           path: reactClient/my-app/build/
-  build_symfony_and_release:
+  build_symfony:
     name: build symfony
     needs: build_react
     runs-on: ubuntu-latest
@@ -41,7 +41,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
       - name: install php
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@2.11.0
         with:
           php-version: '7.4'
           tools: composer
@@ -69,7 +69,7 @@ jobs:
           name: react-build
           path: Symfony-API/public/
       - name: copy index.html of react to template
-        run: "rm ./templates/base.html.twig && rm ./templates/index.html && ln -s ../public/index.html ./templates/index.html"
+        run: "rm ./templates/index.html && rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html"
         working-directory: ./Symfony-API/
       - name: copy Dockerfile
         run: "cp ../dockerBuild/SymfonyDockerfile Dockerfile"
@@ -80,7 +80,76 @@ jobs:
       - name: remove .gitignore
         run: "rm .gitignore"
         working-directory: ./Symfony-API/
-  #RELEASE
+      - name: create archive
+        run: tar czf symfony-build.tar.gz Symfony-API && ls -la
+      - uses: actions/upload-artifact@v2
+        with:
+          name: symfony
+          path: ./symfony-build.tar.gz
+  test_integration:
+    name: integration tests
+    needs: build_symfony
+    runs-on: ubuntu-latest
+    steps:
+      - name: Insert Symfony files
+        uses: actions/download-artifact@v2
+        with:
+          name: symfony
+          path: .
+      - name: unarchive symfony build
+        run: tar xf symfony-build.tar.gz && ls -la && cd Symfony-API && ls -la
+      - name: install apache2 with php
+        run: sudo apt-get purge php7.4 php7.4-common && sudo apt-get autoremove && sudo apt-get install apache2 php7.4 php-sqlite3 libapache2-mod-php7.4 curl httpie
+      - name: copy data to wwwroot
+        run: sudo cp -r ./Symfony-API /var/www/html
+      - name: change ownership of symfony data
+        run: sudo chown -R www-data:www-data /var/www/html/Symfony-API
+        working-directory: ./Symfony-API
+      - name: change config to point at symfony
+        run: sudo sed -i "s~DocumentRoot .*$~DocumentRoot $(pwd)~g" /etc/apache2/sites-enabled/000-default.conf
+        working-directory: /var/www/html/Symfony-API/public
+      - name: set required apache configuration        
+        run: sudo sed -i "/DocumentRoot /a <Directory $(pwd)>\n        AllowOverride All\n        Order Allow,Deny\n        Allow from All\n    </Directory>" /etc/apache2/sites-enabled/000-default.conf
+        working-directory: /var/www/html/Symfony-API/public
+      - name: enable apache2 modules
+        run: sudo a2enmod rewrite
+      - name: restart apache
+        run: sudo /etc/init.d/apache2 restart || systemctl status apache2.service
+      - name: configure app
+        run: sudo sh -c 'echo "DATABASE_URL=\"sqlite:////var/www/pwman.sqlite\"" > .env.local'
+        working-directory: /var/www/html/Symfony-API/
+      - name: prepare database
+        run: sudo php bin/console doctrine:schema:update --force && sudo chown -R www-data:www-data /var/www/
+        working-directory: /var/www/html/Symfony-API/
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: install bats
+        run: git clone https://github.com/bats-core/bats-core.git bats && mkdir test_helper && git clone https://github.com/bats-core/bats-support.git test_helper/bats-support && git clone https://github.com/bats-core/bats-assert.git test_helper/bats-assert
+        working-directory: .github/workflows
+
+      # actual tests start here
+      - name: run bats tests
+        run: ./bats/bin/bats test.bats
+        working-directory: .github/workflows
+      - name: apache errorlog
+        if: ${{ failure() }}
+        run: sudo cat /var/log/apache2/error.log*
+      - name: symfony error log
+        if: ${{ failure() }}
+        run: sudo cat var/log/prod/*
+        working-directory: /var/www/html/Symfony-API/
+  release:
+    name: create release draft
+    needs: test_integration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Insert Symfony files
+        uses: actions/download-artifact@v2
+        with:
+          name: symfony
+          path: .
+      - name: unarchive symfony build
+        run: tar xf symfony-build.tar.gz
       - name: rename Symfony
         run: mv Symfony-API password-manager
         working-directory: ./
