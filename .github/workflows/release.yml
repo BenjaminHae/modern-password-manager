@@ -118,6 +118,9 @@ jobs:
       - name: configure app
         run: sudo sh -c 'echo "DATABASE_URL=\"sqlite:////var/www/pwman.sqlite\"" > .env.local'
         working-directory: /var/www/html/Symfony-API/
+      - name: configure app
+        run: sudo sh -c 'echo "APP_ENV=dev" >> .env.local'
+        working-directory: /var/www/html/Symfony-API/
       - name: prepare database
         run: sudo php bin/console doctrine:schema:update --force && sudo chown www-data:www-data /var/www/pwman.sqlite
         working-directory: /var/www/html/Symfony-API/
