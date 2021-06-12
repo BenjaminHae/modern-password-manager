@@ -30,5 +30,8 @@ security:
     access_control:
         - { path: ^/accounts, roles: ROLE_USER }
         - { path: ^/user/changepassword, roles: ROLE_USER }
+        - { path: ^/user/webauthn, roles: ROLE_USER }
+        - { path: ^/user/settings, roles: ROLE_USER }
+        - { path: ^/user/history, roles: ROLE_USER }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }

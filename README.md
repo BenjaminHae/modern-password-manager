@@ -19,6 +19,17 @@ There also is a [Browser Extension](https://github.com/BenjaminHae/MPMChromeExte
  - Login using biometrics
  - Stable API, so other clients (such as cli) can be implemented
 
+## Screenshots
+
+List of accounts (main view):  
+<img alt="Account List" src="./docs/Account_List.png" width="500"/>
+
+Editing an account:  
+<img alt="Editing an account" src="./docs/Account_Edit.png" width="300"/>
+
+Importing accounts from a csv file:  
+<img alt="Importing accounts from csv" src="./docs/Account_Import.png" width="500"/>
+
 ## Installation
 
 ### Productive use
@@ -47,7 +58,7 @@ The password manager only works when you access it through https or on localhost
 
 With this variant a docker container is started that uses a sqlite database.
 
- 1. run `docker build -t mpm` in the extracted release (or in the repository itself).
+ 1. run `docker build -t mpm .` in the extracted release (or in the repository itself).
  2. start the container: `docker run --name mpm -p 443:443 mpm`
  3. Visit [https://localhost](https://localhost)
  4. If you have used the database in a previous version, you need to upgrade the database (while the container is running).  

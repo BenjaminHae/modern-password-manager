@@ -10,10 +10,10 @@ COPY . /app
 WORKDIR /app/Symfony-API
 RUN composer -q install --no-dev --no-progress --optimize-autoloader --classmap-authoritative
 COPY --from=build-frontend /app/reactClient/my-app/build/ /app/Symfony-API/public/
-RUN rm ./templates/base.html.twig && ln -s ../public/index.html ./templates/index.html
+RUN rm ./templates/base.html.twig && rm ./templates/index.html && ln -s ../public/index.html ./templates/index.html
 
 WORKDIR /app/Symfony-API/vendor/openapi
-RUN rm server-bundle && cp -r ../../../OpenAPIServerBundle/ server-bundle
+RUN rm -r server-bundle && cp -r ../../../OpenAPIServerBundle/ server-bundle
 
 FROM php:7.4-apache
 RUN docker-php-ext-install pdo_mysql
@@ -31,7 +31,7 @@ RUN a2enmod rewrite && \
 
 COPY --from=build-backend /app/Symfony-API /app
 RUN mkdir /data && \
-    echo "DATABASE_URL=\"sqlite:////data/pwman.sqlite\"" > /app/.env.local
+    echo "DATABASE_URL=\"sqlite:////data/pwman.sqlite\"" > /app/.env.local && chown -R www-data:www-data /data
 RUN cd /app/ && php bin/console doctrine:schema:update --force
-RUN chown -R www-data:www-data /app/var
+RUN chown -R www-data:www-data /app
 
