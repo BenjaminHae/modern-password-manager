@@ -162,8 +162,14 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
     public function deleteUserWebAuthn($id, &$responseCode, array &$responseHeaders) {
         $currentUser = $this->security->getUser();
         $webAuthnController = new WebAuthnController($this->entityManager, $this->session, $this->eventController, $this->requestStack, $this->logger);
-        $webAuthnController->deleteWebAuthnDevice($currentUser, $id);
-        return $webAuthnController->getWebAuthnDevices($currentUser);
+        if ($webAuthnController->deleteWebAuthnDevice($currentUser, $id)) {
+            return $webAuthnController->getWebAuthnDevices($currentUser);
+        }
+        else {
+            $this->logger->error('WebAuthN deletion failed: id is unknown');
+            $responseCode = 404;
+            return $this->generateApiError("not found");
+        }
     }
 
     public function getUserHistory(&$responseCode, array &$responseHeaders) 

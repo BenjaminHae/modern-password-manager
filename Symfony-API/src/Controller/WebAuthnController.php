@@ -138,11 +138,12 @@ class WebAuthnController
             $this->entityManager->remove($decryptionKey);
             $this->entityManager->flush();
             $this->eventController->StoreEvent($user, "WebAuthn Delete", "Device Name: " . $deviceName);
+            return true;
         }
         else {
             $this->eventController->StoreEvent($user, "WebAuthn Delete", "failed: Tried to delete inexistent key $id");
+            return false;
         }
-        return true;
     }
 
     private function persistChallenge(ByteBuffer $challenge) {
