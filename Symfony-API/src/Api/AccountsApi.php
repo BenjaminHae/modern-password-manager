@@ -80,8 +80,13 @@ class AccountsApi extends CsrfProtection implements AccountsApiInterface
     public function updateAccount($id, OpenAPIAccount $account, &$responseCode, array &$responseHeaders)
     {
         $currentUser = $this->security->getUser();
-        $this->getAccountsController()->updateAccountFromAPI($currentUser, $id, $account);
-        return $this->getCurrentUsersAccounts();
+        if ($this->getAccountsController()->updateAccountFromAPI($currentUser, $id, $account)) {
+            return $this->getCurrentUsersAccounts();
+        }
+        else {
+            $this->logger->error('updating account failed, account does not exist');
+            $responseCode = 404;
+        }
     }
 
 

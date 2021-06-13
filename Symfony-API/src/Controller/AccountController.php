@@ -83,7 +83,7 @@ class AccountController
             else {
                 $currentAccount = $this->getSpecificAccountForUser($user, $account->getIndex());
             }
-            if (!account) {
+            if (!$currentAccount) {
                 return false;
             }
             $this->fillAccountFromRequest($account, $currentAccount);
