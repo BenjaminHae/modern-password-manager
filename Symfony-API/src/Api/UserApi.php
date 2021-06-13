@@ -122,7 +122,13 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
     public function registerUser(RegistrationInformation $registration, &$responseCode, array &$responseHeaders) {
         if (!$this->allowRegistration) {
           $this->logger->info('registration is disabled but was accessed');
+          $responseCode = 403;
           return $this->generateApiError("registration is not allowed");
+        }
+        if ($this->entityManager->getRepository(User::class)->findOneBy(['username' => $registration->getUsername()])) {
+          $this->logger->error('user already exists');
+          $responseCode = 403;
+          return $this->generateApiError("username can not be used");
         }
         $user = new User();
         $user->setUsername($registration->getUsername());
