@@ -54,9 +54,12 @@ class AccountController
     public function deleteAccount($user, $id)
     {
         $account = $this->getSpecificAccountForUser($user, $id);
-        $this->entityManager->remove($account);
-        $this->entityManager->flush();
-        return true;
+        if ($account) {
+            $this->entityManager->remove($account);
+            $this->entityManager->flush();
+            return true;
+        }
+        return false;
     }
 
     public function updateAccountFromApi($user, $id, OpenAPIAccount $account)
@@ -64,6 +67,10 @@ class AccountController
         return $this->updateAccountsFromApi($user, [["index"=>$id, "account"=>$account]]);
     }
 
+    /*
+     * updates all accounts in the provided array,
+     * does not update any account if one fails (for example does not exist)
+     */
     public function updateAccountsFromApi($user, $accounts)
     {
         //todo if every account should be updated there must be a way that reduces database regquests, i.e. get all accounts for the account
@@ -75,6 +82,9 @@ class AccountController
             }
             else {
                 $currentAccount = $this->getSpecificAccountForUser($user, $account->getIndex());
+            }
+            if (!$currentAccount) {
+                return false;
             }
             $this->fillAccountFromRequest($account, $currentAccount);
         }
