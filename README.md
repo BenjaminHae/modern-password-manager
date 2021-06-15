@@ -74,8 +74,8 @@ Data is stored within the container in `/data` and not persisted between contain
 With this variant a docker container for the application and a database service that persists the data is created:
  1. Change every occurence of `CHANGEME` in `docker-compose.yml` to some secret password, this is the password for the database.
  2. Change the value of the environment variable `APP_SECRET` for the service `mpm` to a new random value (32 hex characters). 
- 3. run `docker-compose up -d` within the path of your local copy of this repository.
- 4. run `docker-compose exec mpm /bin/sh -c "/app/bin/console doctrine:schema:update --force"` to upgrade the database
+ 3. run `docker-compose --env-file /dev/null up -d` within the path of your local copy of this repository.
+ 4. run `docker-compose --env-file /dev/null exec mpm /bin/sh -c "/app/bin/console doctrine:schema:update --force"` to upgrade the database
  5. visit your password-manager on `https://localhost`
 
 
