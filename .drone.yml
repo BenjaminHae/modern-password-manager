@@ -130,9 +130,9 @@ steps:
     # transfer to host
      - scp -i ~/.ssh/id_drone mpm.zip "$${SSH_USER}@$${SSH_HOST}:$${COPY_REMOTE_PATH}"
     # clear destination
-     - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" "/bin/sh -c 'cd $${DEPLOY_PATH} && ls -1'"
+     - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" "/bin/sh -c 'cd $${DEPLOY_PATH} && ls -1 | xargs rm -r'"
     # extract data
-     - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" "unzip -o -q $${COPY_PATH} -d $${DEPLOY_PATH} && rm $${COPY_PATH}"
+     - echo ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" "unzip -o -q $${COPY_PATH} -d $${DEPLOY_PATH} && rm $${COPY_PATH}"
     # execute db update
      - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" "cd $${DEPLOY_PATH} && $${${DRONE_DEPLOY_TO^^}PHP_VERSION} bin/console doctrine:schema:update --dump-sql && $${${DRONE_DEPLOY_TO^^}PHP_VERSION} bin/console doctrine:schema:update --force && $${${DRONE_DEPLOY_TO^^}PHP_VERSION} bin/console cache:clear"
    when:
