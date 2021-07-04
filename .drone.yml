@@ -117,6 +117,7 @@ steps:
      TEST_PHP_VERSION: "php7.4"
      PROD_PHP_VERSION: "php7.4"
    commands:
+     - set -ex
      - apk update
      - apk add zip openssh-client
     # setup ssh
