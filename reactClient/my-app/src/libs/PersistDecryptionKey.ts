@@ -54,10 +54,17 @@ export default class PersistDecryptionKey {
     })
   }
 
+  async activatePersistence(): Promise<void> {
+    if (navigator.storage && navigator.storage.persist && !await navigator.storage.persisted()) {
+      await navigator.storage.persist();
+    }
+  }
+
   async storeKeys(decryptionKeys: IDecryptionKeys): Promise<number> {
     if (!this.db) {
       await this.initStorage();
     }
+    await this.activatePersistence();
     return new Promise((resolve, reject) => {
       if (!this.db) {
         reject();
