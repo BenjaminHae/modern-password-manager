@@ -116,24 +116,10 @@ steps:
      DEV_PHP_VERSION: "php7.3"
      TEST_PHP_VERSION: "php7.4"
      PROD_PHP_VERSION: "php7.4"
+     PHP_VERSION: "${${DRONE_DEPLOY_TO^^}PHP_VERSION}"
    commands:
-     - apk update
-     - apk add zip openssh-client
-    # setup ssh
-     - mkdir ~/.ssh
-     - echo $${SSH_PRIVATE_KEY} | base64 -d > ~/.ssh/id_drone
-     - chmod 0600 ~/.ssh/id_drone
-     - echo $${SSH_HOST_KEY} | base64 -d > ~/.ssh/known_hosts
-     - chmod 0600 ~/.ssh/known_hosts
-    # create zip archive
-     - (cd ./Symfony-API && zip -q --symlinks -r ../mpm.zip .)
-    # transfer to host
-     - scp -i ~/.ssh/id_drone mpm.zip "$${SSH_USER}@$${SSH_HOST}:$${COPY_REMOTE_PATH}"
-     - echo Hi
-    # extract to destination
-     - ssh -i ~/.ssh/id_drone $${SSH_USER}@$${SSH_HOST} "unzip -o -q $${COPY_PATH} -d $${DEPLOY_PATH} && rm $${COPY_PATH}" > test.txt
-    # execute db update
-     - ssh -i ~/.ssh/id_drone "$${SSH_USER}@$${SSH_HOST}" "cd $${DEPLOY_PATH} && $${${DRONE_DEPLOY_TO^^}PHP_VERSION} bin/console doctrine:schema:update --dump-sql && $${${DRONE_DEPLOY_TO^^}PHP_VERSION} bin/console doctrine:schema:update --force && $${${DRONE_DEPLOY_TO^^}PHP_VERSION} bin/console cache:clear"
+     - echo $${PHP_VERSION}
+     - . ./drone_scripts/deploy.sh
    when:
      event:
       - promote
