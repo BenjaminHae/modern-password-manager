@@ -1,4 +1,5 @@
 #!/bin/sh
+set -x
 apk update
 apk add zip openssh-client
 # setup ssh
