@@ -117,7 +117,7 @@ steps:
      TEST_PHP_VERSION: "php7.4"
      PROD_PHP_VERSION: "php7.4"
    commands:
-     - export PHP_VERSION=$${${DRONE_DEPLOY_TO^^}PHP_VERSION}
+     - export PHP_VERSION=$${${DRONE_DEPLOY_TO^^}_PHP_VERSION}
      - echo $${PHP_VERSION}
      - . ./drone_scripts/deploy.sh
    when:
