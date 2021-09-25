@@ -52,15 +52,15 @@ class ChangePassword extends React.Component<IChangePasswordProps, ChangePasswor
           <fieldset disabled={this.state.waiting}>
             <Form.Group controlId="changePwOldPassword">
               <Form.Label>Old Password</Form.Label>
-              <PasswordInputWithToggle autoFocus={true} onChange={this.handleGenericChange} placeholder="Old Password" name="oldPassword" value={this.state.oldPassword} />
+              <PasswordInputWithToggle autoFocus={true} onChange={this.handleGenericChange} placeholder="Old Password" name="oldPassword" value={this.state.oldPassword} autoComplete="current-password" />
             </Form.Group>
             <Form.Group controlId="changePwNewPassword">
               <Form.Label>New Password</Form.Label>
-              <PasswordInputWithToggle onChange={this.handleGenericChange} placeholder="New Password" name="newPassword" value={this.state.newPassword} />
+              <PasswordInputWithToggle onChange={this.handleGenericChange} placeholder="New Password" name="newPassword" value={this.state.newPassword} autoComplete="new-password" />
             </Form.Group>
             <Form.Group controlId="changePwNewPassword2">
               <Form.Label>Repeat new Password</Form.Label>
-              <PasswordInputWithToggle onChange={this.handleGenericChange} placeholder="New Password (repeated)" name="newPassword2" value={this.state.newPassword2} />
+              <PasswordInputWithToggle onChange={this.handleGenericChange} placeholder="New Password (repeated)" name="newPassword2" value={this.state.newPassword2} autoComplete="new-password" />
             </Form.Group>
             <Button variant="primary" type="submit">Change Password</Button>
           </fieldset>
