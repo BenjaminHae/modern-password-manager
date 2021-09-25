@@ -115,7 +115,7 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
             <Form onSubmit={ this.handleDialogStore }>
               <Form.Group controlId="webAuthnFormUsername">
                 <Form.Label>Username (not necessarily your current username - only shown locally in authentication dialog)</Form.Label>
-                <Form.Control type="text" autoFocus placeholder="Enter Username" name="username" onChange={this.handleGenericChange} required />
+                <Form.Control type="text" autoFocus placeholder="Enter Username" name="username" onChange={this.handleGenericChange} required autoComplete="username" />
               </Form.Group>
               <Form.Group controlId="webAuthnFormDeviceName">
                 <Form.Label>Device name to identify this device</Form.Label>
@@ -123,7 +123,7 @@ class WebAuthn extends React.Component<IWebAuthnProps, WebAuthnState> {
               </Form.Group>
               <Form.Group controlId="webAuthnFormPassword">
                 <Form.Label>Password (your current password)</Form.Label>
-                <PasswordInputWithToggle onChange={this.handleGenericChange} value={this.state.password} required />
+                <PasswordInputWithToggle onChange={this.handleGenericChange} value={this.state.password} required autoComplete="current-password" />
               </Form.Group>
               <Button disabled={this.state.waiting} variant="primary" type="submit">
                 { this.state.waiting ? "Registering" : "Add this device" }

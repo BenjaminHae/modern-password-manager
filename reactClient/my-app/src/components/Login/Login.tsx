@@ -54,14 +54,14 @@ class Login extends React.Component<LoginProps, LoginState> {
       <fieldset disabled={this.state.waiting}>
         <Form.Group controlId="formUsername">
           <Form.Label>Username</Form.Label>
-          <Form.Control type="text" autoFocus placeholder="Enter Username" name="username" onChange={this.handleGenericChange} required />
+          <Form.Control type="text" autoFocus placeholder="Enter Username" name="username" onChange={this.handleGenericChange} required autoComplete="username" />
           <Form.Control.Feedback type="invalid">
             Username is required
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group controlId="formPassword">
           <Form.Label>Password</Form.Label>
-          <PasswordInputWithToggle onChange={this.handleGenericChange} value={this.state.password} required />
+          <PasswordInputWithToggle onChange={this.handleGenericChange} value={this.state.password} required autoComplete="current-password" />
           <Form.Control.Feedback type="invalid">
             Password is required
           </Form.Control.Feedback>
