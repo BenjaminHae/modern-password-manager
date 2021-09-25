@@ -11,7 +11,10 @@ chmod 0600 ~/.ssh/known_hosts
 (cd ./Symfony-API && zip -q --symlinks -r ../mpm.zip .)
 # transfer to host
 scp -i ~/.ssh/id_drone mpm.zip "${SSH_USER}@${SSH_HOST}:${COPY_REMOTE_PATH}"
+# clear destination
+ssh -i ~/.ssh/id_drone "${SSH_USER}@${SSH_HOST}" "/bin/sh -c 'cd ${DEPLOY_PATH} && ls -1'"
+# | xargs rm -r
 # extract to destination
-ssh -i ~/.ssh/id_drone ${SSH_USER}@${SSH_HOST} "unzip -o -q ${COPY_PATH} -d ${DEPLOY_PATH} && rm ${COPY_PATH}" > test.txt
+ssh -i ~/.ssh/id_drone ${SSH_USER}@${SSH_HOST} "unzip -o -q ${COPY_PATH} -d ${DEPLOY_PATH} && rm ${COPY_PATH}"
 # execute db update
 ssh -i ~/.ssh/id_drone "${SSH_USER}@${SSH_HOST}" "cd ${DEPLOY_PATH} && ${PHP_VERSION} bin/console doctrine:schema:update --dump-sql && ${PHP_VERSION} bin/console doctrine:schema:update --force && ${PHP_VERSION} bin/console cache:clear"
