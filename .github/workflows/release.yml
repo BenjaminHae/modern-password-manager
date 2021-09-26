@@ -108,7 +108,7 @@ jobs:
           tags: benjaminhae/modern-password-manager:latest
           push: true
           secrets: |
-            GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
+            GIT_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
   #test_integration:
   #  name: integration tests
   #  needs: build_symfony
