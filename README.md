@@ -10,6 +10,12 @@ For login you can use [WebAuthN](https://en.wikipedia.org/wiki/WebAuthn) using p
 
 There also is a [Browser Extension](https://github.com/BenjaminHae/MPMChromeExtension/) ([chrome web store](https://chrome.google.com/webstore/detail/modern-password-manager/nicghopbfhgnjbbkdhkhaiekhpdjdfge)).
 
+## Run and test
+
+
+    docker pull ghcr.io/benjaminhae/modern-password-manager:latest
+
+
 ## Features
 
  - All data is encrypted before it is sent to the server
