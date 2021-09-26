@@ -13,7 +13,7 @@ There also is a [Browser Extension](https://github.com/BenjaminHae/MPMChromeExte
 ## Run and test
 
 
-    docker pull ghcr.io/benjaminhae/modern-password-manager:latest
+    docker run -p 443:443 ghcr.io/benjaminhae/modern-password-manager:latest
 
 
 ## Features
