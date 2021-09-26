@@ -138,9 +138,6 @@ jobs:
         if: ${{ failure() }}
         run: sudo cat var/log/prod/*
         working-directory: /var/www/html/Symfony-API/
-      - name: copy Dockerfile
-        run: "cp ../dockerBuild/SymfonyDockerfile Dockerfile"
-        working-directory: ./Symfony-API/
   release:
     name: create release draft
     needs: test_integration
