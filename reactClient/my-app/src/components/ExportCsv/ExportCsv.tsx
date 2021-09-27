@@ -54,13 +54,15 @@ const ExportCsv: React.FC<IExportCsvProps> = (props: IExportCsvProps) => {
     <Col lg={{ span: 6, offset: 3 }} md={{ span: 8, offset: 2 }} sm={{ span: 12 }}>
       <h3>Export Accounts</h3>
       <p>Exports data as CSV file containing all passwords in plain text.</p>
-      <Form.Group controlId="changePwNewPassword">
-        <Form.Label>Please enter your current password first:</Form.Label>
-        <PasswordInputWithToggle onChange={(e)=>setPassword(e.target.value)} placeholder="Password" name="password" value={password} />
-      </Form.Group>
-      <Button onClick={() => verifyPasswordAndDownloadCsv()}>
-        Export CSV
-      </Button>
+      <Col lg={{ span: 6 }} md={{ span: 8 }} sm={{ span: 12 }}>
+        <Form.Group controlId="exportRequestPassword">
+          <Form.Label>Please enter your current password first:</Form.Label>
+          <PasswordInputWithToggle onChange={(e)=>setPassword(e.target.value)} placeholder="Password" name="password" value={password} autoFocus autoComplete="current-password" />
+        </Form.Group>
+        <Button onClick={() => verifyPasswordAndDownloadCsv()}>
+          Export CSV
+        </Button>
+      </Col>
     </Col>
   </div>
 );
