@@ -18,7 +18,7 @@ import {
     AccountIdFromJSON,
     AccountIdFromJSONTyped,
     AccountIdToJSON,
-} from './';
+} from './AccountId';
 
 /**
  * 
@@ -76,5 +76,4 @@ export function ChangePasswordToJSON(value?: ChangePassword | null): any {
         'accounts': ((value.accounts as Array<any>).map(AccountIdToJSON)),
     };
 }
-
 

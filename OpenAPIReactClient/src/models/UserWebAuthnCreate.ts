@@ -18,7 +18,7 @@ import {
     UserWebAuthnCreateResponseFromJSON,
     UserWebAuthnCreateResponseFromJSONTyped,
     UserWebAuthnCreateResponseToJSON,
-} from './';
+} from './UserWebAuthnCreateResponse';
 
 /**
  * 
@@ -76,5 +76,4 @@ export function UserWebAuthnCreateToJSON(value?: UserWebAuthnCreate | null): any
         'response': UserWebAuthnCreateResponseToJSON(value.response),
     };
 }
-
 

@@ -54,4 +54,3 @@ export function ModelIndexToJSON(value?: ModelIndex | null): any {
     };
 }
 
-

@@ -24,7 +24,7 @@ export interface DecryptionKey {
      * @type {string}
      * @memberof DecryptionKey
      */
-    decryptionKey?: string;
+    decryptionKey: string;
 }
 
 export function DecryptionKeyFromJSON(json: any): DecryptionKey {
@@ -37,7 +37,7 @@ export function DecryptionKeyFromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'decryptionKey': !exists(json, 'decryptionKey') ? undefined : json['decryptionKey'],
+        'decryptionKey': json['decryptionKey'],
     };
 }
 
@@ -53,5 +53,4 @@ export function DecryptionKeyToJSON(value?: DecryptionKey | null): any {
         'decryptionKey': value.decryptionKey,
     };
 }
-
 

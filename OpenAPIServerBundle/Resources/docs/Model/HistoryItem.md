@@ -5,7 +5,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **userAgent** | **string** |  | 
 **iP** | **string** |  | 
-**time** | [**\DateTime**](\DateTime.md) |  | 
+**time** | **\DateTime** |  | 
 **event** | **string** |  | 
 **eventResult** | **string** |  | 
 

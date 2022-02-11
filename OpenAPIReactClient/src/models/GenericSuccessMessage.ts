@@ -62,4 +62,3 @@ export function GenericSuccessMessageToJSON(value?: GenericSuccessMessage | null
     };
 }
 
-

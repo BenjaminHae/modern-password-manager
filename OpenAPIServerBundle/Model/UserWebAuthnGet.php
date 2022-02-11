@@ -54,6 +54,7 @@ class UserWebAuthnGet
      * @var OpenAPI\Server\Model\UserWebAuthnGetResponse
      * @SerializedName("response")
      * @Assert\NotNull()
+     * @Assert\Valid()
      * @Assert\Type("OpenAPI\Server\Model\UserWebAuthnGetResponse")
      * @Type("OpenAPI\Server\Model\UserWebAuthnGetResponse")
      */

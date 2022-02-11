@@ -18,11 +18,13 @@ import {
     AccountFromJSON,
     AccountFromJSONTyped,
     AccountToJSON,
+} from './Account';
+import {
     ModelIndex,
     ModelIndexFromJSON,
     ModelIndexFromJSONTyped,
     ModelIndexToJSON,
-} from './';
+} from './ModelIndex';
 
 /**
  * 
@@ -88,5 +90,4 @@ export function AccountIdToJSON(value?: AccountId | null): any {
         'password': value.password,
     };
 }
-
 

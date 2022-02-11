@@ -62,4 +62,3 @@ export function LogonInformationToJSON(value?: LogonInformation | null): any {
     };
 }
 
-

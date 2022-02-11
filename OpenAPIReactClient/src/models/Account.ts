@@ -70,4 +70,3 @@ export function AccountToJSON(value?: Account | null): any {
     };
 }
 
-

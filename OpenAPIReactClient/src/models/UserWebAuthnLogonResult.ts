@@ -18,11 +18,13 @@ import {
     DecryptionKeyFromJSON,
     DecryptionKeyFromJSONTyped,
     DecryptionKeyToJSON,
+} from './DecryptionKey';
+import {
     LogonResult,
     LogonResultFromJSON,
     LogonResultFromJSONTyped,
     LogonResultToJSON,
-} from './';
+} from './LogonResult';
 
 /**
  * 
@@ -59,7 +61,7 @@ export interface UserWebAuthnLogonResult {
      * @type {string}
      * @memberof UserWebAuthnLogonResult
      */
-    decryptionKey?: string;
+    decryptionKey: string;
 }
 
 export function UserWebAuthnLogonResultFromJSON(json: any): UserWebAuthnLogonResult {
@@ -76,7 +78,7 @@ export function UserWebAuthnLogonResultFromJSONTyped(json: any, ignoreDiscrimina
         'message': json['message'],
         'lastLogin': !exists(json, 'lastLogin') ? undefined : (json['lastLogin'] === null ? null : new Date(json['lastLogin'])),
         'failedLogins': !exists(json, 'failedLogins') ? undefined : json['failedLogins'],
-        'decryptionKey': !exists(json, 'decryptionKey') ? undefined : json['decryptionKey'],
+        'decryptionKey': json['decryptionKey'],
     };
 }
 
@@ -96,5 +98,4 @@ export function UserWebAuthnLogonResultToJSON(value?: UserWebAuthnLogonResult | 
         'decryptionKey': value.decryptionKey,
     };
 }
-
 

@@ -57,12 +57,11 @@ interface AccountsApiInterface
      *
      * Add Account
      *
-     * @param  OpenAPI\Server\Model\Account[] $account  Account Values (required)
-     * @param  integer $responseCode     The HTTP response code to return
-     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     * @param  \OpenAPI\Server\Model\Account[] $account  Account Values (required)
+     * @param  \int $responseCode     The HTTP response code to return
+     * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
-     * @return OpenAPI\Server\Model\AccountId[]
-     *
+     * @return \OpenAPI\Server\Model\AccountId[]
      */
     public function addAccounts(array $account, &$responseCode, array &$responseHeaders);
 
@@ -71,12 +70,11 @@ interface AccountsApiInterface
      *
      * Delete a stored Account
      *
-     * @param  int $id  The id of the account (required)
-     * @param  integer $responseCode     The HTTP response code to return
-     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     * @param  \int $id  The id of the account (required)
+     * @param  \int $responseCode     The HTTP response code to return
+     * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
-     * @return OpenAPI\Server\Model\AccountId[]
-     *
+     * @return \OpenAPI\Server\Model\AccountId[]
      */
     public function deleteAccount($id, &$responseCode, array &$responseHeaders);
 
@@ -85,11 +83,10 @@ interface AccountsApiInterface
      *
      * Returns the accounts stored by the current user
      *
-     * @param  integer $responseCode     The HTTP response code to return
-     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     * @param  \int $responseCode     The HTTP response code to return
+     * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
-     * @return OpenAPI\Server\Model\AccountId[]
-     *
+     * @return \OpenAPI\Server\Model\AccountId[]
      */
     public function getAccounts(&$responseCode, array &$responseHeaders);
 
@@ -98,13 +95,12 @@ interface AccountsApiInterface
      *
      * Update a stored account
      *
-     * @param  int $id  The id of the account (required)
-     * @param  OpenAPI\Server\Model\Account $account  Account Object (required)
-     * @param  integer $responseCode     The HTTP response code to return
-     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     * @param  \int $id  The id of the account (required)
+     * @param  \OpenAPI\Server\Model\Account $account  Account Object (required)
+     * @param  \int $responseCode     The HTTP response code to return
+     * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
-     * @return OpenAPI\Server\Model\AccountId[]
-     *
+     * @return \OpenAPI\Server\Model\AccountId[]
      */
     public function updateAccount($id, Account $account, &$responseCode, array &$responseHeaders);
 }

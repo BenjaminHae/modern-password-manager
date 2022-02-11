@@ -47,11 +47,10 @@ interface MaintenanceApiInterface
      *
      * get information about the server for the client
      *
-     * @param  integer $responseCode     The HTTP response code to return
-     * @param  array   $responseHeaders  Additional HTTP headers to return with the response ()
+     * @param  \int $responseCode     The HTTP response code to return
+     * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
-     * @return OpenAPI\Server\Model\ServerInformation
-     *
+     * @return \OpenAPI\Server\Model\ServerInformation
      */
     public function serverInformation(&$responseCode, array &$responseHeaders);
 }

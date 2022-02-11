@@ -54,4 +54,3 @@ export function UserInformationToJSON(value?: UserInformation | null): any {
     };
 }
 
-

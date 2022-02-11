@@ -86,4 +86,3 @@ export function ServerInformationToJSON(value?: ServerInformation | null): any {
     };
 }
 
-

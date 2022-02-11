@@ -70,4 +70,3 @@ export function UserWebAuthnCredToJSON(value?: UserWebAuthnCred | null): any {
     };
 }
 
-
