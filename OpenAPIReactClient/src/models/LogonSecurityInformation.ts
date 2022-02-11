@@ -62,4 +62,3 @@ export function LogonSecurityInformationToJSON(value?: LogonSecurityInformation 
     };
 }
 
-

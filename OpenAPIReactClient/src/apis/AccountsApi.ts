@@ -44,7 +44,7 @@ export class AccountsApi extends runtime.BaseAPI {
     /**
      * Add Account
      */
-    async addAccountsRaw(requestParameters: AddAccountsRequest): Promise<runtime.ApiResponse<Array<AccountId>>> {
+    async addAccountsRaw(requestParameters: AddAccountsRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<AccountId>>> {
         if (requestParameters.account === null || requestParameters.account === undefined) {
             throw new runtime.RequiredError('account','Required parameter requestParameters.account was null or undefined when calling addAccounts.');
         }
@@ -65,7 +65,7 @@ export class AccountsApi extends runtime.BaseAPI {
             headers: headerParameters,
             query: queryParameters,
             body: requestParameters.account.map(AccountToJSON),
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(AccountIdFromJSON));
     }
@@ -73,15 +73,15 @@ export class AccountsApi extends runtime.BaseAPI {
     /**
      * Add Account
      */
-    async addAccounts(requestParameters: AddAccountsRequest): Promise<Array<AccountId>> {
-        const response = await this.addAccountsRaw(requestParameters);
+    async addAccounts(requestParameters: AddAccountsRequest, initOverrides?: RequestInit): Promise<Array<AccountId>> {
+        const response = await this.addAccountsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Delete a stored Account
      */
-    async deleteAccountRaw(requestParameters: DeleteAccountRequest): Promise<runtime.ApiResponse<Array<AccountId>>> {
+    async deleteAccountRaw(requestParameters: DeleteAccountRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<AccountId>>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteAccount.');
         }
@@ -95,7 +95,7 @@ export class AccountsApi extends runtime.BaseAPI {
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(AccountIdFromJSON));
     }
@@ -103,15 +103,15 @@ export class AccountsApi extends runtime.BaseAPI {
     /**
      * Delete a stored Account
      */
-    async deleteAccount(requestParameters: DeleteAccountRequest): Promise<Array<AccountId>> {
-        const response = await this.deleteAccountRaw(requestParameters);
+    async deleteAccount(requestParameters: DeleteAccountRequest, initOverrides?: RequestInit): Promise<Array<AccountId>> {
+        const response = await this.deleteAccountRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Returns the accounts stored by the current user
      */
-    async getAccountsRaw(): Promise<runtime.ApiResponse<Array<AccountId>>> {
+    async getAccountsRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<AccountId>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -121,7 +121,7 @@ export class AccountsApi extends runtime.BaseAPI {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(AccountIdFromJSON));
     }
@@ -129,15 +129,15 @@ export class AccountsApi extends runtime.BaseAPI {
     /**
      * Returns the accounts stored by the current user
      */
-    async getAccounts(): Promise<Array<AccountId>> {
-        const response = await this.getAccountsRaw();
+    async getAccounts(initOverrides?: RequestInit): Promise<Array<AccountId>> {
+        const response = await this.getAccountsRaw(initOverrides);
         return await response.value();
     }
 
     /**
      * Update a stored account
      */
-    async updateAccountRaw(requestParameters: UpdateAccountRequest): Promise<runtime.ApiResponse<Array<AccountId>>> {
+    async updateAccountRaw(requestParameters: UpdateAccountRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<AccountId>>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling updateAccount.');
         }
@@ -162,7 +162,7 @@ export class AccountsApi extends runtime.BaseAPI {
             headers: headerParameters,
             query: queryParameters,
             body: AccountToJSON(requestParameters.account),
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(AccountIdFromJSON));
     }
@@ -170,8 +170,8 @@ export class AccountsApi extends runtime.BaseAPI {
     /**
      * Update a stored account
      */
-    async updateAccount(requestParameters: UpdateAccountRequest): Promise<Array<AccountId>> {
-        const response = await this.updateAccountRaw(requestParameters);
+    async updateAccount(requestParameters: UpdateAccountRequest, initOverrides?: RequestInit): Promise<Array<AccountId>> {
+        const response = await this.updateAccountRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

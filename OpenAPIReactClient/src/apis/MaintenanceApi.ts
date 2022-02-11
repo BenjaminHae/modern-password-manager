@@ -28,7 +28,7 @@ export class MaintenanceApi extends runtime.BaseAPI {
     /**
      * get information about the server for the client
      */
-    async serverInformationRaw(): Promise<runtime.ApiResponse<ServerInformation>> {
+    async serverInformationRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<ServerInformation>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -38,7 +38,7 @@ export class MaintenanceApi extends runtime.BaseAPI {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ServerInformationFromJSON(jsonValue));
     }
@@ -46,8 +46,8 @@ export class MaintenanceApi extends runtime.BaseAPI {
     /**
      * get information about the server for the client
      */
-    async serverInformation(): Promise<ServerInformation> {
-        const response = await this.serverInformationRaw();
+    async serverInformation(initOverrides?: RequestInit): Promise<ServerInformation> {
+        const response = await this.serverInformationRaw(initOverrides);
         return await response.value();
     }
 

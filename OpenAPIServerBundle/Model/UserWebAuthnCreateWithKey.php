@@ -63,14 +63,16 @@ class UserWebAuthnCreateWithKey
      * @var OpenAPI\Server\Model\UserWebAuthnCreateResponse
      * @SerializedName("response")
      * @Assert\NotNull()
+     * @Assert\Valid()
      * @Assert\Type("OpenAPI\Server\Model\UserWebAuthnCreateResponse")
      * @Type("OpenAPI\Server\Model\UserWebAuthnCreateResponse")
      */
     protected $response;
 
     /**
-     * @var string|null
+     * @var string
      * @SerializedName("decryptionKey")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
@@ -163,7 +165,7 @@ class UserWebAuthnCreateWithKey
     /**
      * Gets decryptionKey.
      *
-     * @return string|null
+     * @return string
      */
     public function getDecryptionKey()
     {
@@ -173,11 +175,11 @@ class UserWebAuthnCreateWithKey
     /**
      * Sets decryptionKey.
      *
-     * @param string|null $decryptionKey
+     * @param string $decryptionKey
      *
      * @return $this
      */
-    public function setDecryptionKey($decryptionKey = null)
+    public function setDecryptionKey($decryptionKey)
     {
         $this->decryptionKey = $decryptionKey;
 

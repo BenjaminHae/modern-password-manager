@@ -100,6 +100,7 @@ class AccountsController extends Controller
         $asserts[] = new Assert\All([
             new Assert\Type("OpenAPI\Server\Model\Account"),
         ]);
+        $asserts[] = new Assert\Valid();
         $response = $this->validate($account, $asserts);
         if ($response instanceof Response) {
             return $response;
@@ -111,7 +112,7 @@ class AccountsController extends Controller
 
             // Set authentication method 'csrf'
             $handler->setcsrf($securitycsrf);
-            
+
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
@@ -194,7 +195,7 @@ class AccountsController extends Controller
         try {
             $handler = $this->getApiHandler();
 
-            
+
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
@@ -263,7 +264,7 @@ class AccountsController extends Controller
         try {
             $handler = $this->getApiHandler();
 
-            
+
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
@@ -369,7 +370,7 @@ class AccountsController extends Controller
 
             // Set authentication method 'csrf'
             $handler->setcsrf($securitycsrf);
-            
+
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];

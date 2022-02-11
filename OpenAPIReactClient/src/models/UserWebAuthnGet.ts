@@ -18,7 +18,7 @@ import {
     UserWebAuthnGetResponseFromJSON,
     UserWebAuthnGetResponseFromJSONTyped,
     UserWebAuthnGetResponseToJSON,
-} from './';
+} from './UserWebAuthnGetResponse';
 
 /**
  * 
@@ -68,5 +68,4 @@ export function UserWebAuthnGetToJSON(value?: UserWebAuthnGet | null): any {
         'response': UserWebAuthnGetResponseToJSON(value.response),
     };
 }
-
 

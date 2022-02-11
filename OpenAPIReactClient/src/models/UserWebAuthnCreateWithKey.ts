@@ -18,15 +18,19 @@ import {
     DecryptionKeyFromJSON,
     DecryptionKeyFromJSONTyped,
     DecryptionKeyToJSON,
+} from './DecryptionKey';
+import {
     UserWebAuthnCreate,
     UserWebAuthnCreateFromJSON,
     UserWebAuthnCreateFromJSONTyped,
     UserWebAuthnCreateToJSON,
+} from './UserWebAuthnCreate';
+import {
     UserWebAuthnCreateResponse,
     UserWebAuthnCreateResponseFromJSON,
     UserWebAuthnCreateResponseFromJSONTyped,
     UserWebAuthnCreateResponseToJSON,
-} from './';
+} from './UserWebAuthnCreateResponse';
 
 /**
  * 
@@ -57,7 +61,7 @@ export interface UserWebAuthnCreateWithKey {
      * @type {string}
      * @memberof UserWebAuthnCreateWithKey
      */
-    decryptionKey?: string;
+    decryptionKey: string;
 }
 
 export function UserWebAuthnCreateWithKeyFromJSON(json: any): UserWebAuthnCreateWithKey {
@@ -73,7 +77,7 @@ export function UserWebAuthnCreateWithKeyFromJSONTyped(json: any, ignoreDiscrimi
         'id': json['id'],
         'name': json['name'],
         'response': UserWebAuthnCreateResponseFromJSON(json['response']),
-        'decryptionKey': !exists(json, 'decryptionKey') ? undefined : json['decryptionKey'],
+        'decryptionKey': json['decryptionKey'],
     };
 }
 
@@ -92,5 +96,4 @@ export function UserWebAuthnCreateWithKeyToJSON(value?: UserWebAuthnCreateWithKe
         'decryptionKey': value.decryptionKey,
     };
 }
-
 

@@ -90,7 +90,7 @@ export class UserApi extends runtime.BaseAPI {
      * change password of current user and upload reencrypted accounts
      * change user password
      */
-    async changePasswordRaw(requestParameters: ChangePasswordRequest): Promise<runtime.ApiResponse<GenericSuccessMessage>> {
+    async changePasswordRaw(requestParameters: ChangePasswordRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<GenericSuccessMessage>> {
         if (requestParameters.changePassword === null || requestParameters.changePassword === undefined) {
             throw new runtime.RequiredError('changePassword','Required parameter requestParameters.changePassword was null or undefined when calling changePassword.');
         }
@@ -111,7 +111,7 @@ export class UserApi extends runtime.BaseAPI {
             headers: headerParameters,
             query: queryParameters,
             body: ChangePasswordToJSON(requestParameters.changePassword),
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => GenericSuccessMessageFromJSON(jsonValue));
     }
@@ -120,8 +120,8 @@ export class UserApi extends runtime.BaseAPI {
      * change password of current user and upload reencrypted accounts
      * change user password
      */
-    async changePassword(requestParameters: ChangePasswordRequest): Promise<GenericSuccessMessage> {
-        const response = await this.changePasswordRaw(requestParameters);
+    async changePassword(requestParameters: ChangePasswordRequest, initOverrides?: RequestInit): Promise<GenericSuccessMessage> {
+        const response = await this.changePasswordRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -129,7 +129,7 @@ export class UserApi extends runtime.BaseAPI {
      * add webauthn
      * add a webauthn credential
      */
-    async createUserWebAuthnRaw(requestParameters: CreateUserWebAuthnRequest): Promise<runtime.ApiResponse<GenericSuccessMessage>> {
+    async createUserWebAuthnRaw(requestParameters: CreateUserWebAuthnRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<GenericSuccessMessage>> {
         if (requestParameters.userWebAuthnCreateWithKey === null || requestParameters.userWebAuthnCreateWithKey === undefined) {
             throw new runtime.RequiredError('userWebAuthnCreateWithKey','Required parameter requestParameters.userWebAuthnCreateWithKey was null or undefined when calling createUserWebAuthn.');
         }
@@ -150,7 +150,7 @@ export class UserApi extends runtime.BaseAPI {
             headers: headerParameters,
             query: queryParameters,
             body: UserWebAuthnCreateWithKeyToJSON(requestParameters.userWebAuthnCreateWithKey),
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => GenericSuccessMessageFromJSON(jsonValue));
     }
@@ -159,15 +159,15 @@ export class UserApi extends runtime.BaseAPI {
      * add webauthn
      * add a webauthn credential
      */
-    async createUserWebAuthn(requestParameters: CreateUserWebAuthnRequest): Promise<GenericSuccessMessage> {
-        const response = await this.createUserWebAuthnRaw(requestParameters);
+    async createUserWebAuthn(requestParameters: CreateUserWebAuthnRequest, initOverrides?: RequestInit): Promise<GenericSuccessMessage> {
+        const response = await this.createUserWebAuthnRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Delete a stored WebAuthn Public Key
      */
-    async deleteUserWebAuthnRaw(requestParameters: DeleteUserWebAuthnRequest): Promise<runtime.ApiResponse<Array<UserWebAuthnCred>>> {
+    async deleteUserWebAuthnRaw(requestParameters: DeleteUserWebAuthnRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<UserWebAuthnCred>>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteUserWebAuthn.');
         }
@@ -181,7 +181,7 @@ export class UserApi extends runtime.BaseAPI {
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserWebAuthnCredFromJSON));
     }
@@ -189,15 +189,15 @@ export class UserApi extends runtime.BaseAPI {
     /**
      * Delete a stored WebAuthn Public Key
      */
-    async deleteUserWebAuthn(requestParameters: DeleteUserWebAuthnRequest): Promise<Array<UserWebAuthnCred>> {
-        const response = await this.deleteUserWebAuthnRaw(requestParameters);
+    async deleteUserWebAuthn(requestParameters: DeleteUserWebAuthnRequest, initOverrides?: RequestInit): Promise<Array<UserWebAuthnCred>> {
+        const response = await this.deleteUserWebAuthnRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Returns a history of successful and failed logins
      */
-    async getUserHistoryRaw(): Promise<runtime.ApiResponse<Array<HistoryItem>>> {
+    async getUserHistoryRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<HistoryItem>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -207,7 +207,7 @@ export class UserApi extends runtime.BaseAPI {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(HistoryItemFromJSON));
     }
@@ -215,15 +215,15 @@ export class UserApi extends runtime.BaseAPI {
     /**
      * Returns a history of successful and failed logins
      */
-    async getUserHistory(): Promise<Array<HistoryItem>> {
-        const response = await this.getUserHistoryRaw();
+    async getUserHistory(initOverrides?: RequestInit): Promise<Array<HistoryItem>> {
+        const response = await this.getUserHistoryRaw(initOverrides);
         return await response.value();
     }
 
     /**
      * Returns the client settings of the current user
      */
-    async getUserSettingsRaw(): Promise<runtime.ApiResponse<UserSettings>> {
+    async getUserSettingsRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<UserSettings>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -233,7 +233,7 @@ export class UserApi extends runtime.BaseAPI {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UserSettingsFromJSON(jsonValue));
     }
@@ -241,15 +241,15 @@ export class UserApi extends runtime.BaseAPI {
     /**
      * Returns the client settings of the current user
      */
-    async getUserSettings(): Promise<UserSettings> {
-        const response = await this.getUserSettingsRaw();
+    async getUserSettings(initOverrides?: RequestInit): Promise<UserSettings> {
+        const response = await this.getUserSettingsRaw(initOverrides);
         return await response.value();
     }
 
     /**
      * get all registered WebAuthn credentials for the user
      */
-    async getUserWebAuthnCredsRaw(): Promise<runtime.ApiResponse<Array<UserWebAuthnCred>>> {
+    async getUserWebAuthnCredsRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<UserWebAuthnCred>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -259,7 +259,7 @@ export class UserApi extends runtime.BaseAPI {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserWebAuthnCredFromJSON));
     }
@@ -267,15 +267,15 @@ export class UserApi extends runtime.BaseAPI {
     /**
      * get all registered WebAuthn credentials for the user
      */
-    async getUserWebAuthnCreds(): Promise<Array<UserWebAuthnCred>> {
-        const response = await this.getUserWebAuthnCredsRaw();
+    async getUserWebAuthnCreds(initOverrides?: RequestInit): Promise<Array<UserWebAuthnCred>> {
+        const response = await this.getUserWebAuthnCredsRaw(initOverrides);
         return await response.value();
     }
 
     /**
      * login
      */
-    async loginUserRaw(requestParameters: LoginUserRequest): Promise<runtime.ApiResponse<LogonResult>> {
+    async loginUserRaw(requestParameters: LoginUserRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<LogonResult>> {
         if (requestParameters.logonInformation === null || requestParameters.logonInformation === undefined) {
             throw new runtime.RequiredError('logonInformation','Required parameter requestParameters.logonInformation was null or undefined when calling loginUser.');
         }
@@ -296,7 +296,7 @@ export class UserApi extends runtime.BaseAPI {
             headers: headerParameters,
             query: queryParameters,
             body: LogonInformationToJSON(requestParameters.logonInformation),
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => LogonResultFromJSON(jsonValue));
     }
@@ -304,15 +304,15 @@ export class UserApi extends runtime.BaseAPI {
     /**
      * login
      */
-    async loginUser(requestParameters: LoginUserRequest): Promise<LogonResult> {
-        const response = await this.loginUserRaw(requestParameters);
+    async loginUser(requestParameters: LoginUserRequest, initOverrides?: RequestInit): Promise<LogonResult> {
+        const response = await this.loginUserRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * get a WebAuthN challenge
      */
-    async loginUserWebAuthnChallengeRaw(): Promise<runtime.ApiResponse<UserWebAuthnChallenge>> {
+    async loginUserWebAuthnChallengeRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<UserWebAuthnChallenge>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -322,7 +322,7 @@ export class UserApi extends runtime.BaseAPI {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UserWebAuthnChallengeFromJSON(jsonValue));
     }
@@ -330,8 +330,8 @@ export class UserApi extends runtime.BaseAPI {
     /**
      * get a WebAuthN challenge
      */
-    async loginUserWebAuthnChallenge(): Promise<UserWebAuthnChallenge> {
-        const response = await this.loginUserWebAuthnChallengeRaw();
+    async loginUserWebAuthnChallenge(initOverrides?: RequestInit): Promise<UserWebAuthnChallenge> {
+        const response = await this.loginUserWebAuthnChallengeRaw(initOverrides);
         return await response.value();
     }
 
@@ -339,7 +339,7 @@ export class UserApi extends runtime.BaseAPI {
      * add webauthn
      * login user with WebAuthn
      */
-    async loginUserWebAuthnGetRaw(requestParameters: LoginUserWebAuthnGetRequest): Promise<runtime.ApiResponse<UserWebAuthnLogonResult>> {
+    async loginUserWebAuthnGetRaw(requestParameters: LoginUserWebAuthnGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<UserWebAuthnLogonResult>> {
         if (requestParameters.userWebAuthnGet === null || requestParameters.userWebAuthnGet === undefined) {
             throw new runtime.RequiredError('userWebAuthnGet','Required parameter requestParameters.userWebAuthnGet was null or undefined when calling loginUserWebAuthnGet.');
         }
@@ -360,7 +360,7 @@ export class UserApi extends runtime.BaseAPI {
             headers: headerParameters,
             query: queryParameters,
             body: UserWebAuthnGetToJSON(requestParameters.userWebAuthnGet),
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UserWebAuthnLogonResultFromJSON(jsonValue));
     }
@@ -369,15 +369,15 @@ export class UserApi extends runtime.BaseAPI {
      * add webauthn
      * login user with WebAuthn
      */
-    async loginUserWebAuthnGet(requestParameters: LoginUserWebAuthnGetRequest): Promise<UserWebAuthnLogonResult> {
-        const response = await this.loginUserWebAuthnGetRaw(requestParameters);
+    async loginUserWebAuthnGet(requestParameters: LoginUserWebAuthnGetRequest, initOverrides?: RequestInit): Promise<UserWebAuthnLogonResult> {
+        const response = await this.loginUserWebAuthnGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Logs out current logged in user session
      */
-    async logoutUserRaw(): Promise<runtime.ApiResponse<GenericSuccessMessage>> {
+    async logoutUserRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<GenericSuccessMessage>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -387,7 +387,7 @@ export class UserApi extends runtime.BaseAPI {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => GenericSuccessMessageFromJSON(jsonValue));
     }
@@ -395,15 +395,15 @@ export class UserApi extends runtime.BaseAPI {
     /**
      * Logs out current logged in user session
      */
-    async logoutUser(): Promise<GenericSuccessMessage> {
-        const response = await this.logoutUserRaw();
+    async logoutUser(initOverrides?: RequestInit): Promise<GenericSuccessMessage> {
+        const response = await this.logoutUserRaw(initOverrides);
         return await response.value();
     }
 
     /**
      * registration
      */
-    async registerUserRaw(requestParameters: RegisterUserRequest): Promise<runtime.ApiResponse<GenericSuccessMessage>> {
+    async registerUserRaw(requestParameters: RegisterUserRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<GenericSuccessMessage>> {
         if (requestParameters.registrationInformation === null || requestParameters.registrationInformation === undefined) {
             throw new runtime.RequiredError('registrationInformation','Required parameter requestParameters.registrationInformation was null or undefined when calling registerUser.');
         }
@@ -424,7 +424,7 @@ export class UserApi extends runtime.BaseAPI {
             headers: headerParameters,
             query: queryParameters,
             body: RegistrationInformationToJSON(requestParameters.registrationInformation),
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => GenericSuccessMessageFromJSON(jsonValue));
     }
@@ -432,8 +432,8 @@ export class UserApi extends runtime.BaseAPI {
     /**
      * registration
      */
-    async registerUser(requestParameters: RegisterUserRequest): Promise<GenericSuccessMessage> {
-        const response = await this.registerUserRaw(requestParameters);
+    async registerUser(requestParameters: RegisterUserRequest, initOverrides?: RequestInit): Promise<GenericSuccessMessage> {
+        const response = await this.registerUserRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -441,7 +441,7 @@ export class UserApi extends runtime.BaseAPI {
      * parameter contains encrypted client settings
      * change client settings of current user
      */
-    async setUserSettingsRaw(requestParameters: SetUserSettingsRequest): Promise<runtime.ApiResponse<GenericSuccessMessage>> {
+    async setUserSettingsRaw(requestParameters: SetUserSettingsRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<GenericSuccessMessage>> {
         if (requestParameters.userSettings === null || requestParameters.userSettings === undefined) {
             throw new runtime.RequiredError('userSettings','Required parameter requestParameters.userSettings was null or undefined when calling setUserSettings.');
         }
@@ -462,7 +462,7 @@ export class UserApi extends runtime.BaseAPI {
             headers: headerParameters,
             query: queryParameters,
             body: UserSettingsToJSON(requestParameters.userSettings),
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => GenericSuccessMessageFromJSON(jsonValue));
     }
@@ -471,8 +471,8 @@ export class UserApi extends runtime.BaseAPI {
      * parameter contains encrypted client settings
      * change client settings of current user
      */
-    async setUserSettings(requestParameters: SetUserSettingsRequest): Promise<GenericSuccessMessage> {
-        const response = await this.setUserSettingsRaw(requestParameters);
+    async setUserSettings(requestParameters: SetUserSettingsRequest, initOverrides?: RequestInit): Promise<GenericSuccessMessage> {
+        const response = await this.setUserSettingsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

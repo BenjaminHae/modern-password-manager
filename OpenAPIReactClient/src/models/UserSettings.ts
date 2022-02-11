@@ -54,4 +54,3 @@ export function UserSettingsToJSON(value?: UserSettings | null): any {
     };
 }
 
-

@@ -18,11 +18,13 @@ import {
     LogonInformationFromJSON,
     LogonInformationFromJSONTyped,
     LogonInformationToJSON,
+} from './LogonInformation';
+import {
     UserInformation,
     UserInformationFromJSON,
     UserInformationFromJSONTyped,
     UserInformationToJSON,
-} from './';
+} from './UserInformation';
 
 /**
  * 
@@ -80,5 +82,4 @@ export function RegistrationInformationToJSON(value?: RegistrationInformation | 
         'email': value.email,
     };
 }
-
 

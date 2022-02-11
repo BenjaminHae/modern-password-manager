@@ -63,6 +63,7 @@ class UserWebAuthnCreate
      * @var OpenAPI\Server\Model\UserWebAuthnCreateResponse
      * @SerializedName("response")
      * @Assert\NotNull()
+     * @Assert\Valid()
      * @Assert\Type("OpenAPI\Server\Model\UserWebAuthnCreateResponse")
      * @Type("OpenAPI\Server\Model\UserWebAuthnCreateResponse")
      */

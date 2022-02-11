@@ -63,6 +63,7 @@ class ChangePassword
      * @var OpenAPI\Server\Model\AccountId[]
      * @SerializedName("accounts")
      * @Assert\NotNull()
+     * @Assert\Valid()
      * @Assert\All({
      *   @Assert\Type("OpenAPI\Server\Model\AccountId")
      * })

@@ -76,8 +76,9 @@ class UserWebAuthnLogonResult
     protected $failedLogins;
 
     /**
-     * @var string|null
+     * @var string
      * @SerializedName("decryptionKey")
+     * @Assert\NotNull()
      * @Assert\Type("string")
      * @Type("string")
      */
@@ -195,7 +196,7 @@ class UserWebAuthnLogonResult
     /**
      * Gets decryptionKey.
      *
-     * @return string|null
+     * @return string
      */
     public function getDecryptionKey()
     {
@@ -205,11 +206,11 @@ class UserWebAuthnLogonResult
     /**
      * Sets decryptionKey.
      *
-     * @param string|null $decryptionKey
+     * @param string $decryptionKey
      *
      * @return $this
      */
-    public function setDecryptionKey($decryptionKey = null)
+    public function setDecryptionKey($decryptionKey)
     {
         $this->decryptionKey = $decryptionKey;
 

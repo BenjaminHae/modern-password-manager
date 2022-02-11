@@ -18,11 +18,13 @@ import {
     GenericSuccessMessageFromJSON,
     GenericSuccessMessageFromJSONTyped,
     GenericSuccessMessageToJSON,
+} from './GenericSuccessMessage';
+import {
     LogonSecurityInformation,
     LogonSecurityInformationFromJSON,
     LogonSecurityInformationFromJSONTyped,
     LogonSecurityInformationToJSON,
-} from './';
+} from './LogonSecurityInformation';
 
 /**
  * 
@@ -88,5 +90,4 @@ export function LogonResultToJSON(value?: LogonResult | null): any {
         'failedLogins': value.failedLogins,
     };
 }
-
 

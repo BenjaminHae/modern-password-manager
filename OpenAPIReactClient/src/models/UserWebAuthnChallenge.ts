@@ -54,4 +54,3 @@ export function UserWebAuthnChallengeToJSON(value?: UserWebAuthnChallenge | null
     };
 }
 
-
