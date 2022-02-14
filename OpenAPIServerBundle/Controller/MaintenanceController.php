@@ -2,7 +2,7 @@
 
 /**
  * MaintenanceController
- * PHP version 7.1.3
+ * PHP version 8.1.1
  *
  * @category Class
  * @package  OpenAPI\Server\Controller
@@ -84,7 +84,7 @@ class MaintenanceController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            $result = $handler->serverInformation($responseCode, $responseHeaders);
+            list($responseCode, $result) = $handler->serverInformation($responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';

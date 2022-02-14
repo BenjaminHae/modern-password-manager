@@ -2,7 +2,7 @@
 
 /**
  * AccountsController
- * PHP version 7.1.3
+ * PHP version 8.1.1
  *
  * @category Class
  * @package  OpenAPI\Server\Controller
@@ -116,7 +116,7 @@ class AccountsController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            $result = $handler->addAccounts($account, $responseCode, $responseHeaders);
+            list($responseCode, $result) = $handler->addAccounts($account, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -199,7 +199,7 @@ class AccountsController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            $result = $handler->deleteAccount($id, $responseCode, $responseHeaders);
+            list($responseCode, $result) = $handler->deleteAccount($id, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -268,7 +268,7 @@ class AccountsController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            $result = $handler->getAccounts($responseCode, $responseHeaders);
+            list($responseCode, $result) = $handler->getAccounts($responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -374,7 +374,7 @@ class AccountsController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            $result = $handler->updateAccount($id, $account, $responseCode, $responseHeaders);
+            list($responseCode, $result) = $handler->updateAccount($id, $account, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
