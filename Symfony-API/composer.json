@@ -2,30 +2,36 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": "^7.1.3",
+        "php": ">=7.1.3",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "doctrine/orm": "~2.6",
+        "doctrine/doctrine-bundle": "^2.5",
+        "doctrine/doctrine-migrations-bundle": "^3.2",
+        "doctrine/orm": "^2.11",
         "lbuchs/webauthn": "dev-master",
         "openapi/server-bundle": "dev-master",
         "symfony/apache-pack": "^1.0",
-        "symfony/console": "^4.4",
-        "symfony/dotenv": "^4.4",
+        "symfony/console": "^6",
+        "symfony/dotenv": "^6",
         "symfony/flex": "^1.1",
-        "symfony/framework-bundle": "^4.4",
+        "symfony/framework-bundle": "^6",
         "symfony/monolog-bundle": "^3.6",
-        "symfony/orm-pack": "^1.0",
-        "symfony/security-bundle": "^4.4",
-        "symfony/templating": "^4.4",
-        "symfony/twig-pack": "^1.0",
-        "symfony/yaml": "^4.4",
+        "symfony/proxy-manager-bridge": "^6",
+        "symfony/security-bundle": "^6",
+        "symfony/templating": "^6",
+        "symfony/twig-bundle": "^6",
+        "symfony/yaml": "^6",
+        "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.0"
     },
     "config": {
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/flex": true
+        }
     },
     "autoload": {
         "psr-4": {
@@ -63,16 +69,15 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "^4.4"
+            "require": "^6"
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.11",
-        "symfony/web-server-bundle": "^4.4"
+        "symfony/maker-bundle": "^1.11"
     },
     "repositories": [{
        "type": "path",
-       "url": "../OpenAPIServerBundle/",
+       "url": "../OpenAPIServerBundle6/",
        "options": {
                "symlink": false
        }
