@@ -19,34 +19,30 @@ use OpenAPI\Server\Model\UserWebAuthnCreateWithKey;
 use OpenAPI\Server\Model\UserWebAuthnChallenge;
 use OpenAPI\Server\Model\Registration;
 use OpenAPI\Server\Model\RegistrationInformation;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Psr\Log\LoggerInterface;
 
-class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessHandlerInterface
+class UserApi extends CsrfProtection implements UserApiInterface
 {
     private $entityManager;
     private $passwordEncoder;
     private $security;
-    private $session;
     private $accountsController;
     private $eventController;
     private $requestStack;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, Security $security, SessionInterface $session, EventController $eventController, CsrfTokenManagerInterface $csrfManager, RequestStack $requestStack, LoggerInterface $logger, $allowRegistration)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordEncoder, Security $security, EventController $eventController, CsrfTokenManagerInterface $csrfManager, RequestStack $requestStack, LoggerInterface $logger, $allowRegistration)
     {
         parent::__construct($csrfManager, $logger);
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
         $this->eventController = $eventController;
         $this->security = $security;
-        $this->session = $session;
         $this->allowRegistration = strtolower($allowRegistration) === "true";
         $this->requestStack = $requestStack;
     }
@@ -141,7 +137,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
     }
 
     public function loginUserWebAuthnChallenge(&$responseCode, array &$responseHeaders) {
-        $webAuthnController = new WebAuthnController($this->entityManager, $this->session, $this->eventController, $this->requestStack, $this->logger);
+        $webAuthnController = new WebAuthnController($this->entityManager, $this->requestStack->getSession(), $this->eventController, $this->requestStack, $this->logger);
         $challenge = base64_encode($webAuthnController->createChallenge()->getBinaryString());
         return new UserWebAuthnChallenge(["challenge" => $challenge]);
     }
@@ -152,7 +148,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
             $responseCode = 403;
             return $this->generateApiError("unauthorized");
         }
-        $webAuthnController = new WebAuthnController($this->entityManager, $this->session, $this->eventController, $this->requestStack, $this->logger);
+        $webAuthnController = new WebAuthnController($this->entityManager, $this->requestStack->getSession(), $this->eventController, $this->requestStack, $this->logger);
         try {
             $webAuthn = $webAuthnController->registerWebAuthnDevice($currentUser, $request);
             $this->eventController->StoreEvent($currentUser, "WebAuthn Store", "Device Name: " . $webAuthn->getDeviceName());
@@ -167,7 +163,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
 
     public function deleteUserWebAuthn($id, &$responseCode, array &$responseHeaders) {
         $currentUser = $this->security->getUser();
-        $webAuthnController = new WebAuthnController($this->entityManager, $this->session, $this->eventController, $this->requestStack, $this->logger);
+        $webAuthnController = new WebAuthnController($this->entityManager, $this->requestStack->getSession(), $this->eventController, $this->requestStack, $this->logger);
         if ($webAuthnController->deleteWebAuthnDevice($currentUser, $id)) {
             return $webAuthnController->getWebAuthnDevices($currentUser);
         }
@@ -187,7 +183,7 @@ class UserApi extends CsrfProtection implements UserApiInterface, LogoutSuccessH
     public function getUserWebAuthnCreds(&$responseCode, array &$responseHeaders) 
     {
         $currentUser = $this->security->getUser();
-        $webAuthnController = new WebAuthnController($this->entityManager, $this->session, $this->eventController, $this->requestStack, $this->logger);
+        $webAuthnController = new WebAuthnController($this->entityManager, $this->requestStack->getSession(), $this->eventController, $this->requestStack, $this->logger);
         return $webAuthnController->getWebAuthnDevices($currentUser);
         
     }

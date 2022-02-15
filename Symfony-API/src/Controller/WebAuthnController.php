@@ -20,15 +20,13 @@ class WebAuthnController
     const SESSION_CHALLENGE_KEY = "webAuthnChallenge";
     const SESSION_LOGON_KEY_ID = "webAuthnLogonKeyId";
     private $entityManager;
-    private $session;
     private $webAuthn;
     private $eventController;
     private $logger;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, EventController $eventController, RequestStack $requestStack, LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $entityManager, EventController $eventController, RequestStack $requestStack, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
-        $this->session = $session;
         $this->eventController = $eventController;
         $this->logger = $logger;
         if ($requestStack && $requestStack->getCurrentRequest()) {
@@ -147,29 +145,29 @@ class WebAuthnController
     }
 
     private function persistChallenge(ByteBuffer $challenge) {
-        $this->session->set(SELF::SESSION_CHALLENGE_KEY, $challenge); 
+        $this->requestStack->getSession()->set(SELF::SESSION_CHALLENGE_KEY, $challenge); 
     }
 
     public function getChallenge(): ?ByteBuffer {
-        $challenge = $this->session->get(SELF::SESSION_CHALLENGE_KEY, null); 
+        $challenge = $this->requestStack->getSession()->get(SELF::SESSION_CHALLENGE_KEY, null); 
         $this->removeChallenge();
         return $challenge; 
     }
 
     public function removeChallenge() {
-        $this->session->remove(SELF::SESSION_CHALLENGE_KEY); 
+        $this->requestStack->getSession()->remove(SELF::SESSION_CHALLENGE_KEY); 
     }
 
     public function rememberLogonKeyId($keyId) {
-        $this->session->set(SELF::SESSION_LOGON_KEY_ID, $keyId); 
+        $this->requestStack->getSession()->set(SELF::SESSION_LOGON_KEY_ID, $keyId); 
     }
 
     public function removeLogonKeyId() {
-        $this->session->remove(SELF::SESSION_LOGON_KEY_ID); 
+        $this->requestStack->getSession()->remove(SELF::SESSION_LOGON_KEY_ID); 
     }
 
     public function getLogonKeyId(): ?WebAuthnPublicKey {
-        $keyId = $this->session->get(SELF::SESSION_LOGON_KEY_ID, null); 
+        $keyId = $this->requestStack->getSession()->get(SELF::SESSION_LOGON_KEY_ID, null); 
         if ($keyId === null)
             return null;
         $pk = $this->entityManager->getRepository(WebAuthnPublicKey::class)
