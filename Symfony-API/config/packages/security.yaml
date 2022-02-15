@@ -1,5 +1,5 @@
 security:
-    encoders:
+    password_hashers:
         App\Entity\User:
             algorithm: argon2i
 
@@ -15,10 +15,10 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: true
-            guard:
-                authenticators:
-                    - App\Security\WebAuthnAuthenticator
+            #anonymous: true
+            #guard:
+            #    authenticators:
+            #        - App\Security\WebAuthnAuthenticator
             json_login:
                 check_path: /user/login
             logout:
