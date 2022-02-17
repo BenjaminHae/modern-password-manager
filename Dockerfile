@@ -1,7 +1,9 @@
 FROM node:12 as build-frontend
-COPY . /app
+RUN mkdir -p /app/reactClient/my-app
+COPY ./reactClient/my-app/package*.json /app/reactClient/my-app/
 WORKDIR /app/reactClient/my-app
 RUN npm install --quiet
+COPY . /app
 RUN npm link ../../OpenAPIReactClient/
 RUN npm run build
 
