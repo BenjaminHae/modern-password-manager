@@ -23,12 +23,14 @@ class WebAuthnController
     private $webAuthn;
     private $eventController;
     private $logger;
+    private $requestStack;
 
     public function __construct(EntityManagerInterface $entityManager, EventController $eventController, RequestStack $requestStack, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
         $this->eventController = $eventController;
         $this->logger = $logger;
+        $this->requestStack = $requestStack;
         if ($requestStack && $requestStack->getCurrentRequest()) {
             $server_name = $requestStack->getCurrentRequest()->server->get("SERVER_NAME");
         } else {
