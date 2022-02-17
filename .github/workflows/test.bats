@@ -1,7 +1,7 @@
 setup() {
     load 'test_helper/bats-support/load'
     load 'test_helper/bats-assert/load'
-    url="http://localhost"
+    url="${BATS_URL:-http://localhost}"
 }
 get_csrf_token() {
     http --session=batsSession -j -b --pretty=format GET ${url}/info | grep csrf | sed 's/^.*"csrfToken": "\([^"]*\)".*$/\1/'
