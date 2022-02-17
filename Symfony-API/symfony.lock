@@ -72,22 +72,27 @@
         "version": "v1.0.3"
     },
     "jms/metadata": {
-        "version": "1.7.0"
+        "version": "2.6.1"
     },
     "jms/parser-lib": {
         "version": "1.0.0"
     },
     "jms/serializer": {
-        "version": "1.13.0"
+        "version": "3.17.1"
     },
     "jms/serializer-bundle": {
-        "version": "2.0",
+        "version": "4.0",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
             "branch": "master",
-            "version": "2.0",
-            "ref": "fe60ce509ef04a3f40da96e3979bc8d9b13b2372"
-        }
+            "version": "3.0",
+            "ref": "384cec52df45f3bfd46a09930d6960a58872b268"
+        },
+        "files": [
+            "config/packages/dev/jms_serializer.yaml",
+            "config/packages/jms_serializer.yaml",
+            "config/packages/prod/jms_serializer.yaml"
+        ]
     },
     "laminas/laminas-code": {
         "version": "3.4.1"
@@ -124,6 +129,9 @@
     },
     "phpoption/phpoption": {
         "version": "1.5.0"
+    },
+    "phpstan/phpdoc-parser": {
+        "version": "1.2.0"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -204,13 +212,23 @@
         }
     },
     "symfony/framework-bundle": {
-        "version": "4.2",
+        "version": "6.0",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "master",
-            "version": "4.2",
-            "ref": "5bb3a8c27df824d195fa68bb635d074854f8498f"
-        }
+            "version": "5.4",
+            "ref": "3cd216a4d007b78d8554d44a5b1c0a446dab24fb"
+        },
+        "files": [
+            "config/packages/cache.yaml",
+            "config/packages/framework.yaml",
+            "config/preload.php",
+            "config/routes/framework.yaml",
+            "config/services.yaml",
+            "public/index.php",
+            "src/Controller/.gitignore",
+            "src/Kernel.php"
+        ]
     },
     "symfony/http-client-contracts": {
         "version": "v2.3.1"
@@ -287,6 +305,9 @@
             "ref": "5374e24d508ba8fd6ba9eb15170255fdb778316a"
         }
     },
+    "symfony/runtime": {
+        "version": "v6.0.3"
+    },
     "symfony/security-bundle": {
         "version": "3.3",
         "recipe": {
@@ -335,13 +356,16 @@
         ]
     },
     "symfony/validator": {
-        "version": "4.1",
+        "version": "6.0",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "master",
-            "version": "4.1",
-            "ref": "0cdc982334f45d554957a6167e030482795bf9d7"
-        }
+            "version": "5.3",
+            "ref": "c32cfd98f714894c4f128bb99aa2530c1227603c"
+        },
+        "files": [
+            "config/packages/validator.yaml"
+        ]
     },
     "symfony/var-dumper": {
         "version": "v4.4.8"
