@@ -116,7 +116,7 @@ class AccountsController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->addAccounts($account, $responseCode, $responseHeaders);
+            $result = $handler->addAccounts($account, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -199,7 +199,7 @@ class AccountsController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->deleteAccount($id, $responseCode, $responseHeaders);
+            $result = $handler->deleteAccount($id, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -374,7 +374,7 @@ class AccountsController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->updateAccount($id, $account, $responseCode, $responseHeaders);
+            $result = $handler->updateAccount($id, $account, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
