@@ -5,7 +5,7 @@ WORKDIR /app/reactClient/my-app
 RUN npm install --quiet
 COPY ./OpenAPIReactClient /app/OpenAPIReactClient
 WORKDIR /app/OpenAPIReactClient
-RUN npm run build
+RUN npm install --quiet && npm run build
 WORKDIR /app/reactClient/my-app
 COPY ./reactClient /app/reactClient
 RUN npm install /app/OpenAPIReactClient
