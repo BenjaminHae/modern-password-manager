@@ -2,7 +2,7 @@
 /**
  * HistoryItemTest
  *
- * PHP version 5
+ * PHP version 8.1.1
  *
  * @category Class
  * @package  OpenAPI\Server\Tests\Model
@@ -29,6 +29,8 @@
 
 namespace OpenAPI\Server\Model;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * HistoryItemTest Class Doc Comment
  *
@@ -39,34 +41,34 @@ namespace OpenAPI\Server\Model;
  * @author      openapi-generator contributors
  * @link        https://github.com/openapitools/openapi-generator
  */
-class HistoryItemTest extends \PHPUnit_Framework_TestCase
+class HistoryItemTest extends TestCase
 {
 
     /**
      * Setup before running any test case
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
     }
 
     /**
      * Setup before running each test case
      */
-    public function setUp()
+    public function setUp(): void
     {
     }
 
     /**
      * Clean up after running each test case
      */
-    public function tearDown()
+    public function tearDown(): void
     {
     }
 
     /**
      * Clean up after running all test cases
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
     }
 
@@ -100,16 +102,16 @@ class HistoryItemTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test attribute "action"
+     * Test attribute "event"
      */
-    public function testPropertyAction()
+    public function testPropertyEvent()
     {
     }
 
     /**
-     * Test attribute "actionResult"
+     * Test attribute "eventResult"
      */
-    public function testPropertyActionResult()
+    public function testPropertyEventResult()
     {
     }
 }

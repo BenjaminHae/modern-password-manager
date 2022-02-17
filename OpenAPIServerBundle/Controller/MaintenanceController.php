@@ -84,7 +84,7 @@ class MaintenanceController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->serverInformation($responseCode, $responseHeaders);
+            $result = $handler->serverInformation($responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';

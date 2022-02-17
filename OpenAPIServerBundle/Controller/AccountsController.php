@@ -268,7 +268,7 @@ class AccountsController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->getAccounts($responseCode, $responseHeaders);
+            $result = $handler->getAccounts($responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';

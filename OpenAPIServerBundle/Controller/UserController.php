@@ -124,7 +124,7 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->changePassword($changePassword, $responseCode, $responseHeaders);
+            $result = $handler->changePassword($changePassword, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -219,7 +219,7 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->createUserWebAuthn($userWebAuthnCreateWithKey, $responseCode, $responseHeaders);
+            $result = $handler->createUserWebAuthn($userWebAuthnCreateWithKey, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -299,7 +299,7 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->deleteUserWebAuthn($id, $responseCode, $responseHeaders);
+            $result = $handler->deleteUserWebAuthn($id, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -368,7 +368,7 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->getUserHistory($responseCode, $responseHeaders);
+            $result = $handler->getUserHistory($responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -434,7 +434,7 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->getUserSettings($responseCode, $responseHeaders);
+            $result = $handler->getUserSettings($responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -500,7 +500,7 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->getUserWebAuthnCreds($responseCode, $responseHeaders);
+            $result = $handler->getUserWebAuthnCreds($responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -587,6 +587,7 @@ class UserController extends Controller
 
 
         try {
+	    error_log("before the error");
             $handler = $this->getApiHandler();
 
             // Set authentication method 'csrf'
@@ -595,7 +596,9 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->loginUser($logonInformation, $responseCode, $responseHeaders);
+	    error_log("executing handler");
+            $result = $handler->loginUser($logonInformation, $responseCode, $responseHeaders);
+	    error_log("probably after the error");
 
             // Find default response message
             $message = '';
@@ -622,6 +625,8 @@ class UserController extends Controller
                 )
             );
         } catch (Exception $fallthrough) {
+	    error_log("This is the error");
+	    error_log(print_r($fallthrough, true));
             return $this->createErrorResponse(new HttpException(500, 'An unsuspected error occurred.', $fallthrough));
         }
     }
@@ -661,7 +666,7 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->loginUserWebAuthnChallenge($responseCode, $responseHeaders);
+            $result = $handler->loginUserWebAuthnChallenge($responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -753,7 +758,7 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->loginUserWebAuthnGet($userWebAuthnGet, $responseCode, $responseHeaders);
+            $result = $handler->loginUserWebAuthnGet($userWebAuthnGet, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -819,7 +824,7 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->logoutUser($responseCode, $responseHeaders);
+            $result = $handler->logoutUser($responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -911,7 +916,7 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->registerUser($registrationInformation, $responseCode, $responseHeaders);
+            $result = $handler->registerUser($registrationInformation, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
@@ -1006,7 +1011,7 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-            list($responseCode, $result) = $handler->setUserSettings($userSettings, $responseCode, $responseHeaders);
+            $result = $handler->setUserSettings($userSettings, $responseCode, $responseHeaders);
 
             // Find default response message
             $message = '';
