@@ -79,7 +79,7 @@
     },
     "repositories": [{
        "type": "path",
-       "url": "../OpenAPIServerBundle6/",
+       "url": "../OpenAPIServerBundle/",
        "options": {
                "symlink": false
        }
