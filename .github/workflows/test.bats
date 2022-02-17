@@ -45,8 +45,7 @@ get_csrf_token() {
 }
 @test "get data" {
     perform_test() {
-        echo '{"username":"tester5","password":"{\"iv\":\"AAAAAAAAAAAAAAAA\",\"ciphertext\":\"YrwGKXPvoVvDpAgYq2UaevvwipM0E4f9Xct2o+a7jlz5ltb1apGM8WOPxdsz7sGvt6xEmPLiefRINaGRWu7uwSCJ8Ds0U00ETU2YCfcYSo9JE/Ilj2WQdyGrbQYOa4J1S24KQ+Lj+IW90mjwgTN23GCvaAL3tE+ACGngA8O974skcXwPwLhaEfdbZnkTQV7f\"}"}' \
- | http --session=batsSession -j --print=hb --pretty=format \
+        http --session=batsSession -j --print=hb --pretty=format \
         GET ${url}/accounts \
         X-CSRF-TOKEN:${csrfToken} \
         Accept:\*/\*
@@ -54,5 +53,30 @@ get_csrf_token() {
     }
     run perform_test
     assert_output --partial '[]'
-    assert_output --partial 'X-OpenAPI-Message: successful operation'
+    assert_output --partial 'X-Openapi-Message: successful operation'
+}
+@test "logout" {
+    perform_test() {
+        http --session-read-only=batsSession -j --print=hb --pretty=format \
+        GET ${url}/user/logout \
+        X-CSRF-TOKEN:${csrfToken} \
+        Accept:\*/\*
+
+    }
+    run perform_test
+
+    assert_output --partial '"message": "logged out",'
+    assert_output --partial '"success": true'
+    assert_output --partial 'Set-Cookie: PHPSESSID=deleted;'
+}
+@test "check logout was successful" {
+    perform_test() {
+        http --session=batsSession -j --print=hb --pretty=format \
+        GET ${url}/accounts \
+        X-CSRF-TOKEN:${csrfToken} \
+        Accept:\*/\*
+
+    }
+    run perform_test
+    refute_output --partial 'X-Openapi-Message: successful operation'
 }
