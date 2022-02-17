@@ -17,7 +17,7 @@ RUN rm ./templates/base.html.twig && rm ./templates/index.html && ln -s ../publi
 WORKDIR /app/Symfony-API/vendor/openapi
 RUN rm -r server-bundle && cp -r ../../../OpenAPIServerBundle/ server-bundle
 
-FROM php:7.4-apache
+FROM php:8.1-apache
 RUN docker-php-ext-install pdo_mysql
 
 ENV APACHE_DOCUMENT_ROOT /app/public
