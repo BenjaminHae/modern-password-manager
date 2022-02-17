@@ -4,6 +4,7 @@ COPY ./reactClient/my-app/package*.json /app/reactClient/my-app/
 WORKDIR /app/reactClient/my-app
 RUN npm install --quiet
 COPY . /app
+RUN npx browserslist@latest --update-db
 RUN npm link ../../OpenAPIReactClient/
 RUN npm run build
 
