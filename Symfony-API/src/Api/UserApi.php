@@ -93,13 +93,17 @@ class UserApi extends CsrfProtection implements UserApiInterface
     }
 
     private function loginResultGenerator($currentUser, String $extraMessage = "") {
+        $this->logger->debug("generating login Result");
         $username = $currentUser->getUsername();
         $loginReport = $currentUser->getLastSuccessfulLoginTimeAndUnsuccessfulCount();
+        $this->logger->debug("retrieved loginReport");
+        $this->logger->debug(print_r($loginReport, true));
         $result = $this->generateApiSuccess("logged in as " . $username . $extraMessage);
         if ($loginReport[0] !== null) {
             $result["lastLogin"] = $loginReport[0]->format('Y-m-d\TH:i:s.u');
         }
         $result["failedLogins"] = $loginReport[1];
+        $this->logger->debug('loginResultGenerator finished');
         return $result;
     }
 
@@ -129,7 +133,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
         $user = new User();
         $user->setUsername($registration->getUsername());
         $user->setEmail($registration->getEmail());
-        $user->setPassword($this->passwordEncoder->encodePassword($user, $registration->getPassword()));
+        $user->setPassword($this->passwordEncoder->hashPassword($user, $registration->getPassword()));
         $this->entityManager->persist($user);
         $this->entityManager->flush();
         $this->eventController->StoreEvent($user, "Register", "success");
@@ -209,7 +213,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
             $this->eventController->StoreEvent($currentUser, "ChangePassword", "failed: old password wrong");
             return $this->generateApiError("Old Password is wrong");
         }
-        $newHash = $this->passwordEncoder->encodePassword($currentUser, $changes->getNewPassword());
+        $newHash = $this->passwordEncoder->hashPassword($currentUser, $changes->getNewPassword());
         $currentUser->setPassword($newHash);
         $this->getAccountsController()->updateAccountsFromApi($currentUser, $changes->getAccounts());
         $this->entityManager->flush();
@@ -219,7 +223,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
     }
 
     // ...
-    public function onLogoutSuccess(Request $request) 
+    public function onLogoutSuccess(?Request $request) 
     {
         $response = new Response();
         $response->setContent(json_encode( $this->generateApiSuccess("logged out") ));
