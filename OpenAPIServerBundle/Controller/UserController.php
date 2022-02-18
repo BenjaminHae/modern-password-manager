@@ -587,7 +587,6 @@ class UserController extends Controller
 
 
         try {
-	    error_log("before the error");
             $handler = $this->getApiHandler();
 
             // Set authentication method 'csrf'
@@ -596,9 +595,7 @@ class UserController extends Controller
             // Make the call to the business logic
             $responseCode = 200;
             $responseHeaders = [];
-	    error_log("executing handler");
             $result = $handler->loginUser($logonInformation, $responseCode, $responseHeaders);
-	    error_log("probably after the error");
 
             // Find default response message
             $message = '';
@@ -625,8 +622,6 @@ class UserController extends Controller
                 )
             );
         } catch (Exception $fallthrough) {
-	    error_log("This is the error");
-	    error_log(print_r($fallthrough, true));
             return $this->createErrorResponse(new HttpException(500, 'An unsuspected error occurred.', $fallthrough));
         }
     }
