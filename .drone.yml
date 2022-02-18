@@ -117,7 +117,7 @@ steps:
      COPY_PATH: "~/tmp/mpm.zip"
      COPY_REMOTE_PATH: "tmp/"
      DEV_PHP_VERSION: "php7.3"
-     TEST_PHP_VERSION: "php7.4"
+     TEST_PHP_VERSION: "php8.1"
      PROD_PHP_VERSION: "php7.4"
    commands:
      - export PHP_VERSION=$${${DRONE_DEPLOY_TO^^}_PHP_VERSION}
