@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Psr\Log\LoggerInterface;
 
@@ -87,14 +88,7 @@ class WebAuthnAuthenticator extends AbstractAuthenticator
             $credentials->userHandle, 
             $credentials->id, 
         */
-        $this->logger->debug("Obtaining User From Credentials");
-        $user = $this->getUserFromWebAuthNCredentials($credentials);
-        if ($user === null) {
-            $this->logger->error("Could not obtain user from WebAuthNCredentials");
-            throw new CustomUserMessageAuthenticationException('No user found for WebAuthNCredentials');
-        }
         $this->logger->debug("Creating Passport");
-        // todo implement user badge
         return new Passport(
             new UserBadge(
                 $credentials["id"], 
