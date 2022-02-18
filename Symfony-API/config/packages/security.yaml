@@ -1,5 +1,5 @@
 security:
-    encoders:
+    password_hashers:
         App\Entity\User:
             algorithm: argon2i
 
@@ -15,15 +15,13 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: true
-            guard:
-                authenticators:
-                    - App\Security\WebAuthnAuthenticator
+            #anonymous: true
+            custom_authenticators:
+            - App\Security\WebAuthnAuthenticator
             json_login:
                 check_path: /user/login
             logout:
                 path: /user/logout
-                success_handler: App\Api\UserApi
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used

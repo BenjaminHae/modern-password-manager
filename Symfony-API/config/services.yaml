@@ -58,6 +58,12 @@ services:
             - { name: 'kernel.event_listener', event: 'security.interactive_login' }
             - { name: 'kernel.event_listener', event: 'security.authentication.failure' }
 
+    App\EventListener\LogoutListener:
+        tags:
+            - name: 'kernel.event_listener'
+              event: 'Symfony\Component\Security\Http\Event\LogoutEvent'
+              dispatcher: security.event_dispatcher.main
+
     App\EventSubscriber\:
         resource: '../src/EventSubscriber/'
 

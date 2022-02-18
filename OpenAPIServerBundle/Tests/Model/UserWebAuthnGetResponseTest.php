@@ -2,7 +2,7 @@
 /**
  * UserWebAuthnGetResponseTest
  *
- * PHP version 7.1.3
+ * PHP version 8.1.1
  *
  * @category Class
  * @package  OpenAPI\Server\Tests\Model
@@ -47,28 +47,28 @@ class UserWebAuthnGetResponseTest extends TestCase
     /**
      * Setup before running any test case
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
     }
 
     /**
      * Setup before running each test case
      */
-    public function setUp()
+    public function setUp(): void
     {
     }
 
     /**
      * Clean up after running each test case
      */
-    public function tearDown()
+    public function tearDown(): void
     {
     }
 
     /**
      * Clean up after running all test cases
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
     }
 
@@ -105,13 +105,6 @@ class UserWebAuthnGetResponseTest extends TestCase
      * Test attribute "signature"
      */
     public function testPropertySignature()
-    {
-    }
-
-    /**
-     * Test attribute "userHandle"
-     */
-    public function testPropertyUserHandle()
     {
     }
 }

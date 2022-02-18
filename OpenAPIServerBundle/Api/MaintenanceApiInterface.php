@@ -1,7 +1,8 @@
 <?php
 /**
  * MaintenanceApiInterface
- * PHP version 7.1.3
+ *
+ * PHP version 8.1.1
  *
  * @category Class
  * @package  OpenAPI\Server
@@ -47,10 +48,10 @@ interface MaintenanceApiInterface
      *
      * get information about the server for the client
      *
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\ServerInformation
      */
     public function serverInformation(&$responseCode, array &$responseHeaders);
+
 }

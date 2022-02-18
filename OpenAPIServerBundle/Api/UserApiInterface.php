@@ -1,7 +1,8 @@
 <?php
 /**
  * UserApiInterface
- * PHP version 7.1.3
+ *
+ * PHP version 8.1.1
  *
  * @category Class
  * @package  OpenAPI\Server
@@ -68,12 +69,12 @@ interface UserApiInterface
      * change user password
      *
      * @param  \OpenAPI\Server\Model\ChangePassword $changePassword  ChangePassword Object (required)
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\GenericSuccessMessage
      */
     public function changePassword(ChangePassword $changePassword, &$responseCode, array &$responseHeaders);
+
 
     /**
      * Operation createUserWebAuthn
@@ -81,12 +82,12 @@ interface UserApiInterface
      * add a webauthn credential
      *
      * @param  \OpenAPI\Server\Model\UserWebAuthnCreateWithKey $userWebAuthnCreateWithKey  WebAuthnCreate Object (required)
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\GenericSuccessMessage
      */
     public function createUserWebAuthn(UserWebAuthnCreateWithKey $userWebAuthnCreateWithKey, &$responseCode, array &$responseHeaders);
+
 
     /**
      * Operation deleteUserWebAuthn
@@ -94,48 +95,48 @@ interface UserApiInterface
      * Delete a stored WebAuthn Public Key
      *
      * @param  \int $id  The index of the WebAuthn Public Key to delete (not the public key id) (required)
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\UserWebAuthnCred[]
      */
     public function deleteUserWebAuthn($id, &$responseCode, array &$responseHeaders);
 
+
     /**
      * Operation getUserHistory
      *
      * Returns a history of successful and failed logins
      *
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\HistoryItem[]
      */
     public function getUserHistory(&$responseCode, array &$responseHeaders);
 
+
     /**
      * Operation getUserSettings
      *
      * Returns the client settings of the current user
      *
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\UserSettings
      */
     public function getUserSettings(&$responseCode, array &$responseHeaders);
 
+
     /**
      * Operation getUserWebAuthnCreds
      *
      * get all registered WebAuthn credentials for the user
      *
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\UserWebAuthnCred[]
      */
     public function getUserWebAuthnCreds(&$responseCode, array &$responseHeaders);
+
 
     /**
      * Operation loginUser
@@ -143,24 +144,24 @@ interface UserApiInterface
      * login
      *
      * @param  \OpenAPI\Server\Model\LogonInformation $logonInformation  Logon Object (required)
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\LogonResult
      */
     public function loginUser(LogonInformation $logonInformation, &$responseCode, array &$responseHeaders);
 
+
     /**
      * Operation loginUserWebAuthnChallenge
      *
      * get a WebAuthN challenge
      *
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\UserWebAuthnChallenge
      */
     public function loginUserWebAuthnChallenge(&$responseCode, array &$responseHeaders);
+
 
     /**
      * Operation loginUserWebAuthnGet
@@ -168,24 +169,24 @@ interface UserApiInterface
      * login user with WebAuthn
      *
      * @param  \OpenAPI\Server\Model\UserWebAuthnGet $userWebAuthnGet  WebAuthnGet Object (required)
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\UserWebAuthnLogonResult
      */
     public function loginUserWebAuthnGet(UserWebAuthnGet $userWebAuthnGet, &$responseCode, array &$responseHeaders);
 
+
     /**
      * Operation logoutUser
      *
      * Logs out current logged in user session
      *
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\GenericSuccessMessage
      */
     public function logoutUser(&$responseCode, array &$responseHeaders);
+
 
     /**
      * Operation registerUser
@@ -193,12 +194,12 @@ interface UserApiInterface
      * registration
      *
      * @param  \OpenAPI\Server\Model\RegistrationInformation $registrationInformation  Registration Object (required)
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\GenericSuccessMessage
      */
     public function registerUser(RegistrationInformation $registrationInformation, &$responseCode, array &$responseHeaders);
+
 
     /**
      * Operation setUserSettings
@@ -206,10 +207,10 @@ interface UserApiInterface
      * change client settings of current user
      *
      * @param  \OpenAPI\Server\Model\UserSettings $userSettings  Settings Object (required)
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\GenericSuccessMessage
      */
     public function setUserSettings(UserSettings $userSettings, &$responseCode, array &$responseHeaders);
+
 }

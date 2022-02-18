@@ -7,13 +7,13 @@ open_api_server_accounts_addaccounts:
     path:     /accounts
     methods:  [PUT]
     defaults:
-        _controller: open_api_server.controller.accounts:addAccountsAction
+        _controller: open_api_server.controller.accounts::addAccountsAction
 
 open_api_server_accounts_deleteaccount:
     path:     /accounts/{id}
     methods:  [DELETE]
     defaults:
-        _controller: open_api_server.controller.accounts:deleteAccountAction
+        _controller: open_api_server.controller.accounts::deleteAccountAction
     requirements:
         id: '\d+'
 
@@ -21,13 +21,13 @@ open_api_server_accounts_getaccounts:
     path:     /accounts
     methods:  [GET]
     defaults:
-        _controller: open_api_server.controller.accounts:getAccountsAction
+        _controller: open_api_server.controller.accounts::getAccountsAction
 
 open_api_server_accounts_updateaccount:
     path:     /accounts/{id}
     methods:  [POST]
     defaults:
-        _controller: open_api_server.controller.accounts:updateAccountAction
+        _controller: open_api_server.controller.accounts::updateAccountAction
     requirements:
         id: '\d+'
 
@@ -36,26 +36,26 @@ open_api_server_maintenance_serverinformation:
     path:     /info
     methods:  [GET]
     defaults:
-        _controller: open_api_server.controller.maintenance:serverInformationAction
+        _controller: open_api_server.controller.maintenance::serverInformationAction
 
 # user
 open_api_server_user_changepassword:
     path:     /user/changepassword
     methods:  [POST]
     defaults:
-        _controller: open_api_server.controller.user:changePasswordAction
+        _controller: open_api_server.controller.user::changePasswordAction
 
 open_api_server_user_createuserwebauthn:
     path:     /user/webauthn
     methods:  [POST]
     defaults:
-        _controller: open_api_server.controller.user:createUserWebAuthnAction
+        _controller: open_api_server.controller.user::createUserWebAuthnAction
 
 open_api_server_user_deleteuserwebauthn:
     path:     /user/webauthn/{id}
     methods:  [DELETE]
     defaults:
-        _controller: open_api_server.controller.user:deleteUserWebAuthnAction
+        _controller: open_api_server.controller.user::deleteUserWebAuthnAction
     requirements:
         id: '\d+'
 
@@ -63,53 +63,53 @@ open_api_server_user_getuserhistory:
     path:     /user/history
     methods:  [GET]
     defaults:
-        _controller: open_api_server.controller.user:getUserHistoryAction
+        _controller: open_api_server.controller.user::getUserHistoryAction
 
 open_api_server_user_getusersettings:
     path:     /user/settings
     methods:  [GET]
     defaults:
-        _controller: open_api_server.controller.user:getUserSettingsAction
+        _controller: open_api_server.controller.user::getUserSettingsAction
 
 open_api_server_user_getuserwebauthncreds:
     path:     /user/webauthn
     methods:  [GET]
     defaults:
-        _controller: open_api_server.controller.user:getUserWebAuthnCredsAction
+        _controller: open_api_server.controller.user::getUserWebAuthnCredsAction
 
 open_api_server_user_loginuser:
     path:     /user/login
     methods:  [POST]
     defaults:
-        _controller: open_api_server.controller.user:loginUserAction
+        _controller: open_api_server.controller.user::loginUserAction
 
 open_api_server_user_loginuserwebauthnchallenge:
     path:     /user/login/webauthn
     methods:  [GET]
     defaults:
-        _controller: open_api_server.controller.user:loginUserWebAuthnChallengeAction
+        _controller: open_api_server.controller.user::loginUserWebAuthnChallengeAction
 
 open_api_server_user_loginuserwebauthnget:
     path:     /user/login/webauthn
     methods:  [POST]
     defaults:
-        _controller: open_api_server.controller.user:loginUserWebAuthnGetAction
+        _controller: open_api_server.controller.user::loginUserWebAuthnGetAction
 
 open_api_server_user_logoutuser:
     path:     /user/logout
     methods:  [GET]
     defaults:
-        _controller: open_api_server.controller.user:logoutUserAction
+        _controller: open_api_server.controller.user::logoutUserAction
 
 open_api_server_user_registeruser:
     path:     /user
     methods:  [PUT]
     defaults:
-        _controller: open_api_server.controller.user:registerUserAction
+        _controller: open_api_server.controller.user::registerUserAction
 
 open_api_server_user_setusersettings:
     path:     /user/settings
     methods:  [POST]
     defaults:
-        _controller: open_api_server.controller.user:setUserSettingsAction
+        _controller: open_api_server.controller.user::setUserSettingsAction
 

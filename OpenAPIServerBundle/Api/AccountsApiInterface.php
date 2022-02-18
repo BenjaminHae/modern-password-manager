@@ -1,7 +1,8 @@
 <?php
 /**
  * AccountsApiInterface
- * PHP version 7.1.3
+ *
+ * PHP version 8.1.1
  *
  * @category Class
  * @package  OpenAPI\Server
@@ -58,12 +59,12 @@ interface AccountsApiInterface
      * Add Account
      *
      * @param  \OpenAPI\Server\Model\Account[] $account  Account Values (required)
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\AccountId[]
      */
     public function addAccounts(array $account, &$responseCode, array &$responseHeaders);
+
 
     /**
      * Operation deleteAccount
@@ -71,24 +72,24 @@ interface AccountsApiInterface
      * Delete a stored Account
      *
      * @param  \int $id  The id of the account (required)
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\AccountId[]
      */
     public function deleteAccount($id, &$responseCode, array &$responseHeaders);
 
+
     /**
      * Operation getAccounts
      *
      * Returns the accounts stored by the current user
      *
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\AccountId[]
      */
     public function getAccounts(&$responseCode, array &$responseHeaders);
+
 
     /**
      * Operation updateAccount
@@ -97,10 +98,10 @@ interface AccountsApiInterface
      *
      * @param  \int $id  The id of the account (required)
      * @param  \OpenAPI\Server\Model\Account $account  Account Object (required)
-     * @param  \int $responseCode     The HTTP response code to return
      * @param  \array   $responseHeaders  Additional HTTP headers to return with the response ()
      *
      * @return \OpenAPI\Server\Model\AccountId[]
      */
     public function updateAccount($id, Account $account, &$responseCode, array &$responseHeaders);
+
 }

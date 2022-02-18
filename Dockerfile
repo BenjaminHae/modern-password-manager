@@ -1,21 +1,36 @@
 FROM node:12 as build-frontend
-COPY . /app
+RUN mkdir -p /app/reactClient/my-app
+COPY ./reactClient/my-app/package*.json /app/reactClient/my-app/
 WORKDIR /app/reactClient/my-app
 RUN npm install --quiet
-RUN npm link ../../OpenAPIReactClient/
+COPY ./OpenAPIReactClient /app/OpenAPIReactClient
+WORKDIR /app/OpenAPIReactClient
+RUN npm install --quiet && npm run build
+WORKDIR /app/reactClient/my-app
+COPY ./reactClient /app/reactClient
+RUN npm install /app/OpenAPIReactClient
 RUN npm run build
 
-FROM composer:2 as build-backend
-COPY . /app
+FROM php:8.1 as build-backend
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+RUN apt-get update && apt-get install -y \
+        libzip-dev \
+        zip \
+  && docker-php-ext-install zip
+# copy dependencies and package files
+RUN mkdir -p /app/Symfony-API
+COPY ./OpenAPIServerBundle /app/OpenAPIServerBundle
+COPY ./Symfony-API /app/Symfony-API
 WORKDIR /app/Symfony-API
-RUN composer -q install --no-dev --no-progress --optimize-autoloader --classmap-authoritative
+RUN composer install --no-dev --no-progress --optimize-autoloader --classmap-authoritative
+
 COPY --from=build-frontend /app/reactClient/my-app/build/ /app/Symfony-API/public/
 RUN rm ./templates/base.html.twig && rm ./templates/index.html && ln -s ../public/index.html ./templates/index.html
 
 WORKDIR /app/Symfony-API/vendor/openapi
 RUN rm -r server-bundle && cp -r ../../../OpenAPIServerBundle/ server-bundle
 
-FROM php:7.4-apache
+FROM php:8.1-apache
 RUN docker-php-ext-install pdo_mysql
 
 ENV APACHE_DOCUMENT_ROOT /app/public
