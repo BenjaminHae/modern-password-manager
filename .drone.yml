@@ -61,6 +61,7 @@ steps:
  - name: symfony
    image: php:8.1
    commands:
+    - apt-get update && apt-get install -y libzip-dev zip && docker-php-ext-install zip
     - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
     - php composer-setup.php --quiet
     - cd ./Symfony-API
