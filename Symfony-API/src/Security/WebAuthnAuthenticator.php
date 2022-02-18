@@ -9,29 +9,29 @@ use App\Controller\WebAuthnController;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Psr\Log\LoggerInterface;
 
-class WebAuthnAuthenticator extends AbstractGuardAuthenticator
+class WebAuthnAuthenticator extends AbstractAuthenticator
 {
+    const RESPONSE_KEYS = [ "authenticatorData", "clientDataJSON", "type", "signature" ];
     private $em;
-    private $session;
     private $security;
     private $requestStack;
     private $logger;
 
-    public function __construct(EntityManagerInterface $em, SessionInterface $session, Security $security, EventController $eventController, RequestStack $requestStack, LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $em, Security $security, EventController $eventController, RequestStack $requestStack, LoggerInterface $logger)
     {
         $this->em = $em;
-        $this->session = $session;
         $this->security = $security;
         $this->eventController = $eventController;
         $this->requestStack = $requestStack;
@@ -43,7 +43,7 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
      * used for the request. Returning `false` will cause this authenticator
      * to be skipped.
      */
-    public function supports(Request $request)
+    public function supports(Request $request): ?bool
     {
         if ($this->security->getUser()) {
             return false;
@@ -58,8 +58,7 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
             if (! array_key_exists($key, $data))
                 return false;
         }
-        $responseKeys = [ "authenticatorData", "clientDataJSON", "type", "signature" ];
-        foreach ($responseKeys as $key) {
+        foreach (self::RESPONSE_KEYS as $key) {
             if (! array_key_exists($key, $data["response"]))
                 return false;
         }
@@ -70,15 +69,15 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
      * Called on every request. Return whatever credentials you want to
      * be passed to getUser() as $credentials.
      */
-    public function getCredentials(Request $request)
+    public function authenticate(Request $request): Passport
     {
+        $this->logger->debug("Reading WebAuthN Response Data");
         $data = json_decode($request->getContent(), true);
         //check for valid data
-        $responseKeys = [ "authenticatorData", "clientDataJSON", "type", "signature" ];
         $credentials = [];
         $credentials["id"] = $data["id"];
         //extract credentials
-        foreach ($responseKeys as $key) {
+        foreach (self::RESPONSE_KEYS as $key) {
             $credentials[$key] = $data["response"][$key];
         }
         /*
@@ -88,18 +87,35 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
             $credentials->userHandle, 
             $credentials->id, 
         */
-        return $credentials;
+        $this->logger->debug("Obtaining User From Credentials");
+        $user = $this->getUserFromWebAuthNCredentials($credentials);
+        if ($user === null) {
+            $this->logger->error("Could not obtain user from WebAuthNCredentials");
+            throw new CustomUserMessageAuthenticationException('No user found for WebAuthNCredentials');
+        }
+        $this->logger->debug("Creating Passport");
+        // todo implement user badge
+        return new Passport(
+            new UserBadge(
+                $credentials["id"], 
+                function ($id) {
+                    return $this->getUserFromWebAuthNCredentials($id);
+                }
+            ), 
+            new CustomCredentials(
+                function ($credentials, UserInterface $user) {
+                    return $this->checkCredentials($credentials, $user);
+                },
+                $credentials
+            )
+        );
+
     }
 
-    public function getUser($credentials, UserProviderInterface $userProvider)
+    public function getUserFromWebAuthNCredentials($id)
     {
-        if (null === $credentials) {
-            // The token header was empty, authentication fails with HTTP Status
-            // Code 401 "Unauthorized"
-            return null;
-        }
         $pk = $this->em->getRepository(WebAuthnPublicKey::class)
-            ->findOneByPublicKeyId($credentials["id"]);
+            ->findOneByPublicKeyId($id);
         if (null === $pk) {
             return null;
         }
@@ -108,17 +124,17 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        $webAuthn = new WebAuthnController($this->em, $this->session, $this->eventController, $this->requestStack, $this->logger);
+        $webAuthn = new WebAuthnController($this->em, $this->eventController, $this->requestStack, $this->logger);
         return $webAuthn->checkCredentials($credentials, $user);
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         // on success, let the request continue
         return null;
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         $data = [
             // you may want to customize or obfuscate the message first
@@ -130,23 +146,5 @@ class WebAuthnAuthenticator extends AbstractGuardAuthenticator
         ];
 
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
-    }
-
-    /**
-     * Called when authentication is needed, but it's not sent
-     */
-    public function start(Request $request, AuthenticationException $authException = null)
-    {
-        $data = [
-            // you might translate this message
-            'message' => 'Authentication Required'
-        ];
-
-        return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
-    }
-
-    public function supportsRememberMe()
-    {
-        return false;
     }
 }
