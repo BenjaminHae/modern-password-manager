@@ -116,9 +116,9 @@ steps:
      DEPLOY_PATH: "~/htdocs/pwman-${DRONE_DEPLOY_TO}/"
      COPY_PATH: "~/tmp/mpm.zip"
      COPY_REMOTE_PATH: "tmp/"
-     DEV_PHP_VERSION: "php7.3"
+     DEV_PHP_VERSION: "php8.1"
      TEST_PHP_VERSION: "php8.1"
-     PROD_PHP_VERSION: "php7.4"
+     PROD_PHP_VERSION: "php8.1"
    commands:
      - export PHP_VERSION=$${${DRONE_DEPLOY_TO^^}_PHP_VERSION}
      - echo $${PHP_VERSION}
