@@ -125,6 +125,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
           $responseCode = 403;
           return $this->generateApiError("registration is not allowed");
         }
+        $this->logger->debug('check whether user already exists');
         if ($this->entityManager->getRepository(User::class)->findOneBy(['username' => $registration->getUsername()])) {
           $this->logger->error('user already exists');
           $responseCode = 403;
@@ -134,8 +135,11 @@ class UserApi extends CsrfProtection implements UserApiInterface
         $user->setUsername($registration->getUsername());
         $user->setEmail($registration->getEmail());
         $user->setPassword($this->passwordEncoder->hashPassword($user, $registration->getPassword()));
+        $this->logger->debug('now persisting user');
         $this->entityManager->persist($user);
+        $this->logger->debug('flushing changes');
         $this->entityManager->flush();
+        $this->logger->debug('flushed');
         $this->eventController->StoreEvent($user, "Register", "success");
         return $this->generateApiSuccess("successfully registered");
     }

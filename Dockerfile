@@ -3,10 +3,12 @@ RUN mkdir -p /app/reactClient/my-app
 COPY ./reactClient/my-app/package*.json /app/reactClient/my-app/
 WORKDIR /app/reactClient/my-app
 RUN npm install --quiet
-COPY ./reactClient /app/reactClient
 COPY ./OpenAPIReactClient /app/OpenAPIReactClient
-RUN npx browserslist@latest --update-db
-RUN npm link ../../OpenAPIReactClient/
+WORKDIR /app/OpenAPIReactClient
+RUN npm install --quiet && npm run build
+WORKDIR /app/reactClient/my-app
+COPY ./reactClient /app/reactClient
+RUN npm install /app/OpenAPIReactClient
 RUN npm run build
 
 FROM php:8.1 as build-backend
