@@ -58,10 +58,14 @@ steps:
        from_secret: "s3_secret_key"
      restore: true
      filename: "${DRONE_COMMIT}.tar"
+ - name: get composer
+   image: composer:2
+   commands:
+    - cp /usr/bin/composer .
  - name: symfony
    image: php:8.1
    commands:
-    - apt update && apt install composer
+    - cp composer /usr/bin/composer
     - cd ./Symfony-API
     - composer -q install --no-suggest --no-dev --no-progress --optimize-autoloader --classmap-authoritative
     - (cd vendor/openapi && rm -r server-bundle && cp -r ../../../OpenAPIServerBundle/ server-bundle)
