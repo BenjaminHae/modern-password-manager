@@ -63,7 +63,7 @@ interface AccountsApiInterface
      *
      * @return \OpenAPI\Server\Model\AccountId[]
      */
-    public function addAccounts(array $account, &$responseCode, array &$responseHeaders);
+    public function addAccounts(array $account, &$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\AccountId[];
 
 
     /**
@@ -76,7 +76,7 @@ interface AccountsApiInterface
      *
      * @return \OpenAPI\Server\Model\AccountId[]
      */
-    public function deleteAccount($id, &$responseCode, array &$responseHeaders);
+    public function deleteAccount($id, &$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\AccountId[];
 
 
     /**
@@ -88,7 +88,7 @@ interface AccountsApiInterface
      *
      * @return \OpenAPI\Server\Model\AccountId[]
      */
-    public function getAccounts(&$responseCode, array &$responseHeaders);
+    public function getAccounts(&$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\AccountId[];
 
 
     /**
@@ -102,6 +102,6 @@ interface AccountsApiInterface
      *
      * @return \OpenAPI\Server\Model\AccountId[]
      */
-    public function updateAccount($id, Account $account, &$responseCode, array &$responseHeaders);
+    public function updateAccount($id, Account $account, &$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\AccountId[];
 
 }
