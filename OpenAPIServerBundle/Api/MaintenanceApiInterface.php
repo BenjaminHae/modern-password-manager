@@ -52,6 +52,6 @@ interface MaintenanceApiInterface
      *
      * @return \OpenAPI\Server\Model\ServerInformation
      */
-    public function serverInformation(&$responseCode, array &$responseHeaders);
+    public function serverInformation(&$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\ServerInformation;
 
 }
