@@ -29,7 +29,7 @@ class MaintenanceApi implements MaintenanceApiInterface
     /**
      * Implementation of MaintenanceApiInterface#serverInformation
      */
-    public function serverInformation(&$responseCode, array &$responseHeaders)
+    public function serverInformation(&$responseCode, array &$responseHeaders): ServerInformation
     {
         $challenge = base64_encode($this->webAuthnController->createChallenge()->getBinaryString());
         $csrfToken = $this->csrfManager->getToken("Api")->getValue();

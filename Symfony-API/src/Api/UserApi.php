@@ -12,6 +12,7 @@ use OpenAPI\Server\Api\UserApiInterface;
 use OpenAPI\Server\Model\UserSettings as OpenAPIUserSettings;
 use OpenAPI\Server\Model\AccountId;
 use OpenAPI\Server\Model\ChangePassword;
+use OpenAPI\Server\Model\GenericSuccessMessage;
 use OpenAPI\Server\Model\LogonInformation;
 use OpenAPI\Server\Model\UserWebAuthnGet;
 use OpenAPI\Server\Model\UserWebAuthnCreate;
@@ -150,7 +151,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
         return new UserWebAuthnChallenge(["challenge" => $challenge]);
     }
 
-    public function createUserWebAuthn(UserWebAuthnCreateWithKey $request, &$responseCode, array &$responseHeaders) {
+    public function createUserWebAuthn(UserWebAuthnCreateWithKey $request, &$responseCode, array &$responseHeaders): GenericSuccessMessage {
         $currentUser = $this->security->getUser();
         if (!$currentUser) {
             $responseCode = 403;
@@ -169,7 +170,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
         return $this->generateApiSuccess("successfully registered webauthn credential");
     }
 
-    public function deleteUserWebAuthn($id, &$responseCode, array &$responseHeaders) {
+    public function deleteUserWebAuthn($id, &$responseCode, array &$responseHeaders): array {
         $currentUser = $this->security->getUser();
         $webAuthnController = new WebAuthnController($this->entityManager, $this->eventController, $this->requestStack, $this->logger);
         if ($webAuthnController->deleteWebAuthnDevice($currentUser, $id)) {
@@ -182,13 +183,13 @@ class UserApi extends CsrfProtection implements UserApiInterface
         }
     }
 
-    public function getUserHistory(&$responseCode, array &$responseHeaders) 
+    public function getUserHistory(&$responseCode, array &$responseHeaders): array
     {
         $currentUser = $this->security->getUser();
         return $currentUser->getEvents()->map(function($event) { return $event->getAsOpenAPIHistoryItem(); } );
     }
 
-    public function getUserWebAuthnCreds(&$responseCode, array &$responseHeaders) 
+    public function getUserWebAuthnCreds(&$responseCode, array &$responseHeaders): array
     {
         $currentUser = $this->security->getUser();
         $webAuthnController = new WebAuthnController($this->entityManager, $this->eventController, $this->requestStack, $this->logger);
@@ -196,21 +197,21 @@ class UserApi extends CsrfProtection implements UserApiInterface
         
     }
 
-    public function getUserSettings(&$responseCode, array &$responseHeaders) 
+    public function getUserSettings(&$responseCode, array &$responseHeaders): UserSettings
     {
         $currentUser = $this->security->getUser();
         $userSettings = $currentUser->getClientConfiguration();
         return new OpenAPIUserSettings(["encryptedUserSettings" => $userSettings]);
     }
 
-    public function setUserSettings(OpenAPIUserSettings $userSettings, &$responseCode, array &$responseHeaders) {
+    public function setUserSettings(OpenAPIUserSettings $userSettings, &$responseCode, array &$responseHeaders): GenericSuccessMessage {
         $currentUser = $this->security->getUser();
         $userSettings = $currentUser->setClientConfiguration($userSettings->getEncryptedUserSettings());
         $this->entityManager->flush();
         return $this->generateApiSuccess("successfully stored user settings");
     }
 
-    public function changePassword(ChangePassword $changes, &$responseCode, array &$responseHeaders)
+    public function changePassword(ChangePassword $changes, &$responseCode, array &$responseHeaders): GenericSuccessMessage
     {
         $currentUser = $this->security->getUser();
         if (!$this->passwordEncoder->isPasswordValid($currentUser, $changes->getOldPassword())) {
@@ -227,7 +228,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
     }
 
     // ...
-    public function onLogoutSuccess(?Request $request) 
+    public function onLogoutSuccess(?Request $request): Response
     {
         $response = new Response();
         $response->setContent(json_encode( $this->generateApiSuccess("logged out") ));
