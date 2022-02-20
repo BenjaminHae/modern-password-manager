@@ -99,7 +99,7 @@ interface UserApiInterface
      *
      * @return \OpenAPI\Server\Model\UserWebAuthnCred[]
      */
-    public function deleteUserWebAuthn($id, &$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\UserWebAuthnCred[];
+    public function deleteUserWebAuthn($id, &$responseCode, array &$responseHeaders): array;
 
 
     /**
@@ -111,7 +111,7 @@ interface UserApiInterface
      *
      * @return \OpenAPI\Server\Model\HistoryItem[]
      */
-    public function getUserHistory(&$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\HistoryItem[];
+    public function getUserHistory(&$responseCode, array &$responseHeaders): array;
 
 
     /**
@@ -135,7 +135,7 @@ interface UserApiInterface
      *
      * @return \OpenAPI\Server\Model\UserWebAuthnCred[]
      */
-    public function getUserWebAuthnCreds(&$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\UserWebAuthnCred[];
+    public function getUserWebAuthnCreds(&$responseCode, array &$responseHeaders): array;
 
 
     /**
