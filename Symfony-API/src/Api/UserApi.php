@@ -90,7 +90,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
                 ->findOneByPublicKeyId($request->getId());
             $result = $this->loginResultGenerator($currentUser, " using WebAuthn key for " . $pk->getDeviceName());
             $result["decryptionKey"] = $pk->getDecryptionKey()->getDecryptionKey();
-            return $result;
+            return new UserWebAuthnLogonResult($result)))))))));
         }
         $this->logger->error('webAuthN login failed');
         return $this->generateApiError("failed to log in");
