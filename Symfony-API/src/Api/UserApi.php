@@ -19,6 +19,7 @@ use OpenAPI\Server\Model\UserWebAuthnGet;
 use OpenAPI\Server\Model\UserWebAuthnCreate;
 use OpenAPI\Server\Model\UserWebAuthnCreateWithKey;
 use OpenAPI\Server\Model\UserWebAuthnChallenge;
+use OpenAPI\Server\Model\UserWebAuthnLogonResult;
 use OpenAPI\Server\Model\Registration;
 use OpenAPI\Server\Model\RegistrationInformation;
 use Symfony\Component\HttpFoundation\Response;
@@ -80,7 +81,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
         return $this->generateApiError("failed to log in");
     }
 
-    public function loginUserWebAuthnGet(UserWebAuthnGet $request, &$responseCode, array &$responseHeaders) {
+    public function loginUserWebAuthnGet(UserWebAuthnGet $request, &$responseCode, array &$responseHeaders): UserWebAuthnLogonResult {
         $currentUser = $this->security->getUser();
         if ($currentUser)
         {
@@ -109,7 +110,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
         return $result;
     }
 
-    public function logoutUser(&$responseCode, array &$responseHeaders) 
+    public function logoutUser(&$responseCode, array &$responseHeaders): GenericSuccessMessage
     {
         $currentUser = $this->security->getUser();
         if ($currentUser)
@@ -121,7 +122,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
         return $this->generateApiSuccess("logged out");
     }
 
-    public function registerUser(RegistrationInformation $registration, &$responseCode, array &$responseHeaders) {
+    public function registerUser(RegistrationInformation $registration, &$responseCode, array &$responseHeaders): GenericSuccessMessage {
         if (!$this->allowRegistration) {
           $this->logger->info('registration is disabled but was accessed');
           $responseCode = 403;
@@ -146,7 +147,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
         return $this->generateApiSuccess("successfully registered");
     }
 
-    public function loginUserWebAuthnChallenge(&$responseCode, array &$responseHeaders) {
+    public function loginUserWebAuthnChallenge(&$responseCode, array &$responseHeaders): UserWebAuthnChallenge {
         $webAuthnController = new WebAuthnController($this->entityManager, $this->eventController, $this->requestStack, $this->logger);
         $challenge = base64_encode($webAuthnController->createChallenge()->getBinaryString());
         return new UserWebAuthnChallenge(["challenge" => $challenge]);
