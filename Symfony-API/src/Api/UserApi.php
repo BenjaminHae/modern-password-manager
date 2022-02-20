@@ -15,6 +15,7 @@ use OpenAPI\Server\Model\ChangePassword;
 use OpenAPI\Server\Model\GenericSuccessMessage;
 use OpenAPI\Server\Model\LogonInformation;
 use OpenAPI\Server\Model\LogonResult;
+use OpenAPI\Server\Model\UserSettings;
 use OpenAPI\Server\Model\UserWebAuthnGet;
 use OpenAPI\Server\Model\UserWebAuthnCreate;
 use OpenAPI\Server\Model\UserWebAuthnCreateWithKey;
