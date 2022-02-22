@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Api;
 
 use App\Controller\AccountController;
@@ -12,7 +13,6 @@ use OpenAPI\Server\Api\UserApiInterface;
 use OpenAPI\Server\Model\UserSettings as OpenAPIUserSettings;
 use OpenAPI\Server\Model\AccountId;
 use OpenAPI\Server\Model\ChangePassword;
-use OpenAPI\Server\Model\GenericSuccessMessage;
 use OpenAPI\Server\Model\LogonInformation;
 use OpenAPI\Server\Model\LogonResult;
 use OpenAPI\Server\Model\UserSettings;
@@ -60,12 +60,12 @@ class UserApi extends CsrfProtection implements UserApiInterface
         return $this->accountsController;
     }
 
-    private function generateApiError($msg)
+    private function generateApiError($msg): array
     {
         return ["success" => false, "message" => $msg];
     }
 
-    private function generateApiSuccess($msg)
+    private function generateApiSuccess($msg): array
     {
         return ["success" => true, "message" => $msg];
     }
@@ -76,7 +76,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
         $currentUser = $this->security->getUser();
         if ($currentUser)
         {
-            return $this->loginResultGenerator($currentUser);
+            return new LogonResult($this->loginResultGenerator($currentUser));
         }
         $this->logger->error('standard login failed');
         return $this->generateApiError("failed to log in");
@@ -90,7 +90,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
                 ->findOneByPublicKeyId($request->getId());
             $result = $this->loginResultGenerator($currentUser, " using WebAuthn key for " . $pk->getDeviceName());
             $result["decryptionKey"] = $pk->getDecryptionKey()->getDecryptionKey();
-            return new UserWebAuthnLogonResult($result)))))))));
+            return new UserWebAuthnLogonResult($result);
         }
         $this->logger->error('webAuthN login failed');
         return $this->generateApiError("failed to log in");
@@ -104,14 +104,14 @@ class UserApi extends CsrfProtection implements UserApiInterface
         $this->logger->debug(print_r($loginReport, true));
         $result = $this->generateApiSuccess("logged in as " . $username . $extraMessage);
         if ($loginReport[0] !== null) {
-            $result["lastLogin"] = $loginReport[0]->format('Y-m-d\TH:i:s.u');
+            $result["lastLogin"] = $loginReport[0];
         }
         $result["failedLogins"] = $loginReport[1];
         $this->logger->debug('loginResultGenerator finished');
         return $result;
     }
 
-    public function logoutUser(&$responseCode, array &$responseHeaders): GenericSuccessMessage
+    public function logoutUser(&$responseCode, array &$responseHeaders): array
     {
         $currentUser = $this->security->getUser();
         if ($currentUser)
@@ -123,7 +123,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
         return $this->generateApiSuccess("logged out");
     }
 
-    public function registerUser(RegistrationInformation $registration, &$responseCode, array &$responseHeaders): GenericSuccessMessage {
+    public function registerUser(RegistrationInformation $registration, &$responseCode, array &$responseHeaders): array {
         if (!$this->allowRegistration) {
           $this->logger->info('registration is disabled but was accessed');
           $responseCode = 403;
@@ -154,7 +154,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
         return new UserWebAuthnChallenge(["challenge" => $challenge]);
     }
 
-    public function createUserWebAuthn(UserWebAuthnCreateWithKey $request, &$responseCode, array &$responseHeaders): GenericSuccessMessage {
+    public function createUserWebAuthn(UserWebAuthnCreateWithKey $request, &$responseCode, array &$responseHeaders): array {
         $currentUser = $this->security->getUser();
         if (!$currentUser) {
             $responseCode = 403;
@@ -173,7 +173,7 @@ class UserApi extends CsrfProtection implements UserApiInterface
         return $this->generateApiSuccess("successfully registered webauthn credential");
     }
 
-    public function deleteUserWebAuthn($id, &$responseCode, array &$responseHeaders): array {
+    public function deleteUserWebAuthn($id, &$responseCode, array &$responseHeaders): iterable {
         $currentUser = $this->security->getUser();
         $webAuthnController = new WebAuthnController($this->entityManager, $this->eventController, $this->requestStack, $this->logger);
         if ($webAuthnController->deleteWebAuthnDevice($currentUser, $id)) {
@@ -186,13 +186,13 @@ class UserApi extends CsrfProtection implements UserApiInterface
         }
     }
 
-    public function getUserHistory(&$responseCode, array &$responseHeaders): array
+    public function getUserHistory(&$responseCode, array &$responseHeaders): iterable
     {
         $currentUser = $this->security->getUser();
         return $currentUser->getEvents()->map(function($event) { return $event->getAsOpenAPIHistoryItem(); } );
     }
 
-    public function getUserWebAuthnCreds(&$responseCode, array &$responseHeaders): array
+    public function getUserWebAuthnCreds(&$responseCode, array &$responseHeaders): iterable
     {
         $currentUser = $this->security->getUser();
         $webAuthnController = new WebAuthnController($this->entityManager, $this->eventController, $this->requestStack, $this->logger);
@@ -207,14 +207,14 @@ class UserApi extends CsrfProtection implements UserApiInterface
         return new OpenAPIUserSettings(["encryptedUserSettings" => $userSettings]);
     }
 
-    public function setUserSettings(OpenAPIUserSettings $userSettings, &$responseCode, array &$responseHeaders): GenericSuccessMessage {
+    public function setUserSettings(OpenAPIUserSettings $userSettings, &$responseCode, array &$responseHeaders): array {
         $currentUser = $this->security->getUser();
         $userSettings = $currentUser->setClientConfiguration($userSettings->getEncryptedUserSettings());
         $this->entityManager->flush();
         return $this->generateApiSuccess("successfully stored user settings");
     }
 
-    public function changePassword(ChangePassword $changes, &$responseCode, array &$responseHeaders): GenericSuccessMessage
+    public function changePassword(ChangePassword $changes, &$responseCode, array &$responseHeaders): array
     {
         $currentUser = $this->security->getUser();
         if (!$this->passwordEncoder->isPasswordValid($currentUser, $changes->getOldPassword())) {

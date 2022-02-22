@@ -41,7 +41,7 @@ class MaintenanceApi implements MaintenanceApiInterface
     /**
      * Implementation of MaintenanceApiInterface#serverInformation
      */
-    public function serverInformation()
+    public function serverInformation(): \OpenAPI\Server\Model\ServerInformation
     {
         // Implement the operation ...
     }
