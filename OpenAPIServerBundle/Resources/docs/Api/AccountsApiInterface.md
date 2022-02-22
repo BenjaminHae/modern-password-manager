@@ -52,7 +52,7 @@ class AccountsApi implements AccountsApiInterface
     /**
      * Implementation of AccountsApiInterface#addAccounts
      */
-    public function addAccounts(array $account)
+    public function addAccounts(array $account): array
     {
         // Implement the operation ...
     }
@@ -104,7 +104,7 @@ class AccountsApi implements AccountsApiInterface
     /**
      * Implementation of AccountsApiInterface#deleteAccount
      */
-    public function deleteAccount($id)
+    public function deleteAccount($id): array
     {
         // Implement the operation ...
     }
@@ -156,7 +156,7 @@ class AccountsApi implements AccountsApiInterface
     /**
      * Implementation of AccountsApiInterface#getAccounts
      */
-    public function getAccounts()
+    public function getAccounts(): array
     {
         // Implement the operation ...
     }
@@ -213,7 +213,7 @@ class AccountsApi implements AccountsApiInterface
     /**
      * Implementation of AccountsApiInterface#updateAccount
      */
-    public function updateAccount($id, Account $account)
+    public function updateAccount($id, Account $account): array
     {
         // Implement the operation ...
     }

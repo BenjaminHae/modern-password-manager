@@ -84,7 +84,7 @@ class JmsSerializer implements SerializerInterface
                 }
 
                 break;
-	    case 'DateTime':
+            case 'DateTime':
             case '\DateTime':
                 return new DateTime($data);
             default:

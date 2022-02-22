@@ -93,7 +93,7 @@ class AccountsApi implements AccountsApiInterface // An interface is autogenerat
     /**
      * Implementation of AccountsApiInterface#addAccounts
      */
-    public function addAccounts(array $account)
+    public function addAccounts(array $account): array
     {
         // Implement the operation ...
     }

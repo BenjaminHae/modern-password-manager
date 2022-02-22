@@ -62,7 +62,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#changePassword
      */
-    public function changePassword(ChangePassword $changePassword)
+    public function changePassword(ChangePassword $changePassword): \OpenAPI\Server\Model\GenericSuccessMessage
     {
         // Implement the operation ...
     }
@@ -124,7 +124,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#createUserWebAuthn
      */
-    public function createUserWebAuthn(UserWebAuthnCreateWithKey $userWebAuthnCreateWithKey)
+    public function createUserWebAuthn(UserWebAuthnCreateWithKey $userWebAuthnCreateWithKey): \OpenAPI\Server\Model\GenericSuccessMessage
     {
         // Implement the operation ...
     }
@@ -176,7 +176,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#deleteUserWebAuthn
      */
-    public function deleteUserWebAuthn($id)
+    public function deleteUserWebAuthn($id): array
     {
         // Implement the operation ...
     }
@@ -228,7 +228,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#getUserHistory
      */
-    public function getUserHistory()
+    public function getUserHistory(): array
     {
         // Implement the operation ...
     }
@@ -277,7 +277,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#getUserSettings
      */
-    public function getUserSettings()
+    public function getUserSettings(): \OpenAPI\Server\Model\UserSettings
     {
         // Implement the operation ...
     }
@@ -326,7 +326,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#getUserWebAuthnCreds
      */
-    public function getUserWebAuthnCreds()
+    public function getUserWebAuthnCreds(): array
     {
         // Implement the operation ...
     }
@@ -383,7 +383,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#loginUser
      */
-    public function loginUser(LogonInformation $logonInformation)
+    public function loginUser(LogonInformation $logonInformation): \OpenAPI\Server\Model\LogonResult
     {
         // Implement the operation ...
     }
@@ -435,7 +435,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#loginUserWebAuthnChallenge
      */
-    public function loginUserWebAuthnChallenge()
+    public function loginUserWebAuthnChallenge(): \OpenAPI\Server\Model\UserWebAuthnChallenge
     {
         // Implement the operation ...
     }
@@ -494,7 +494,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#loginUserWebAuthnGet
      */
-    public function loginUserWebAuthnGet(UserWebAuthnGet $userWebAuthnGet)
+    public function loginUserWebAuthnGet(UserWebAuthnGet $userWebAuthnGet): \OpenAPI\Server\Model\UserWebAuthnLogonResult
     {
         // Implement the operation ...
     }
@@ -546,7 +546,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#logoutUser
      */
-    public function logoutUser()
+    public function logoutUser(): \OpenAPI\Server\Model\GenericSuccessMessage
     {
         // Implement the operation ...
     }
@@ -603,7 +603,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#registerUser
      */
-    public function registerUser(RegistrationInformation $registrationInformation)
+    public function registerUser(RegistrationInformation $registrationInformation): \OpenAPI\Server\Model\GenericSuccessMessage
     {
         // Implement the operation ...
     }
@@ -665,7 +665,7 @@ class UserApi implements UserApiInterface
     /**
      * Implementation of UserApiInterface#setUserSettings
      */
-    public function setUserSettings(UserSettings $userSettings)
+    public function setUserSettings(UserSettings $userSettings): \OpenAPI\Server\Model\GenericSuccessMessage
     {
         // Implement the operation ...
     }

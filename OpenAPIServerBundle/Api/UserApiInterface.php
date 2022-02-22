@@ -73,7 +73,7 @@ interface UserApiInterface
      *
      * @return \OpenAPI\Server\Model\GenericSuccessMessage
      */
-    public function changePassword(ChangePassword $changePassword, &$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\GenericSuccessMessage;
+    public function changePassword(ChangePassword $changePassword, &$responseCode, array &$responseHeaders): array|\OpenAPI\Server\Model\GenericSuccessMessage;
 
 
     /**
@@ -86,7 +86,7 @@ interface UserApiInterface
      *
      * @return \OpenAPI\Server\Model\GenericSuccessMessage
      */
-    public function createUserWebAuthn(UserWebAuthnCreateWithKey $userWebAuthnCreateWithKey, &$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\GenericSuccessMessage;
+    public function createUserWebAuthn(UserWebAuthnCreateWithKey $userWebAuthnCreateWithKey, &$responseCode, array &$responseHeaders): array|\OpenAPI\Server\Model\GenericSuccessMessage;
 
 
     /**
@@ -99,7 +99,7 @@ interface UserApiInterface
      *
      * @return \OpenAPI\Server\Model\UserWebAuthnCred[]
      */
-    public function deleteUserWebAuthn($id, &$responseCode, array &$responseHeaders): array;
+    public function deleteUserWebAuthn($id, &$responseCode, array &$responseHeaders): iterable;
 
 
     /**
@@ -111,7 +111,7 @@ interface UserApiInterface
      *
      * @return \OpenAPI\Server\Model\HistoryItem[]
      */
-    public function getUserHistory(&$responseCode, array &$responseHeaders): array;
+    public function getUserHistory(&$responseCode, array &$responseHeaders): iterable;
 
 
     /**
@@ -123,7 +123,7 @@ interface UserApiInterface
      *
      * @return \OpenAPI\Server\Model\UserSettings
      */
-    public function getUserSettings(&$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\UserSettings;
+    public function getUserSettings(&$responseCode, array &$responseHeaders): array|\OpenAPI\Server\Model\UserSettings;
 
 
     /**
@@ -135,7 +135,7 @@ interface UserApiInterface
      *
      * @return \OpenAPI\Server\Model\UserWebAuthnCred[]
      */
-    public function getUserWebAuthnCreds(&$responseCode, array &$responseHeaders): array;
+    public function getUserWebAuthnCreds(&$responseCode, array &$responseHeaders): iterable;
 
 
     /**
@@ -148,7 +148,7 @@ interface UserApiInterface
      *
      * @return \OpenAPI\Server\Model\LogonResult
      */
-    public function loginUser(LogonInformation $logonInformation, &$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\LogonResult;
+    public function loginUser(LogonInformation $logonInformation, &$responseCode, array &$responseHeaders): array|\OpenAPI\Server\Model\LogonResult;
 
 
     /**
@@ -160,7 +160,7 @@ interface UserApiInterface
      *
      * @return \OpenAPI\Server\Model\UserWebAuthnChallenge
      */
-    public function loginUserWebAuthnChallenge(&$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\UserWebAuthnChallenge;
+    public function loginUserWebAuthnChallenge(&$responseCode, array &$responseHeaders): array|\OpenAPI\Server\Model\UserWebAuthnChallenge;
 
 
     /**
@@ -173,7 +173,7 @@ interface UserApiInterface
      *
      * @return \OpenAPI\Server\Model\UserWebAuthnLogonResult
      */
-    public function loginUserWebAuthnGet(UserWebAuthnGet $userWebAuthnGet, &$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\UserWebAuthnLogonResult;
+    public function loginUserWebAuthnGet(UserWebAuthnGet $userWebAuthnGet, &$responseCode, array &$responseHeaders): array|\OpenAPI\Server\Model\UserWebAuthnLogonResult;
 
 
     /**
@@ -185,7 +185,7 @@ interface UserApiInterface
      *
      * @return \OpenAPI\Server\Model\GenericSuccessMessage
      */
-    public function logoutUser(&$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\GenericSuccessMessage;
+    public function logoutUser(&$responseCode, array &$responseHeaders): array|\OpenAPI\Server\Model\GenericSuccessMessage;
 
 
     /**
@@ -198,7 +198,7 @@ interface UserApiInterface
      *
      * @return \OpenAPI\Server\Model\GenericSuccessMessage
      */
-    public function registerUser(RegistrationInformation $registrationInformation, &$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\GenericSuccessMessage;
+    public function registerUser(RegistrationInformation $registrationInformation, &$responseCode, array &$responseHeaders): array|\OpenAPI\Server\Model\GenericSuccessMessage;
 
 
     /**
@@ -211,6 +211,6 @@ interface UserApiInterface
      *
      * @return \OpenAPI\Server\Model\GenericSuccessMessage
      */
-    public function setUserSettings(UserSettings $userSettings, &$responseCode, array &$responseHeaders): \OpenAPI\Server\Model\GenericSuccessMessage;
+    public function setUserSettings(UserSettings $userSettings, &$responseCode, array &$responseHeaders): array|\OpenAPI\Server\Model\GenericSuccessMessage;
 
 }
