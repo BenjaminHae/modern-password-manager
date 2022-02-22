@@ -51,12 +51,12 @@ class AccountsApi extends CsrfProtection implements AccountsApiInterface
     /**
      * Implementation of AccountsApiInterface#getAccounts
      */
-    public function getAccounts(&$responseCode, array &$responseHeaders): array
+    public function getAccounts(&$responseCode, array &$responseHeaders): iterable
     {
         return $this->getCurrentUsersAccounts();
     }
 
-    public function addAccounts(array $accounts, &$responseCode, array &$responseHeaders): array
+    public function addAccounts(array $accounts, &$responseCode, array &$responseHeaders): iterable
     {
         $currentUser = $this->security->getUser();
         foreach ($accounts as $account) {
@@ -65,7 +65,7 @@ class AccountsApi extends CsrfProtection implements AccountsApiInterface
         return $this->getCurrentUsersAccounts();
     }
 
-    public function deleteAccount($id, &$responseCode, array &$responseHeaders): array
+    public function deleteAccount($id, &$responseCode, array &$responseHeaders): iterable
     {
         $currentUser = $this->security->getUser();
         if ($this->getAccountsController()->deleteAccount($currentUser, $id)) {
@@ -77,7 +77,7 @@ class AccountsApi extends CsrfProtection implements AccountsApiInterface
         }
     }
 
-    public function updateAccount($id, OpenAPIAccount $account, &$responseCode, array &$responseHeaders): array
+    public function updateAccount($id, OpenAPIAccount $account, &$responseCode, array &$responseHeaders): iterable
     {
         $currentUser = $this->security->getUser();
         if ($this->getAccountsController()->updateAccountFromAPI($currentUser, $id, $account)) {
