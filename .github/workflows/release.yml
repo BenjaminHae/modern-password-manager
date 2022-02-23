@@ -101,7 +101,7 @@ jobs:
       - name: unarchive symfony build
         run: tar xf symfony-build.tar.gz && ls -la && cd Symfony-API && ls -la
       - name: install apache2 with php
-        run: sudo apt-get purge php7.4 php7.4-common && sudo apt-get autoremove && sudo apt-get install apache2 php7.4 php-sqlite3 libapache2-mod-php7.4 curl httpie
+        run: sudo apt-get purge php7.4 php7.4-common php8.1 php8.1-common && sudo apt-get autoremove && sudo apt-get install apache2 php8.1 php-sqlite3 libapache2-mod-php8.1 curl httpie
       - name: copy data to wwwroot
         run: sudo cp -r ./Symfony-API /var/www/html
       - name: change ownership of symfony data
