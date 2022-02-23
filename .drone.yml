@@ -65,6 +65,7 @@ steps:
     - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
     - php composer-setup.php --quiet
     - cd ./Symfony-API
+    - rm -rf vendor
     - php ../composer.phar install --no-suggest --no-dev --no-progress --optimize-autoloader --classmap-authoritative
     - (cd vendor/openapi && rm -r server-bundle && cp -r ../../../OpenAPIServerBundle/ server-bundle)
     - cp -r ../reactClient/my-app/build/. public/
