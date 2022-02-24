@@ -48,12 +48,13 @@ get_csrf_token() {
         http --session=batsSession -j --print=hb --pretty=format \
         GET ${url}/accounts \
         X-CSRF-TOKEN:${csrfToken} \
-        Accept:\*/\*
+        Accept:\*/\* \
+        | tr '[:upper:]' '[:lower:]'
 
     }
     run perform_test
     assert_output --partial '[]'
-    assert_output --partial 'X-Openapi-Message: successful operation'
+    assert_output --partial 'x-openapi-message: successful operation'
 }
 @test "logout" {
     perform_test() {
@@ -74,9 +75,10 @@ get_csrf_token() {
         http --session=batsSession -j --print=hb --pretty=format \
         GET ${url}/accounts \
         X-CSRF-TOKEN:${csrfToken} \
-        Accept:\*/\*
+        Accept:\*/\* \
+        | tr '[:upper:]' '[:lower:]'
 
     }
     run perform_test
-    refute_output --partial 'X-Openapi-Message: successful operation'
+    refute_output --partial 'x-openapi-message: successful operation'
 }
