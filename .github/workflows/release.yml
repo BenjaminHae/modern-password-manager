@@ -140,7 +140,7 @@ jobs:
         run: sudo cat /var/log/apache2/error.log*
       - name: symfony error log
         if: ${{ failure() }}
-        run: sudo cat var/log/prod/*
+        run: sudo cat var/log/*.log
         working-directory: /var/www/html/Symfony-API/
   release:
     name: create release draft
