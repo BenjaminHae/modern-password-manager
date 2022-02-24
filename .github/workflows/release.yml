@@ -100,8 +100,10 @@ jobs:
           path: .
       - name: unarchive symfony build
         run: tar xf symfony-build.tar.gz && ls -la && cd Symfony-API && ls -la
+      - name: install apt repo
+        run: apt-get install -y software-properties-common && add-apt-repository -y ppa:ondrej/php
       - name: install apache2 with php
-        run: sudo apt-get purge php7.4 php7.4-common php8.0 php8.0-common && sudo apt-get autoremove && sudo apt-get install apache2 php8.0 php-sqlite3 libapache2-mod-php8.0 curl httpie
+        run: sudo apt-get purge php7.4 php7.4-common php8.0 php8.0-common php8.1 php8.1-common && sudo apt-get autoremove -y && sudo apt-get install -y apache2 php8.1 php8.1-sqlite3 libapache2-mod-php8.1 curl httpie
       - name: copy data to wwwroot
         run: sudo cp -r ./Symfony-API /var/www/html
       - name: change ownership of symfony data
