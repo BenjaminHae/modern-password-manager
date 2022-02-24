@@ -32,7 +32,7 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
     { view: AuthenticatedView.Edit, name: "Edit Account", icon: (<PencilFill/>), selectable: false },
     { view: AuthenticatedView.Add, name: "Add Account", icon: (<Plus/>), selectable: false },
   ];
-  private idleTimer = React.createRef<IdleTimer>();
+  private idleTimerRef = React.createRef<IdleTimer>();
   constructor(props: IAuthenticatedProps) {
     super(props);
     this.state = this.defaultViewState();
@@ -66,7 +66,7 @@ class Authenticated extends React.Component<IAuthenticatedProps, AuthenticatedSt
     return (
       <div className={styles.Authenticated}>
         <IdleTimer
-          ref={ this.idleTimer }
+          ref={ this.idleTimerRef as any }
           timeout={ this.props.idleTimeout }
           onIdle={ this.props.onIdle }
           events={ [ 'keydown', 'wheel', 'DOMMouseScroll', 'mousewheel', 'mousedown', 'touchstart', 'touchmove', 'MSPointerDown', 'MSPointerMove', 'visibilitychange' ] }
