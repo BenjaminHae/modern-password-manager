@@ -101,7 +101,7 @@ jobs:
       - name: unarchive symfony build
         run: tar xf symfony-build.tar.gz && ls -la && cd Symfony-API && ls -la
       - name: install apt repo
-        run: sudo apt-get install -y software-properties-common && add-apt-repository -y ppa:ondrej/php
+        run: sudo apt-get install -y software-properties-common && sudo add-apt-repository -y ppa:ondrej/php
       - name: install apache2 with php
         run: sudo apt-get purge php7.4 php7.4-common php8.0 php8.0-common php8.1 php8.1-common && sudo apt-get autoremove -y && sudo apt-get install -y apache2 php8.1 php8.1-sqlite3 libapache2-mod-php8.1 curl httpie
       - name: copy data to wwwroot
