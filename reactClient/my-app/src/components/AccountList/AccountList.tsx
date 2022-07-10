@@ -103,7 +103,7 @@ class AccountList extends React.Component<AccountListProps, AccountListState> {
   }
   
   getAccountButtons(account: Account): JSX.Element {
-    let buttons : Array <void | JSX.Element> = [<Button key="EditAccountNative" onClick={()=>{this.props.editAccountHandler(account)}}><Pencil/></Button>];
+    let buttons : Array <JSX.Element> = [<Button key="EditAccountNative" onClick={()=>{this.props.editAccountHandler(account)}}><Pencil/></Button>];
     buttons = this.props.pluginSystem.accountButtons(account).concat(buttons);
     return (
       <ButtonGroup size="sm" className={styles.TableButtonGroup} key="buttons">
