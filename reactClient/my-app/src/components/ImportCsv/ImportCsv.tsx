@@ -84,7 +84,12 @@ class ImportCsv extends React.Component<ImportCsvProps, ImportCsvState> {
       this.setState({ file: undefined, data: [], waiting: false});
     }
     catch(e) {
-      this.props.showMessage(`There was an error when importing: ${e.toString()}`, {variant: "warning", autoClose: false});
+      if (e instanceof Error) {
+        this.props.showMessage(`There was an error when importing: ${e.toString()}`, {variant: "warning", autoClose: false});
+      }
+      else {
+        this.props.showMessage(`There was an error when importing: ${e}`, {variant: "warning", autoClose: false});
+      }
     }
   }
 
