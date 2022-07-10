@@ -65,7 +65,9 @@ export default class WebAuthNAuthenticationProvider implements IAuthenticationPr
         keyIndex = await persistor.indexByCredentialId(credentials.id);
       }
       catch(e) {
-        this.debug(`Finding credential in indexdb failed: ${e.message}`);
+	if (e instanceof Error) {
+          this.debug(`Finding credential in indexdb failed: ${e.message}`);
+	}
         return null;
       }
       if (!keyIndex) {
