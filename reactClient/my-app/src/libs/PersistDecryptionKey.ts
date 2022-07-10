@@ -99,7 +99,7 @@ export default class PersistDecryptionKey {
     if (!this.db) {
       await this.initStorage();
     }
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<undefined|number>((resolve, reject) => {
       if (!this.db) {
         reject();
         return;
