@@ -18,7 +18,6 @@ export class CredentialProviderPassword implements ICredentialProvider {
         enc.encode(password),
         {
           "name": "PBKDF2",
-          "prime": new Uint8Array(12),
         },
         false,
         ["deriveBits", "deriveKey"]
