@@ -35,6 +35,7 @@ export class Account {
     getOtherJSON(): string {
         return JSON.stringify(this.other);
     }
+    // eslint-disable-next-line no-explicit-any
     addEncryptedFile(name: string, fkey: any): void {
         this.file = { "name":"", "key": fkey };
         //return self.encryptionWrapper.decryptChar(name)
