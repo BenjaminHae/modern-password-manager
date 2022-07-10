@@ -127,7 +127,11 @@ export default class WebAuthNAuthenticationProvider implements IAuthenticationPr
       await this.backend.createWebAuthn(webAuthCredential.id, deviceName, attestationResponse.attestationObject, attestationResponse.clientDataJSON, webAuthCredential.type, storedKey.wrappedServerKey);
       this.debug(`Success`);
     } catch(e) {
-      this.debug(`Registration failed: ${e.message}`);
+      let message = "";
+      if (e instanceof Error) {
+        message = e.message;
+      }
+      this.debug(`Registration failed: ${message}`);
       this.debug(`Removing persisted keys`);
       persistor.removeKeys(storedKey.keyIndex);
       throw e;
