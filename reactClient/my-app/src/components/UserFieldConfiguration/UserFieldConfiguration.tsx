@@ -20,15 +20,15 @@ const UserFieldConfiguration: React.FC<IUserFieldConfigurationProps> = (props: I
           await props.doStoreOptions(userOptions);
           props.showMessage("stored options", {variant: "success"});
         }
-        catch(e) {
+        catch(e: any) {
           props.showMessage(`Couldn't store options: ${e.toString()}`, {variant: "warning"});
         }
       }
-      catch(e) {
+      catch(e: any) {
         props.showMessage(`Data does not fit necessary format: ${e.toString()}`, {variant: "warning"});
       }
     }
-    catch(e) {
+    catch(e: any) {
       props.showMessage(`Not valid JSON ${e.toString()}`, {variant: "warning"});
     }
     setWaiting(false);

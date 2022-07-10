@@ -52,7 +52,12 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
     catch(e) {
       this.setState({ waiting: false });
-      this.props.showMessage("Registration failed: " + e.toString(), { autoClose: false, variant: "danger" } );
+      if (e instanceof Error) {
+        this.props.showMessage("Registration failed: " + e.toString(), { autoClose: false, variant: "danger" } );
+      }
+      else {
+        this.props.showMessage("Registration failed: " + e, { autoClose: false, variant: "danger" } );
+      }
     }
   }
   async submitForm(event: React.FormEvent<HTMLFormElement>): Promise<void> {

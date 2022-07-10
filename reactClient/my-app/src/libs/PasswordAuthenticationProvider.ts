@@ -50,7 +50,7 @@ export default class PasswordAuthenticationProvider implements IAuthenticationPr
             this.callWaitForLoginFinished();
             return info;
           })
-          .catch((e) => {
+          .catch((e: any) => {
             this.callWaitForLoginFinished();
             let msg = e.toString();
             if ("status" in e) {
@@ -75,7 +75,7 @@ export default class PasswordAuthenticationProvider implements IAuthenticationPr
             this.callWaitForLoginFinished();
             return info;
           })
-          .catch((e) => {
+          .catch((e: any) => {
             this.callWaitForLoginFinished();
             let msg = e.toString();
             if ("status" in e) {

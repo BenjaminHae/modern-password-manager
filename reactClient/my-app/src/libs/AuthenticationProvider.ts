@@ -52,8 +52,10 @@ export default class AuthenticationProviderManager {
       info = await provider.performAuthentication();
     }
     catch(e) {
-      this.debug(`${provider.constructor.name} failed: ${e.message}`)
-      this.showMessage(`Login failed: ${e.message}`);
+      if (e instanceof Error) {
+        this.debug(`${provider.constructor.name} failed: ${e.message}`)
+        this.showMessage(`Login failed: ${e.message}`);
+      }
     }
     finally {
       this.autoLoginStateSetter(false);
