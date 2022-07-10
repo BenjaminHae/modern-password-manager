@@ -18,8 +18,6 @@ export class CredentialProviderPassword implements ICredentialProvider {
         enc.encode(password),
         {
           "name": "PBKDF2",
-          //the next lines are a trick to get the typescript compiler to accept the type :/
-          "generator": new Uint8Array(12),
           "prime": new Uint8Array(12),
         },
         false,
