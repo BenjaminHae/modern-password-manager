@@ -50,7 +50,7 @@ export default class WebAuthNAuthenticationProvider implements IAuthenticationPr
       }
       credentials = await webAuthn.getCredential(challenge, credIds);
     }
-    catch(e) {
+    catch(e: any) {
       this.debug(`WebAuthn get failed: ${e.message}`);
       return null;
     }
