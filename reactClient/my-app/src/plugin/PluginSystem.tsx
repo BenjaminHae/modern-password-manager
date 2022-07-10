@@ -232,19 +232,19 @@ export class PluginSystem {
   /* filling UI elements in */
 
   getMainView(): Array<JSX.Element> {
-    return this.mainViewCallback.map(view => view()).filter(button => button !== undefined);
+    return this.mainViewCallback.map(view => view()).filter((button): button is JSX.Element => button !== undefined);
   }
 
   accountButtons(account: Account): Array<JSX.Element> {
-    return this.accountButtonCallback.map(button => button(account)).filter(button => button !== undefined);
+    return this.accountButtonCallback.map(button => button(account)).filter((button): button is JSX.Element => button !== undefined);
   }
 
   passwordButtons(account: Account): Array<JSX.Element> {
-    return this.passwordButtonCallback.map(button => button(account)).filter(button => button !== undefined);
+    return this.passwordButtonCallback.map(button => button(account)).filter((button): button is JSX.Element => button !== undefined);
   }
 
   editInputButtons(inputKey: string, currentValue: string, setValue: (val: string) => void, account?: Account): Array<JSX.Element> {
-    return this.editInputButtonCallback.map(button => button(inputKey, currentValue, setValue, account)).filter(button => button !== undefined);
+    return this.editInputButtonCallback.map(button => button(inputKey, currentValue, setValue, account)).filter((button): button is JSX.Element => button !== undefined);
   }
 
   editPreShow(fields: {[index: string]:string}, account?: Account): void {
