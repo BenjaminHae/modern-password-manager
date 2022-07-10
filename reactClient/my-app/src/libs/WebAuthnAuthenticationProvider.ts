@@ -57,7 +57,7 @@ export default class WebAuthNAuthenticationProvider implements IAuthenticationPr
 
     const response = credentials.response as AuthenticatorAssertionResponse;
     const persistor = this.getPersistor();
-    let keyIndex: number | undefined;
+    let keyIndex: number | void;
     if (!response.userHandle) {
       this.debug(`no user Handle was specified`);
       this.debug(`Trying to get by id ${credentials.id}`);
