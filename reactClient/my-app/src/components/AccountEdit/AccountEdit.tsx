@@ -99,7 +99,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
       this.setState({fields: currentFields});
     }
   }
-  getButtons(inputKey: string, currentValue: string, account?: Account): Array<JSX.Element | void> {
+  getButtons(inputKey: string, currentValue: string, account?: Account): Array<JSX.Element> {
     return this.props.pluginSystem.editInputButtons(inputKey, currentValue, (val:string) => {
         this.handleGenericChange(inputKey, val);
       }, account);
