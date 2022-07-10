@@ -87,7 +87,7 @@ export default class WebAuthNAuthenticationProvider implements IAuthenticationPr
       this.debug(`successful`);
       return info;
     }
-    catch(e) {
+    catch(e: any) {
       let message = "";
       if (e.message)
         message = e.message;
