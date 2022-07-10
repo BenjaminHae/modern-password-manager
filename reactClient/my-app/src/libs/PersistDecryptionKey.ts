@@ -82,7 +82,7 @@ export default class PersistDecryptionKey {
     if (!this.db) {
       await this.initStorage();
     }
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       if (!this.db) {
         reject();
         return;
@@ -99,7 +99,7 @@ export default class PersistDecryptionKey {
     if (!this.db) {
       await this.initStorage();
     }
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       if (!this.db) {
         reject();
         return;
@@ -137,7 +137,7 @@ export default class PersistDecryptionKey {
     if (!this.db) {
       await this.initStorage();
     }
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       if (!this.db) {
         reject();
         return;
@@ -164,7 +164,7 @@ export default class PersistDecryptionKey {
     if (!this.db) {
       await this.initStorage();
     }
-    return new Promise((resolve, reject) => {
+    return new Promise<Array<ArrayBuffer>>((resolve, reject) => {
       if (!this.db) {
         reject();
         return;
@@ -185,7 +185,7 @@ export default class PersistDecryptionKey {
     if (!this.db) {
       await this.initStorage();
     }
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       if (!this.db) {
         reject();
         return;
@@ -202,7 +202,7 @@ export default class PersistDecryptionKey {
     if (!this.db) {
       await this.initStorage();
     }
-    return new Promise((resolve, reject) => {
+    return new Promise<Array<IKeyInfo>>((resolve, reject) => {
       if (!this.db) {
         reject();
         return;
@@ -231,7 +231,7 @@ export default class PersistDecryptionKey {
     if (!this.db) {
       await this.initStorage();
     }
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       if (!this.db) {
         reject();
         return;
