@@ -95,11 +95,11 @@ export default class PersistDecryptionKey {
     });
   }
 
-  async indexByCredentialId(credentialId: string): Promise<undefined|number> {
+  async indexByCredentialId(credentialId: string): Promise<void|number> {
     if (!this.db) {
       await this.initStorage();
     }
-    return new Promise<undefined|number>((resolve, reject) => {
+    return new Promise<void|number>((resolve, reject) => {
       if (!this.db) {
         reject();
         return;
