@@ -120,7 +120,7 @@ class AccountEdit extends React.Component<AccountEditProps, AccountEditState> {
         <Form.Group controlId="formPassword" key="password">
           <Form.Label>Password</Form.Label>
           <InputGroup>
-            <Form.Control type="text" placeholder="Password" name="password" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.handleGenericChangeByChangeEvent(event)} value={this.state.fields["password"]} />
+            <Form.Control type="text" placeholder="Password" name="password" autoComplete="new-password" onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.handleGenericChangeByChangeEvent(event)} value={this.state.fields["password"]} />
             <InputGroup.Append>
               {this.getButtons("password", this.state.fields["password"], this.props.account)}
               {this.props.account && 
